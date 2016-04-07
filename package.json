@@ -1,0 +1,14 @@
+{
+   "name": "rvp",
+   "version": "0.1.0",
+   "description": "Research Video Prototype",
+   "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+   },
+   "author": "Studio Process <contact@process.studio>",
+   "repository": {
+      "type": "git",
+      "url": "https://github.com/StudioProcess/rvp.git"
+   },
+   "license": "MPL"
+}
