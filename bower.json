@@ -1,0 +1,13 @@
+{
+  "name": "rvp",
+  "private": true,
+  "dependencies": {
+    "jquery": "^2.2.3",
+    "modernizr": "~2.8.1",
+    "foundation-sites": "^6.2.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5"
+  }
+}
