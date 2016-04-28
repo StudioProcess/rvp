@@ -3,10 +3,11 @@
 @import "bower_components/foundation-sites/scss/foundation.scss";
 // endbower
 
-@include foundation-everything;
+@include foundation-everything(true);
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,400italic,700,700italic,500,500italic);
 
 body {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 .hero-unit {
@@ -30,4 +31,30 @@ body {
   background: #ccc;
   color: #000;
   padding: 0.2em 0;
+}
+
+.align-right{
+  text-align: right;
+}
+
+.title {
+  font-weight: lighter;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  //margin: 2em 0;
+  font-size: 25px;
+  line-height: 28px;
+  a {
+    font-weight: 500;
+  }
+}
+
+.login {
+  font-weight: normal;
+  font-size: 17px;
+  line-height: 20px;
+}
+
+.annotation-order{
+  text-align: right;
 }
