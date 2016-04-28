@@ -4,6 +4,7 @@
 // endbower
 
 @include foundation-everything(true);
+
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,400italic,700,700italic,500,500italic);
 
 body {
@@ -60,10 +61,22 @@ body {
   text-align: right;
 }
 
-.annotation-overview {
-  font-weight: normal;
-  text-align: left;
-  margin-bottom: 0.5em;
+.annotation-category-red {
+  background-color: #ff5840;
+}
+
+.annotation-category-grey {
+  background-color: $medium-gray;
+}
+
+.annotation-category-blue {
+  background-color: #3d93d9;
+}
+
+.annotation-row {
+  background-color: $light-gray;
+  margin-left: 0.5em;
+  margin-bottom: 0.1em;
 }
 
 .video-material-title {
@@ -73,5 +86,8 @@ body {
 }
 
 .video-container {
-  min-height: 500px;
+  img {
+    width: 800px;
+    height: 450px;
+  }
 }
