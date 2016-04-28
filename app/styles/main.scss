@@ -55,6 +55,23 @@ body {
   line-height: 20px;
 }
 
-.annotation-order{
+.annotation-order {
+  font-weight: 500;
   text-align: right;
+}
+
+.annotation-overview {
+  font-weight: normal;
+  text-align: left;
+  margin-bottom: 0.5em;
+}
+
+.video-material-title {
+  font-weight: 500;
+  text-align: left;
+  margin-bottom: 0.5em;
+}
+
+.video-container {
+  min-height: 500px;
 }
