@@ -1,3 +1,4 @@
+@import "settings";
 // bower:scss
 @import "bower_components/foundation-sites/scss/foundation.scss";
 // endbower
@@ -5,9 +6,7 @@
 @include foundation-everything;
 
 body {
-  background: #fafafa;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  color: #333;
 }
 
 .hero-unit {
