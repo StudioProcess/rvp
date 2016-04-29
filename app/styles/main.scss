@@ -61,6 +61,12 @@ body {
   text-align: right;
 }
 
+.annotation-category-title {
+  padding-top: 0.2em;
+  padding-bottom: 0.6em;
+  background-color: $white;
+}
+
 .annotation-category-red {
   background-color: #ff5840;
 }
@@ -76,7 +82,7 @@ body {
 .annotation-row {
   background-color: $light-gray;
   margin-left: 0.5em;
-  margin-bottom: 0.1em;
+  margin-bottom: 0.3em;
 }
 
 .video-material-title {
