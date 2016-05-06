@@ -7,6 +7,9 @@
 
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,400italic,700,700italic,500,500italic);
 
+
+$annotation-category-width: 10px;
+
 body {
   font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
@@ -58,25 +61,33 @@ body {
 
 .annotation-order {
   font-weight: 500;
-  text-align: right;
 }
 
 .annotation-category-title {
-  padding-top: 0.2em;
-  padding-bottom: 0.6em;
-  background-color: $white;
+  font-weight: 500;
+  background-color: $light-gray;
+  padding-top: 0.3em;
+  padding-bottom: 0.3em;
+  margin-bottom: 0.3em
 }
 
 .annotation-category-red {
+  width: $annotation-category-width;
   background-color: #ff5840;
 }
 
 .annotation-category-grey {
+  width: $annotation-category-width;
   background-color: $medium-gray;
 }
 
 .annotation-category-blue {
+  width: $annotation-category-width;
   background-color: #3d93d9;
+}
+
+.annotation-category-blank {
+  width: $annotation-category-width;
 }
 
 .annotation-row {
@@ -95,5 +106,17 @@ body {
   img {
     width: 800px;
     height: 450px;
+  }
+}
+
+.inline-list-annotation-order,li,ul {
+  margin-left: 0 !important;
+  padding-right: 0.57em;
+  text-align: left;
+  list-style-type: none;
+  display: inline;
+
+  a:hover {
+    color: $dark-gray;
   }
 }
