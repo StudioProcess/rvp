@@ -43,8 +43,8 @@ body {
 
 .title {
   font-weight: lighter;
-  margin-top: 2em;
-  margin-bottom: 1em;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
   //margin: 2em 0;
   font-size: 25px;
   line-height: 28px;
@@ -119,4 +119,10 @@ body {
   a:hover {
     color: $dark-gray;
   }
+}
+
+.header-row {
+  //background-color: #CCC;
+  margin-top: 0em;
+  margin-bottom: 1.5em;
 }
