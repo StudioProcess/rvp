@@ -4,7 +4,8 @@
   "dependencies": {
     "jquery": "^2.2.3",
     "modernizr": "~2.8.1",
-    "foundation-sites": "^6.2.1"
+    "foundation-sites": "^6.2.1",
+    "angular": "bower-angular#^1.5.5"
   },
   "devDependencies": {
     "chai": "^3.5.0",
