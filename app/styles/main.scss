@@ -15,7 +15,7 @@ body {
 }
 
 // DESKTOP LAYOUT
-@media (min-width: 500px) {
+@media (min-width: 900px) {
   .hero-unit {
     margin: 50px auto 0;
     width: 300px;
@@ -128,5 +128,77 @@ body {
   .footer-site {
     height: 5.0em;
     width: 100%;
+  }
+}
+
+// MOBILE LAYOUT
+@media (max-width: 899px) {
+  .hero-unit {
+    visibility: hidden;
+  }
+  .browserupgrade {
+    visibility: hidden;
+  }
+  .align-right {
+    visibility: hidden;
+  }
+  .title {
+    visibility: hidden;
+    a {
+      visibility: hidden;
+    }
+  }
+  .login {
+    visibility: hidden;
+  }
+  .annotation-order {
+    visibility: hidden;
+  }
+  .annotation-category-title {
+    visibility: hidden;
+  }
+  .annotation-category-red {
+    visibility: hidden;
+  }
+  .annotation-category-grey {
+    visibility: hidden;
+  }
+  .annotation-category-blue {
+    visibility: hidden;
+  }
+  .annotation-category-blank {
+    visibility: hidden;
+  }
+  .annotation-row {
+    visibility: hidden;
+  }
+  .annotation-content {
+    visibility: hidden;
+  }
+  .video-material-title {
+    visibility: hidden;
+  }
+  .video-container {
+    img {
+      visibility: hidden;
+    }
+  }
+  .inline-list-annotation-order,
+  li,
+  ul {
+    visibility: hidden;
+    a:hover {
+      visibility: hidden;
+    }
+  }
+  .header-row {
+    visibility: hidden;
+  }
+
+  .footer-site {
+    visibility: hidden;
+  }
+  .slider {
+    visibility: hidden;
   }
 }
