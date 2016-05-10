@@ -7,7 +7,7 @@
     <title>rvp</title>
 
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <!-- Place favicon.ico in the root directory -->
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
     <!-- build:css styles/vendor.css -->
     <!-- bower:css -->
@@ -27,7 +27,7 @@
     <script src="/bower_components/modernizr/modernizr.js"></script>
     <!-- endbuild -->
   </head>
-  <body>
+  <body ng-app="rvApp">
     <!--[if lt IE 10]>
       <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -64,7 +64,7 @@
 
 <div class="row">
   <div class="small-8 columns video-container">
-    <img src="img/video-placeholder.png">
+    <img src="images/video-placeholder.png">
     <div class="slider" data-slider data-initial-start="78">
       <span class="slider-handle" data-slider-handle role="slider" tabindex="1"></span>
       <span class="slider-fill" data-slider-fill></span>
@@ -137,6 +137,8 @@
   </div>
 </div>
 
+<!-- test angular -->
+<div ng-include="'views/main.html'" ng-controller="MainCtrl"></div>
 
 <!-- FOOTER -->
 <div class="footer-site"></div>
@@ -171,14 +173,17 @@
     <script src="/bower_components/what-input/what-input.js"></script>
     <script src="/bower_components/foundation-sites/dist/foundation.js"></script>
     <script src="/bower_components/angular/angular.js"></script>
+    <script src="/bower_components/lodash/lodash.js"></script>
+    <script src="/bower_components/moment/moment.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
     <!-- flowplayer -->
     <script src="/node_modules/flowplayer/dist/flowplayer.js"></script>
 
-    <!-- build:js scripts/main.js -->
-    <script src="scripts/main.js"></script>
+    <!-- build:js scripts/scripts.js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers/main.js"></script>
     <!-- endbuild -->
   </body>
 </html>

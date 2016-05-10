@@ -48,10 +48,15 @@ const testLintOptions = {
   }
 };
 
+gulp.task('views', () => {
+  return gulp.src('app/views/**/*.html')
+    .pipe(gulp.dest('dist/views'));
+});
+
 gulp.task('lint', lint('app/scripts/**/*.js'));
 gulp.task('lint:test', lint('test/spec/**/*.js', testLintOptions));
 
-gulp.task('html', ['styles', 'scripts'], () => {
+gulp.task('html', ['styles', 'scripts', 'views'], () => {
   return gulp.src('app/*.html')
     .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
     .pipe($.if('*.js', $.uglify()))
@@ -145,7 +150,11 @@ gulp.task('serve:test', ['scripts'], () => {
   gulp.watch('test/spec/**/*.js', ['lint:test']);
 });
 
-// inject bower components
+/**
+ * inject bower components
+ * fills 'bower:scss' sections in *.scss files
+ * fills 'bower:css' and 'bower:js' sections in *.html files
+ */
 gulp.task('wiredep', () => {
   gulp.src('app/styles/*.scss')
     .pipe(wiredep({
