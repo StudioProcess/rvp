@@ -8,6 +8,13 @@ import {stream as wiredep} from 'wiredep';
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
+/**
+ * process styles
+ * uses sass and autoprefixer (no concatenation/minification)
+ * uses sourcemaps
+ * places results in .tmp/styles
+ * reloads browser-sync
+ */
 gulp.task('styles', () => {
   return gulp.src('app/styles/*.scss')
     .pipe($.plumber())
@@ -23,6 +30,13 @@ gulp.task('styles', () => {
     .pipe(reload({stream: true}));
 });
 
+/**
+ * process scripts
+ * uses babel (no concatenation/minification)
+ * uses sourcemaps
+ * places results in .tmp/scripts
+ * reloads browser-sync
+ */
 gulp.task('scripts', () => {
   return gulp.src('app/scripts/**/*.js')
     .pipe($.plumber())
@@ -48,6 +62,10 @@ const testLintOptions = {
   }
 };
 
+/**
+ * copy angular views to dist folder
+ * TODO: use gulp-angular-templatecache instead of a simple copy
+ */
 gulp.task('views', () => {
   return gulp.src('app/views/**/*.html')
     .pipe(gulp.dest('dist/views'));
@@ -56,6 +74,11 @@ gulp.task('views', () => {
 gulp.task('lint', lint('app/scripts/**/*.js'));
 gulp.task('lint:test', lint('test/spec/**/*.js', testLintOptions));
 
+/**
+ * process html for build (dist folder)
+ * fills 'build:css' and 'build:js' sections with links to minified js/css
+ * minifies html
+ */
 gulp.task('html', ['styles', 'scripts', 'views'], () => {
   return gulp.src('app/*.html')
     .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
@@ -65,6 +88,9 @@ gulp.task('html', ['styles', 'scripts', 'views'], () => {
     .pipe(gulp.dest('dist'));
 });
 
+/**
+ * process images for build (dist/images folder)
+ */
 gulp.task('images', () => {
   return gulp.src('app/images/**/*')
     .pipe($.cache($.imagemin({
@@ -84,6 +110,9 @@ gulp.task('fonts', () => {
     .pipe(gulp.dest('dist/fonts'));
 });
 
+/**
+ * copy extra files from root to dist folder
+ */
 gulp.task('extras', () => {
   return gulp.src([
     'app/*.*',
