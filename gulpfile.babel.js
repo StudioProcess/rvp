@@ -10,9 +10,8 @@ const reload = browserSync.reload;
 
 /*
  * TODO:
- * build: fix injector error in index.html (build doesn't run)
+ * build: use templatecache for angular (views are not loaded from files because of CORS)
  * build: copy flowplayer assets (images, fonts)
- * build: use templatecache for angular
  *
  */
 
@@ -51,6 +50,7 @@ gulp.task('scripts', () => {
     .pipe($.plumber())
     .pipe($.sourcemaps.init())
     .pipe($.babel())
+    .pipe($.ngAnnotate())
     .pipe($.sourcemaps.write('.'))
     .pipe(gulp.dest('.tmp/scripts'))
     .pipe(reload({stream: true}));
