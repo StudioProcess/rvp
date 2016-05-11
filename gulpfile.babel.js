@@ -79,7 +79,7 @@ gulp.task('lint:test', lint('test/spec/**/*.js', testLintOptions));
  * fills 'build:css' and 'build:js' sections with links to minified js/css
  * minifies html
  */
-gulp.task('html', ['styles', 'scripts', 'views'], () => {
+gulp.task('html', ['styles', 'scripts', 'views', 'wiredep'], () => {
   return gulp.src('app/*.html')
     .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
     .pipe($.if('*.js', $.uglify()))
