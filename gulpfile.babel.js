@@ -8,6 +8,15 @@ import {stream as wiredep} from 'wiredep';
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
+/*
+ * TODO:
+ * build: fix injector error in index.html (build doesn't run)
+ * build: copy flowplayer assets (images, fonts)
+ * build: use templatecache for angular
+ *
+ */
+
+
 /**
  * process styles
  * uses sass and autoprefixer (no concatenation/minification)
