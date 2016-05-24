@@ -8,11 +8,15 @@
  * Controller of the rvApp
  */
 angular.module('rvApp')
-  .controller('MainCtrl', function ($log) {
+  .controller('MainCtrl', function ($log, db) {
     this.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
       'Karma'
     ];
     $log.log('Controller: MainCtrl');
+
+    db.init();
+
+    console.log(db);
   });
