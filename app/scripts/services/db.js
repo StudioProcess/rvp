@@ -1,6 +1,6 @@
 'use strict';
 
-var dbFactory = function() {
+var createPM = function() {
   var db;
   // var validateObjects = true;
 
@@ -199,4 +199,42 @@ var dbFactory = function() {
   };
 };
 
-angular.module('rvApp').factory('db', dbFactory);
+// FIXME
+createMediaStore = function() {
+  var db;
+
+  function init() {
+    db = new PouchDB('media'); // create or open db
+  }
+
+  function packIdRev(doc) {
+    return "doc/" + doc.id + "/rev/" + doc.rev;
+  }
+
+  function unpackIdRev(docURI) {
+  }
+
+  function put(blob) {
+    // TODO: generate UUID
+    // wait for success, return docURI for id/rev
+    return db.putAttachment(id, id, blob, blob.type);
+  }
+
+  function get(id) {
+    return db.getAttachment(id, id);
+  }
+
+  function del(id) {
+    return db.removeAttachment();
+  }
+
+  return {
+    init,
+    put,
+    get
+  };
+}
+
+createDB = createPM;
+
+angular.module('rvApp').factory('db', createDB);
