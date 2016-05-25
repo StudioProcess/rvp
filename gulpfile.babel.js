@@ -8,6 +8,7 @@ import browserify from 'browserify';
 import babelify from 'babelify';
 import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
+import path from 'path';
 
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
@@ -42,18 +43,45 @@ gulp.task('styles', () => {
     .pipe(reload({stream: true}));
 });
 
+// /**
+//  * process scripts
+//  * uses babel (no concatenation/minification)
+//  * uses sourcemaps
+//  * places results in .tmp/scripts
+//  * reloads browser-sync
+//  */
+// gulp.task('scripts.old', () => {
+//   return gulp.src('app/scripts/**/*.js')
+//     .pipe($.plumber())
+//     .pipe($.sourcemaps.init())
+//     .pipe($.babel())
+//     .pipe($.ngAnnotate())
+//     .pipe($.sourcemaps.write('.'))
+//     .pipe(gulp.dest('.tmp/scripts'))
+//     .pipe(reload({stream: true}));
+// });
+
 /**
- * process scripts
+ * bundle scripts
+ * uses browserify
  * uses babel (no concatenation/minification)
- * uses sourcemaps
- * places results in .tmp/scripts
+ * uses sourcemaps ({debug:true} in browserify)
+ * places results in .tmp/scripts/app.bundle.js
  * reloads browser-sync
  */
-gulp.task('scripts.old', () => {
-  return gulp.src('app/scripts/**/*.js')
-    .pipe($.plumber())
-    .pipe($.sourcemaps.init())
-    .pipe($.babel())
+gulp.task('scripts', () => {
+  function bundle(filename) {
+    let parsed = path.parse(filename);
+    return browserify(filename, {debug: true}) // use filename (e.g. app.js) as entry point for bundle
+      .transform(babelify) // use babel to transform es6 to es5 (modules are transpiled to commonjs)
+      .bundle() // emits bundle contents as text stream
+      .pipe($.plumber())
+      .pipe(source(parsed.name + '.bundle' + parsed.ext)) // convert to vinyl object stream using filename app.bundle.js
+      .pipe(buffer()); // file contents converted to buffer (for use with sourcemaps)
+  }
+
+  return bundle('app/scripts/app.js')
+    .pipe($.sourcemaps.init({loadMaps: true}))
     .pipe($.ngAnnotate())
     .pipe($.sourcemaps.write('.'))
     .pipe(gulp.dest('.tmp/scripts'))
@@ -74,25 +102,6 @@ const testLintOptions = {
     mocha: true
   }
 };
-
-/**
- * bundle scripts (replaces 'scripts' task)
- * uses browserify
- * uses babel (no concatenation/minification)
- * uses sourcemaps
- * places results in .tmp/scripts/app.bundle.js
- * reloads browser-sync
- */
-gulp.task('scripts', () => {
-  return browserify('app/scripts/app.js', {debug: true}).transform(babelify).bundle()
-    .pipe(source('app.bundle.js'))
-    .pipe(buffer())
-    .pipe($.sourcemaps.init({loadMaps: true}))
-    .pipe($.ngAnnotate())
-    .pipe($.sourcemaps.write('.'))
-    .pipe(gulp.dest('.tmp/scripts'))
-    .pipe(reload({stream: true}));
-});
 
 /**
  * copy angular views to dist folder
