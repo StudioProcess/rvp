@@ -75,7 +75,7 @@
     </div>
 
 
-    <div ng-include="'views/annotationBar.html'" ng-controller="annotationBarCtrl as annotations"></div> 
+    <div ng-include="'views/annotationBar.html'" ng-controller="AnnotationBarCtrl as annotations"></div>
 
     <div class="row annotation-row">
       <div class="annotation-category-grey"></div>
@@ -175,12 +175,12 @@
     <script src="/bower_components/angular/angular.js"></script>
     <script src="/bower_components/lodash/lodash.js"></script>
     <script src="/bower_components/moment/moment.js"></script>
+    <script src="/bower_components/pouchdb/dist/pouchdb.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
     <!-- build:js scripts/scripts.js -->
-    <script src="scripts/app.js"></script>
-    <script src="scripts/controllers/main.js"></script>
+    <script src="scripts/app.bundle.js"></script>
     <!-- endbuild -->
   </body>
 </html>
