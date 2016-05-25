@@ -22,3 +22,10 @@ app.controller('AnnotationBarCtrl', AnnotationBarCtrl);
  * Services
  */
 app.factory('db', dbFactory);
+
+/**
+ * Config & Run
+ */
+app.run(function() {
+  $(document).foundation();
+});
