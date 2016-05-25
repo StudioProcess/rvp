@@ -49,21 +49,5 @@
     "bower": "bower install",
     "npm": "npm install",
     "clean-install": "npm run clean-bower; npm run clean-npm; bower install; npm install"
-  },
-  "eslintConfig": {
-    "env": {
-      "es6": true,
-      "node": true,
-      "browser": true
-    },
-    "globals": {
-      "angular": true
-    },
-    "rules": {
-      "quotes": [
-        "warn",
-        "single"
-      ]
-    }
   }
 }
