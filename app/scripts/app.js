@@ -1,4 +1,5 @@
-'use strict';
+import MainCtrl from './controllers/main';
+import dbFactory from './services/db';
 
 /**
  * @ngdoc overview
@@ -8,5 +9,14 @@
  *
  * Main module of the application.
  */
-angular
-  .module('rvApp', []);
+let app = angular.module('rvApp', []);
+
+/**
+ * Controllers
+ */
+app.controller('MainCtrl', MainCtrl);
+
+/**
+ * Services
+ */
+app.factory('db', dbFactory);
