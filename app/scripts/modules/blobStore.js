@@ -8,6 +8,7 @@ import docuri from 'docuri';
 
 /**
  * factory function for blob store objects
+ * @return {BlobStore}
  */
 export default function createBlobStore() {
   /**
@@ -73,6 +74,10 @@ export default function createBlobStore() {
     return db.removeAttachment(doc.id, doc.id, doc.rev);
   }
 
+  /**
+   * BlobStore public API
+   * @typedef BlobStore
+   */
   return {
     put,
     get,
