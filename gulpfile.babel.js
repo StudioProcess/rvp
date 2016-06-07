@@ -255,7 +255,7 @@ gulp.task('serve:dist', () => {
  * runs all specs by default
  * use cmd line arg '--spec file' to run a single spec file
  */
-gulp.task('test', ['lint', 'scripts', 'lint:test', 'scripts:test'], () => {
+gulp.task('test', ['lint:test', 'scripts:test'], () => {
   browserSync({
     notify: false,
     port: 9000,
@@ -271,8 +271,8 @@ gulp.task('test', ['lint', 'scripts', 'lint:test', 'scripts:test'], () => {
     }
   });
 
-  gulp.watch('app/scripts/**/*.js', ['lint', 'scripts']); // rebundle and reload when scripts change
-  gulp.watch('test/spec/**/*.js', ['lint:test', 'scripts:test']); // rebundle and reload when specs change
+  // rebundle and reload when specs or scripts change
+  gulp.watch(['test/**/*.js', 'app/scripts/**/*.js'], ['lint:test', 'scripts:test']);
 });
 
 /**
