@@ -2,7 +2,8 @@
  * Blob Store module
  * @module modules/blobStore
  */
-
+import _ from 'lodash';
+import PouchDB from 'pouchdb';
 import uuid from 'node-uuid';
 import docuri from 'docuri';
 
@@ -10,7 +11,7 @@ import docuri from 'docuri';
  * factory function for blob store objects
  * @return {BlobStore}
  */
-export default function createBlobStore() {
+export default function createBlobStore(options) {
   /**
    * pouch db instance
    * @private
@@ -23,13 +24,16 @@ export default function createBlobStore() {
    */
   let route;
 
-  init();
+  init(options);
 
   /**
    * @private
    */
-  function init() {
-    db = new PouchDB('blobs'); // create or open db
+  function init(opts) {
+    options = _.defaults(opts, {
+      'name': 'blobs'
+    });
+    db = new PouchDB(options.name); // create or open db
     route = docuri.route('doc/:id/rev/:rev');
   }
 
@@ -42,7 +46,7 @@ export default function createBlobStore() {
   function put(blob, id) {
     let doc = route(id);
 
-    if (doc) { // with docURI parameter (and valid)
+    if (id) { // with id parameter
       return db.putAttachment(doc.id, doc.id, doc.rev, blob, blob.type).then((result) => {
         return route(result); // result.id, result.rev => docURI
       });
@@ -75,12 +79,24 @@ export default function createBlobStore() {
   }
 
   /**
+   * reset database
+   * @return {Promise} resolves to an object with an 'ok' property of true
+   */
+  function reset() {
+    return db.destroy().then((result) => {
+      db = new PouchDB(options.name);
+      return {'ok':true};
+    });
+  }
+
+  /**
    * BlobStore public API
    * @typedef BlobStore
    */
   return {
     put,
     get,
-    del
+    del,
+    reset
   };
 }
