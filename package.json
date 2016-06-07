@@ -13,7 +13,9 @@
   "dependencies": {
     "docuri": "^4.2.1",
     "flowplayer": "^6.0.5",
-    "node-uuid": "^1.4.7"
+    "lodash": "^4.13.1",
+    "node-uuid": "^1.4.7",
+    "pouchdb": "^5.4.0"
   },
   "devDependencies": {
     "babel-core": "^6.9.0",
@@ -22,6 +24,7 @@
     "browser-sync": "^2.12.8",
     "browserify": "^13.0.1",
     "del": "^2.2.0",
+    "globby": "^4.1.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-babel": "^6.1.2",
@@ -40,6 +43,9 @@
     "gulp-uglify": "^1.5.3",
     "gulp-useref": "^3.1.0",
     "main-bower-files": "^2.13.1",
+    "minimist": "^1.2.0",
+    "tap-browser-color": "^0.1.2",
+    "tape": "^4.5.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "wiredep": "^4.0.0"

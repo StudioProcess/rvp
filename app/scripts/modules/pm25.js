@@ -1,3 +1,5 @@
+import PouchDB from 'pouchdb';
+
 export default function createPM() {
   var db;
   // var validateObjects = true;

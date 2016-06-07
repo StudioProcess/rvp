@@ -9,12 +9,15 @@ import babelify from 'babelify';
 import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
 import path from 'path';
+import minimist from 'minimist';
+import globby from 'globby';
 
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
 /*
  * TODO:
+ * lint: use gulp-notify (and prevent pipe breaking in browserify)
  * build: use templatecache for angular (views are not loaded from files because of CORS)
  * build: copy flowplayer assets (images, fonts)
  *
@@ -62,6 +65,30 @@ gulp.task('styles', () => {
 // });
 
 /**
+ * bundle ES6 scripts/modules (to CommonJS)
+ */
+function bundle(glob, filename) {
+  let files = globby.sync(glob);
+  console.log('[bundling]', files);
+
+  // // TODO: if no filename was given use first input file and add '.bundle' before extension
+  // if (!filename) {
+  //   let parsed = path.parse(files[0]);
+  // }
+
+  return browserify(files, {debug: true}) // use files array as entry points for bundle
+    .transform(babelify) // use babel to transform es6 to es5 (modules are transpiled to commonjs)
+    .bundle() // emits bundle contents as text stream
+    // .on('error', function (err) {
+    //     console.log(err.toString());
+    //     this.emit("end");
+    //   })
+    .pipe($.plumber())
+    .pipe(source(filename)) // convert to vinyl object stream using filename
+    .pipe(buffer()); // file contents converted to buffer (for use with sourcemaps)
+}
+
+/**
  * bundle scripts
  * uses browserify
  * uses babel (no concatenation/minification)
@@ -70,17 +97,7 @@ gulp.task('styles', () => {
  * reloads browser-sync
  */
 gulp.task('scripts', () => {
-  function bundle(filename) {
-    let parsed = path.parse(filename);
-    return browserify(filename, {debug: true}) // use filename (e.g. app.js) as entry point for bundle
-      .transform(babelify) // use babel to transform es6 to es5 (modules are transpiled to commonjs)
-      .bundle() // emits bundle contents as text stream
-      .pipe($.plumber())
-      .pipe(source(parsed.name + '.bundle' + parsed.ext)) // convert to vinyl object stream using filename app.bundle.js
-      .pipe(buffer()); // file contents converted to buffer (for use with sourcemaps)
-  }
-
-  return bundle('app/scripts/app.js')
+  return bundle('app/scripts/app.js', 'app.bundle.js')
     .pipe($.sourcemaps.init({loadMaps: true}))
     .pipe($.ngAnnotate())
     .pipe($.sourcemaps.write('.'))
@@ -88,20 +105,27 @@ gulp.task('scripts', () => {
     .pipe(reload({stream: true}));
 });
 
-function lint(files, options) {
-  return () => {
-    return gulp.src(files)
-      .pipe(reload({stream: true, once: true}))
-      .pipe($.eslint(options))
-      .pipe($.eslint.format())
-      .pipe($.if(!browserSync.active, $.eslint.failAfterError()));
-  };
-}
-const testLintOptions = {
-  env: {
-    mocha: true
+/**
+ * bundle specs
+ * by default all specs (in test/spec/) are bundled
+ * use cmd line arg '--spec file' to bundle a single spec file
+ * files beginning with an underscore are always bundled
+ */
+gulp.task('scripts:test', () => {
+  let args = minimist(process.argv.slice(2));
+  let pattern = 'test/spec/**/*.js'; // all specs
+  if (args.spec) {
+    let parsed = path.parse(args.spec);
+    pattern = `test/spec/**/${parsed.name}.js`; // spec provided by --spec arg
   }
-};
+
+  return bundle(['test/**/_*.js', pattern], 'spec.bundle.js')
+    .pipe($.sourcemaps.init({loadMaps: true}))
+    .pipe($.ngAnnotate())
+    .pipe($.sourcemaps.write('.'))
+    .pipe(gulp.dest('.tmp/spec'))
+    .pipe(reload({stream: true}));
+});
 
 /**
  * copy angular views to dist folder
@@ -112,8 +136,32 @@ gulp.task('views', () => {
     .pipe(gulp.dest('dist/views'));
 });
 
-gulp.task('lint', lint('app/scripts/**/*.js'));
-gulp.task('lint:test', lint('test/spec/**/*.js', testLintOptions));
+function lint(files, options) {
+  return gulp.src(files)
+    .pipe($.plumber())
+    // .pipe(reload({stream: true, once: true}))
+    .pipe($.eslint(options))
+    .pipe($.eslint.format());
+    // .pipe($.if(!browserSync.active, $.eslint.failAfterError()));
+}
+const testLintOptions = {
+  env: {},
+  globals: {}
+};
+
+/**
+ * lint scripts
+ */
+gulp.task('lint', () => {
+  return lint('app/scripts/**/*.js');
+});
+
+/**
+ * lint specs
+ */
+gulp.task('lint:test', () => {
+  return lint('test/**/*.js', testLintOptions);
+});
 
 /**
  * process html for build (dist folder)
@@ -165,7 +213,7 @@ gulp.task('extras', () => {
 
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
-gulp.task('serve', ['styles', 'scripts', 'fonts'], () => {
+gulp.task('serve', ['styles', 'lint', 'scripts', 'fonts'], () => {
   browserSync({
     notify: false,
     port: 9000,
@@ -187,7 +235,7 @@ gulp.task('serve', ['styles', 'scripts', 'fonts'], () => {
   ]).on('change', reload);
 
   gulp.watch('app/styles/**/*.scss', ['styles']);
-  gulp.watch('app/scripts/**/*.js', ['scripts']);
+  gulp.watch('app/scripts/**/*.js', ['lint', 'scripts']);
   gulp.watch('app/fonts/**/*', ['fonts']);
   gulp.watch('bower.json', ['wiredep', 'fonts']);
 });
@@ -202,23 +250,29 @@ gulp.task('serve:dist', () => {
   });
 });
 
-gulp.task('serve:test', ['scripts'], () => {
+/**
+ * test specs
+ * runs all specs by default
+ * use cmd line arg '--spec file' to run a single spec file
+ */
+gulp.task('test', ['lint:test', 'scripts:test'], () => {
   browserSync({
     notify: false,
     port: 9000,
     ui: false,
+    browser: "google chrome",
     server: {
       baseDir: 'test',
       routes: {
-        '/scripts': '.tmp/scripts',
-        '/bower_components': 'bower_components'
+        '/spec': '.tmp/spec',
+        '/bower_components': 'bower_components',
+        '/node_modules': 'node_modules'
       }
     }
   });
 
-  gulp.watch('app/scripts/**/*.js', ['scripts']);
-  gulp.watch('test/spec/**/*.js').on('change', reload);
-  gulp.watch('test/spec/**/*.js', ['lint:test']);
+  // rebundle and reload when specs or scripts change
+  gulp.watch(['test/**/*.js', 'app/scripts/**/*.js'], ['lint:test', 'scripts:test']);
 });
 
 /**
