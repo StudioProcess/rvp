@@ -1,32 +1,25 @@
-<!doctype html>
-<html lang="en">
 
-<head>
-  <meta charset="utf-8">
-  <title>upload</title>
-  <style>
-    .box__dragndrop,
-    .box__uploading,
-    .box__success,
-    .box__error {
-      display: none;
-    }
-  </style>
-</head>
+<!DOCTYPE html>
 
-<body>
+<meta charset="utf-8">
 
-  <form class="box" method="post" action="" enctype="multipart/form-data">
-    <div class="box__input">
-      <input class="box__file" type="file" name="files[]" id="file" data-multiple-caption="{count} files selected" multiple />
-      <label for="file"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
-      <button class="box__button" type="submit">Upload</button>
-    </div>
-    <div class="box__uploading">Uploading&hellip;</div>
-    <div class="box__success">Done!</div>
-    <div class="box__error">Error! <span></span>.</div>
-  </form>
+<title>Dropzone simple example</title>
 
-</body>
 
-</html>
+<!--
+  DO NOT SIMPLY COPY THOSE LINES. Download the JS and CSS files from the
+  latest release (https://github.com/enyo/dropzone/releases/latest), and
+  host them yourself!
+-->
+<link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
+
+
+<p>
+  This is the most minimal example of Dropzone. The upload in this example
+  doesn't work, because there is no actual server to handle the file upload.
+</p>
+
+<!-- Change /upload-target to your upload address -->
+<form action="/upload-target" class="dropzone"></form>
+
+<script src="/bower_components/dropzone/dist/dropzone.js"></script>
