@@ -1,25 +1,26 @@
+<!doctype html>
+<html class="no-js" lang="">
 
-<!DOCTYPE html>
+<head>
 
-<meta charset="utf-8">
+  <title>drag and drop upload</title>
 
-<title>Dropzone simple example</title>
+  <!-- use own css -->
+  <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
 
+</head>
 
-<!--
-  DO NOT SIMPLY COPY THOSE LINES. Download the JS and CSS files from the
-  latest release (https://github.com/enyo/dropzone/releases/latest), and
-  host them yourself!
--->
-<link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
+<body>
 
+  <p>
+    Drag and drop upload. The upload in this example doesn't work, because there is no actual server to handle the file upload.
+  </p>
 
-<p>
-  This is the most minimal example of Dropzone. The upload in this example
-  doesn't work, because there is no actual server to handle the file upload.
-</p>
+  <!-- Change /upload-target to your upload address -->
+  <form action="/upload-target" class="dropzone"></form>
 
-<!-- Change /upload-target to your upload address -->
-<form action="/upload-target" class="dropzone"></form>
+  <script src="/bower_components/dropzone/dist/dropzone.js"></script>
 
-<script src="/bower_components/dropzone/dist/dropzone.js"></script>
+</body>
+
+</html>
