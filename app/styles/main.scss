@@ -129,6 +129,11 @@ body {
     height: 5.0em;
     width: 100%;
   }
+
+  .dragged-over {
+    background-color: #000;
+    //TODO: dashed border
+  }
 }
 
 // MOBILE LAYOUT

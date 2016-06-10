@@ -5,6 +5,9 @@
 
   <title>drag'n'drop uploader</title>
   <script src="test.js"></script>
+  <script src="/bower_components/jquery/dist/jquery.js"></script>
+  <script src="/bower_components/foundation-sites/dist/foundation.js"></script>
+
   <style>
     .dropArea {
       width: 200px;
@@ -21,10 +24,11 @@
             border: 1px solid #CCC;
           }
   </style>
+  <link rel="stylesheet" href="styles/main.css">
 </head>
 
-<body>
-  <div class="dropArea" id="dropbox">
+<body ng-app="rvApp">
+  <div class="row header-row dropArea" id="dropbox">
     drop video here
   </div>
   <input type="file" multiple id="input">

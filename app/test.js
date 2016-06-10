@@ -17,6 +17,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   function dragover(e) {
     console.log("file(s) dragged over");
+    var dropAreaElement = document.getElementById("dropbox");
+    dropAreaElement.classList.add("dragged-over");
+    //$("p:first").addClass("intro");
+
     e.stopPropagation();
     e.preventDefault();
   }
