@@ -58,21 +58,23 @@
   </div>
 </div>
 
-<div class="row">
+<div class="row main-video-annotation-sidebar-both">
   <div class="small-8 columns">
     <div class="dropArea" multiple id="dropbox">
       Drop video file here or select file manually.
     </div>
     <div class="manual-upload">
-      <input type="file" multiple id="input" class="success button">
+      <input type="file" multiple id="input">
     </div>
+    <!--
     <div class="slider" data-slider data-initial-start="78">
       <span class="slider-handle" data-slider-handle role="slider" tabindex="1"></span>
       <span class="slider-fill" data-slider-fill></span>
       <input type="hidden">
     </div>
+    -->
   </div>
-  <div class="small-4 columns">
+  <div class="small-4 columns main-video-annotation-sidebar">
     <div class="row annotation-category-title">
       <div class="annotation-category-blank"></div>
       <div class="small-2 columns align-self-middle">Time</div>
@@ -140,9 +142,18 @@
 
   </div>
 </div>
+<!-- TIMELINE -->
+<div class="timeline">
+  <div class="slider" data-slider data-initial-start="78">
+    <span class="slider-handle" data-slider-handle role="slider" tabindex="1"></span>
+    <span class="slider-fill" data-slider-fill></span>
+    <input type="hidden">
+  </div>
+</div>
 
-<!-- test angular -->
+<!-- test angular
 <div ng-include="'views/main.html'" ng-controller="MainCtrl"></div>
+-->
 
 <!-- FOOTER -->
 <div class="footer-site"></div>

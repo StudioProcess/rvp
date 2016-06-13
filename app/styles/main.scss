@@ -9,6 +9,8 @@
 
 
 $annotation-category-width: 10px;
+$screen-height: 100%;
+$video-height: 450px;
 
 body {
   font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -130,20 +132,33 @@ body {
     width: 100%;
   }
 
+  .main-video-annotation-both {
+    max-height: $video-height;
+  }
+  .main-video-annotation-sidebar {
+    max-height: $video-height;
+    overflow: scroll;
+  }
+
+  //TIMELINE
+  .timeline {
+    padding-top: 5em;
+  }
+
   // DRAG AND DROP AREA STYLES
   .dropArea {
     height: 100%;
-    max-height: 400px;
+    max-height: $video-height;
     background-color: $light-gray;
-    border: 2px dashed #000;
-    text-align: center;
-    vertical-align: middle;
-    //cursor: pointer;
+    border: 2px dashed $dark-gray;
+    color: $dark-gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .dragged-over {
     background-color: $light-gray;
     border: 2px solid $dark-gray;
-    //TODO: dashed border
   }
   .manual-upload {
     padding-top: 1em;
