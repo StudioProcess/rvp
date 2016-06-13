@@ -11,6 +11,7 @@
 $annotation-category-width: 10px;
 $screen-height: 100%;
 $video-height: 450px;
+$super-light-gray: #f5f5f5;
 
 body {
   font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -69,6 +70,7 @@ body {
     padding-bottom: 0.5em;
     margin-bottom: 0em;
     border-bottom: 1px solid $white;
+    //position: fixed;
   }
   .annotation-category-red {
     width: $annotation-category-width;
@@ -142,12 +144,16 @@ body {
 
   //TIMELINE
   .timeline {
-    padding-top: 5em;
+    //margin-top: 2em;
+    padding-top: 1em;
+    border-top: 1px solid $dark-gray;
+    background-color: $super-light-gray;
+    min-height: 200px;
   }
 
   // DRAG AND DROP AREA STYLES
   .dropArea {
-    height: 100%;
+    min-height: 400px;
     max-height: $video-height;
     background-color: $light-gray;
     border: 2px dashed $dark-gray;
