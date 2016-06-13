@@ -163,10 +163,22 @@ body {
   .manual-upload {
     padding-top: 1em;
   }
+  .screen-too-small {
+    display: none;
+  }
 }
 
 // MOBILE LAYOUT
 @media (max-width: 899px) {
+  div { display: none; }
+  .screen-too-small {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /*
   .hero-unit {
     margin: 50px auto 0;
     width: 300px;
@@ -276,5 +288,5 @@ body {
     height: 5.0em;
     width: 100%;
   }
-
+  */
 }
