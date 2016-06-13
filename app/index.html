@@ -59,8 +59,13 @@
 </div>
 
 <div class="row">
-  <div class="small-8 columns video-container">
-    <img src="images/video-placeholder.png">
+  <div class="small-8 columns">
+    <div class="dropArea" multiple id="dropbox">
+      Drop video file here or select file manually.
+    </div>
+    <div class="manual-upload">
+      <input type="file" multiple id="input" class="success button">
+    </div>
     <div class="slider" data-slider data-initial-start="78">
       <span class="slider-handle" data-slider-handle role="slider" tabindex="1"></span>
       <span class="slider-fill" data-slider-fill></span>
@@ -180,5 +185,7 @@
     <!-- build:js scripts/scripts.js -->
     <script src="scripts/app.bundle.js"></script>
     <!-- endbuild -->
+
+    <script src="filedragger.js"></script>
   </body>
 </html>

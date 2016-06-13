@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   dropbox.addEventListener("dragenter", dragenter, false);
   dropbox.addEventListener("dragover", dragover, false);
   dropbox.addEventListener("drop", drop, false);
+  dropbox.addEventListener("dragleave", dragleave, false);
 
   function dragenter(e) {
     e.stopPropagation();
@@ -19,7 +20,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
     console.log("file(s) dragged over");
     var dropAreaElement = document.getElementById("dropbox");
     dropAreaElement.classList.add("dragged-over");
-    //$("p:first").addClass("intro");
+
+    e.stopPropagation();
+    e.preventDefault();
+  }
+
+  function dragleave(e) {
+    var dropAreaElement = document.getElementById("dropbox");
+    dropAreaElement.classList.remove("dragged-over");
 
     e.stopPropagation();
     e.preventDefault();

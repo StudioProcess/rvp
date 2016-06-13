@@ -4,26 +4,10 @@
 <head>
 
   <title>drag'n'drop uploader</title>
-  <script src="test.js"></script>
+  <script src="filedragger.js"></script>
   <script src="/bower_components/jquery/dist/jquery.js"></script>
   <script src="/bower_components/foundation-sites/dist/foundation.js"></script>
 
-  <style>
-    .dropArea {
-      width: 200px;
-      height: 200px;
-      background-color: #CCC;
-      border: 1px solid #000;
-      display: flex;
-      align-items: center;
-
-    }
-
-    .dropArea:hover {
-            background-color: #EFEFEF;
-            border: 1px solid #CCC;
-          }
-  </style>
   <link rel="stylesheet" href="styles/main.css">
 </head>
 
@@ -31,7 +15,7 @@
   <div class="row header-row dropArea" id="dropbox">
     drop video here
   </div>
-  <input type="file" multiple id="input">
+  <input type="file" multiple id="input" class="success button">
 </body>
 
 </html>
