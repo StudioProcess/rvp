@@ -122,6 +122,9 @@ body {
     a:hover {
       color: $dark-gray;
     }
+    a:active {
+      text-decoration: underline;
+    }
   }
   .header-row {
     //background-color: #CCC;
@@ -144,7 +147,8 @@ body {
 
   //TIMELINE
   .timeline {
-
+    padding-left: 1em;
+    padding-right: 1em;
     padding-top: 1em;
     border-top: 1px solid $dark-gray;
     background-color: $super-light-gray;
@@ -168,6 +172,10 @@ body {
   }
   .manual-upload {
     padding-top: 1em;
+  }
+  .columns-video {
+    //padding-left: 1em;
+    padding-right: 1em;
   }
   .screen-too-small {
     display: none;
