@@ -16,7 +16,8 @@ module.exports = function(defaults) {
       'reflect-metadata/**/*.+(ts|js|js.map)',
       'rxjs/**/*.+(js|js.map)',
       '@angular/**/*.+(js|js.map)',
-      'jquery/dist/*.+(js|js.map)'
+      'jquery/dist/*.+(js|js.map)',
+      'foundation-sites/dist/*.js'
     ]
   });
 };

@@ -21,7 +21,12 @@
     {{/each}}
     <script>
       System.import('system-config.js').then(function () {
-        System.import('main');
+        System.import('foundation').then(function() {
+          // jquery and foundation are loaded
+          $(document).foundation();
+          console.log('foundation loaded');
+          System.import('main');
+        });
       }).catch(console.error.bind(console));
     </script>
 

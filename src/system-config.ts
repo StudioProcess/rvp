@@ -7,14 +7,21 @@
  **********************************************************************************************/
 /** Map relative paths to URLs. */
 const map: any = {
-  'jquery': 'vendor/jquery/dist/jquery.js'
+  'jquery': 'vendor/jquery/dist/jquery.js',
+  'foundation': 'vendor/foundation-sites/dist/foundation.js'
 };
 
 /** User packages configuration. */
 const packages: any = {
-  'jquery': {
+
+};
+
+const meta: any = {
+  'foundation': {
+    deps: ['jquery']
   }
 };
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 /***********************************************************************************************
@@ -61,4 +68,4 @@ System.config({
 });
 
 // Apply the user's configuration.
-System.config({ map, packages });
+System.config({ map, packages, meta });
