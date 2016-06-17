@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import * as $ from 'jquery';
+import { Component, AfterViewInit } from '@angular/core';
 import {TimelineComponent} from './timeline/timeline.component';
 import {InspectorComponent} from './inspector/inspector.component';
 import {VideoComponent} from './video/video.component';
+declare var $:any;
 
 @Component({
   moduleId: module.id,
@@ -11,13 +11,15 @@ import {VideoComponent} from './video/video.component';
   styleUrls: ['app.component.css'],
   directives: [TimelineComponent, InspectorComponent, VideoComponent]
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
   title = 'app works!';
   constructor() {
-    // declare var document: any;
     console.log("app component");
-    // console.log($());
-    // declare var document:any;
-    console.log(document);
+  }
+
+  ngAfterViewInit() {
+
+    console.log("app after view init");
+    $(document).foundation();
   }
 }

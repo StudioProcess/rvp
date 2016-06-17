@@ -10,6 +10,7 @@
   {{/unless}}
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="app/_global.css" class="css">
 </head>
 <body>
   <app-root>Loading...</app-root>
@@ -23,7 +24,6 @@
       System.import('system-config.js').then(function () {
         System.import('foundation').then(function() {
           // jquery and foundation are loaded
-          $(document).foundation();
           console.log('foundation loaded');
           System.import('main');
         });
