@@ -1,0 +1,148 @@
+<h1>
+  {{title}}
+</h1>
+
+<!-- <app-timeline></app-timeline>
+<app-inspector></app-inspector>
+<app-video></app-video> -->
+
+<!-- HEADER START -->
+<div class="row header-row">
+  <div class="large-7 title"><a href="/">Research Video</a> Zürcher Hochschule der Künste
+  </div>
+  <div class="columns align-right align-middle">
+  </div>
+  <div class="columns small-4 align-right align-bottom title login">
+    <!-- <label for="right-label" class="text-left"><strong>Login</strong> [user@mail.xyz]</label> -->
+    <!--
+    <form>
+      <input type="text" placeholder="Login: user@mail.xyz">
+    </form>
+    -->
+  </div>
+</div>
+<!-- HEADER END -->
+
+
+<div class="row header-row">
+  <div class="small-8 video-material-title">Video Material</div>
+  <div class="small-4 columns">
+    <div class="row">
+      <div class="annotation-category-blank"></div>
+      <div class="small-11s columns annotation-order">
+        <ul class="inline-list inline-list-annotation-order">
+
+          <li>Sort by:</li>
+          <li style="text-decoration:underline;"><a href="#">Chronological</a></li>
+          <li><a href="#">Type</a></li>
+          <li><a href="#">Custom</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row main-video-annotation-sidebar-both">
+  <div class="small-8 columns-video">
+    <div class="dropArea" multiple id="dropbox">
+      Drop video file here or select file manually.
+    </div>
+    <div class="manual-upload">
+      <input type="file" multiple id="input">
+    </div>
+    <!--
+    <div class="slider" data-slider data-initial-start="78">
+      <span class="slider-handle" data-slider-handle role="slider" tabindex="1"></span>
+      <span class="slider-fill" data-slider-fill></span>
+      <input type="hidden">
+    </div>
+    -->
+  </div>
+  <div class="small-4 columns main-video-annotation-sidebar">
+    <div class="row annotation-category-title">
+      <div class="annotation-category-blank"></div>
+      <div class="small-2 columns align-self-middle">Time</div>
+      <div class="columns">Title/Description</div>
+    </div>
+
+
+    <div ng-include="'views/annotationBar.html'" ng-controller="AnnotationBarCtrl as annotations"></div>
+
+    <div class="row annotation-row">
+      <div class="annotation-category-grey"></div>
+      <div class="small-2 columns annotation-content">00:01</div>
+      <div class="columns annotation-content">Tänzerin kommt</div>
+    </div>
+
+    <div class="row annotation-row">
+      <div class="annotation-category-red"></div>
+      <div class="small-2 columns annotation-content">00:04</div>
+      <div class="columns annotation-content">Handbewegung außen<br />
+        Sed ut erat erat. Sed sed maximus urna. Nulla iaculis metus eget ligula finibus imperdiet. Fusce eget posuere nisi.</div>
+    </div>
+
+    <div class="row annotation-row">
+      <div class="annotation-category-red"></div>
+      <div class="small-2 columns annotation-content">00:05</div>
+      <div class="columns annotation-content">Beugung<br />
+        Sed ut erat erat. Sed sed maximus urna. Nulla iaculis metus eget ligula finibus imperdiet.
+      </div>
+    </div>
+
+    <div class="row annotation-row">
+      <div class="annotation-category-blue"></div>
+      <div class="small-2 columns annotation-content">00:10</div>
+      <div class="columns annotation-content">Drehung hinten<br />
+      Fusce eget posuere nisi.</div>
+    </div>
+
+    <div class="row annotation-row">
+      <div class="annotation-category-blue"></div>
+      <div class="small-2 columns annotation-content">10:01</div>
+      <div class="columns annotation-content">Salto<br />
+        Sed sed maximus urna. Sed ut erat erat. Sed sed maximus urna.</div>
+    </div>
+
+    <div class="row annotation-row">
+      <div class="annotation-category-red"></div>
+      <div class="small-2 columns annotation-content">00:01</div>
+      <div class="columns annotation-content">Fußdrehung<br />
+        Sed ut erat erat. Sed sed maximus urna.</div>
+    </div>
+
+    <div class="row annotation-row">
+      <div class="annotation-category-blue"></div>
+      <div class="small-2 columns annotation-content">00:01</div>
+      <div class="columns annotation-content">Komposition<br />
+      Sed ut erat erat. Sed sed maximus urna. Nulla iaculis metus eget ligula finibus imperdiet.</div>
+    </div>
+
+    <div class="row annotation-row">
+      <div class="annotation-category-grey"></div>
+      <div class="small-2 columns annotation-content">00:01</div>
+      <div class="columns annotation-content">Komposition<br />
+      Sed ut erat erat. Sed sed maximus urna. Nulla iaculis metus eget ligula finibus imperdiet.</div>
+    </div>
+
+  </div>
+</div>
+<!-- TIMELINE -->
+
+<div class="timeline">
+  <div class="row video-material-title">Timeline</div>
+  <div class="slider row" data-slider data-initial-start="78">
+    <span class="slider-handle" data-slider-handle role="slider" tabindex="1"></span>
+    <span class="slider-fill" data-slider-fill></span>
+    <input type="hidden">
+  </div>
+</div>
+
+
+<!-- FOOTER
+<div class="footer-site"></div>
+-->
+
+<!-- DISPLAY TOO SMALL -->
+<div class="screen-too-small">
+  The screen you are using is too small.
+</div>
