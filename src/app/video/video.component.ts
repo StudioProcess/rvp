@@ -6,6 +6,10 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: 'video.component.html',
   styleUrls: ['video.component.css']
 })
+
+
+// IMPORT FILEDRAGGER.JS
+
 export class VideoComponent implements OnInit {
 
   title = 'video works!';
