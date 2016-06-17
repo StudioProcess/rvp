@@ -8,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TimelineComponent implements OnInit {
 
+  title = 'timeline works!';
+
   constructor() {}
 
   ngOnInit() {
