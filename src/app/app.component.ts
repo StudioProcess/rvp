@@ -1,7 +1,7 @@
 import { Component, AfterViewInit } from '@angular/core';
-import {TimelineComponent} from './timeline/timeline.component';
-import {InspectorComponent} from './inspector/inspector.component';
-import {VideoComponent} from './video/video.component';
+import { TimelineComponent } from './timeline/timeline.component';
+import { InspectorComponent } from './inspector/inspector.component';
+import { VideoComponent } from './video/video.component';
 declare var $:any;
 
 @Component({
