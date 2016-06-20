@@ -16,9 +16,14 @@
     "inlineSources": true,
     "allowSyntheticDefaultImports": true
   },
-
+  "atom": {
+    "rewriteTsconfig": false
+  },
   "files": [
     "main.ts",
     "typings.d.ts"
+  ],
+  "filesGlob": [
+    "**/*.ts"
   ]
 }
