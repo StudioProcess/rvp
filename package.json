@@ -26,7 +26,6 @@
     "pree2e": "webdriver-manager update",
     "e2e": "protractor"
   },
-  "private": true,
   "dependencies": {
     "@angular/common": "2.0.0-rc.3",
     "@angular/compiler": "2.0.0-rc.3",
@@ -55,11 +54,11 @@
     "karma": "0.13.22",
     "karma-chrome-launcher": "0.2.3",
     "karma-jasmine": "0.3.8",
+    "node-sass": "3.7.0",
     "protractor": "3.3.0",
     "ts-node": "0.5.5",
     "tslint": "3.11.0",
     "typescript": "1.8.10",
-    "typings": "0.8.1",
-    "node-sass": "3.7.0"
+    "typings": "^1.3.0"
   }
 }
