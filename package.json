@@ -19,6 +19,7 @@
     "chrome": "open -a 'google chrome' http://localhost:4200",
     "postinstall": "npm link angular-cli && typings install",
     "reinstall": "rm -rf node_modules dist tmp typings && npm install",
+    "update": "git pull && npm prune && npm install",
     "typings": "typings",
     "lint": "tslint \"src/**/*.ts\"",
     "test": "ng test",
