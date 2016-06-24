@@ -8,8 +8,14 @@
 /** Map relative paths to URLs. */
 const map: any = {
   'jquery': 'vendor/jquery/dist/jquery.js',
-  'foundation': 'vendor/foundation-sites/dist/foundation.js'
+  'foundation': 'vendor/foundation-sites/dist/foundation.js',
+  'pouchdb': 'vendor/pouchdb/dist/pouchdb.js',
+  'lodash': 'vendor/lodash/lodash.js',
+  'node-uuid': 'vendor/node-uuid/uuid.js',
+  'docuri': 'vendor/docuri/index.js'
 };
+
+
 
 /** User packages configuration. */
 const packages: any = {

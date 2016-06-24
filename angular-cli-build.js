@@ -17,7 +17,11 @@ module.exports = function(defaults) {
       'rxjs/**/*.+(js|js.map)',
       '@angular/**/*.+(js|js.map)',
       'jquery/dist/*.+(js|js.map)',
-      'foundation-sites/dist/*.js'
+      'foundation-sites/dist/*.js',
+      'pouchdb/dist/*.js',
+      'lodash/lodash.js',
+      'node-uuid/uuid.js',
+      'docuri/index.js'
     ]
   });
 };

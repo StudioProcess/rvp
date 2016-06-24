@@ -2,10 +2,12 @@
  * Blob Store module
  * @module modules/blobStore
  */
-import _ from 'lodash';
-import PouchDB from 'pouchdb';
+
+import * as _ from 'lodash';
+import * as PouchDB from 'pouchdb';
 import uuid from 'node-uuid';
-import docuri from 'docuri';
+import * as docuri from 'docuri';
+
 
 /**
  * factory function for blob store objects
@@ -35,6 +37,7 @@ export default function createBlobStore(options) {
     });
     db = new PouchDB(options.name); // create or open db
     route = docuri.route('doc/:id/rev/:rev');
+    console.log('blobStore initialized', db);
   }
 
   /**

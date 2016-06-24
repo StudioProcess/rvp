@@ -1,4 +1,5 @@
-import PouchDB from 'pouchdb';
+import * as PouchDB from 'pouchdb';
+declare var emit;
 
 export default function createPM() {
   var db;
@@ -10,7 +11,6 @@ export default function createPM() {
    */
   function init() {
     db = new PouchDB('pm25'); // create or open db
-    // console.log(db);
 
     var ddocs = [{
       _id: '_design/events',

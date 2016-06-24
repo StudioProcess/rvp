@@ -4,3 +4,8 @@
 
 /// <reference path="../typings/index.d.ts" />
 declare var module: { id: string };
+
+// dummy declaration for 'https://github.com/jo/docuri'
+declare module 'docuri' {
+  export var route:any;
+}
