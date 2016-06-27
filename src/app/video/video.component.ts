@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import * as videojs from 'video.js';
+
 @Component({
   moduleId: module.id,
   selector: 'app-video',
@@ -17,6 +19,7 @@ export class VideoComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
+    console.log('videojs', videojs);
   }
 
 }

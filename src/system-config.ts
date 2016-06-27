@@ -12,7 +12,8 @@ const map: any = {
   'pouchdb': 'vendor/pouchdb/dist/pouchdb.js',
   'lodash': 'vendor/lodash/lodash.js',
   'node-uuid': 'vendor/node-uuid/uuid.js',
-  'docuri': 'vendor/docuri/index.js'
+  'docuri': 'vendor/docuri/index.js',
+  'video.js': 'vendor/video.js/dist/video.js'
 };
 
 

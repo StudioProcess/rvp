@@ -5,7 +5,14 @@
 /// <reference path="../typings/index.d.ts" />
 declare var module: { id: string };
 
+
 // dummy declaration for 'https://github.com/jo/docuri'
 declare module 'docuri' {
   export var route:any;
+}
+
+
+// module declaration for video.js
+declare module 'video.js' {
+  export default VideoJSStatic;
 }

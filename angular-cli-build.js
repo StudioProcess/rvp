@@ -21,7 +21,8 @@ module.exports = function(defaults) {
       'pouchdb/dist/*.js',
       'lodash/lodash.js',
       'node-uuid/uuid.js',
-      'docuri/index.js'
+      'docuri/index.js',
+      'video.js/dist/**/*'
     ]
   });
 };
