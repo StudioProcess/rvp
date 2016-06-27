@@ -17,6 +17,8 @@ declare var $:any;
 export class AppComponent implements AfterViewInit {
   title = 'app works!';
 
+  videoSrc = 'http://www.sample-videos.com/video/mp4/240/big_buck_bunny_240p_1mb.mp4';
+
   constructor(backend:BackendService) {
     console.log("app component");
     console.log(backend.blobStore);
@@ -29,5 +31,7 @@ export class AppComponent implements AfterViewInit {
 
   videoFilePicked(event) {
     console.log('app says:', event);
+    // console.log('video URL:', )
+    this.videoSrc = URL.createObjectURL(event.file);
   }
 }

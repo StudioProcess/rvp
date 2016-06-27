@@ -12,7 +12,7 @@ declare module 'docuri' {
 }
 
 
-// module declaration for video.js
-declare module 'video.js' {
-  export default VideoJSStatic;
-}
+// // module declaration for video.js
+// declare module 'video.js' {
+//   export default VideoJSStatic;
+// }

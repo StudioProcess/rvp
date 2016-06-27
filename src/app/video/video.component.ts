@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-
-import * as videojs from 'video.js';
+import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
+import 'video.js'; // creates global videojs() function
 
 @Component({
   moduleId: module.id,
@@ -8,18 +7,40 @@ import * as videojs from 'video.js';
   templateUrl: 'video.component.html',
   styleUrls: ['video.component.css']
 })
+export class VideoComponent implements OnInit, AfterViewInit {
 
+  player; // VideoJS Player instance
+  playerReady; // Promise. resolves when player is ready
 
-// IMPORT FILEDRAGGER.JS
+  @Input()
+  set videoSrc(src) {
+    this.playerReady.then(() => {
+      // console.log('player ready', this.player);
+      this.player.src(src);
+    });
+  }
 
-export class VideoComponent implements OnInit {
+  get videoSrc() {
+    if (this.player) {
+      return this.player.currentSrc();
+    }
+    return null;
+  }
 
-  title = 'video works!';
-
-  constructor() {}
+  constructor() {
+    let resolveFn;
+    this.playerReady = new Promise(function(resolve) {
+      resolveFn = resolve;
+    });
+    this.playerReady.resolve = resolveFn;
+  }
 
   ngOnInit() {
-    console.log('videojs', videojs);
+  }
+
+  ngAfterViewInit() {
+    this.player = videojs('videojs');
+    this.playerReady.resolve();
   }
 
 }

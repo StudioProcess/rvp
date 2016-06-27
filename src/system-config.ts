@@ -26,6 +26,10 @@ const packages: any = {
 const meta: any = {
   'foundation': {
     deps: ['jquery']
+  },
+  'video.js': {
+    format: 'global',
+    exports: 'videojs'
   }
 };
 
