@@ -1,4 +1,11 @@
+// foundation settings (variables)
 @import 'settings';
+
+// foundation base
 @import 'node_modules/foundation-sites/scss/foundation';
 
+// include foundation globals
 @include foundation-global-styles;
+
+// include foundation features
+@include foundation-everything(true);
