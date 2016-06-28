@@ -59,6 +59,7 @@ const barrels: string[] = [
   'app/timeline',
   'app/filepicker',
   'app/project-io',
+  'app/project-info',
   /** @cli-barrel */
 ];
 

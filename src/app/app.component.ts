@@ -4,6 +4,8 @@ import { InspectorComponent } from './inspector/inspector.component';
 import { VideoComponent } from './video/video.component';
 import { BackendService } from './backend/backend.service';
 import { FilepickerComponent } from './filepicker/filepicker.component';
+import { ProjectInfoComponent } from './project-info/project-info.component';
+import { ProjectIoComponent } from './project-io/project-io.component';
 declare var $:any;
 
 @Component({
@@ -11,7 +13,7 @@ declare var $:any;
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
-  directives: [TimelineComponent, InspectorComponent, VideoComponent, FilepickerComponent],
+  directives: [TimelineComponent, InspectorComponent, VideoComponent, FilepickerComponent, ProjectInfoComponent, ProjectIoComponent],
   providers: [BackendService]
 })
 export class AppComponent implements AfterViewInit {
