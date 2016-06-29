@@ -58,6 +58,7 @@ $video-height: 450px;
   .annotation-category-title {
     font-weight: 500;
     background-color: $light-gray;
+    //margin-left: 0.5em;
     padding-top: 0.5em;
     padding-right: 0.2em;
     padding-bottom: 0.5em;
@@ -80,17 +81,7 @@ $video-height: 450px;
   .annotation-category-blank {
     width: $annotation-category-width;
   }
-  .annotation-row {
-    background-color: $light-gray;
-    margin-left: 0.5em;
-    margin-bottom: 0em;
-  }
-  .annotation-content {
-    padding-right: 0.2em;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
-    border-bottom: 1px solid $white;
-  }
+
   .video-material-title {
     font-weight: 500;
     text-align: left;

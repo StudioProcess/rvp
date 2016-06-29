@@ -1,0 +1,40 @@
+@import '../app.component.scss';
+// foundation base
+@import 'node_modules/foundation-sites/scss/foundation';
+
+// include foundation globals
+@include foundation-global-styles;
+
+// include foundation features
+@include foundation-everything(true);
+
+
+$annotation-category-width: 10px;
+
+// DESKTOP LAYOUT
+@media (min-width: 900px) {
+
+  .annotation-category-grey {
+    width: $annotation-category-width;
+    background-color: $medium-gray;
+  }
+
+  .annotation-content {
+    padding-right: 0.2em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid $white;
+  }
+
+  .annotation-row {
+    background-color: $light-gray;
+    //margin-left: 0.5em;
+    margin-bottom: 0em;
+  }
+
+  .row {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+  }
+}

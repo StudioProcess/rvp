@@ -1,14 +1,10 @@
-<app-filepicker (filePicked)="videoFilePicked($event)"></app-filepicker>
-<app-project-info></app-project-info>
-<app-project-io></app-project-io>
-<app-video [videoSrc]="videoSrc"></app-video>
-<app-inspector></app-inspector>
-<app-timeline></app-timeline>
 
 
+<!--
 <h1>
   {{title}}
 </h1>
+-->
 
 
 <!-- HEADER START -->
@@ -27,6 +23,21 @@
   </div>
 </div>
 <!-- HEADER END -->
+
+<!-- PROJECT HANDLING -->
+<div class="reveal" id="exampleModal1" data-reveal>
+  <h1>Project Handling</h1>
+  <app-filepicker (filePicked)="videoFilePicked($event)"></app-filepicker>
+  <app-project-info></app-project-info>
+  <app-project-io></app-project-io>
+  <button class="close-button" data-close aria-label="Close modal" type="button">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<p><a data-open="exampleModal1">[project settings]</a></p> <!-- replace with gear icon -->
+<!-- PROJECT HANDLING END -->
+
 
 
 <div class="row header-row">
@@ -50,20 +61,21 @@
 <div class="row main-video-annotation-sidebar-both">
   <div class="small-8 columns-video">
     <div class="dropArea" multiple id="dropbox">
-      Drop video file here or select file manually.
-    </div>
-    <div class="manual-upload">
-      <input type="file" multiple id="input">
+      <app-video [videoSrc]="videoSrc"></app-video>
     </div>
     <!--
-    <div class="slider" data-slider data-initial-start="78">
-      <span class="slider-handle" data-slider-handle role="slider" tabindex="1"></span>
-      <span class="slider-fill" data-slider-fill></span>
-      <input type="hidden">
+    <div class="dropArea" multiple id="dropbox">
+      Drop video file here or select file manually.
+    </div>
+    -->
+    <!--
+    <div class="manual-upload">
+      <input type="file" multiple id="input">
     </div>
     -->
   </div>
   <div class="small-4 columns main-video-annotation-sidebar">
+
     <div class="row annotation-category-title">
       <div class="annotation-category-blank"></div>
       <div class="small-2 columns align-self-middle">Time</div>
@@ -71,68 +83,13 @@
     </div>
 
 
-    <div ng-include="'views/annotationBar.html'" ng-controller="AnnotationBarCtrl as annotations"></div>
+    <app-inspector></app-inspector>
 
-    <div class="row annotation-row">
-      <div class="annotation-category-grey"></div>
-      <div class="small-2 columns annotation-content">00:01</div>
-      <div class="columns annotation-content">Tänzerin kommt</div>
-    </div>
-
-    <div class="row annotation-row">
-      <div class="annotation-category-red"></div>
-      <div class="small-2 columns annotation-content">00:04</div>
-      <div class="columns annotation-content">Handbewegung außen<br />
-        Sed ut erat erat. Sed sed maximus urna. Nulla iaculis metus eget ligula finibus imperdiet. Fusce eget posuere nisi.</div>
-    </div>
-
-    <div class="row annotation-row">
-      <div class="annotation-category-red"></div>
-      <div class="small-2 columns annotation-content">00:05</div>
-      <div class="columns annotation-content">Beugung<br />
-        Sed ut erat erat. Sed sed maximus urna. Nulla iaculis metus eget ligula finibus imperdiet.
-      </div>
-    </div>
-
-    <div class="row annotation-row">
-      <div class="annotation-category-blue"></div>
-      <div class="small-2 columns annotation-content">00:10</div>
-      <div class="columns annotation-content">Drehung hinten<br />
-      Fusce eget posuere nisi.</div>
-    </div>
-
-    <div class="row annotation-row">
-      <div class="annotation-category-blue"></div>
-      <div class="small-2 columns annotation-content">10:01</div>
-      <div class="columns annotation-content">Salto<br />
-        Sed sed maximus urna. Sed ut erat erat. Sed sed maximus urna.</div>
-    </div>
-
-    <div class="row annotation-row">
-      <div class="annotation-category-red"></div>
-      <div class="small-2 columns annotation-content">00:01</div>
-      <div class="columns annotation-content">Fußdrehung<br />
-        Sed ut erat erat. Sed sed maximus urna.</div>
-    </div>
-
-    <div class="row annotation-row">
-      <div class="annotation-category-blue"></div>
-      <div class="small-2 columns annotation-content">00:01</div>
-      <div class="columns annotation-content">Komposition<br />
-      Sed ut erat erat. Sed sed maximus urna. Nulla iaculis metus eget ligula finibus imperdiet.</div>
-    </div>
-
-    <div class="row annotation-row">
-      <div class="annotation-category-grey"></div>
-      <div class="small-2 columns annotation-content">00:01</div>
-      <div class="columns annotation-content">Komposition<br />
-      Sed ut erat erat. Sed sed maximus urna. Nulla iaculis metus eget ligula finibus imperdiet.</div>
-    </div>
 
   </div>
 </div>
 <!-- TIMELINE -->
-
+<!--
 <div class="timeline">
   <div class="row video-material-title">Timeline</div>
   <div class="slider row" data-slider data-initial-start="78">
@@ -141,6 +98,8 @@
     <input type="hidden">
   </div>
 </div>
+-->
+<app-timeline></app-timeline>
 
 
 <!-- FOOTER
