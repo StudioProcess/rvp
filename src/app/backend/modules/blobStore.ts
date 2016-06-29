@@ -5,7 +5,7 @@
 
 import * as _ from 'lodash';
 import * as PouchDB from 'pouchdb';
-import uuid from 'node-uuid';
+import * as uuid from 'node-uuid';
 import * as docuri from 'docuri';
 
 
@@ -13,7 +13,7 @@ import * as docuri from 'docuri';
  * factory function for blob store objects
  * @return {BlobStore}
  */
-export default function createBlobStore(options) {
+export default function createBlobStore(options?) {
   /**
    * pouch db instance
    * @private
