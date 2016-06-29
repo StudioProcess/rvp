@@ -1,5 +1,5 @@
-import test from 'tape';
-import createBlobStore from '../../app/scripts/modules/blobStore.js';
+import { test } from 'tape';
+import createBlobStore from './blobStore';
 
 let blobs;
 let testData = {hello: "world"};

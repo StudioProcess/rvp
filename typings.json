@@ -16,6 +16,9 @@
     "videojs": "registry:dt/videojs#0.0.0+20160316155526"
   },
   "dependencies": {
-    "node-uuid": "registry:npm/node-uuid#1.4.7+20160503013124"
+    "node-uuid": "registry:npm/node-uuid#1.4.7+20160503013124",
+  },
+  "devDependencies": {
+    "tape": "registry:npm/tape#4.0.0+20160622192935"
   }
 }

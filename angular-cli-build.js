@@ -16,6 +16,7 @@ module.exports = function(defaults) {
       'reflect-metadata/**/*.+(ts|js|js.map)',
       'rxjs/**/*.+(js|js.map)',
       '@angular/**/*.+(js|js.map)',
+      'tap-browser-color/*.js',
       'jquery/dist/*.+(js|js.map)',
       'foundation-sites/dist/*.js',
       'pouchdb/dist/*.js',
