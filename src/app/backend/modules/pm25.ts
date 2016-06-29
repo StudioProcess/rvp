@@ -1,16 +1,22 @@
+import * as _ from 'lodash';
 import * as PouchDB from 'pouchdb';
 declare var emit;
 
-export default function createPM() {
+export default function createPM(options?) {
   var db;
   // var validateObjects = true;
 
+  // set option defaults
+  options = _.defaults(options, {
+    'name': 'pm25'
+  });
+
   /**
    * [init description]
-   * @return {[type]} [description]
+   * @return {Promise} [description]
    */
   function init() {
-    db = new PouchDB('pm25'); // create or open db
+    db = new PouchDB(options.name); // create or open db
 
     var ddocs = [{
       _id: '_design/events',
@@ -45,17 +51,19 @@ export default function createPM() {
       }
     }];
 
-    return db.bulkDocs(ddocs).catch(function (err) {
+    return db.bulkDocs(ddocs).catch((err) => {
       // TODO: expect this error
       // some error (maybe a 409, because it already exists?)
       console.log(err);
-    }).then(function () {
+    }).then(() => {
       // build indices by querying
       return Promise.all([
         db.query( 'events/by_group', {limit:0} ),
         db.query( 'events/all', {limit:0} ),
         db.query( 'groups/all', {limit:0} )
       ]);
+    }).then(() => {
+      return {ok:true};
     });
   }
 
@@ -176,9 +184,20 @@ export default function createPM() {
     });
   }
 
+  /**
+   * reset database
+   * @return {Promise} resolves to an object with an 'ok' property of true
+   */
+  function reset() {
+    return db.destroy().then(() => {
+      return init();
+    });
+  }
+
   // db API
   return {
     init,
+    reset,
     group: {
       create: createGroup,
       update: updateGroup,
