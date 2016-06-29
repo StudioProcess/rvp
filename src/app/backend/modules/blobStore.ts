@@ -26,15 +26,18 @@ export default function createBlobStore(options?) {
    */
   let route;
 
-  init(options);
+  // set option defaults
+  options = _.defaults(options, {
+    'name': 'blobs'
+  });
+
+  // initialize
+  init();
 
   /**
    * @private
    */
-  function init(opts) {
-    options = _.defaults(opts, {
-      'name': 'blobs'
-    });
+  function init() {
     db = new PouchDB(options.name); // create or open db
     route = docuri.route('doc/:id/rev/:rev');
     console.log('blobStore initialized', db);

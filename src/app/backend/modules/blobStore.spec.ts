@@ -46,7 +46,6 @@ test('get()', t => {
 
 test('del()', t => {
   blobs.del(id).then((result) => {
-    // t.deepEqual(result, testBlob, 'got what was put in');
     t.equal(result.ok, true);
 
     return blobs.get(id).then(result => {
