@@ -10,10 +10,29 @@ $video-height: 450px;
   font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+// GENERAL COMPONENT STYLING GOES HERE; NO SPECIFICS!
+.video-component {
+  max-height: $video-height;
+}
+
+.inspector-component {
+  max-height: $video-height;
+  overflow: scroll;
+}
+
+.timeline-component {
+
+}
+
+.header-row {
+  margin-top: 2.0em;
+  margin-bottom: 0.2em;
+}
+
 // DESKTOP LAYOUT
 @media (min-width: 900px) {
   .hero-unit {
-    margin: 50px auto 0;
+    //margin: 50px auto 0;
     width: 300px;
     //font-size: 18px;
     //font-weight: 200;
@@ -52,81 +71,9 @@ $video-height: 450px;
     font-size: 17px;
     line-height: 20px;
   }
-  .annotation-order {
-    font-weight: 500;
-  }
-  .annotation-category-title {
-    font-weight: 500;
-    background-color: $light-gray;
-    //margin-left: 0.5em;
-    padding-top: 0.5em;
-    padding-right: 0.2em;
-    padding-bottom: 0.5em;
-    margin-bottom: 0em;
-    border-bottom: 1px solid $white;
-    //position: fixed;
-  }
-  .annotation-category-red {
-    width: $annotation-category-width;
-    background-color: #ff5840;
-  }
-  .annotation-category-grey {
-    width: $annotation-category-width;
-    background-color: $medium-gray;
-  }
-  .annotation-category-blue {
-    width: $annotation-category-width;
-    background-color: #3d93d9;
-  }
-  .annotation-category-blank {
-    width: $annotation-category-width;
-  }
-
-  .video-material-title {
-    font-weight: 500;
-    text-align: left;
-    margin-bottom: 0.5em;
-  }
-  .video-container {
-    img {
-      width: 800px;
-      height: 450px;
-    }
-  }
-  .inline-list-annotation-order,
-  li,
-  ul {
-    display: flex;
-    justify-content: space-between;
-    margin-left: 0 !important;
-    padding-right: 0.57em;
-    //text-align: left;
-    list-style-type: none;
-    //display: inline;
-    a:hover {
-      color: $dark-gray;
-    }
-    a:active {
-      text-decoration: underline;
-    }
-  }
-  .header-row {
-    //background-color: #CCC;
-    margin-top: 2.0em;
-    margin-bottom: 0.2em;
-  }
-
   .footer-site {
     height: 5.0em;
     width: 100%;
-  }
-
-  .main-video-annotation-both {
-    max-height: $video-height;
-  }
-  .main-video-annotation-sidebar {
-    max-height: $video-height;
-    overflow: scroll;
   }
 
   //TIMELINE

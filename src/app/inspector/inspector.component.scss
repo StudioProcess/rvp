@@ -1,12 +1,5 @@
-@import '../app.component.scss';
-// foundation base
-@import 'node_modules/foundation-sites/scss/foundation';
-
-// include foundation globals
-@include foundation-global-styles;
-
-// include foundation features
-@include foundation-everything(true);
+@import '../settings';
+@import '../video/video.component.scss';
 
 
 $annotation-category-width: 10px;
@@ -14,9 +7,59 @@ $annotation-category-width: 10px;
 // DESKTOP LAYOUT
 @media (min-width: 900px) {
 
+  .annotation-order {
+    font-weight: 500;
+  }
+
+  .inline-list-annotation-order,
+  li,
+  ul {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 0 !important;
+    padding-right: 0.57em;
+    //text-align: left;
+    list-style-type: none;
+    //display: inline;
+    a:hover {
+      color: $dark-gray;
+    }
+    a:active {
+      text-decoration: underline;
+    }
+  }
+
+  .annotation-category-title {
+    font-weight: 500;
+    background-color: $light-gray;
+    //margin-left: 0.5em;
+    padding-top: 0.5em;
+    padding-right: 0.2em;
+    padding-bottom: 0.5em;
+    margin-bottom: 0em;
+    border-bottom: 1px solid $white;
+    //position: fixed;
+  }
+
   .annotation-category-grey {
     width: $annotation-category-width;
     background-color: $medium-gray;
+  }
+
+  .annotation-category-red {
+    width: $annotation-category-width;
+    background-color: #ff5840;
+  }
+  .annotation-category-grey {
+    width: $annotation-category-width;
+    background-color: $medium-gray;
+  }
+  .annotation-category-blue {
+    width: $annotation-category-width;
+    background-color: #3d93d9;
+  }
+  .annotation-category-blank {
+    width: $annotation-category-width;
   }
 
   .annotation-content {
