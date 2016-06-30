@@ -33,8 +33,12 @@ $video-height: 450px;
   padding-right: 1.0em;
 }
 
+.row {
+  min-width: 1000px;
+}
+
 // DESKTOP LAYOUT
-@media (min-width: 900px) {
+
   .browserupgrade {
     margin: 0.2em 0;
     background: #ccc;
@@ -60,14 +64,6 @@ $video-height: 450px;
   .footer-site {
     height: 5.0em;
     width: 100%;
-  }
-
-  //TIMELINE
-  .timeline {
-    padding-top: 1em;
-    //border-top: 1px solid $dark-gray;
-    background-color: $light-gray;
-    min-height: 200px;
   }
 
   // DRAG AND DROP AREA STYLES
@@ -96,9 +92,10 @@ $video-height: 450px;
   .screen-too-small {
     display: none;
   }
-}
+
 
 // MOBILE LAYOUT
+/**
 @media (max-width: 899px) {
   div { display: none; }
   .screen-too-small {
@@ -109,3 +106,4 @@ $video-height: 450px;
     justify-content: center;
   }
 }
+**/

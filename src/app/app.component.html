@@ -19,23 +19,21 @@
 <!-- PROJECT HANDLING END -->
 
 <!-- MAIN LAYOUT -->
-<div class="row small-12 large-12">
-  <div class="small-6 large-7 columns video-component">
+<div class="row large-12">
+  <div class="large-7 columns video-component">
     <!-- VIDEO COMPONENT -->
     <app-video [videoSrc]="videoSrc"></app-video>
   </div>
 
-  <div class="small-6 large-5 columns inspector-component">
+  <div class="large-5 columns inspector-component">
     <!-- INSPECTOR COMPONENT -->
     <app-inspector></app-inspector>
   </div>
 </div>
 
 <!-- TIMELINE COMPONENT -->
-<div class="row small-12 large-12">
-  <div class="small-12 large-12 columns timeline-component">
-    <app-timeline></app-timeline>
-  </div>
+<div class="row large-12 timeline-component columns">
+  <app-timeline></app-timeline>
 </div>
 <!-- TIMELINE COMPONENT END-->
 <!-- MAIN LAYOUT END -->
