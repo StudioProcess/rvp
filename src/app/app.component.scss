@@ -29,6 +29,16 @@ $video-height: 450px;
   margin-bottom: 0.2em;
 }
 
+.title {
+  padding-left: 0.5em;
+}
+
+.settings {
+  margin-bottom: 0.5em;
+  padding-right: 0.5em;
+  text-align: right;
+}
+
 // DESKTOP LAYOUT
 @media (min-width: 900px) {
   .hero-unit {
