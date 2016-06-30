@@ -23,7 +23,8 @@ module.exports = function(defaults) {
       'lodash/lodash.js',
       'node-uuid/uuid.js',
       'docuri/index.js',
-      'video.js/dist/**/*'
+      'video.js/dist/**/*',
+      'ajv/dist/*.js'
     ]
   });
 };

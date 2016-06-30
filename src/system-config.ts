@@ -13,7 +13,8 @@ const map: any = {
   'lodash': 'vendor/lodash/lodash.js',
   'node-uuid': 'vendor/node-uuid/uuid.js',
   'docuri': 'vendor/docuri/index.js',
-  'video.js': 'vendor/video.js/dist/video.js'
+  'video.js': 'vendor/video.js/dist/video.js',
+  'ajv': 'vendor/ajv/dist/ajv.bundle.js'
 };
 
 

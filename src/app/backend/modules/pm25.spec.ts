@@ -35,21 +35,46 @@ test('reset()', t => {
   });
 });
 
-test('group.create()', t => {
-  let group = {
-    type: 'group',
-    fields: {
-      name: 'test'
-    }
-  };
+let group = {
+  type: 'group',
+  fields: {
+    name: 'test',
+    key: 'value'
+  }
+};
 
+test('group.create()', t => {
   pm.group.create(group).then(result => {
-    console.log(result);
-    t.equal(result.ok, true);
+    t.equals(result.ok, true);
     t.assert(result.id, 'got id ' + result.id);
     t.assert(result.rev, 'got rev ' + result.rev);
+
+    group['_id'] = result.id;
+    group['_rev'] = result.rev;
+    t.deepEquals(result.group, group);
+
+    console.log(result);
     t.end();
   }).catch(err => {
-    t.fail(err);
+    console.error(err);
+    t.fail(err.message);
   });
 });
+
+// test('group.create()', t => {
+//   pm.group.create(group).then(result => {
+//     t.equals(result.ok, true);
+//     t.assert(result.id, 'got id ' + result.id);
+//     t.assert(result.rev, 'got rev ' + result.rev);
+//
+//     group['_id'] = result.id;
+//     group['_rev'] = result.rev;
+//     t.deepEquals(result.group, group);
+//
+//     console.log(result);
+//     t.end();
+//   }).catch(err => {
+//     console.error(err);
+//     t.fail(err.message);
+//   });
+// });
