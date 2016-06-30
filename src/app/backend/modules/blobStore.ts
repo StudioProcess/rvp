@@ -1,6 +1,6 @@
 /**
- * Blob Store module
- * @module modules/blobStore
+ * Blob Store
+ * @module blobStore
  */
 
 import * as _ from 'lodash';
