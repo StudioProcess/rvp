@@ -41,6 +41,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.player = videojs('videojs');
     this.player.fluid(true);
+    this.player.aspectRatio("16:9");
     this.playerReady.resolve();
   }
 
