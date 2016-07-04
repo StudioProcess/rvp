@@ -10,11 +10,11 @@ import {
   async, inject
 } from '@angular/core/testing';
 
-import { InspectorentryComponent } from './inspector-entry.component';
+import { AnnotationComponent } from './annotation.component';
 
-describe('Component: Inspectorentry', () => {
+describe('Component: Annotation', () => {
   it('should create an instance', () => {
-    let component = new InspectorentryComponent();
+    let component = new AnnotationComponent();
     expect(component).toBeTruthy();
   });
 });

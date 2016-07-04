@@ -62,6 +62,10 @@ const barrels: string[] = [
   'app/project-io',
   'app/project-info',
   'app/inspectorentry',
+  'app/timeline-annotation',
+  'app/timeline-track',
+  'app/timeline/track',
+  'app/timeline/track/annotation',
   /** @cli-barrel */
 ];
 
