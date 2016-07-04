@@ -1,1 +1,1 @@
-export * from './backend.service';
+export * from './simple-backend.service';
