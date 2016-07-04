@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { InspectorentryComponent } from '../inspectorentry/inspectorentry.component';
+import { InspectorentryComponent } from '../inspector-entry/inspector-entry.component';
 
 @Component({
   moduleId: module.id,
