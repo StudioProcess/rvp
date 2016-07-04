@@ -10,7 +10,7 @@ import {
   async, inject
 } from '@angular/core/testing';
 
-import { InspectorentryComponent } from './inspectorentry.component';
+import { InspectorentryComponent } from './inspector-entry.component';
 
 describe('Component: Inspectorentry', () => {
   it('should create an instance', () => {
