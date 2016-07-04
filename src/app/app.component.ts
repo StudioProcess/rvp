@@ -32,6 +32,9 @@ export class AppComponent implements AfterViewInit {
 
     this.backend.retrieveVideo().then(blob => {
       this.videoSrc = URL.createObjectURL(blob);
+      console.log('video retrieved:', blob);
+    }).catch(err => {
+      console.error('retrieve video:', err);
     });
   }
 
@@ -52,7 +55,9 @@ export class AppComponent implements AfterViewInit {
       lastModifiedDate: event.file.lastModifiedDate
     };
     this.backend.storeVideo(event.file, meta).then((result) => {
-      console.log('video stored', result);
+      console.log('video stored:', result);
+    }).catch(err => {
+      console.error('store video:', err);
     });
   }
 }
