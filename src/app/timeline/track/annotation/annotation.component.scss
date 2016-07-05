@@ -1,0 +1,8 @@
+@import '../../../settings';
+
+.annotation {
+  position: absolute;
+  height: 20px;
+  top: 0;
+  background-color: $dark-gray;
+}
