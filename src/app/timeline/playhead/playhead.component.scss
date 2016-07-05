@@ -1,0 +1,11 @@
+@import '../../settings';
+
+.playhead {
+  background-color: $dark-gray;
+  display: block;
+  position: absolute;
+  width: 1px;
+  top: 0;
+  bottom: 0;
+  left: 5;
+}

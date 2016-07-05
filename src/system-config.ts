@@ -66,6 +66,7 @@ const barrels: string[] = [
   'app/timeline-track',
   'app/timeline/track',
   'app/timeline/track/annotation',
+  'app/timeline/playhead',
   /** @cli-barrel */
 ];
 
