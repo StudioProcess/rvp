@@ -2,12 +2,12 @@
   <div class="annotation-category-grey"></div>
   <div class="small-2 columns annotation-content">
     <label>
-      <textarea placeholder="00:12"></textarea>
+      <textarea value="{{ entry.utc_timestamp }}"></textarea>
     </label>
   </div>
   <div class="columns annotation-content">
     <label>
-      <textarea class="description" placeholder="Annotation description" value="asdsa"></textarea>
+      <textarea class="description" value="{{ entry.fields.description }}"></textarea>
     </label>
   </div>
 </div>

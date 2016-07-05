@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Annotation } from '../../models/models';
+
 
 @Component({
   moduleId: module.id,
@@ -9,8 +11,10 @@ import { Component, OnInit } from '@angular/core';
 export class EntryComponent implements OnInit {
 
   title = 'inspectorentry works!';
+  @Input() entry:Annotation;
 
   constructor() {
+
   }
 
   ngOnInit() {
