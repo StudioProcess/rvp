@@ -1,10 +1,45 @@
-<!-- HEADER START -->
-<div class="row large-12 header-row title">
-  <a href="/">Research Video</a>&nbsp;Zürcher Hochschule der Künste
-</div>
-<!-- HEADER END -->
+<div class="container">
 
-<!-- PROJECT HANDLING -->
+  <!-- HEADER START -->
+  <div class="row title">
+    <span>Research Video</span>&nbsp;Zürcher Hochschule der Künste
+  </div>
+  <!-- HEADER END -->
+
+  <!-- SETTINGS LINK START -->
+  <div class="row settings align-right">
+    <!-- TODO: replace with gear icon -->
+    <a data-open="exampleModal1">[project settings]</a>
+  </div>
+  <!-- SETTINGS LINK END -->
+
+  <!-- MAIN LAYOUT -->
+  <div class="row">
+    <div class="column video-component">
+      <!-- VIDEO COMPONENT -->
+      <app-video [videoSrc]="videoSrc"></app-video>
+    </div>
+
+    <div class="column small-4 inspector-component">
+      <!-- INSPECTOR COMPONENT -->
+      <app-inspector></app-inspector>
+    </div>
+  </div>
+
+  <!-- TIMELINE COMPONENT -->
+  <div class="row timeline-component">
+    <app-timeline></app-timeline>
+  </div>
+  <!-- TIMELINE COMPONENT END-->
+  <!-- MAIN LAYOUT END -->
+
+  <!-- FOOTER -->
+  <div class="footer"></div>
+
+</div>
+
+
+<!-- MODAL: PROJECT HANDLING -->
 <div class="reveal" id="exampleModal1" data-reveal>
   <h1>Project Handling</h1>
   <app-filepicker (filePicked)="videoFilePicked($event)"></app-filepicker>
@@ -13,37 +48,4 @@
   <button class="close-button" data-close aria-label="Close modal" type="button">
     <span aria-hidden="true">&times;</span>
   </button>
-</div>
-
-<div class="large-12 align-right settings row"><a data-open="exampleModal1">[project settings]</a></div> <!-- replace with gear icon -->
-<!-- PROJECT HANDLING END -->
-
-<!-- MAIN LAYOUT -->
-<div class="row large-12">
-  <div class="small-7 large-7 columns video-component">
-    <!-- VIDEO COMPONENT -->
-    <app-video [videoSrc]="videoSrc"></app-video>
-  </div>
-
-  <div class="small-5 large-5 columns inspector-component">
-    <!-- INSPECTOR COMPONENT -->
-    <app-inspector></app-inspector>
-  </div>
-</div>
-
-<!-- TIMELINE COMPONENT -->
-<div class="row large-12 timeline-component columns">
-  <app-timeline></app-timeline>
-</div>
-<!-- TIMELINE COMPONENT END-->
-<!-- MAIN LAYOUT END -->
-
-
-<!-- FOOTER
-<div class="footer-site"></div>
--->
-
-<!-- DISPLAY TOO SMALL -->
-<div class="screen-too-small">
-  The screen you are using is too small.
 </div>

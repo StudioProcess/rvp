@@ -10,9 +10,19 @@
 // include foundation features
 @include foundation-everything(true);
 
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,400italic,700,700italic,500,500italic);
+
+body {
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  height:auto;
+}
+
 .loading {
-  width: 100%;
-  height: 100%;
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
   display: flex;
   align-items: center;
   justify-content: center;

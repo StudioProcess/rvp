@@ -13,24 +13,23 @@
   <link rel="stylesheet" href="app/global.css" class="css">
 </head>
 <body>
-  <app-root><div class="loading"><strong>Research Video</strong>&nbsp;Zürcher Hochschule der Künste</div></app-root>
 
+  <app-root>
+    <div class="loading"><strong>Research Video</strong>&nbsp;Zürcher Hochschule der Künste</div>
+  </app-root>
 
-
-    {{#each scripts.polyfills}}
-    <script src="{{.}}"></script>
-    {{/each}}
-    <script>
-      System.import('system-config.js').then(function () {
-        System.import('foundation').then(function() {
-          // jquery and foundation are loaded
-          console.log('foundation loaded');
-          System.import('main');
-        });
-      }).catch(console.error.bind(console));
-    </script>
-
-
+  {{#each scripts.polyfills}}
+  <script src="{{.}}"></script>
+  {{/each}}
+  <script>
+    System.import('system-config.js').then(function () {
+      System.import('foundation').then(function() {
+        // jquery and foundation are loaded
+        console.log('foundation loaded');
+        System.import('main');
+      });
+    }).catch(console.error.bind(console));
+  </script>
 
 </body>
 </html>
