@@ -6,15 +6,17 @@
   </div>
   <!-- HEADER END -->
 
-  <!-- SETTINGS LINK START -->
-  <div class="row column settings align-right">
-    <!-- TODO: replace with gear icon -->
-    <a data-open="exampleModal1">[project settings]</a>
+  <!-- MENU BAR START -->
+  <div class="row align-right menu-bar">
+    <div class="column settings">
+      <!-- TODO: replace with gear icon -->
+      <a data-open="exampleModal1">[project settings]</a>
   </div>
-  <!-- SETTINGS LINK END -->
+  </div>
+  <!-- MENU BAR LINK END -->
 
   <!-- MAIN LAYOUT -->
-  <div class="row">
+  <div class="row video-and-inspector">
     <div class="column video-component">
       <!-- VIDEO COMPONENT -->
       <app-video [videoSrc]="videoSrc"></app-video>
@@ -41,7 +43,7 @@
 
 <!-- MODAL: PROJECT HANDLING -->
 <div class="reveal" id="exampleModal1" data-reveal>
-  <h1>Project Handling</h1>
+  <h1><img src="../img/rv-logo_1000px.png" width="60px"> Project Handling</h1>
   <app-filepicker (filePicked)="videoFilePicked($event)"></app-filepicker>
   <app-project-info></app-project-info>
   <app-project-io></app-project-io>
