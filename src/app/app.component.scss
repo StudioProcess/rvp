@@ -8,9 +8,9 @@ $video-and-inspector-height: 450px;
 }
 
 .title {
-  margin-top: 2.0em;
+  margin-top: 2.5em;
   font-weight: lighter;
-  margin-bottom: 1.0em;
+  margin-bottom: 0em;
   font-size: 21px;
   line-height: 21px;
   span {
@@ -36,7 +36,7 @@ $video-and-inspector-height: 450px;
 
   .inspector-component {
     max-height: $video-and-inspector-height;
-    overflow:scroll;
+    overflow:hidden;
   }
 }
 

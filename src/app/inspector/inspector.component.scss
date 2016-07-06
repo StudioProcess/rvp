@@ -1,5 +1,6 @@
 @import '../settings';
 @import '../video/video.component.scss';
+@import '../app.component.scss';
 
 
 $annotation-category-width: 10px;
@@ -44,6 +45,11 @@ $annotation-category-width: 10px;
   .annotation-category-grey {
     width: $annotation-category-width;
     background-color: $medium-gray;
+  }
+
+  .scroll-annotation {
+    height: 350px;
+    overflow: scroll;
   }
 
   .annotation-category-red {
