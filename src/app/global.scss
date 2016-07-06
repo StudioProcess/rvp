@@ -26,7 +26,16 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: lighter;
-  font-size: 21px;
-  line-height: 21px;
+  flex-direction: column;
+
+
+  .text {
+    font-weight: lighter;
+    font-size: 25px;
+    line-height: 21px;
+  }
+
+  .image {
+    padding-bottom: 2em;
+  }
 }
