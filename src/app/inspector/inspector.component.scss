@@ -75,6 +75,13 @@ $annotation-category-width: 10px;
     margin-bottom: 0em;
   }
 
+  .annotation-row:hover {
+    background-color: $super-light-gray;
+    //border-right: 1px solid $dark-gray;
+    //border-top: 1px solid $dark-gray;
+    //border-bottom: 1px solid $dark-gray;
+  }
+
   .row {
     margin-left: 0;
     margin-right: 0;
