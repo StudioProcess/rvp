@@ -1,4 +1,4 @@
-export class RVPPage {
+export class RvpPage {
   navigateTo() {
     return browser.get('/');
   }

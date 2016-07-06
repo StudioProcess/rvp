@@ -1,10 +1,10 @@
-import { RVPPage } from './app.po';
+import { RvpPage } from './app.po';
 
 describe('rvp App', function() {
-  let page: RVPPage;
+  let page: RvpPage;
 
   beforeEach(() => {
-    page = new RVPPage();
+    page = new RvpPage();
   });
 
   it('should display message saying app works', () => {
