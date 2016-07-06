@@ -31,23 +31,23 @@ export class AppComponent implements AfterViewInit {
   videoSrc = 'http://www.sample-videos.com/video/mp4/240/big_buck_bunny_240p_1mb.mp4';
 
   constructor(private backend:SimpleBackendService) {
-    console.log("app component");
+    log.debug('app component');
 
     this.backend.retrieveVideo().then(blob => {
       this.videoSrc = URL.createObjectURL(blob);
-      console.log('video retrieved:', blob);
+      log.info('video retrieved:', blob);
     }).catch(err => {
-      console.error('retrieve video:', err);
+      log.error('retrieve video:', err);
     });
   }
 
   ngAfterViewInit() {
-    console.log("app after view init");
+    log.debug("app after view init");
     $(document).foundation();
   }
 
   videoFilePicked(event) {
-    console.log('video file picked:', event);
+    log.info('video file picked:', event);
     this.videoSrc = URL.createObjectURL(event.file);
 
     let meta = {
@@ -58,9 +58,9 @@ export class AppComponent implements AfterViewInit {
       lastModifiedDate: event.file.lastModifiedDate
     };
     this.backend.storeVideo(event.file, meta).then((result) => {
-      console.log('video stored:', result);
+      log.debug('video stored:', result);
     }).catch(err => {
-      console.error('store video:', err);
+      log.error('store video:', err);
     });
   }
 }

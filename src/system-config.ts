@@ -16,7 +16,8 @@ const map: any = {
   'video.js': 'vendor/video.js/dist/video.js',
   'ajv': 'vendor/ajv/dist/ajv.bundle.js',
   '@ngrx': 'vendor/@ngrx',
-  'localforage': 'vendor/localforage'
+  'localforage': 'vendor/localforage',
+  'loglevel': 'vendor/loglevel'
 };
 
 
@@ -33,6 +34,9 @@ const packages: any = {
   },
   'localforage': {
     main: 'dist/localforage.js'
+  },
+  'loglevel': {
+    main: 'dist/loglevel.js'
   }
 };
 

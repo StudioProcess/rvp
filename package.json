@@ -44,6 +44,7 @@
     "foundation-sites": "^6.2.3",
     "localforage": "^1.4.2",
     "lodash": "^4.13.1",
+    "loglevel": "^1.4.1",
     "node-uuid": "^1.4.7",
     "pouchdb": "^5.4.0",
     "reflect-metadata": "0.1.3",

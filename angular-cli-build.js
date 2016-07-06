@@ -26,7 +26,8 @@ module.exports = function(defaults) {
       'video.js/dist/**/*',
       'ajv/dist/*.js',
       '@ngrx/**/*.+(js|js.map)',
-      'localforage/dist/*.js'
+      'localforage/dist/*.js',
+      'loglevel/dist/*.js'
     ]
   });
 };
