@@ -1,15 +1,12 @@
 @import '../inspector.component.scss';
 
 textarea {
-  //insert custom style here
-  background-color: $light-gray;
-  border: 1px solid $light-gray;
+  background-color: transparent;
+  border: 1px solid transparent;
   box-shadow: none;
-  //color: $black;
   resize: none;
   margin: 0;
   min-width: 60px;
-
 }
 
 .description{
@@ -17,7 +14,7 @@ textarea {
 }
 
 textarea:hover {
-  border: 1px solid $dark-gray;
+  //border: 1px solid $dark-gray;
 }
 
 textarea:focus {

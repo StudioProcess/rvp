@@ -28,8 +28,6 @@ export class InspectorComponent implements OnInit {
     this.entries.push(this.entry);
     this.entries.push(this.entry);
     this.entries.push(this.entry);
-    this.entries.push(this.entry);
-    this.entries.push(this.entry);
   }
 
   ngOnInit() {

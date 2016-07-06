@@ -9,9 +9,8 @@ $video-and-inspector-height: 450px;
 
 .title {
   margin-top: 2.0em;
-  margin-bottom: 0.2em;
   font-weight: lighter;
-  margin-bottom: 0.5em;
+  margin-bottom: 1.0em;
   font-size: 21px;
   line-height: 21px;
   span {
@@ -19,18 +18,26 @@ $video-and-inspector-height: 450px;
   }
 }
 
-.settings {
+.menu-bar {
+  margin-bottom: 2em;
 
+  .settings {
+    text-align: right;
+  }
 }
 
-.video-component {
-  max-height: $video-and-inspector-height;
-  overflow:hidden;
-}
+.video-and-inspector {
+  margin-bottom: 1em;
 
-.inspector-component {
-  max-height: $video-and-inspector-height;
-  overflow:hidden;
+  .video-component {
+    max-height: $video-and-inspector-height;
+    overflow:hidden;
+  }
+
+  .inspector-component {
+    max-height: $video-and-inspector-height;
+    overflow:scroll;
+  }
 }
 
 .timeline-component {
