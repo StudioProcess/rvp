@@ -24,7 +24,8 @@ module.exports = function(defaults) {
       'node-uuid/uuid.js',
       'docuri/index.js',
       'video.js/dist/**/*',
-      'ajv/dist/*.js'
+      'ajv/dist/*.js',
+      '@ngrx/**/*.+(js|js.map)'
     ]
   });
 };

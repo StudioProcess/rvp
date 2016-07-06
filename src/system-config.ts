@@ -14,14 +14,22 @@ const map: any = {
   'node-uuid': 'vendor/node-uuid/uuid.js',
   'docuri': 'vendor/docuri/index.js',
   'video.js': 'vendor/video.js/dist/video.js',
-  'ajv': 'vendor/ajv/dist/ajv.bundle.js'
+  'ajv': 'vendor/ajv/dist/ajv.bundle.js',
+  '@ngrx': 'vendor/@ngrx'
 };
 
 
 
 /** User packages configuration. */
 const packages: any = {
-
+  '@ngrx/core': {
+    main: 'index.js',
+    format: 'cjs'
+  },
+  '@ngrx/store': {
+    main: 'index.js',
+    format: 'cjs'
+  }
 };
 
 const meta: any = {
