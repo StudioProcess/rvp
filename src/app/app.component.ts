@@ -1,5 +1,8 @@
 import { Component, AfterViewInit } from '@angular/core';
 
+import * as localforage from 'localforage';
+import { provideStore } from '@ngrx/store';
+
 // import { BackendService } from './backend/backend.service';
 import { LocalStorageService } from './backend/local-storage.service';
 import { SimpleBackendService } from './backend/simple-backend.service';

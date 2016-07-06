@@ -25,7 +25,8 @@ module.exports = function(defaults) {
       'docuri/index.js',
       'video.js/dist/**/*',
       'ajv/dist/*.js',
-      '@ngrx/**/*.+(js|js.map)'
+      '@ngrx/**/*.+(js|js.map)',
+      'localforage/dist/*.js'
     ]
   });
 };

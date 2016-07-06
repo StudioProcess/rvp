@@ -15,7 +15,8 @@ const map: any = {
   'docuri': 'vendor/docuri/index.js',
   'video.js': 'vendor/video.js/dist/video.js',
   'ajv': 'vendor/ajv/dist/ajv.bundle.js',
-  '@ngrx': 'vendor/@ngrx'
+  '@ngrx': 'vendor/@ngrx',
+  'localforage': 'vendor/localforage'
 };
 
 
@@ -29,6 +30,9 @@ const packages: any = {
   '@ngrx/store': {
     main: 'index.js',
     format: 'cjs'
+  },
+  'localforage': {
+    main: 'dist/localforage.js'
   }
 };
 
