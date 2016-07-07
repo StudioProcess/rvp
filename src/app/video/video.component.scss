@@ -8,7 +8,7 @@ $video-height: 450px;
   margin-bottom: 1.0em;
 }
 .video-area {
-  min-height: 400px;
+  min-height: $video-height;
   max-height: $video-height;
   background-color: $light-gray;
   color: $dark-gray;
