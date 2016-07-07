@@ -1,6 +1,7 @@
 <!-- TIMELINE -->
 <div class="timeline-test" (mousemove)="moveCursor($event)">
-    <app-playhead [time]="playheadTime"></app-playhead>
+    <app-cursor [time]="cursorTime" [displayTime]="cursorDisplayTime"></app-cursor> <!-- cursor -->
+    <app-playhead [time]="playheadTime" [displayTime]="playheadDisplayTime"></app-playhead> <!-- playhead -->
     <app-annotation [data]="annotation"></app-annotation>
   <!--
   Timeline

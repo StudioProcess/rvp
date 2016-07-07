@@ -7,8 +7,8 @@ $blue: #2198e6;
   pointer-events: none;
 }
 
-.playhead {
-  background-color: $dark-gray;
+.cursor {
+  background-color: $blue;
   display: block;
   position: absolute;
   width: 1px;
@@ -20,7 +20,7 @@ $blue: #2198e6;
 .timelabel {
   color: $white;
   display: inline-block;
-  background-color: $dark-gray;
+  background-color: $blue;
   position: relative;
   top: 0;
   left: 0;
