@@ -1,3 +1,7 @@
+/**
+ * Utilities (this file only)
+ */
+
 // Simple key-value map
 interface Map {
   [key:string]: any;
@@ -9,10 +13,19 @@ interface Fields extends Map {
   description?: string;
 }
 
+
+
+/**
+ * Exported Types
+ */
+
+// Time is a timestamp or duration in seconds since UNIX epoch (fractional part possible)
+export type Time = number;
+
 // Marker with metadata
 export interface Annotation {
-  utc_timestamp: number;
-  duration: number;
+  utc_timestamp: Time;
+  duration: Time;
   fields?: Fields;
 }
 
@@ -25,8 +38,8 @@ export interface Track {
 
 // Timeline containing tracks
 export interface Timeline {
-  duration: number;
-  playhead: number;
+  duration: Time;
+  playhead: Time;
   zoom: number;
   pan: number;
   tracks: Track[];
