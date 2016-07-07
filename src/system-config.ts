@@ -17,10 +17,9 @@ const map: any = {
   'ajv': 'vendor/ajv/dist/ajv.bundle.js',
   '@ngrx': 'vendor/@ngrx',
   'localforage': 'vendor/localforage',
-  'loglevel': 'vendor/loglevel'
+  'loglevel': 'vendor/loglevel',
+  'moment': 'vendor/moment'
 };
-
-
 
 /** User packages configuration. */
 const packages: any = {
@@ -37,6 +36,9 @@ const packages: any = {
   },
   'loglevel': {
     main: 'dist/loglevel.js'
+  },
+  'moment': {
+    main: 'moment.js'
   }
 };
 
