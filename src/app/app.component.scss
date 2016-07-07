@@ -45,7 +45,22 @@ $video-and-inspector-height: 450px;
 }
 
 .footer {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  display: flex;
+  justify-content: center;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: $dark-gray;
 
+  a {
+    color: $dark-gray;
+    text-decoration: none;
+    border-bottom: 1px solid;
+  }
 }
 
 

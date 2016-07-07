@@ -58,6 +58,10 @@ $annotation-category-width: 10px;
   }
   .annotation-category-grey {
     width: $annotation-category-width;
+    background-color: $dark-gray;
+  }
+  .annotation-category-grey:hover {
+    width: $annotation-category-width;
     background-color: $medium-gray;
   }
   .annotation-category-blue {
