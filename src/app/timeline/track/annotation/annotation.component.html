@@ -1,1 +1,7 @@
-<div class="annotation" [style.left]="data.utc_timestamp + '%'" [style.width]="data.duration + '%'"><div>
+<div
+  class="annotation"
+  (mousemove)="moveCursor($event)"
+  [style.left]="data.utc_timestamp + '%'"
+  [style.width]="data.duration + '%'"
+  >
+<div>

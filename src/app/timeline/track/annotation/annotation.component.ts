@@ -11,10 +11,15 @@ import { Annotation } from '../../../models/models';
 export class AnnotationComponent implements OnInit {
 
   @Input() data:Annotation;
+  @Input() event:Event;
 
   constructor() {}
 
   ngOnInit() {
   }
 
+  moveCursor($event) {
+    log.debug($event);
+    $event.stopPropagation();
+  }
 }

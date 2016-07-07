@@ -16,6 +16,7 @@ export class TimelineComponent implements OnInit {
 
   title = 'timeline works!';
   @Input() duration:number;
+
   cursorTime;
   cursorDisplayTime;
 
@@ -41,7 +42,7 @@ export class TimelineComponent implements OnInit {
     this.cursorTime = $event.offsetX / $event.currentTarget.offsetWidth * 100,100;
     this.cursorDisplayTime = extround($event.offsetX / $event.currentTarget.offsetWidth * 100,100);
     //log.debug("offsetX",$event.offsetX, "targetWidth",$event.target.offsetWidth);
-    //log.debug($event.currentTarget);
+    //log.debug($event.currentTarget.className);
   }
 
   constructor() {
