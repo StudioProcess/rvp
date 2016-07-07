@@ -10,6 +10,7 @@ $annotation-category-width: 10px;
 
   .annotation-order {
     font-weight: 500;
+    height: 35px;
   }
 
   .inline-list-annotation-order,
@@ -48,7 +49,7 @@ $annotation-category-width: 10px;
   }
 
   .scroll-annotation {
-    height: 350px;
+    height: ($video-and-inspector-height - 35);
     overflow: scroll;
   }
 
