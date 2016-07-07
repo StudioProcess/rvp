@@ -32,15 +32,15 @@ export class TimelineComponent implements OnInit {
     }
   };
 
-  moveCursor($event) {
+  moveCursor($moveEvent) {
 
     function extround(myvalue,n) {
       myvalue = (Math.round(myvalue * n) / n);
       return myvalue;
     }
 
-    this.cursorTime = $event.offsetX / $event.currentTarget.offsetWidth * 100,100;
-    this.cursorDisplayTime = extround($event.offsetX / $event.currentTarget.offsetWidth * 100,100);
+    this.cursorTime = $moveEvent.offsetX / $moveEvent.currentTarget.offsetWidth * 100,100;
+    this.cursorDisplayTime = extround($moveEvent.offsetX / $moveEvent.currentTarget.offsetWidth * 100,100);
     //log.debug("offsetX",$event.offsetX, "targetWidth",$event.target.offsetWidth);
     //log.debug($event.currentTarget.className);
   }

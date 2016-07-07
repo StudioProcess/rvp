@@ -1,7 +1,10 @@
 <div
   class="annotation"
   (mousemove)="moveCursor($event)"
+  (mouseover)="hoverOver($event)"
+  (mouseout)="hoverOut($event)"
   [style.left]="data.utc_timestamp + '%'"
   [style.width]="data.duration + '%'"
+  [style.backgroundColor]="backcolor"
   >
 <div>

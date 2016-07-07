@@ -11,15 +11,23 @@ import { Annotation } from '../../../models/models';
 export class AnnotationComponent implements OnInit {
 
   @Input() data:Annotation;
-  @Input() event:Event;
+  @Input() backcolor:string;
 
   constructor() {}
 
   ngOnInit() {
   }
 
-  moveCursor($event) {
-    log.debug($event);
-    $event.stopPropagation();
+  hoverOver($hoverEvent){
+    //this.backcolor = "#FF0000";
+  }
+
+  hoverOut($hoverEvent){
+    //this.backcolor = "#FFFFFF";
+  }
+
+  moveCursor($moveEvent) {
+    log.debug($moveEvent);
+    $moveEvent.stopPropagation();
   }
 }

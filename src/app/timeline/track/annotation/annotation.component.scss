@@ -5,6 +5,7 @@
   height: 20px;
   top: 0;
   background-color: $dark-gray;
-
-  //pointer-events: none; // only temporary
+}
+.annotation:hover {
+  background-color: $medium-gray;
 }
