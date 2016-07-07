@@ -1,5 +1,9 @@
 @import '../../settings';
 
+:host {
+  pointer-events: none;
+}
+
 .playhead {
   background-color: $dark-gray;
   display: block;

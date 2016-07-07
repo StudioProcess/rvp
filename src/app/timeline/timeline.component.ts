@@ -15,6 +15,7 @@ export class TimelineComponent implements OnInit {
 
   title = 'timeline works!';
   @Input() duration:number;
+  playheadTime;
 
   annotation:Annotation = {
     utc_timestamp: 10,
@@ -24,6 +25,12 @@ export class TimelineComponent implements OnInit {
       description: "dancer enters stage"
     }
   };
+
+  moveCursor($event) {
+    this.playheadTime = $event.offsetX / $event.target.offsetWidth * 100;
+    //log.debug("offsetX",$event.offsetX, "targetWidth",$event.target.offsetWidth);
+    log.debug($event.target);
+  }
 
   constructor() {
   }
