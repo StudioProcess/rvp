@@ -3,6 +3,9 @@ import { Component, AfterViewInit } from '@angular/core';
 import * as localforage from 'localforage';
 import { provideStore } from '@ngrx/store';
 
+import { Project } from './models';
+import mockData from './mock-data';
+
 // import { BackendService } from './backend/backend.service';
 import { LocalStorageService } from './backend/local-storage.service';
 import { SimpleBackendService } from './backend/simple-backend.service';
@@ -27,18 +30,24 @@ declare var $:any;
 })
 export class AppComponent implements AfterViewInit {
 
+  projectData:Project;
   title = 'app works!';
-  videoSrc = 'http://www.sample-videos.com/video/mp4/240/big_buck_bunny_240p_1mb.mp4';
+  videoSrc;
 
   constructor(private backend:SimpleBackendService) {
     log.debug('app component');
 
-    this.backend.retrieveVideo().then(blob => {
-      this.videoSrc = URL.createObjectURL(blob);
-      log.info('video retrieved:', blob);
-    }).catch(err => {
-      log.error('retrieve video:', err);
-    });
+    // get mock data
+    this.projectData = mockData;
+    log.debug('data retrieved', this.projectData);
+    this.videoSrc = this.projectData.video.url;
+
+    // this.backend.retrieveVideo().then(blob => {
+    //   this.videoSrc = URL.createObjectURL(blob);
+    //   log.info('video retrieved:', blob);
+    // }).catch(err => {
+    //   log.error('retrieve video:', err);
+    // });
   }
 
   ngAfterViewInit() {
