@@ -1,6 +1,6 @@
 @import '../inspector.component.scss';
 
-$annotation-category-width: 10px;
+$annotation-category-width: 2px;
 
 .testrow {
   background-color: #342687;
@@ -29,10 +29,6 @@ textarea {
 }
 
 .annotation-category-color {
-  min-width: $annotation-category-width;
-  max-width: $annotation-category-width;
-  left: 0;
-  height: 100%;
   background-color: #ff5840;
 }
 

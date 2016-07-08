@@ -49,6 +49,13 @@ $annotation-category-width: 10px;
     overflow: scroll;
   }
 
+  table {
+    display: block;
+    height: ($video-and-inspector-height - 35);
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+
 
   .annotation-category-grey {
     //width: $annotation-category-width;
