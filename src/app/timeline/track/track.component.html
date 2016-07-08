@@ -1,4 +1,6 @@
-<p>
-  track
-  <app-annotation></app-annotation>
-</p>
+<div class="track">
+  <p>{{data.fields.title}}</p>
+  <div class="annotations">
+    <app-annotation *ngFor="let annotation of data.annotations" [data]="annotation"></app-annotation>
+  </div>
+</div>

@@ -11,7 +11,7 @@ let data:Project = {
   },
 
   timeline: {
-    duration: 5 * 60, // 5 min
+    duration: 210, // 3:30 min
     playhead: 1 * 60, // 1 min
     zoom: 1,
     pan: 0,

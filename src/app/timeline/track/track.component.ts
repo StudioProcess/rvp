@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { AnnotationComponent } from './annotation';
+import { Track, Annotation } from '../../shared/models';
 
 @Component({
   moduleId: module.id,
@@ -10,7 +11,10 @@ import { AnnotationComponent } from './annotation';
 })
 export class TrackComponent implements OnInit {
 
-  constructor() {}
+  @Input() data:Track;
+
+  constructor() {
+  }
 
   ngOnInit() {
   }

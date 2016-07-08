@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { TrackComponent } from './track';
 import { PlayheadComponent } from './playhead';
 import { CursorComponent } from './cursor';
-import { AnnotationComponent } from './track/annotation';
 import { Timeline, Annotation } from '../shared/models';
 
 @Component({
@@ -10,7 +9,7 @@ import { Timeline, Annotation } from '../shared/models';
   selector: 'app-timeline',
   templateUrl: 'timeline.component.html',
   styleUrls: ['timeline.component.css'],
-  directives: [TrackComponent, PlayheadComponent, CursorComponent, AnnotationComponent]
+  directives: [TrackComponent, PlayheadComponent, CursorComponent]
 })
 export class TimelineComponent implements OnInit {
 
@@ -44,9 +43,7 @@ export class TimelineComponent implements OnInit {
     //log.debug($event.currentTarget.className);
   }
 
-  playheadClick($clickEvent){
-
-    log.debug("bla");
+  playheadClick($clickEvent) {
 
     function extround(myvalue,n) {
       myvalue = (Math.round(myvalue * n) / n);

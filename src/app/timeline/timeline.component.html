@@ -1,12 +1,8 @@
 <!-- TIMELINE -->
 <div class="timeline-test" (mousemove)="moveCursor($event)" (mousedown)="playheadClick($event)">
-    <app-annotation [data]="annotation"></app-annotation>
+
     <app-cursor [time]="cursorTime" [displayTime]="cursorDisplayTime"></app-cursor> <!-- cursor -->
     <app-playhead [time]="playheadTime" [displayTime]="playheadDisplayTime"></app-playhead> <!-- playhead -->
-  <!--
-  Timeline
-  <app-track></app-track>
-  <app-track></app-track>
-  <app-track></app-track>
--->
+
+    <app-track *ngFor="let track of data.tracks" [data]="track"></app-track>
 </div>
