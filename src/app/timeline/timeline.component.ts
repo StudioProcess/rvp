@@ -1,9 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { TrackComponent } from './track/track.component';
-import { PlayheadComponent } from './playhead/playhead.component';
-import { CursorComponent } from './cursor/cursor.component';
-import { AnnotationComponent } from './track/annotation/annotation.component';
-import { Annotation } from '../models/models';
+import { PlayheadComponent } from './playhead';
+import { CursorComponent } from './cursor';
+import { AnnotationComponent } from './track/annotation';
+import { Annotation } from '../shared/models';
 
 @Component({
   moduleId: module.id,

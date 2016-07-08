@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Annotation } from '../../../models/models';
+import { Annotation } from '../../../shared/models';
 
 @Component({
   moduleId: module.id,

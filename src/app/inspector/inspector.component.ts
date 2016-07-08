@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { EntryComponent } from './entry/entry.component';
-import { Annotation } from '../models/models';
+import { EntryComponent } from './entry';
+import { Annotation } from '../shared/models';
 
 @Component({
   moduleId: module.id,
