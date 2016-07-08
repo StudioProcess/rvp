@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { EntryComponent } from './entry';
 import { Annotation } from '../shared/models';
 
@@ -10,27 +10,27 @@ import { Annotation } from '../shared/models';
   directives: [EntryComponent]
 })
 export class InspectorComponent implements OnInit {
+  @Input() entries:Annotation[];
 
-  title = 'inspector works!';
+  // entry:Annotation = {
+  //   utc_timestamp: 3234,
+  //   duration: 1,
+  //   fields:{
+  //     title: "Titel of Annotation",
+  //     description: "dancer enters stage"
+  //   }
+  // };
 
-  entry:Annotation = {
-    utc_timestamp: 3234,
-    duration: 1,
-    fields:{
-      title: "Titel of Annotation",
-      description: "dancer enters stage"
-    }
-  };
-
-  entries:Annotation[] = [];
+  // constructor() {
+  //   this.entries.push(this.entry);
+  //   this.entries.push(this.entry);
+  //   this.entries.push(this.entry);
+  //   this.entries.push(this.entry);
+  //   this.entries.push(this.entry);
+  //   this.entries.push(this.entry);
+  // }
 
   constructor() {
-    this.entries.push(this.entry);
-    this.entries.push(this.entry);
-    this.entries.push(this.entry);
-    this.entries.push(this.entry);
-    this.entries.push(this.entry);
-    this.entries.push(this.entry);
   }
 
   ngOnInit() {

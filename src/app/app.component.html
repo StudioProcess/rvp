@@ -19,12 +19,12 @@
   <div class="row video-and-inspector">
     <div class="column video-component">
       <!-- VIDEO COMPONENT -->
-      <app-video [videoSrc]="videoSrc"></app-video>
+      <app-video [videoSrc]="videoSrc | async"></app-video>
     </div>
 
     <div class="column small-4 inspector-component">
       <!-- INSPECTOR COMPONENT -->
-      <app-inspector></app-inspector>
+      <app-inspector [entries]='inspectorEntries | async'></app-inspector>
     </div>
   </div>
 
