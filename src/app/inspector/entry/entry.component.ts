@@ -3,7 +3,7 @@ import { Annotation } from '../../shared/models';
 
 @Component({
   moduleId: module.id,
-  selector: 'app-entry',
+  selector: '[app-entry]',
   templateUrl: 'entry.component.html',
   styleUrls: ['entry.component.css']
 })

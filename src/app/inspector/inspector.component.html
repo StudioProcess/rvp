@@ -10,8 +10,20 @@
 </div>
 <!-- END SORT BY ROW -->
 
-<app-entry *ngFor="let entry of entries" [entry]="entry"></app-entry>
+<table class="hover">
+  <thead>
+    <tr>
+      <th width="20"></th>
+      <th width="80">Start</th>
+      <th>Title/Description</th>
+      <th width="80">Duration</th>
+    </tr>
+  </thead>
 
+  <tbody>
+      <tr app-entry *ngFor="let entry of entries" [entry]="entry"></tr>
+  </tbody>
+</table>
 
 
 
