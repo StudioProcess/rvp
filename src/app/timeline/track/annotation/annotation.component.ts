@@ -30,4 +30,8 @@ export class AnnotationComponent implements OnInit {
     //log.debug($moveEvent);
     $moveEvent.stopPropagation();
   }
+
+  clickAnnotation($clickEvent){
+    $clickEvent.stopPropagation();
+  }
 }
