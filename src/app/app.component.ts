@@ -6,9 +6,8 @@ import { provideStore } from '@ngrx/store';
 import { Project } from './shared/models';
 import mockData from './shared/mock-data';
 
-// import { BackendService } from './backend/backend.service';
-import { LocalStorageService } from './backend/local-storage.service';
-import { SimpleBackendService } from './backend/simple-backend.service';
+// import { BackendService } from './backend';
+import { LocalStorageService, SimpleBackendService } from './backend';
 
 import { VideoComponent } from './video';
 import { InspectorComponent } from './inspector';

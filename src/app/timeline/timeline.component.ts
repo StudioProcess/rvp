@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { TrackComponent } from './track/track.component';
+import { TrackComponent } from './track';
 import { PlayheadComponent } from './playhead';
 import { CursorComponent } from './cursor';
 import { AnnotationComponent } from './track/annotation';
