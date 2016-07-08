@@ -34,16 +34,13 @@ $annotation-category-width: 10px;
   .annotation-category-title {
     font-weight: 500;
     background-color: $light-gray;
-    //margin-left: 0.5em;
     padding-top: 0.5em;
-    padding-right: 0.2em;
     padding-bottom: 0.5em;
-    margin-bottom: 0em;
     border-bottom: 1px solid $white;
   }
 
   .annotation-category-grey {
-    width: $annotation-category-width;
+    //width: $annotation-category-width;
     background-color: $medium-gray;
   }
 
@@ -52,37 +49,21 @@ $annotation-category-width: 10px;
     overflow: scroll;
   }
 
-  .annotation-category-red {
-    width: $annotation-category-width;
-    background-color: #ff5840;
-  }
+
   .annotation-category-grey {
-    width: $annotation-category-width;
+    //width: $annotation-category-width;
     background-color: $dark-gray;
   }
   .annotation-category-grey:hover {
-    width: $annotation-category-width;
+    //width: $annotation-category-width;
     background-color: $medium-gray;
   }
   .annotation-category-blue {
-    width: $annotation-category-width;
+    //width: $annotation-category-width;
     background-color: #3d93d9;
   }
   .annotation-category-blank {
-    width: $annotation-category-width;
-  }
-
-  .annotation-content {
-    padding-right: 0.2em;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
-    border-bottom: 1px solid $white;
-  }
-
-  .annotation-row {
-    background-color: $light-gray;
-    //margin-left: 0.5em;
-    margin-bottom: 0em;
+    //width: $annotation-category-width;
   }
 
   .annotation-row:hover {
@@ -90,10 +71,4 @@ $annotation-category-width: 10px;
     //border-right: 1px solid $dark-gray;
     //border-top: 1px solid $dark-gray;
     //border-bottom: 1px solid $dark-gray;
-  }
-
-  .row {
-    margin-left: 0;
-    margin-right: 0;
-    width: 100%;
   }

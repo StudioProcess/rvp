@@ -1,5 +1,44 @@
+<!-- SORT BY ROW -->
+<div class="small-12 row columns main-video-annotation-sidebar annotation-order">
+    <ul class="inline-list inline-list-annotation-order">
+
+      <li>Sort by:</li>
+      <li style="text-decoration:underline;"><a href="#">Chronological</a></li>
+      <li><a href="#">Type</a></li>
+      <li><a href="#">Custom</a></li>
+    </ul>
+</div>
+<!-- END SORT BY ROW -->
+
+<!-- ANNOTATIONS -->
+<div class="scroll-annotation">
+  <div class="row small-12 annotation-category-title">
+    <div class="small-1 columns annotation-category-blank"></div>
+    <div class="columns small-2 align-self-middle">Time</div>
+    <div class="columns align-left">Title/Description</div>
+  </div>
+
+  <app-entry *ngFor="let entry of entries" [entry]="entry"></app-entry>
+</div>
+<!-- END ANNOTATIONS -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
 <div class="main-video-annotation-sidebar">
+
   <div class="row">
+
     <div class="large-12 columns annotation-order">
       <ul class="inline-list inline-list-annotation-order">
 
@@ -9,15 +48,17 @@
         <li><a href="#">Custom</a></li>
       </ul>
     </div>
-    <div>
 
-      <div class="row scroll-annotation">
-        <div class="row annotation-category-title">
-          <div class="annotation-category-blank"></div>
+      <div class="row small-12 scroll-annotation">
+        <div class="row small-12 annotation-category-title">
+          <div class="small-1 columns annotation-category-blank"></div>
           <div class="columns small-2 align-self-middle">Time</div>
-          <div class="columns align-left">Title/Description</div>
+          <div class="columns small-9 align-left">Title/Description</div>
         </div>
 
         <app-entry *ngFor="let entry of entries" [entry]="entry"></app-entry>
       </div>
-    </div>
+
+  </div>
+</div>
+-->

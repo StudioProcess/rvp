@@ -1,5 +1,40 @@
-<div class="row annotation-row">
-  <div class="annotation-category-grey"></div> <!-- color from track -->
+<div class="small-12 row annotation-row">
+  <div class="small-1 columns">
+    <div class="annotation-category-color"></div>
+  </div>
+
+  <div class="small-2 columns annotation-content">
+    <label>
+      <textarea value="{{ entry.utc_timestamp }}"></textarea>
+    </label>
+  </div>
+
+  <div class="columns annotation-content">
+    <label>
+      <textarea class="description" value="{{ entry.fields.description }}"></textarea>
+    </label>
+  </div>
+
+  <div class="small-1 columns">
+    ^
+    <!-- for re-ordering -->
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!--
+<div class="small-12 row annotation-row">
+  <div class="small-1 columns annotation-category-grey"></div> <!-- color from track -->
+  <!--
   <div class="small-2 columns annotation-content">
     <label>
       <textarea value="{{ entry.utc_timestamp }}"></textarea>
@@ -11,3 +46,4 @@
     </label>
   </div>
 </div>
+-->

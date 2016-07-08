@@ -1,5 +1,11 @@
 @import '../inspector.component.scss';
 
+$annotation-category-width: 10px;
+
+.testrow {
+  background-color: #342687;
+}
+
 textarea {
   background-color: transparent;
   border: 1px solid transparent;
@@ -9,8 +15,33 @@ textarea {
   min-width: 60px;
 }
 
+.annotation-row {
+  background-color: $light-gray;
+  //margin-left: 0.5em;
+  margin-bottom: 0em;
+}
+
+.annotation-content {
+  //padding-right: 0.2em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid $white;
+}
+
+.annotation-category-color {
+  min-width: $annotation-category-width;
+  max-width: $annotation-category-width;
+  left: 0;
+  height: 100%;
+  background-color: #ff5840;
+}
+
+.annotation-category-color:hover {
+  background-color: $medium-gray;
+}
+
 .description{
-  min-height: 70px;
+  //min-height: 70px;
 }
 
 textarea:hover {
