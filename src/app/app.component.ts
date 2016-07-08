@@ -3,7 +3,7 @@ import { Store, provideStore } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { stubReducer } from './reducers';
-import { Project, Annotation } from './shared/models';
+import { Project, Annotation, Timeline } from './shared/models';
 import mockData from './shared/mock-data';
 
 import * as localforage from 'localforage';
@@ -30,6 +30,7 @@ export class AppComponent implements AfterViewInit {
 
   videoSrc:Observable<string>;
   inspectorEntries:Observable<Annotation[]>;
+  timelineData:Observable<Timeline>;
 
   constructor(private store:Store<Project>) {
     log.debug('app component');
@@ -41,6 +42,12 @@ export class AppComponent implements AfterViewInit {
         return annotations.concat(track.annotations);
       }, []);
     });
+
+    this.timelineData = store.select('timeline') as Observable<Timeline>;
+
+    // this.timelineData.subscribe(data => {
+    //   log.debug('timeline data', data);
+    // })
 
     // log.debug(store);
 

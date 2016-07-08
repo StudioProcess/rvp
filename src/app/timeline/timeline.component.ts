@@ -3,7 +3,7 @@ import { TrackComponent } from './track';
 import { PlayheadComponent } from './playhead';
 import { CursorComponent } from './cursor';
 import { AnnotationComponent } from './track/annotation';
-import { Annotation } from '../shared/models';
+import { Timeline, Annotation } from '../shared/models';
 
 @Component({
   moduleId: module.id,
@@ -14,8 +14,7 @@ import { Annotation } from '../shared/models';
 })
 export class TimelineComponent implements OnInit {
 
-  title = 'timeline works!';
-  @Input() duration:number;
+  @Input() data:Timeline;
 
   cursorTime;
   cursorDisplayTime;

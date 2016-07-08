@@ -30,7 +30,7 @@
 
   <!-- TIMELINE COMPONENT -->
   <div class="row column timeline-component">
-    <app-timeline></app-timeline>
+    <app-timeline [data]='timelineData | async'></app-timeline>
   </div>
   <!-- TIMELINE COMPONENT END-->
   <!-- MAIN LAYOUT END -->
