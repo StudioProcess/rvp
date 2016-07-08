@@ -2,17 +2,19 @@
 
 $annotation-category-width: 2px;
 
-.testrow {
-  background-color: #342687;
-}
-
 textarea {
+  font-size: 13px;
+  line-height: 16px;
   background-color: transparent;
   border: 1px solid transparent;
   box-shadow: none;
   resize: none;
   margin: 0;
   min-width: 60px;
+}
+
+table,tr,td {
+  padding: 0 !important;
 }
 
 .annotation-row {
