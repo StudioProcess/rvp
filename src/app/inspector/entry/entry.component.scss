@@ -3,18 +3,23 @@
 $annotation-category-width: 2px;
 
 textarea {
-  font-size: 13px;
-  line-height: 16px;
+  font-size: 14px;
+  line-height: 15px;
   background-color: transparent;
   border: 1px solid transparent;
   box-shadow: none;
   resize: none;
   margin: 0;
-  min-width: 60px;
+  min-height: 60px;
+  padding: 0.4em;
+}
+
+th {
+  font-size: 12px;
 }
 
 table,tr,td {
-  padding: 0 !important;
+  padding: 0.5em !important;
 }
 
 .annotation-row {
@@ -38,8 +43,12 @@ table,tr,td {
   background-color: $medium-gray;
 }
 
-.description{
-  //min-height: 70px;
+.description {
+
+}
+
+.number {
+  text-align: center;
 }
 
 textarea:hover {
