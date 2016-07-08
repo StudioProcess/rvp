@@ -28,13 +28,13 @@ declare var $:any;
 })
 export class AppComponent implements AfterViewInit {
 
-  videoSrc:Observable<any>;
-  inspectorEntries:Observable<any>;
+  videoSrc:Observable<string>;
+  inspectorEntries:Observable<Annotation[]>;
 
   constructor(private store:Store<Project>) {
     log.debug('app component');
 
-    this.videoSrc = store.select('video', 'url');
+    this.videoSrc = store.select('video', 'url') as Observable<string>;
 
     this.inspectorEntries = store.select(data => {
       return data.timeline.tracks.reduce((annotations, track) => {
