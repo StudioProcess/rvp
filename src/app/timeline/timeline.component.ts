@@ -45,6 +45,20 @@ export class TimelineComponent implements OnInit {
     //log.debug($event.currentTarget.className);
   }
 
+  playheadClick($clickEvent){
+
+    log.debug("bla");
+
+    function extround(myvalue,n) {
+      myvalue = (Math.round(myvalue * n) / n);
+      return myvalue;
+    }
+
+    this.playheadTime = $clickEvent.offsetX / $clickEvent.currentTarget.offsetWidth * 100,100;
+    this.playheadDisplayTime = extround($clickEvent.offsetX / $clickEvent.currentTarget.offsetWidth * 100,100);
+
+  }
+
   constructor() {
   }
 

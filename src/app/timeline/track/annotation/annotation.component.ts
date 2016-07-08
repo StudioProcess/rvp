@@ -27,7 +27,7 @@ export class AnnotationComponent implements OnInit {
   }
 
   moveCursor($moveEvent) {
-    log.debug($moveEvent);
+    //log.debug($moveEvent);
     $moveEvent.stopPropagation();
   }
 }
