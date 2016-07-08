@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AnnotationComponent } from './annotation/annotation.component';
+import { AnnotationComponent } from './annotation';
 
 @Component({
   moduleId: module.id,

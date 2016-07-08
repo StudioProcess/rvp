@@ -3,19 +3,17 @@ import { Component, AfterViewInit } from '@angular/core';
 import * as localforage from 'localforage';
 import { provideStore } from '@ngrx/store';
 
-import { Project } from './models';
-import mockData from './mock-data';
+import { Project } from './shared/models';
+import mockData from './shared/mock-data';
 
 // import { BackendService } from './backend/backend.service';
 import { LocalStorageService } from './backend/local-storage.service';
 import { SimpleBackendService } from './backend/simple-backend.service';
 
-import { TimelineComponent } from './timeline/timeline.component';
-import { InspectorComponent } from './inspector/inspector.component';
-import { VideoComponent } from './video/video.component';
-import { FilepickerComponent } from './filepicker/filepicker.component';
-import { ProjectInfoComponent } from './project-info/project-info.component';
-import { ProjectIoComponent } from './project-io/project-io.component';
+import { VideoComponent } from './video';
+import { InspectorComponent } from './inspector';
+import { TimelineComponent } from './timeline';
+import { FilepickerComponent, InfoComponent, IoComponent } from './project-handling';
 
 declare var $:any;
 
@@ -25,7 +23,7 @@ declare var $:any;
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
-  directives: [TimelineComponent, InspectorComponent, VideoComponent, FilepickerComponent, ProjectInfoComponent, ProjectIoComponent],
+  directives: [TimelineComponent, InspectorComponent, VideoComponent, FilepickerComponent, InfoComponent, IoComponent],
   providers: [LocalStorageService, SimpleBackendService]
 })
 export class AppComponent implements AfterViewInit {
