@@ -1,17 +1,12 @@
-<td class="annotation-category-color">
-</td>
-<td>
-  <label>
-    <textarea class="number" value="{{ entry.utc_timestamp | time }}"></textarea>
-  </label>
-</td>
-<td>
-  <label>
-    <textarea class="description" value="{{ entry.fields.description }}"></textarea>
-  </label>
-</td>
-<td>
-  <label>
-    <textarea class="number" value="{{ entry.duration | time }}"></textarea>
-  </label>
-</td>
+<div class="annotation-track-color"></div>
+<div class="timedisplay"> <!-- <div class="column small-3"> -->
+  <div class="row column icon">
+    <img src="../../img/clock_start.png" alt="annotation start time"  title="annotation start time" width="10px"><input type="value" class="number" value="{{ entry.utc_timestamp | time }}">
+  </div>
+  <div class="row column icon">
+    <img src="../../img/clock_duration.png" alt="annotation duration"  title="annotation duration" width="10px"><input type="value" class="number" value="{{ entry.duration | time }}">
+  </div>
+</div>
+<div class="column">
+  <textarea class="description" value="{{ entry.fields.description }}"></textarea>
+</div>
