@@ -4,8 +4,8 @@
   (mouseover)="hoverOver($event)"
   (mouseout)="hoverOut($event)"
   (mousedown)="clickAnnotation($event)"
-  [style.left]="timestamp + '%'"
-  [style.width]="duration + '%'"
+  [style.left.%]="timestamp"
+  [style.width.%]="duration"
   [style.backgroundColor]="backcolor"
   >
 <div>
