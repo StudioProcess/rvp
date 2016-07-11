@@ -1,7 +1,8 @@
+import { enableProdMode, PLATFORM_PIPES } from '@angular/core';
 import { bootstrap } from '@angular/platform-browser-dynamic';
-import { enableProdMode } from '@angular/core';
 import * as log from 'loglevel';
 import { AppComponent, environment } from './app/';
+import { TimePipe } from './app/shared/time.pipe';
 
 // setup global logger
 log.enableAll();
@@ -22,5 +23,10 @@ if (environment.production) {
   enableProdMode();
 }
 
+// configure global/app providers
+let providers = [
+  { provide: PLATFORM_PIPES, useValue: [TimePipe], multi:true } // globally available pipes
+];
+
 // run app
-bootstrap(AppComponent);
+bootstrap(AppComponent, providers);
