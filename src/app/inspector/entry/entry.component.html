@@ -1,10 +1,10 @@
-<div class="column small-1 annotation-track-color" ></div>
-<div class="column small-3">
-  <div class="row column">
-    <textarea class="number" value="{{ entry.utc_timestamp | time }}"></textarea>
+<div class="annotation-track-color"></div>
+<div class="timedisplay"> <!-- <div class="column small-3"> -->
+  <div class="row column icon">
+    <img src="../../img/clock_start.png" alt="annotation start time"  title="annotation start time" width="10px"><input type="value" class="number" value="{{ entry.utc_timestamp | time }}">
   </div>
-  <div class="row column">
-    <textarea class="number" value="{{ entry.duration | time }}"></textarea>
+  <div class="row column icon">
+    <img src="../../img/clock_duration.png" alt="annotation duration"  title="annotation duration" width="10px"><input type="value" class="number" value="{{ entry.duration | time }}">
   </div>
 </div>
 <div class="column">

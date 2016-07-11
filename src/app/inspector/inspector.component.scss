@@ -2,12 +2,7 @@
 @import '../video/video.component.scss';
 @import '../app.component.scss';
 
-
-$annotation-category-width: 10px;
-
 // DESKTOP LAYOUT
-
-
   .annotation-order {
     font-weight: 500;
     height: 35px;
@@ -43,21 +38,6 @@ $annotation-category-width: 10px;
     //width: $annotation-category-width;
     background-color: $medium-gray;
   }
-
-  .scroll-annotation {
-    height: ($video-and-inspector-height - 35);
-    overflow: scroll;
-  }
-
-  table {
-    font-size: 14px;
-    display: block;
-    height: ($video-and-inspector-height - 35);
-    overflow-y: scroll;
-    overflow-x: hidden;
-  }
-
-
   .annotation-category-grey {
     //width: $annotation-category-width;
     background-color: $dark-gray;
@@ -73,7 +53,6 @@ $annotation-category-width: 10px;
   .annotation-category-blank {
     //width: $annotation-category-width;
   }
-
   .annotation-row:hover {
     background-color: $super-light-gray;
     //border-right: 1px solid $dark-gray;
