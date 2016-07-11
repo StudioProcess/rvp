@@ -10,12 +10,13 @@ textarea {
   box-shadow: none;
   resize: none;
   margin: 0;
-  //min-height: 60px;
+  min-height: 60px !important;
   padding: 0.4em;
 }
 
 textarea:hover {
   border: 1px solid $medium-gray;
+  background-color: $light-gray;
 }
 
 textarea:focus {
@@ -54,6 +55,7 @@ textarea:focus {
 .timedisplay {
   padding-left: 0.4em;
   input {
+    background-color: transparent;
     margin-left: 0.2em;
   }
 }
