@@ -10,7 +10,7 @@ textarea {
   box-shadow: none;
   resize: none;
   margin: 0;
-  min-height: 60px;
+  //min-height: 60px;
   padding: 0.4em;
 }
 
@@ -47,7 +47,8 @@ table,tr,td {
   border-bottom: 1px solid $white;
 }
 
-.annotation-category-color {
+.annotation-track-color {
+  width: 10px;
   background-color: #ff5840;
 }
 

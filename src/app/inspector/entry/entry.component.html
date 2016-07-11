@@ -1,17 +1,12 @@
-<td class="annotation-category-color">
-</td>
-<td>
-  <label>
+<div class="column small-1 annotation-track-color" ></div>
+<div class="colum small-3">
+  <div class="row column">
     <textarea class="number" value="{{ entry.utc_timestamp | time }}"></textarea>
-  </label>
-</td>
-<td>
-  <label>
-    <textarea class="description" value="{{ entry.fields.description }}"></textarea>
-  </label>
-</td>
-<td>
-  <label>
+  </div>
+  <div class="row column">
     <textarea class="number" value="{{ entry.duration | time }}"></textarea>
-  </label>
-</td>
+  </div>
+</div>
+<div class="colum">
+  <textarea class="description" value="{{ entry.fields.description }}"></textarea>
+</div>
