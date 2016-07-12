@@ -1,1 +1,3 @@
-<div app-entry *ngFor="let entry of entries" [entry]="entry" class="row" style="background-color: #f0f2f0; padding-top: 0.2em; padding-bottom: 0.2em;"></div>
+<div class="scroll-container">
+  <div app-entry *ngFor="let entry of entries" [entry]="entry"></div>
+</div>

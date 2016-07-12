@@ -1,5 +1,22 @@
-<div class="annotation-track-color"></div>
-<div class="timedisplay"> <!-- <div class="column small-3"> -->
+<div class="row column entry-container" style="">
+
+  <div class="row">
+    <div class="column shrink track-color" style="width:15px"> </div>
+    <div class="column">
+      <div class="row time-row" >
+        <div class="column timestamp">TIMESTAMP</div>
+        <div class="column duration">DURATION</div>
+      </div>
+      <div class="row text-row">
+        <div class="column data">TEXT CONTENT</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- <div class="annotation-track-color"></div>
+<div class="timedisplay">
   <div class="row column icon">
     <img src="../../img/clock_start.png" alt="annotation start time"  title="annotation start time" width="10px"><input type="value" class="number" value="{{ entry.utc_timestamp | time }}">
   </div>
@@ -9,4 +26,4 @@
 </div>
 <div class="column">
   <textarea class="description" value="{{ entry.fields.description }}"></textarea>
-</div>
+</div> -->

@@ -1,29 +1,10 @@
 @import '../settings';
-@import '../video/video.component.scss';
-@import '../app.component.scss';
 
-// DESKTOP LAYOUT
-  .annotation-order {
-    font-weight: 500;
-    height: 35px;
-  }
-
-  .inline-list-annotation-order,
-  li,
-  ul {
-    display: flex;
-    justify-content: space-between;
-    margin-left: 0 !important;
-    padding-right: 0.57em;
-    //text-align: left;
-    list-style-type: none;
-    //display: inline;
-    a:hover {
-      color: $dark-gray;
-    }
-    a:active {
-      text-decoration: underline;
-    }
+  // enables scrolling inside the inspector
+  .scroll-container {
+    height: $video-and-inspector-height;
+    overflow-x: hidden;
+    overflow-y: scroll;
   }
 
   .annotation-category-title {

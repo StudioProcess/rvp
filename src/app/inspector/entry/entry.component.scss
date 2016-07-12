@@ -1,79 +1,89 @@
-@import '../inspector.component.scss';
+@import '../../settings';
 
 $annotation-trackcolor-width: 15px;
 
-textarea {
-  font-size: 14px;
-  line-height: 15px;
-  background-color: transparent;
-  border: 1px solid transparent;
-  box-shadow: none;
-  resize: none;
-  margin: 0;
-  min-height: 60px !important;
-  padding: 0.2em;
-}
-
-textarea:hover {
-  border: 1px solid $medium-gray;
+.entry-container {
   background-color: $light-gray;
+  margin-bottom: 0.5em;
 }
 
-textarea:focus {
-  -moz-box-shadow:    inset 0 1px 2px rgba(0,0,0,.10), 0 -1px 1px #FFF, 0 1px 0 #FFF;
-  -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.10), 0 -1px 1px #FFF, 0 1px 0 #FFF;
-  box-shadow:         inset 0 1px 2px rgba(0,0,0,.10), 0 -1px 1px #FFF, 0 1px 0 #FFF;
-  border: 1px solid $dark-gray;
-  color: $black;
+.track-color {
+  width:15px;
+  background-color:dodgerblue; 
 }
 
-.annotation-row {
-  background-color: $light-gray;
-  //margin-left: 0.5em;
-  margin-bottom: 0em;
-}
-
-.annotation-content {
-  //padding-right: 0.2em;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
-  border-bottom: 1px solid $white;
-}
-
-.annotation-track-color {
-  width: $annotation-trackcolor-width;
-  background-color: #3d93d9;
-}
-
-.annotation-category-color:hover {
-  background-color: $medium-gray;
-}
-
-.description {
-}
-
-.timedisplay {
-  padding-left: 0.4em;
-  input {
-    background-color: transparent;
-    margin-left: 0.2em;
-  }
-}
-
-.number {
-  text-align: center;
-  width: 100px;
-  border: 1px solid transparent;
-}
-
-.number:hover {
-  border: 1px solid $medium-gray;
-}
-
-.number:focus {
-  -moz-box-shadow:    inset 0 1px 2px rgba(0,0,0,.10), 0 -1px 1px #FFF, 0 1px 0 #FFF;
-  -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.10), 0 -1px 1px #FFF, 0 1px 0 #FFF;
-  box-shadow:         inset 0 1px 2px rgba(0,0,0,.10), 0 -1px 1px #FFF, 0 1px 0 #FFF;
-  border: 1px solid $dark-gray;
-  color: $black;
-}
+// textarea {
+//   font-size: 14px;
+//   line-height: 15px;
+//   background-color: transparent;
+//   border: 1px solid transparent;
+//   box-shadow: none;
+//   resize: none;
+//   margin: 0;
+//   min-height: 60px !important;
+//   padding: 0.2em;
+// }
+//
+// textarea:hover {
+//   border: 1px solid $medium-gray;
+//   background-color: $light-gray;
+// }
+//
+// textarea:focus {
+//   -moz-box-shadow:    inset 0 1px 2px rgba(0,0,0,.10), 0 -1px 1px #FFF, 0 1px 0 #FFF;
+//   -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.10), 0 -1px 1px #FFF, 0 1px 0 #FFF;
+//   box-shadow:         inset 0 1px 2px rgba(0,0,0,.10), 0 -1px 1px #FFF, 0 1px 0 #FFF;
+//   border: 1px solid $dark-gray;
+//   color: $black;
+// }
+//
+// .annotation-row {
+//   background-color: $light-gray;
+//   //margin-left: 0.5em;
+//   margin-bottom: 0em;
+// }
+//
+// .annotation-content {
+//   //padding-right: 0.2em;
+//   padding-top: 0.5em;
+//   padding-bottom: 0.5em;
+//   border-bottom: 1px solid $white;
+// }
+//
+// .annotation-track-color {
+//   width: $annotation-trackcolor-width;
+//   background-color: #3d93d9;
+// }
+//
+// .annotation-category-color:hover {
+//   background-color: $medium-gray;
+// }
+//
+// .description {
+// }
+//
+// .timedisplay {
+//   padding-left: 0.4em;
+//   input {
+//     background-color: transparent;
+//     margin-left: 0.2em;
+//   }
+// }
+//
+// .number {
+//   text-align: center;
+//   width: 100px;
+//   border: 1px solid transparent;
+// }
+//
+// .number:hover {
+//   border: 1px solid $medium-gray;
+// }
+//
+// .number:focus {
+//   -moz-box-shadow:    inset 0 1px 2px rgba(0,0,0,.10), 0 -1px 1px #FFF, 0 1px 0 #FFF;
+//   -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.10), 0 -1px 1px #FFF, 0 1px 0 #FFF;
+//   box-shadow:         inset 0 1px 2px rgba(0,0,0,.10), 0 -1px 1px #FFF, 0 1px 0 #FFF;
+//   border: 1px solid $dark-gray;
+//   color: $black;
+// }

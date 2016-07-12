@@ -1,8 +1,5 @@
 @import 'settings';
 
-$min-width: 1050px;
-$video-and-inspector-height: 450px;
-
 .container {
   min-width:$min-width;
 }
@@ -26,11 +23,6 @@ $video-and-inspector-height: 450px;
   }
 }
 
-.scroll-annotation {
-  height: $video-and-inspector-height;
-  overflow: scroll;
-}
-
 .video-and-inspector {
   margin-bottom: 1em;
 
@@ -41,8 +33,7 @@ $video-and-inspector-height: 450px;
 
   .inspector-component {
     max-height: $video-and-inspector-height;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    overflow:hidden;
   }
 }
 
