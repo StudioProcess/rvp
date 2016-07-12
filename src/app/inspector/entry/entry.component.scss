@@ -20,6 +20,7 @@ $highlight-color: $medium-gray;
 }
 .title {
   width: 100%;
+  font-weight: 500;
   border: 1px solid transparent;
   background-color: inherit;
 }
@@ -60,9 +61,15 @@ $highlight-color: $medium-gray;
   border-color: transparent;
   box-shadow: 0 0 0 $white;
 }
+.duration-icon {
+  padding-right: 5px;
+}
+.timestamp-icon {
+  padding-right: 5px;
+}
 .number, .timestamp {
   color: $dark-gray;
-  width: 93px;
+  width: 88px;
   border: 1px solid transparent;
   background-color: inherit;
 }
@@ -75,4 +82,14 @@ $highlight-color: $medium-gray;
   outline: none;
   border-color: transparent;
   box-shadow: 0 0 0 $white;
+}
+.time-row {
+  padding-top: 1.0em;
+  padding-right: 1.0em;
+  padding-bottom: 0.5em;
+}
+
+.text-row {
+  padding-right: 1.0em;
+  padding-bottom: 1.0em;
 }

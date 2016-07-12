@@ -4,16 +4,16 @@
     <div class="column">
       <div class="row time-row" >
         <div class="column timestamp">
-        <input type="value" class="number" title="Annotation Start Time" value="{{ entry.utc_timestamp | time }}"><i class="fi-clock" title="Annotation Start Time"></i>
+        <label><i class="ion-ios-time timestamp-icon" title="Start Time"></i><input id="timestamp-input" type="value" class="number" title="Start Time" value="{{ entry.utc_timestamp | time }}"></label>
         </div>
         <div class="column duration">
-          <i class="fi-arrow-right" title="Annotation Duration"></i><input type="value" class="number" title="Annotation Duration" value="{{ entry.duration | time }}">
+          <label><i class="ion-ios-time-outline duration-icon" title="Duration"></i><input type="value" class="number" title="Duration" value="{{ entry.duration | time }}"></label>
         </div>
       </div>
       <div class="row text-row">
         <div class="column data">
-          <input type="value" class="title" title="Annotation Start Time" value="{{ entry.fields.title }}">
-          <textarea class="description" value="{{ entry.fields.description }}"></textarea>
+          <input type="value" class="title" title="Title" value="{{ entry.fields.title }}">
+          <textarea class="description" title="Description" value="{{ entry.fields.description }}"></textarea>
         </div>
       </div>
     </div>
