@@ -15,4 +15,5 @@ $video-height: 450px;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow:hidden; // fixes video content slightly overflowing the container 
 }
