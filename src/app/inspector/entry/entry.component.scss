@@ -1,89 +1,59 @@
 @import '../../settings';
-
 $annotation-trackcolor-width: 15px;
-
+$outline-width: 3px;
+$highlight-color: #dedede;
 .entry-container {
   background-color: $light-gray;
-  margin-bottom: 0.5em;
+  border: $black solid transparent;
+  margin-bottom: 0.3em;
 }
-
+.entry-container:hover {
+  outline-offset: (-$outline-width);
+  outline: $outline-width solid $black;
+}
+:host:nth-child(odd) .entry-container {
+  background-color: $white;
+}
 .track-color {
-  width:15px;
-  background-color:dodgerblue; 
+  width: 15px;
+  background-color: #2198e6;
 }
+textarea {
+  font-size: 14px;
+  line-height: 15px;
+  resize: none;
+  margin: 0;
+  min-height: 60px !important;
+  padding: 0.2em;
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 $white;
+  background-color: inherit;
+}
+textarea:hover {
+  color: $dark-gray;
+}
+textarea:focus {
+  color: $black;
+  background-color: $highlight-color;
+}
+.duration {
+  display: flex;
+  justify-content: flex-end;
 
-// textarea {
-//   font-size: 14px;
-//   line-height: 15px;
-//   background-color: transparent;
-//   border: 1px solid transparent;
-//   box-shadow: none;
-//   resize: none;
-//   margin: 0;
-//   min-height: 60px !important;
-//   padding: 0.2em;
-// }
-//
-// textarea:hover {
-//   border: 1px solid $medium-gray;
-//   background-color: $light-gray;
-// }
-//
-// textarea:focus {
-//   -moz-box-shadow:    inset 0 1px 2px rgba(0,0,0,.10), 0 -1px 1px #FFF, 0 1px 0 #FFF;
-//   -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.10), 0 -1px 1px #FFF, 0 1px 0 #FFF;
-//   box-shadow:         inset 0 1px 2px rgba(0,0,0,.10), 0 -1px 1px #FFF, 0 1px 0 #FFF;
-//   border: 1px solid $dark-gray;
-//   color: $black;
-// }
-//
-// .annotation-row {
-//   background-color: $light-gray;
-//   //margin-left: 0.5em;
-//   margin-bottom: 0em;
-// }
-//
-// .annotation-content {
-//   //padding-right: 0.2em;
-//   padding-top: 0.5em;
-//   padding-bottom: 0.5em;
-//   border-bottom: 1px solid $white;
-// }
-//
-// .annotation-track-color {
-//   width: $annotation-trackcolor-width;
-//   background-color: #3d93d9;
-// }
-//
-// .annotation-category-color:hover {
-//   background-color: $medium-gray;
-// }
-//
-// .description {
-// }
-//
-// .timedisplay {
-//   padding-left: 0.4em;
-//   input {
-//     background-color: transparent;
-//     margin-left: 0.2em;
-//   }
-// }
-//
-// .number {
-//   text-align: center;
-//   width: 100px;
-//   border: 1px solid transparent;
-// }
-//
-// .number:hover {
-//   border: 1px solid $medium-gray;
-// }
-//
-// .number:focus {
-//   -moz-box-shadow:    inset 0 1px 2px rgba(0,0,0,.10), 0 -1px 1px #FFF, 0 1px 0 #FFF;
-//   -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.10), 0 -1px 1px #FFF, 0 1px 0 #FFF;
-//   box-shadow:         inset 0 1px 2px rgba(0,0,0,.10), 0 -1px 1px #FFF, 0 1px 0 #FFF;
-//   border: 1px solid $dark-gray;
-//   color: $black;
-// }
+}
+.number {
+  width: 93px;
+  border: 1px solid transparent;
+  background-color: inherit;
+}
+.number:hover {
+  color: $dark-gray;
+}
+input:focus {
+  color: $black;
+  background-color: $highlight-color;
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 $white;
+}

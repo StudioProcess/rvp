@@ -1,14 +1,19 @@
-<div class="row column entry-container" style="">
-
+<div class="row column entry-container">
   <div class="row">
-    <div class="column shrink track-color" style="width:15px"> </div>
+    <div class="column shrink track-color"> </div>
     <div class="column">
       <div class="row time-row" >
-        <div class="column timestamp">TIMESTAMP</div>
-        <div class="column duration">DURATION</div>
+        <div class="column timestamp">
+        <input type="value" class="number" title="Annotation Start Time" value="{{ entry.utc_timestamp | time }}"><i class="fi-clock" title="Annotation Start Time"></i>
+        </div>
+        <div class="column duration">
+          <i class="fi-clock" title="Annotation Duration"></i><input type="value" class="number" title="Annotation Duration" value="{{ entry.duration | time }}">
+        </div>
       </div>
       <div class="row text-row">
-        <div class="column data">TEXT CONTENT</div>
+        <div class="column data">
+          <textarea class="description" value="{{ entry.fields.description }}"></textarea>
+        </div>
       </div>
     </div>
   </div>
