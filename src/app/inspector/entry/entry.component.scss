@@ -1,7 +1,7 @@
 @import '../../settings';
 $annotation-trackcolor-width: 15px;
 $outline-width: 3px;
-$highlight-color: $medium-gray;
+$highlight-color: $white;
 .entry-container {
   background-color: $light-gray;
   border: $black solid transparent;
@@ -12,7 +12,7 @@ $highlight-color: $medium-gray;
   outline: $outline-width solid $black;
 }
 :host:nth-child(even) .entry-container {
-  background-color: $super-light-gray;
+  background-color: #f6f6f6;
 }
 .track-color {
   width: 15px;
