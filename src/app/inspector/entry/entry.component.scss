@@ -50,7 +50,6 @@ $highlight-color: $white;
   background-color: $highlight-color;
 }
 .duration {
-  color: $dark-gray;
   display: flex;
   justify-content: flex-end;
 }
@@ -62,9 +61,11 @@ $highlight-color: $white;
   box-shadow: 0 0 0 $white;
 }
 .duration-icon {
+  color: $dark-gray;
   padding-right: 5px;
 }
 .timestamp-icon {
+  color: $dark-gray;
   padding-right: 5px;
 }
 .number, .timestamp {
