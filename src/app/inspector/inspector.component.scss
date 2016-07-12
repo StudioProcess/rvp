@@ -6,29 +6,6 @@
     overflow-x: hidden;
     overflow-y: scroll;
   }
-
-  .annotation-category-grey {
-    //width: $annotation-category-width;
-    background-color: $medium-gray;
-  }
-  .annotation-category-grey {
-    //width: $annotation-category-width;
-    background-color: $dark-gray;
-  }
-  .annotation-category-grey:hover {
-    //width: $annotation-category-width;
-    background-color: $medium-gray;
-  }
-  .annotation-category-blue {
-    //width: $annotation-category-width;
-    background-color: #3d93d9;
-  }
-  .annotation-category-blank {
-    //width: $annotation-category-width;
-  }
-  .annotation-row:hover {
-    background-color: $super-light-gray;
-    //border-right: 1px solid $dark-gray;
-    //border-top: 1px solid $dark-gray;
-    //border-bottom: 1px solid $dark-gray;
+  .settings {
+    color: $dark-gray;
   }

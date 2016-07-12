@@ -18,31 +18,50 @@ $highlight-color: #dedede;
   width: 15px;
   background-color: #2198e6;
 }
-textarea {
+.title {
+  width: 100%;
+  border: 1px solid transparent;
+  background-color: inherit;
+}
+.title:hover {
+  color: $dark-gray;
+}
+.title:focus {
+  color: $black;
+  background-color: $highlight-color;
+}
+.description {
   font-size: 14px;
   line-height: 15px;
   resize: none;
   margin: 0;
-  min-height: 60px !important;
   padding: 0.2em;
   outline: none;
   border-color: transparent;
   box-shadow: 0 0 0 $white;
   background-color: inherit;
 }
-textarea:hover {
+.description:hover {
   color: $dark-gray;
 }
-textarea:focus {
+.description:focus {
   color: $black;
   background-color: $highlight-color;
 }
 .duration {
+  color: $dark-gray;
   display: flex;
   justify-content: flex-end;
-
 }
-.number {
+.duration:focus {
+  color: $black;
+  background-color: $highlight-color;
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 $white;
+}
+.number, .timestamp {
+  color: $dark-gray;
   width: 93px;
   border: 1px solid transparent;
   background-color: inherit;
@@ -50,7 +69,7 @@ textarea:focus {
 .number:hover {
   color: $dark-gray;
 }
-input:focus {
+.number:focus, .duration:focus, .title:focus {
   color: $black;
   background-color: $highlight-color;
   outline: none;
