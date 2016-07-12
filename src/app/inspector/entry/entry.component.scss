@@ -1,18 +1,18 @@
 @import '../../settings';
 $annotation-trackcolor-width: 15px;
 $outline-width: 3px;
-$highlight-color: #dedede;
+$highlight-color: $medium-gray;
 .entry-container {
   background-color: $light-gray;
   border: $black solid transparent;
-  margin-bottom: 0.3em;
+  //margin-bottom: 0.3em;
 }
 .entry-container:hover {
   outline-offset: (-$outline-width);
   outline: $outline-width solid $black;
 }
 :host:nth-child(even) .entry-container {
-  background-color: $white;
+  background-color: $super-light-gray;
 }
 .track-color {
   width: 15px;
