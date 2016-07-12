@@ -4,9 +4,9 @@ let data:Project = {
 
   video: {
     id: null,
-    url: 'http://www.sample-videos.com/video/mp4/240/big_buck_bunny_240p_1mb.mp4',
+    url: 'http://www.html5videoplayer.net/videos/toystory.mp4',
     meta: {
-      filename: 'big_buck_bunny_240p_1mb.mp4'
+      filename: 'toystory.mp4'
     }
   },
 

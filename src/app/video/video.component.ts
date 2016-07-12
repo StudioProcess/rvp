@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, ElementRef } from '@angular/core';
 import 'video.js'; // creates global videojs() function
 
 @Component({
@@ -11,11 +11,13 @@ export class VideoComponent implements OnInit, AfterViewInit {
 
   player; // VideoJS Player instance
   playerReady; // Promise. resolves when player is ready
+  playerOptions = {
+
+  };
 
   @Input()
   set videoSrc(src) {
     this.playerReady.then(() => {
-      // console.log('player ready', this.player);
       this.player.src(src);
     });
   }
@@ -27,7 +29,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
     return null;
   }
 
-  constructor() {
+  constructor(public hostElement: ElementRef) {
     let resolveFn;
     this.playerReady = new Promise(function(resolve) {
       resolveFn = resolve;
@@ -39,10 +41,20 @@ export class VideoComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.player = videojs('videojs');
-    this.player.fluid(true);
-    this.player.aspectRatio("16:9");
-    this.playerReady.resolve();
+    this.player = videojs('videojs', this.playerOptions, () => {
+      // player ready
+      this.playerReady.resolve();
+      this.fitPlayer();
+      window.addEventListener('resize', () => {
+        this.fitPlayer();
+      });
+    });
+  }
+
+  fitPlayer() {
+    let elementDim = this.hostElement.nativeElement.getBoundingClientRect();
+    this.player.width(elementDim.width);
+    this.player.height(elementDim.height);
   }
 
 }
