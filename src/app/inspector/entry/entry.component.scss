@@ -11,7 +11,7 @@ $highlight-color: #dedede;
   outline-offset: (-$outline-width);
   outline: $outline-width solid $black;
 }
-:host:nth-child(odd) .entry-container {
+:host:nth-child(even) .entry-container {
   background-color: $white;
 }
 .track-color {
