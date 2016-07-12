@@ -1,4 +1,8 @@
-<!-- <div class="large-12 video-title">Video Material</div> -->
-<div class="video-area large-12" multiple>
-  <video id="videojs" class="video-js video-file vjs-big-play-centered" controls></video>
+<div class="video-area" multiple>
+  <video id="videojs" class="video-js video-file vjs-big-play-centered"
+    controls
+    (play)="onPlay($event)"
+    (pause)="onPause($event)"
+    (seeking)="onSeeking($event)">
+  </video>
 </div>
