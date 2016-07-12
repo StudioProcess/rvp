@@ -68,6 +68,7 @@ $highlight-color: $white;
   padding-right: 5px;
 }
 .number, .timestamp {
+  font-weight: 500;
   color: $dark-gray;
   width: 88px;
   border: 1px solid transparent;
