@@ -1,3 +1,56 @@
+@import '../../settings';
+
+$highlight-color: $white;
+$outline-width: 3px;
+
+.track-container {
+  padding: 0.4em;
+  background-color: #ff0;
+  min-height: 60px;
+  margin-bottom: 0.2em;
+}
+
+.track-container:hover {
+  outline-offset: (-$outline-width);
+  outline: $outline-width solid $black;
+}
+
+.title {
+  display:inline-block;
+  //background-color: #678909;
+}
+
+.annotation-container{
+  //position: relative;
+}
+
 .annotations {
-  position:relative;
+  position: relative;
+}
+
+.title-input {
+  display: inline-block;
+  width: 105px;
+  font-weight: 500;
+  //color: $dark-gray;
+  border: 1px solid transparent;
+  background-color: inherit;
+}
+
+.title-input:hover {
+  color: $dark-gray;
+}
+
+.title-input:focus {
+  color: $black;
+  background-color: $highlight-color;
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 $white;
+}
+
+.title-icon {
+  //color: $dark-gray;
+  padding-left: 5px;
+  padding-right: 5px;
 }

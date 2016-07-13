@@ -1,6 +1,31 @@
-<div class="track">
-  <p>{{data.fields.title}}</p>
+<div class="track-container">
+  <div class="row column">
+    <div class="row">
+      <div class="column shrink title">
+        <label><i class="ion-clipboard title-icon" title="Start Time"></i>
+          <input id="timestamp-input" type="value" class="title-input" title="Start Time"
+          value="{{data.fields.title}}"></label>
+      </div>
+      <div class="column shrink">Color</div>
+      <div class="column shrink">Händel</div>
+    </div>
+    <div class="row">
+      <div class="column">
+        <div class="annotation-container">
+          <div class="annotations">
+            <app-annotation *ngFor="let annotation of data.annotations" [data]="annotation"></app-annotation>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="track">
+  <div class="title">
+
+    </div>
   <div class="annotations">
     <app-annotation *ngFor="let annotation of data.annotations" [data]="annotation"></app-annotation>
   </div>
-</div>
+</div> -->
