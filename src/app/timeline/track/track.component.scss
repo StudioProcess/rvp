@@ -11,7 +11,7 @@ $outline-width: 3px;
   min-height: 65px;
   margin-top: 0.2em;
   margin-bottom: 0.2em;
-  background-color: #f6f6f6;
+  background-color: $process-super-light-gray;
 
 }
 
@@ -68,7 +68,7 @@ $outline-width: 3px;
 .annotation-row {
   width: 100%;
   height: 20px;
-  background-color: $light-gray;
+  background-color: $process-light-gray;
 }
 
 .track-color {

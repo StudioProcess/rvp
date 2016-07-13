@@ -3,7 +3,7 @@ $annotation-trackcolor-width: 15px;
 $outline-width: 3px;
 $highlight-color: $white;
 .entry-container {
-  background-color: $light-gray;
+  background-color: $process-light-gray;
   border: $black solid transparent;
   //margin-bottom: 0.3em;
 }
@@ -12,7 +12,7 @@ $highlight-color: $white;
   outline: $outline-width solid $black;
 }
 :host:nth-child(even) .entry-container {
-  background-color: #f6f6f6;
+  background-color: $process-super-light-gray;
 }
 .track-color {
   width: 15px;

@@ -25,7 +25,7 @@ let data:Project = {
         annotations: [
           {
             utc_timestamp: 60,
-            duration: 0,
+            duration: 5,
             fields: {
               title: '1 min',
               description: 'Marks one minute elapsed'
