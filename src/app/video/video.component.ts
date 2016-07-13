@@ -60,10 +60,10 @@ export class VideoComponent implements OnInit {
       Observable.interval(this.timeupdateRate).takeUntil(pause$) // emits poll events until player pauses
     ).merge(seeking$).throttleTime(this.timeupdateRate*0.9);
     // emit updated times on this stream
-    const timeupdateStream = pollStream.map(() => this.player.currentTime());
+    const timeupdateStream = pollStream.map(() => this.player.currentTime()).distinctUntilChanged();
     // forward to output
     timeupdateStream.subscribe(this.timeupdate);
-    this.timeupdate.subscribe((time) => { log.debug('time updated', time) }); // test
+    // this.timeupdate.subscribe((time) => { log.debug('time updated', time) }); // test
   }
 
   // fit player to available space (use on window resize)
