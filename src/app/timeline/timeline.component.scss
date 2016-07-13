@@ -3,11 +3,13 @@
 .timeline {
   width: 100%;
   padding-top: 1em;
-  min-height: 200px;
+  margin-bottom: 5em;
+  //min-height: 200px;
 }
 
 .timeline-test {
-  background-color: $light-gray;
+  //background-color: $light-gray;
   position: relative;
-  height: 150px;
+  min-height: 50px;
+  margin-bottom: 5em;
 }

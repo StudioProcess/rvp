@@ -1,3 +1,85 @@
+@import '../../settings';
+
+$highlight-color: $white;
+$outline-width: 3px;
+
+.track-container {
+  padding-top: 0.4em;
+  padding-bottom: 2.4em;
+  padding-left: 0.4em;
+  padding-right: 0.4em;
+  min-height: 65px;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+  background-color: #f6f6f6;
+
+}
+
+.track-container:hover {
+  outline-offset: (-$outline-width);
+  outline: $outline-width solid $black;
+}
+
+.title {
+  display:inline-block;
+}
+
+.annotation-container{
+  //position: relative;
+}
+
 .annotations {
-  position:relative;
+  position: relative;
+}
+
+.title-input {
+  display: inline-block;
+  width: 105px;
+  font-weight: 500;
+  //color: $dark-gray;
+  border: 1px solid transparent;
+  background-color: inherit;
+}
+
+.title-input:hover {
+  color: $dark-gray;
+}
+
+.title-input:focus {
+  color: $black;
+  background-color: $highlight-color;
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 $white;
+}
+
+.title-icon, .track-color-icon {
+  //color: $dark-gray;
+  padding-left: 5px;
+  padding-right: 1px;
+}
+
+.title-row {
+  padding-bottom: 0.5em;
+}
+
+.annotation-row {
+  width: 100%;
+  height: 20px;
+  background-color: $light-gray;
+}
+
+.track-color {
+  height: 3px;
+  width: 124px;
+  // background: red; /* For browsers that do not support gradients */
+  // background: -webkit-linear-gradient(left, red , $light-gray, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray); /* For Safari 5.1 to 6.0 */
+  // background: -o-linear-gradient(right, red, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray); /* For Opera 11.1 to 12.0 */
+  // background: -moz-linear-gradient(right, red, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray); /* For Firefox 3.6 to 15 */
+  // background: linear-gradient(to right, red , $light-gray, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray); /* Standard syntax */
+}
+hr {
+     color: #f00;
+     background: #f00;
+     height: 1px;
 }
