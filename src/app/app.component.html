@@ -12,10 +12,10 @@
       <img src=".././img/rv-logo_1000px.png" width="40px" alt="Research Video Logo" title="Research Video">
     </div>
     <div class="column settings">
-      <label><a data-open="exampleModal1"><i class="ion-information-circled settings" title="Project Settings"></i> Info</a></label>
+      <label><a data-open="project-info"><i class="ion-information-circled settings" title="Project Settings"></i> Info</a></label>
     </div>
     <div class="column shrink settings">
-      <label><a data-open="exampleModal1"><i class="ion-ios-gear settings" title="Project Settings"></i> Project Settings</a></label>
+      <label><a data-open="settings-reveal"><i class="ion-ios-gear settings" title="Project Settings"></i> Project Settings</a></label>
     </div>
   </div>
   <!-- MENU BAR LINK END -->
@@ -51,11 +51,20 @@
 
 
 <!-- MODAL: PROJECT HANDLING -->
-<div class="reveal" id="exampleModal1" data-reveal>
+<div class="reveal" id="settings-reveal" data-reveal>
   <h1><img src="../img/rv-logo_1000px.png" width="60px"> Project Handling</h1>
   <app-filepicker (filePicked)="videoFilePicked($event)"></app-filepicker>
   <app-info></app-info>
   <app-io></app-io>
+  <button class="close-button" data-close aria-label="Close modal" type="button">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<!-- MODAL: PROJECT INFORMATION -->
+<div class="reveal" id="project-info" data-reveal>
+  <h1>Project Information</h1>
+  General Information about project and contributers. Also: possibly space for short application help/guidelines.
   <button class="close-button" data-close aria-label="Close modal" type="button">
     <span aria-hidden="true">&times;</span>
   </button>
