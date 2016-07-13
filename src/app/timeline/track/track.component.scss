@@ -4,11 +4,15 @@ $highlight-color: $white;
 $outline-width: 3px;
 
 .track-container {
-  padding: 0.4em;
+  padding-top: 0.4em;
+  padding-bottom: 2.4em;
+  padding-left: 0.4em;
+  padding-right: 0.4em;
   min-height: 65px;
   margin-top: 0.2em;
   margin-bottom: 0.2em;
-  background-color: $light-gray;
+  background-color: #f6f6f6;
+
 }
 
 .track-container:hover {
@@ -56,17 +60,23 @@ $outline-width: 3px;
 }
 
 .title-row {
-  //background-color: $super-light-gray;
   padding-bottom: 0.5em;
 }
 
 .annotation-row {
-  background-color: $white;
+  width: 100%;
+  height: 20px;
+  background-color: $light-gray;
 }
 
 .track-color {
-  width: 20px;
-  height: 20px;
+  height: 3px;
+  width: 124px;
+  // background: red; /* For browsers that do not support gradients */
+  // background: -webkit-linear-gradient(left, red , $light-gray, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray); /* For Safari 5.1 to 6.0 */
+  // background: -o-linear-gradient(right, red, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray); /* For Opera 11.1 to 12.0 */
+  // background: -moz-linear-gradient(right, red, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray); /* For Firefox 3.6 to 15 */
+  // background: linear-gradient(to right, red , $light-gray, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray); /* Standard syntax */
 }
 hr {
      color: #f00;
