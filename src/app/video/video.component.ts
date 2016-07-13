@@ -1,6 +1,5 @@
-import { Component, OnInit, AfterViewInit, Input, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, Output, ElementRef, EventEmitter } from '@angular/core';
 import 'video.js'; // creates global videojs() function
-
 import { Observable, Subject } from 'rxjs/Rx';
 
 @Component({
@@ -9,20 +8,17 @@ import { Observable, Subject } from 'rxjs/Rx';
   templateUrl: 'video.component.html',
   styleUrls: ['video.component.css']
 })
-export class VideoComponent implements OnInit, AfterViewInit {
+export class VideoComponent implements OnInit {
 
-  player; // VideoJS Player instance
-  playerReady; // Promise that resolves when player is ready
-  playerOptions = {}; // Options to pass to VideoJS player
+  private player; // VideoJS Player instance
+  private playerReady; // Promise that resolves when player is ready
+  private playerOptions = {}; // Options to pass to VideoJS player
+  private timeupdateRate = 30; // in milliseconds
 
-  private timepolling:Observable<number>; //
-  private pollingSubscription;
+  // emits player time updates (in seconds)
+  @Output() timeupdate = new EventEmitter<number>();
 
-  timeupdate:Subject<number> = new Subject<number>();
-  timeupdateRate = 30; // ms
-
-  @Input()
-  set videoSrc(src) {
+  @Input() set videoSrc(src) {
     this.playerReady.then(() => {
       this.player.src(src);
     });
@@ -41,20 +37,9 @@ export class VideoComponent implements OnInit, AfterViewInit {
       resolveFn = resolve;
     });
     this.playerReady.resolve = resolveFn;
-
-    this.timepolling = Observable.interval(this.timeupdateRate).map(() => {
-      return this.player.currentTime();
-    });
-
-    this.timeupdate.subscribe((time) => {
-      log.debug('polling time', time);
-    });
   }
 
   ngOnInit() {
-  }
-
-  ngAfterViewInit() {
     this.player = videojs('videojs', this.playerOptions, () => {
       // player ready
       this.playerReady.resolve();
@@ -63,26 +48,28 @@ export class VideoComponent implements OnInit, AfterViewInit {
         this.fitPlayer();
       });
     });
+
+    // setup player event streams
+    const el = this.hostElement.nativeElement.querySelector('video'); // player/video DOM element
+    const play$ = Observable.fromEvent(el, 'play');
+    const pause$ = Observable.fromEvent(el, 'pause');
+    const seeking$ = Observable.fromEvent(el, 'seeking');
+
+    // emit events when the current player time should be polled
+    const pollStream = play$.flatMapTo(
+      Observable.interval(this.timeupdateRate).takeUntil(pause$) // emits poll events until player pauses
+    ).merge(seeking$).throttleTime(this.timeupdateRate*0.9);
+    // emit updated times on this stream
+    const timeupdateStream = pollStream.map(() => this.player.currentTime());
+    // forward to output
+    timeupdateStream.subscribe(this.timeupdate);
+    this.timeupdate.subscribe((time) => { log.debug('time updated', time) }); // test
   }
 
+  // fit player to available space (use on window resize)
   private fitPlayer() {
     let elementDim = this.hostElement.nativeElement.getBoundingClientRect();
     this.player.dimensions(elementDim.width, elementDim.height);
-  }
-
-  onPlay(event?) {
-    log.debug('play', event);
-    this.pollingSubscription = this.timepolling.subscribe(this.timeupdate);
-  }
-
-  onPause(event?) {
-    log.debug('pause', event);
-    this.pollingSubscription.unsubscribe();
-  }
-
-  onSeeking(event?) {
-    log.debug('seeking', event);
-    this.timeupdate.next(this.player.currentTime());
   }
 
 
