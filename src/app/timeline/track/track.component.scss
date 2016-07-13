@@ -5,9 +5,10 @@ $outline-width: 3px;
 
 .track-container {
   padding: 0.4em;
-  background-color: #ff0;
   min-height: 60px;
+  margin-top: 0.2em;
   margin-bottom: 0.2em;
+  background-color: $light-gray;
 }
 
 .track-container:hover {
@@ -17,7 +18,6 @@ $outline-width: 3px;
 
 .title {
   display:inline-block;
-  //background-color: #678909;
 }
 
 .annotation-container{
@@ -53,4 +53,11 @@ $outline-width: 3px;
   //color: $dark-gray;
   padding-left: 5px;
   padding-right: 5px;
+}
+
+.title-row{
+  //background-color: $white;
+}
+
+.annotation-row {
 }
