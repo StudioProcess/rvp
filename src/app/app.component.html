@@ -18,7 +18,7 @@
   <div class="row video-and-inspector">
     <div class="column video-component">
       <!-- VIDEO COMPONENT -->
-      <app-video [videoSrc]="videoSrc | async"></app-video>
+      <app-video [videoSrc]="videoSrc | async" (timeupdate)="onVideoTimeupdate($event)"></app-video>
     </div>
 
     <div class="column small-4 inspector-component">

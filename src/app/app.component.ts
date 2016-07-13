@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { Store, provideStore } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
@@ -31,6 +31,7 @@ export class AppComponent implements AfterViewInit {
   videoSrc:Observable<string>;
   inspectorEntries:Observable<Annotation[]>;
   timelineData:Observable<Timeline>;
+  @ViewChild(VideoComponent) private video:VideoComponent; // inject video component child (available AfterViewInit)
 
   constructor(private store:Store<Project>) {
     log.debug('app component');
@@ -70,6 +71,8 @@ export class AppComponent implements AfterViewInit {
   ngAfterViewInit() {
     log.debug("app after view init");
     $(document).foundation();
+
+    // this.video.timeupdate.subscribe((time) => { log.debug(time) });
   }
 
   videoFilePicked(event) {
@@ -88,5 +91,9 @@ export class AppComponent implements AfterViewInit {
     // }).catch(err => {
     //   log.error('store video:', err);
     // });
+  }
+
+  onVideoTimeupdate(time) {
+    log.debug('video time updated:', time);
   }
 }
