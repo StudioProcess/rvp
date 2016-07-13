@@ -15,9 +15,11 @@ $outline-width: 3px;
 
 }
 
-.track-container:hover {
-  outline-offset: (-$outline-width);
-  outline: $outline-width solid $black;
+:host.highlighted {
+  .track-container {
+    outline-offset: (-$outline-width);
+    outline: $outline-width solid $black;
+  }
 }
 
 .title {
