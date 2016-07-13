@@ -18,7 +18,7 @@ let data:Project = {
     tracks: [
       // 1st track
       {
-        color: '#ff3d3d', // red
+        color: '#f6d751', // '#ff3d3d', // red
         fields: {
           title: 'Minute marks'
         },
@@ -52,7 +52,7 @@ let data:Project = {
 
       // 2nd track
       {
-        color: '#2870f4', // blue
+        color: '#FE5F55', //'#2870f4', // blue
         fields: {
           title: 'Some durations'
         },
@@ -94,7 +94,7 @@ let data:Project = {
 
       // 3nd track
       {
-        color: '#f4bd28', // orange
+        color: '#5684e3', //'#f4bd28', // orange
         fields: {
           title: 'Mixed'
         },
@@ -153,6 +153,32 @@ let data:Project = {
             fields: {
               title: 'G',
               description: "We call this annotation 'G'. It's a marker at 3:15 mins."
+            }
+          }
+        ]
+      },
+
+      // 4th track
+      {
+        color: '#333745', //'#f4bd28', // orange
+        fields: {
+          title: 'Highlights'
+        },
+        annotations: [
+          {
+            utc_timestamp: 5,
+            duration: 40,
+            fields: {
+              title: 'A long annotation.',
+              description: "Annotation starts at 5 seconds and lasts 40 seconds. Yes, that's a pretty long annotation."
+            }
+          },
+          {
+            utc_timestamp: 50,
+            duration: 15,
+            fields: {
+              title: 'A medium-length annotation of 15 seconds.',
+              description: "Start ist at 50 seconds — lasting for 15 seconds."
             }
           }
         ]
