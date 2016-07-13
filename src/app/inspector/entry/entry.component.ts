@@ -11,6 +11,7 @@ export class EntryComponent implements OnInit {
 
   title = 'inspectorentry works!';
   @Input() entry:Annotation;
+  @Input() color:string;
 
   constructor() {
 
