@@ -2,7 +2,7 @@
   <div class="row">
     <div class="column shrink"><div class="track-color" [style.backgroundColor]="data.color"></div></div>
     <div class="column">
-      <div class="row time-row" >
+      <div class="row time-row collapse spacer-right">
         <div class="column timestamp">
         <label><i class="ion-ios-time-outline timestamp-icon" title="Start Time"></i><input id="timestamp-input" type="value" class="number" title="Start Time" value="{{ data.annotation.utc_timestamp | time }}"></label>
         </div>
@@ -10,7 +10,7 @@
           <label><i class="ion-ios-time duration-icon" title="Duration"></i><input type="value" class="number" title="Duration" value="{{ data.annotation.duration | time }}"></label>
         </div>
       </div>
-      <div class="row text-row">
+      <div class="row text-row collapse spacer-right">
         <div class="column data">
           <input type="value" class="title" title="Title" value="{{ data.annotation.fields.title }}">
           <textarea class="description" title="Description" value="{{ data.annotation.fields.description }}"></textarea>
