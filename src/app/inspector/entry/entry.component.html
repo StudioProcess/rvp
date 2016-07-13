@@ -1,19 +1,19 @@
 <div class="row column entry-container">
   <div class="row">
-    <div class="column shrink track-color"> </div>
+    <div class="column shrink"><div class="track-color" [style.backgroundColor]="data.color"></div></div>
     <div class="column">
       <div class="row time-row" >
         <div class="column timestamp">
-        <label><i class="ion-ios-time-outline timestamp-icon" title="Start Time"></i><input id="timestamp-input" type="value" class="number" title="Start Time" value="{{ entry.utc_timestamp | time }}"></label>
+        <label><i class="ion-ios-time-outline timestamp-icon" title="Start Time"></i><input id="timestamp-input" type="value" class="number" title="Start Time" value="{{ data.annotation.utc_timestamp | time }}"></label>
         </div>
         <div class="column duration">
-          <label><i class="ion-ios-time duration-icon" title="Duration"></i><input type="value" class="number" title="Duration" value="{{ entry.duration | time }}"></label>
+          <label><i class="ion-ios-time duration-icon" title="Duration"></i><input type="value" class="number" title="Duration" value="{{ data.annotation.duration | time }}"></label>
         </div>
       </div>
       <div class="row text-row">
         <div class="column data">
-          <input type="value" class="title" title="Title" value="{{ entry.fields.title }}">
-          <textarea class="description" title="Description" value="{{ entry.fields.description }}"></textarea>
+          <input type="value" class="title" title="Title" value="{{ data.annotation.fields.title }}">
+          <textarea class="description" title="Description" value="{{ data.annotation.fields.description }}"></textarea>
         </div>
       </div>
     </div>
@@ -24,12 +24,12 @@
 <!-- <div class="annotation-track-color"></div>
 <div class="timedisplay">
   <div class="row column icon">
-    <img src="../../img/clock_start.png" alt="annotation start time"  title="annotation start time" width="10px"><input type="value" class="number" value="{{ entry.utc_timestamp | time }}">
+    <img src="../../img/clock_start.png" alt="annotation start time"  title="annotation start time" width="10px"><input type="value" class="number" value="{{ data.utc_timestamp | time }}">
   </div>
   <div class="row column icon">
-    <img src="../../img/clock_duration.png" alt="annotation duration"  title="annotation duration" width="10px"><input type="value" class="number" value="{{ entry.duration | time }}">
+    <img src="../../img/clock_duration.png" alt="annotation duration"  title="annotation duration" width="10px"><input type="value" class="number" value="{{ data.duration | time }}">
   </div>
 </div>
 <div class="column">
-  <textarea class="description" value="{{ entry.fields.description }}"></textarea>
+  <textarea class="description" value="{{ data.fields.description }}"></textarea>
 </div> -->

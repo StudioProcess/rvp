@@ -29,6 +29,11 @@ export interface Annotation {
   fields?: Fields;
 }
 
+export interface InspectorEntry {
+  annotation: Annotation;
+  color: string;
+}
+
 // Track containing annotations and metadata
 export interface Track {
   annotations: Annotation[];

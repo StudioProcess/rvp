@@ -3,7 +3,7 @@ import { Store, provideStore } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { stubReducer } from './reducers';
-import { Project, Annotation, Timeline } from './shared/models';
+import { Project, InspectorEntry, Timeline } from './shared/models';
 import mockData from './shared/mock-data';
 
 import * as localforage from 'localforage';
@@ -29,21 +29,29 @@ declare var $:any;
 export class AppComponent implements AfterViewInit {
 
   videoSrc:Observable<string>;
-  inspectorEntries:Observable<Annotation[]>;
+  inspectorEntries:Observable<InspectorEntry[]>;
   timelineData:Observable<Timeline>;
   @ViewChild(VideoComponent) private video:VideoComponent; // inject video component child (available AfterViewInit)
 
   constructor(private store:Store<Project>) {
     log.debug('app component');
 
+    // video data
     this.videoSrc = store.select('video', 'url') as Observable<string>;
 
-    this.inspectorEntries = store.select(data => {
-      return data.timeline.tracks.reduce((annotations, track) => {
-        return annotations.concat(track.annotations);
-      }, []);
+    // inspector data
+    this.inspectorEntries = store.select(state => {
+      return state.timeline.tracks.reduce( (acc, track) => {
+        // map annotations to [ [annotation, color], ...]
+        let color = track.color;
+        let annotationsWithColor = track.annotations.map(annotation => {
+          return {annotation, color}; });
+        return acc.concat(annotationsWithColor);
+      }, [] );
     });
+    // this.inspectorEntries.subscribe((data) => { log.debug(data); })
 
+    // timeline data
     this.timelineData = store.select('timeline') as Observable<Timeline>;
 
     // this.timelineData.subscribe(data => {

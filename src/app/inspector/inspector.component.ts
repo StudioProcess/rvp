@@ -10,7 +10,7 @@ import { Annotation } from '../shared/models';
   directives: [EntryComponent]
 })
 export class InspectorComponent implements OnInit {
-  @Input() entries:Annotation[];
+  @Input() entries:any[];
 
   // entry:Annotation = {
   //   utc_timestamp: 3234,

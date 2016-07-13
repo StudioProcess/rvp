@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Annotation } from '../../shared/models';
+import { InspectorEntry } from '../../shared/models';
 
 @Component({
   moduleId: module.id,
@@ -10,10 +10,9 @@ import { Annotation } from '../../shared/models';
 export class EntryComponent implements OnInit {
 
   title = 'inspectorentry works!';
-  @Input() entry:Annotation;
+  @Input() data:InspectorEntry;
 
   constructor() {
-
   }
 
   ngOnInit() {
