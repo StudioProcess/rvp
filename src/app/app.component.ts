@@ -46,7 +46,9 @@ export class AppComponent implements AfterViewInit {
         let color = track.color;
         let annotationsWithColor = track.annotations.map(annotation => {
           return {annotation, color}; });
-        return acc.concat(annotationsWithColor);
+        acc = acc.concat(annotationsWithColor);
+        acc.sort(this.compareEntries);
+        return acc;
       }, [] );
     });
     // this.inspectorEntries.subscribe((data) => { log.debug(data); })
@@ -103,5 +105,10 @@ export class AppComponent implements AfterViewInit {
 
   onVideoTimeupdate(time) {
     log.debug('video time updated:', time);
+  }
+
+  // compare function to sort entries by timestamp
+  private compareEntries(a:InspectorEntry, b:InspectorEntry):number {
+    return a.annotation.utc_timestamp - b.annotation.utc_timestamp;
   }
 }
