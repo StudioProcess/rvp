@@ -1,11 +1,7 @@
 import { Component, OnInit, AfterViewInit, Input, ElementRef } from '@angular/core';
 import 'video.js'; // creates global videojs() function
 
-import { Observable } from 'rxjs/Observable';
-import { Subject } from "rxjs/Subject";
-// import 'rxjs/observable/interval';
-import 'rxjs/Rx'; // TODO: proper feature imports for Rx
-
+import { Observable, Subject } from 'rxjs/Rx';
 
 @Component({
   moduleId: module.id,
