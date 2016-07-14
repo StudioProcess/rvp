@@ -15,12 +15,9 @@ $handle-content-color: $process-super-light-gray;
 }
 
 .left-handle {
-  //color: $process-light-gray;
   cursor: ew-resize;
-  //background-color: $handle-outer-color;
   text-align: left;
   width: 10px;
-  //border-left: 1px solid $black;
   &:hover {
     color: $process-super-light-gray;
     background-color: $process-dark-gray;
@@ -28,11 +25,8 @@ $handle-content-color: $process-super-light-gray;
 }
 
 .right-handle {
-  //color: $process-light-gray;
   cursor: ew-resize;
-  //background-color: $handle-outer-color;
   text-align: right;
-  //border-right: 1px solid $black;
   width: 10px;
   &:hover {
     color: $process-super-light-gray;
@@ -44,4 +38,5 @@ $handle-content-color: $process-super-light-gray;
 .content {
   width: 100%;
   text-align:center;
+  pointer-events: none;
 }
