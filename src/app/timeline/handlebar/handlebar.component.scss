@@ -5,9 +5,11 @@ $handle-content-color: $process-super-light-gray;
 
 .handlebar-container {
   height: 20px;
+  position: absolute;
 }
 .handlebar {
   display: flex;
+  //flex-direction: row;
   &:hover {
     color: $process-dark-gray;
     background-color: $process-light-gray;
