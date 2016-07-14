@@ -1,8 +1,14 @@
 <!-- TIMELINE -->
-<div class="timeline-test" (mousemove)="moveCursor($event)" (mousedown)="playheadClick($event)">
+<div class="timeline" (mousemove)="moveCursor($event)" (mousedown)="playheadClick($event)">
 
-    <!-- <app-cursor [time]="cursorTime" [displayTime]="cursorDisplayTime"></app-cursor> <!-- cursor -->
-    <!-- <app-playhead [time]="playheadTime" [displayTime]="playheadDisplayTime"></app-playhead> <!-- playhead --> 
+    <div class="timeline-header">
+      <app-handlebar class="scrollbar" [width]="'20'" [position]="'40'" [handlebarColor]="'#CCC'"></app-handlebar>
+    </div>
 
     <app-track *ngFor="let track of data.tracks" [data]="track"></app-track>
+    <!-- cursor -->
+    <!-- <app-cursor [time]="cursorTime" [displayTime]="cursorDisplayTime"></app-cursor>  -->
+    <!-- playhead -->
+    <!-- <app-playhead [time]="playheadTime" [displayTime]="playheadDisplayTime"></app-playhead>  -->
+
 </div>
