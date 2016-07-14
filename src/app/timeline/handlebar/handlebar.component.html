@@ -1,7 +1,10 @@
-<div class="handlebar"
-[style.margin-left.%]="position"
-[style.width.px]="width">
-  <div class="left-handle"><i class="ion-arrow-left-b"></i></div>
-  <div class="content"></div>
-  <div class="right-handle"><i class="ion-arrow-right-b"></i></div>
+<div class="handlbar-container"
+[style.background-color]="handlebarColor"
+[style.width.px]="width"
+[style.margin-left.%]="position">
+  <div class="handlebar input-color">
+    <div class="left-handle"><i class="ion-arrow-right-b"></i></div>
+    <div class="content" (mousedown)="mouseDown($event)">HALLO</div>
+    <div class="right-handle"><i class="ion-arrow-left-b"></i></div>
+  </div>
 </div>

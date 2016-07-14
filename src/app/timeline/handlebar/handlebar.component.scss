@@ -1,32 +1,42 @@
 @import '../../settings';
 
 $handle-outer-color: $process-dark-gray;
-$handle-content-color: $process-light-gray;
+$handle-content-color: $process-super-light-gray;
 
-.handlebar {
+.handlebar-container {
   height: 20px;
+}
+.handlebar {
   display: flex;
+  &:hover {
+    color: $process-dark-gray;
+    background-color: $process-light-gray;
+  }
 }
 
 .left-handle {
-  color: $process-light-gray;
+  //color: $process-light-gray;
   cursor: ew-resize;
-  background-color: $handle-outer-color;
-  text-align: center;
-  width: 20px;
+  //background-color: $handle-outer-color;
+  text-align: left;
+  width: 10px;
+  //border-left: 1px solid $black;
   &:hover {
-    background-color: $process-semi-dark-gray;
+    color: $process-super-light-gray;
+    background-color: $process-dark-gray;
   }
 }
 
 .right-handle {
-  color: $process-light-gray;
+  //color: $process-light-gray;
   cursor: ew-resize;
-  background-color: $handle-outer-color;
-  text-align: center;
-  width: 20px;
+  //background-color: $handle-outer-color;
+  text-align: right;
+  //border-right: 1px solid $black;
+  width: 10px;
   &:hover {
-    background-color: $process-semi-dark-gray;
+    color: $process-super-light-gray;
+    background-color: $process-dark-gray;
   }
 
 }
@@ -34,9 +44,4 @@ $handle-content-color: $process-light-gray;
 .content {
   width: 100%;
   text-align:center;
-  background-color: $handle-content-color;
-  &:hover {
-    background-color: $process-medium-gray;
-  }
-
 }

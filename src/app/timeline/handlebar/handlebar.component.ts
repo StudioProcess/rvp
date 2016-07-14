@@ -11,10 +11,18 @@ export class HandlebarComponent implements OnInit {
   // define inputs
   @Input() position:number;
   @Input() width:number;
+  @Input() handlebarColor:string;
+  @Input() text:string;
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  // export dragevent
+
+  mouseDown($mouseDownEvent){
+    log.debug("mouse down");
   }
 
 }
