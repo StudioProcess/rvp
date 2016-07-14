@@ -1,5 +1,5 @@
 @import '../../settings';
-$annotation-trackcolor-width: 15px;
+$annotation-trackcolor-width: 10px;
 $outline-width: 3px;
 $highlight-color: $white;
 .entry-container {
@@ -15,7 +15,7 @@ $highlight-color: $white;
   background-color: $process-super-light-gray;
 }
 .track-color {
-  width: 15px;
+  width: $annotation-trackcolor-width;
   height: 100%;
 }
 .title {
