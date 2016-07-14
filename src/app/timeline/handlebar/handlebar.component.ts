@@ -1,6 +1,11 @@
 import { Component, OnInit, Input, ElementRef, Output } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
+interface DragEvent {
+  type:'dragstart'|'drag'|'dragend'
+  event:MouseEvent;
+}
+
 @Component({
   moduleId: module.id,
   selector: 'app-handlebar',
@@ -15,41 +20,41 @@ export class HandlebarComponent implements OnInit {
   @Input() handlebarColor:string;
   @Input() text:string;
 
-  @Output() centerDrag:Observable<MouseEvent>;
-  @Output() leftDrag:Observable<MouseEvent>;
-  @Output() rightDrag:Observable<MouseEvent>;
+  // define outputs
+  @Output() centerDrag:Observable<DragEvent>;
+  @Output() leftDrag:Observable<DragEvent>;
+  @Output() rightDrag:Observable<DragEvent>;
 
   constructor(private hostElement:ElementRef) { }
 
   ngOnInit() {
-    let centerStreams = this.dragStreams('.handlebar');
-    let leftStreams = this.dragStreams('.left-handle');
-    let rightStreams = this.dragStreams('.right-handle');
-    this.centerDrag = centerStreams.drag;
-    this.leftDrag = leftStreams.drag;
-    this.rightDrag = rightStreams.drag;
+    // publish drag event streams
+    this.centerDrag = this.dragStream('.handlebar');
+    this.leftDrag = this.dragStream('.left-handle');
+    this.rightDrag = this.dragStream('.right-handle');
 
-    // centerStreams.dragstart.subscribe((e) => { log.debug('center dragstart', e) });
-    // centerStreams.drag.subscribe((e) => { log.debug('center drag', e) });
-    // centerStreams.dragend.subscribe((e) => { log.debug('center dragend', e) });
-    // leftStreams.dragstart.subscribe((e) => { log.debug('left dragstart', e) });
-    // leftStreams.drag.subscribe((e) => { log.debug('left drag', e) });
-    // leftStreams.dragend.subscribe((e) => { log.debug('left dragend', e) });
-    // rightStreams.dragstart.subscribe((e) => { log.debug('right dragstart', e) });
-    // rightStreams.drag.subscribe((e) => { log.debug('right drag', e) });
-    // rightStreams.dragend.subscribe((e) => { log.debug('right dragend', e) });
+    // this.centerDrag.subscribe((e) => { log.debug('centerDrag', e) });
+    // this.leftDrag.subscribe((e) => { log.debug('leftDrag', e) });
+    // this.rightDrag.subscribe((e) => { log.debug('rightDrag', e) });
   }
 
-  private dragStreams(selector:string) {
-    let stopPropagation = (e:MouseEvent) => { e.stopPropagation() };
-    const el = this.hostElement.nativeElement.querySelector(selector);
-    const down$ = Observable.fromEvent(el, 'mousedown').do(stopPropagation);
-    const move$ = Observable.fromEvent(el, 'mousemove').do(stopPropagation);
-    const up$ = Observable.fromEvent(el, 'mouseup').do(stopPropagation);
-    let drag = down$.flatMap( () => move$.takeUntil(up$) ) as Observable<MouseEvent>;
-    let dragstart = down$.flatMap( () => move$.first() ) as Observable<MouseEvent>;
-    let dragend = dragstart.flatMap( () => up$.first() ) as Observable<MouseEvent>;
-    return { drag, dragstart, dragend };
+  private dragStream(selector:string):Observable<DragEvent> {
+    // helper functions:
+    // stops propagation on the given MouseEvent
+    const stopPropagation = (e:MouseEvent) => { e.stopPropagation() };
+    // returns a function that wraps a MouseEvent with the type property and returns a DragEvent
+    const wrapEvent = (type:'dragstart'|'drag'|'dragend') => ( (event:MouseEvent):DragEvent => {return {type, event}} );
+
+    // dom event streams
+    const el = this.hostElement.nativeElement.querySelector(selector); // dom element with the given selector
+    const mousedown$ = Observable.fromEvent(el, 'mousedown').do(stopPropagation);
+    const mousemove$ = Observable.fromEvent(el, 'mousemove').do(stopPropagation);
+    const mouseup$ = Observable.fromEvent(el, 'mouseup').do(stopPropagation);
+
+    let drag = mousedown$.flatMap( () => mousemove$.skip(1).takeUntil(mouseup$) ).map( wrapEvent('drag') );
+    let start = mousedown$.flatMap( () => mousemove$.first() ).map( wrapEvent('dragstart') );
+    let end = start.flatMap( () => mouseup$.first() ).map( wrapEvent('dragend') );
+    return drag.merge(start, end);
   }
 
 }
