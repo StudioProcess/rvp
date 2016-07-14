@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, ElementRef, EventEmitter } from '@angular/core';
 import 'video.js'; // creates global videojs() function
-import { Observable, Subject } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
 
 @Component({
   moduleId: module.id,
