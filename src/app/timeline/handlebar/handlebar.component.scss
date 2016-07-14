@@ -7,6 +7,7 @@ $handle-content-color: $process-super-light-gray;
   height: 20px;
   position: absolute;
 }
+
 .handlebar {
   display: flex;
   //flex-direction: row;
@@ -34,11 +35,11 @@ $handle-content-color: $process-super-light-gray;
     color: $process-super-light-gray;
     background-color: $process-dark-gray;
   }
-
 }
 
 .content {
   width: 100%;
   text-align:center;
   pointer-events: none;
+  overflow: hidden;
 }
