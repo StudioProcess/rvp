@@ -14,6 +14,7 @@ import { VideoComponent } from './video';
 import { InspectorComponent } from './inspector';
 import { TimelineComponent } from './timeline';
 import { FilepickerComponent, InfoComponent, IoComponent } from './project-handling';
+import { HandlebarComponent } from './timeline/handlebar';
 
 declare var $:any;
 
@@ -23,7 +24,7 @@ declare var $:any;
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
-  directives: [TimelineComponent, InspectorComponent, VideoComponent, FilepickerComponent, InfoComponent, IoComponent],
+  directives: [TimelineComponent, InspectorComponent, VideoComponent, FilepickerComponent, InfoComponent, IoComponent, HandlebarComponent],
   providers: [provideStore({stubReducer}, mockData), LocalStorageService, SimpleBackendService]
 })
 export class AppComponent implements AfterViewInit {

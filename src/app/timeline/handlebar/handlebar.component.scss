@@ -1,0 +1,42 @@
+@import '../../settings';
+
+$handle-outer-color: $process-dark-gray;
+$handle-content-color: $process-light-gray;
+
+.handlebar {
+  height: 20px;
+  display: flex;
+}
+
+.left-handle {
+  color: $process-light-gray;
+  cursor: ew-resize;
+  background-color: $handle-outer-color;
+  text-align: center;
+  width: 20px;
+  &:hover {
+    background-color: $process-semi-dark-gray;
+  }
+}
+
+.right-handle {
+  color: $process-light-gray;
+  cursor: ew-resize;
+  background-color: $handle-outer-color;
+  text-align: center;
+  width: 20px;
+  &:hover {
+    background-color: $process-semi-dark-gray;
+  }
+
+}
+
+.content {
+  width: 100%;
+  text-align:center;
+  background-color: $handle-content-color;
+  &:hover {
+    background-color: $process-medium-gray;
+  }
+
+}
