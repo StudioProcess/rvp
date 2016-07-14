@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, Output } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
 
 @Component({
   moduleId: module.id,
@@ -14,15 +15,24 @@ export class HandlebarComponent implements OnInit {
   @Input() handlebarColor:string;
   @Input() text:string;
 
-  constructor() { }
+  @Output() centerDrag:Observable<any>;
+
+  constructor(private hostElement:ElementRef) { }
 
   ngOnInit() {
+    this.centerDrag = this.dragStream('.handlebar');
+    // const left = el.querySelector('.left-handle');
+    // const right = el.querySelector('.right-handle');
+    // this.centerDrag.subscribe((e) => { log.debug(e) });
   }
 
-  // export dragevent
-
-  mouseDown($mouseDownEvent){
-    log.debug("mouse down");
+  private dragStream(selector:string):Observable<MouseEvent> {
+    const el = this.hostElement.nativeElement.querySelector(selector);
+    log.debug(el);
+    const down$ = Observable.fromEvent(el, 'mousedown');
+    const move$ = Observable.fromEvent(el, 'mousemove');
+    const up$ = Observable.fromEvent(el, 'mouseup');
+    return down$.flatMap( () => move$.takeUntil(up$) ) as Observable<MouseEvent>;
   }
 
 }
