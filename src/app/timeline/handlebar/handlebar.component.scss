@@ -10,6 +10,7 @@ $handle-content-color: $process-super-light-gray;
 
 .handlebar {
   display: flex;
+  height: inherit;
   //flex-direction: row;
   &:hover {
     color: $process-dark-gray;
@@ -39,6 +40,7 @@ $handle-content-color: $process-super-light-gray;
 
 .content {
   width: 100%;
+  height:inherit;
   text-align:center;
   pointer-events: none;
   overflow: hidden;
