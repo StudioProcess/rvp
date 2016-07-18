@@ -1,6 +1,6 @@
 @import '../../settings';
 
-$main-color: $dark-gray;
+$main-color: $process-dark-gray;
 $blue: #2198e6;
 
 :host {
@@ -8,7 +8,8 @@ $blue: #2198e6;
 }
 
 .playhead {
-  background-color: $dark-gray;
+  margin-top: 20px;
+  background-color: $black;
   display: block;
   position: absolute;
   width: 1px;
@@ -20,7 +21,7 @@ $blue: #2198e6;
 .timelabel {
   color: $white;
   display: inline-block;
-  background-color: $dark-gray;
+  background-color: $black;
   position: relative;
   top: 0;
   left: 0;
