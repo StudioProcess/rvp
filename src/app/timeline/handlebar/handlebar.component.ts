@@ -19,19 +19,37 @@ export class HandlebarComponent implements OnInit {
   @Input() width:number;
   @Input() handlebarColor:string;
   @Input() text:string;
+  @Input() minWidth:number;
 
   // define outputs
   @Output() centerDrag:Observable<DragEvent>;
   @Output() leftDrag:Observable<DragEvent>;
   @Output() rightDrag:Observable<DragEvent>;
 
-  constructor(private hostElement:ElementRef) { }
+  isCircle: boolean = false;
+
+  constructor(private hostElement:ElementRef) {
+    this.isCircle = false;
+  }
 
   ngOnInit() {
     // publish drag event streams
     this.centerDrag = this.dragStream('.handlebar');
     this.leftDrag = this.dragStream('.left-handle');
     this.rightDrag = this.dragStream('.right-handle');
+
+    // check if length shorter than minimum width
+    if((this.width <= this.minWidth) && (this.width != 0)) {
+      this.width = this.minWidth;
+    }
+
+    //check if width under minimum length
+    if((this.width < 1) && (this.width != 0)) {
+      this.width = 1;
+      this.isCircle = true;
+    }
+
+    log.debug(this.width);
 
     // this.centerDrag.subscribe((e) => { log.debug('centerDrag', e) });
     // this.leftDrag.subscribe((e) => { log.debug('leftDrag', e) });

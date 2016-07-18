@@ -50,3 +50,24 @@ $handle-content-color: $process-super-light-gray;
     color: $process-dark-gray;
   }
 }
+
+// CIRCULAR LAYOUT FOR ANNOTATIONS WITH NO DURATION
+.handlebar-container.circular {
+  width: 20px !important;
+  border-radius: 10px !important;
+  color: transparent !important;
+
+  .handlebar:hover {
+    color: $black !important;
+  }
+
+  .left-handle:hover {
+      color: transparent !important;
+      background-color: $black !important;
+  }
+
+  .right-handle:hover {
+      color: transparent !important;
+      background-color: $black !important;
+  }
+}
