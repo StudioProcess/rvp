@@ -23,7 +23,7 @@ $handle-content-color: $process-super-light-gray;
   text-align: left;
   width: 10px;
   &:hover {
-    color: $process-super-light-gray;
+    color: $process-dark-gray;
     background-color: $process-dark-gray;
   }
 }
@@ -33,7 +33,7 @@ $handle-content-color: $process-super-light-gray;
   text-align: right;
   width: 10px;
   &:hover {
-    color: $process-super-light-gray;
+    color: $process-dark-gray;
     background-color: $process-dark-gray;
   }
 }
@@ -45,7 +45,7 @@ $handle-content-color: $process-super-light-gray;
   pointer-events: none;
   overflow: hidden;
   word-break: break-all;
-  color: $process-super-light-gray;
+  color: $black;
   &:hover {
     color: $process-dark-gray;
   }
