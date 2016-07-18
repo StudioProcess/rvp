@@ -3,13 +3,14 @@ import { TrackComponent } from './track';
 import { PlayheadComponent } from './playhead';
 import { CursorComponent } from './cursor';
 import { Timeline, Annotation } from '../shared/models';
+import { ScrollZoom } from './scroll-zoom.directive';
 
 @Component({
   moduleId: module.id,
   selector: 'app-timeline',
   templateUrl: 'timeline.component.html',
   styleUrls: ['timeline.component.css'],
-  directives: [TrackComponent, PlayheadComponent, CursorComponent]
+  directives: [TrackComponent, PlayheadComponent, CursorComponent, ScrollZoom]
 })
 export class TimelineComponent implements OnInit {
 

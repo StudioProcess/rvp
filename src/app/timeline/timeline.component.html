@@ -2,7 +2,35 @@
 <div class="timeline-test" (mousemove)="moveCursor($event)" (mousedown)="playheadClick($event)">
 
     <!-- <app-cursor [time]="cursorTime" [displayTime]="cursorDisplayTime"></app-cursor> <!-- cursor -->
-    <!-- <app-playhead [time]="playheadTime" [displayTime]="playheadDisplayTime"></app-playhead> <!-- playhead --> 
+    <!-- <app-playhead [time]="playheadTime" [displayTime]="playheadDisplayTime"></app-playhead> <!-- playhead -->
 
     <app-track *ngFor="let track of data.tracks" [data]="track"></app-track>
+</div>
+
+<div  style="width:100%;">
+  <div></div>
+</div>
+
+
+<style>
+  .scroll-container {
+    outline:1px solid dodgerblue;
+    height:100px;
+    overflow-x: hidden;
+  }
+  .scrollable {
+    width:2000px;
+    position: relative;
+  }
+  .bar {
+    width:8%; background-color:blue; height:30px; margin: 1em 1%; display:inline-block; }
+</style>
+<div scroll zoom="1000" class="scroll-container row column">
+  <div class="scrollable">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+  </div>
 </div>
