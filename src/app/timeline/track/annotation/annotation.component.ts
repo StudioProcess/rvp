@@ -1,12 +1,14 @@
 import { Component, OnInit, Input, Inject, forwardRef } from '@angular/core';
 import { TimelineComponent } from '../../timeline.component';
 import { Annotation, Timeline } from '../../../shared/models';
+import { HandlebarComponent } from '../../handlebar/handlebar.component';
 
 @Component({
   moduleId: module.id,
   selector: 'app-annotation',
   templateUrl: 'annotation.component.html',
-  styleUrls: ['annotation.component.css']
+  styleUrls: ['annotation.component.css'],
+  directives: [HandlebarComponent]
   // providers: [TimelineComponent]
 })
 
@@ -18,6 +20,7 @@ export class AnnotationComponent implements OnInit {
   timeline:TimelineComponent;
   timestamp:number;
   duration:number;
+  handlebar:HandlebarComponent;
 
   constructor(@Inject(forwardRef(() => TimelineComponent)) timeline) {
     this.timeline = timeline;

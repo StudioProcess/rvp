@@ -1,6 +1,11 @@
 import { Component, OnInit, Input, ElementRef, Output } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
+interface DragEvent {
+  type:'dragstart'|'drag'|'dragend'
+  event:MouseEvent;
+}
+
 @Component({
   moduleId: module.id,
   selector: 'app-handlebar',
@@ -15,24 +20,42 @@ export class HandlebarComponent implements OnInit {
   @Input() handlebarColor:string;
   @Input() text:string;
 
-  @Output() centerDrag:Observable<any>;
+  // define outputs
+  @Output() centerDrag:Observable<DragEvent>;
+  @Output() leftDrag:Observable<DragEvent>;
+  @Output() rightDrag:Observable<DragEvent>;
 
   constructor(private hostElement:ElementRef) { }
 
   ngOnInit() {
+    // publish drag event streams
     this.centerDrag = this.dragStream('.handlebar');
-    // const left = el.querySelector('.left-handle');
-    // const right = el.querySelector('.right-handle');
-    // this.centerDrag.subscribe((e) => { log.debug(e) });
+    this.leftDrag = this.dragStream('.left-handle');
+    this.rightDrag = this.dragStream('.right-handle');
+
+    // this.centerDrag.subscribe((e) => { log.debug('centerDrag', e) });
+    // this.leftDrag.subscribe((e) => { log.debug('leftDrag', e) });
+    // this.rightDrag.subscribe((e) => { log.debug('rightDrag', e) });
   }
 
-  private dragStream(selector:string):Observable<MouseEvent> {
-    const el = this.hostElement.nativeElement.querySelector(selector);
-    log.debug(el);
-    const down$ = Observable.fromEvent(el, 'mousedown');
-    const move$ = Observable.fromEvent(el, 'mousemove');
+  private dragStream(selector:string):Observable<DragEvent> {
+    // helper functions:
+    // stops propagation on the given MouseEvent
+    const stopPropagation = (e:MouseEvent) => { e.stopPropagation() };
+    // returns a function that wraps a MouseEvent with the type property and returns a DragEvent
+    const wrapEvent = (type:'dragstart'|'drag'|'dragend') => ( (event:MouseEvent):DragEvent => {return {type, event}} );
+
+    // dom event streams
+    const el = this.hostElement.nativeElement.querySelector(selector); // dom element with the given selector
+    const mousedown$ = Observable.fromEvent(el, 'mousedown').do(stopPropagation);
+    const mousemove$ = Observable.fromEvent(el, 'mousemove').do(stopPropagation);
+    const mouseup$ = Observable.fromEvent(el, 'mouseup').do(stopPropagation);
+
+    let drag = mousedown$.flatMap( () => mousemove$.skip(1).takeUntil(mouseup$) ).map( wrapEvent('drag') );
+    let start = mousedown$.flatMap( () => mousemove$.first() ).map( wrapEvent('dragstart') );
+    let end = start.flatMap( () => mouseup$.first() ).map( wrapEvent('dragend') );
     const up$ = Observable.fromEvent(el, 'mouseup');
-    return down$.flatMap( () => move$.takeUntil(up$) ) as Observable<MouseEvent>;
+    return drag.merge(start, end);
   }
 
 }

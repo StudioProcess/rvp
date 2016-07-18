@@ -1,15 +1,22 @@
 <!-- TIMELINE -->
 <div class="timeline" (mousemove)="moveCursor($event)" (mousedown)="playheadClick($event)">
 
+<<<<<<< HEAD
+    <!-- <app-cursor [time]="cursorTime" [displayTime]="cursorDisplayTime"></app-cursor> <!-- cursor -->
+    <!-- <app-playhead [time]="playheadTime" [displayTime]="playheadDisplayTime"></app-playhead> <!-- playhead -->
+=======
     <div class="timeline-header">
       <app-handlebar class="scrollbar" [width]="'20'" [position]="'40'" [text]="'|||'" [handlebarColor]="'#CCC'"></app-handlebar>
     </div>
+>>>>>>> master
 
     <app-track *ngFor="let track of data.tracks" [data]="track"></app-track>
     <!-- cursor -->
     <!-- <app-cursor [time]="cursorTime" [displayTime]="cursorDisplayTime"></app-cursor>  -->
     <!-- playhead -->
     <!-- <app-playhead [time]="playheadTime" [displayTime]="playheadDisplayTime"></app-playhead>  -->
+
+</div>
 
 <div  style="width:100%;">
   <div></div>

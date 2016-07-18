@@ -5,9 +5,13 @@ $handle-content-color: $process-super-light-gray;
 
 .handlebar-container {
   height: 20px;
+  position: absolute;
 }
+
 .handlebar {
   display: flex;
+  height: inherit;
+  //flex-direction: row;
   &:hover {
     color: $process-dark-gray;
     background-color: $process-light-gray;
@@ -15,12 +19,9 @@ $handle-content-color: $process-super-light-gray;
 }
 
 .left-handle {
-  //color: $process-light-gray;
   cursor: ew-resize;
-  //background-color: $handle-outer-color;
   text-align: left;
   width: 10px;
-  //border-left: 1px solid $black;
   &:hover {
     color: $process-super-light-gray;
     background-color: $process-dark-gray;
@@ -28,20 +29,20 @@ $handle-content-color: $process-super-light-gray;
 }
 
 .right-handle {
-  //color: $process-light-gray;
   cursor: ew-resize;
-  //background-color: $handle-outer-color;
   text-align: right;
-  //border-right: 1px solid $black;
   width: 10px;
   &:hover {
     color: $process-super-light-gray;
     background-color: $process-dark-gray;
   }
-
 }
 
 .content {
   width: 100%;
+  height:inherit;
   text-align:center;
+  pointer-events: none;
+  overflow: hidden;
+  word-break: break-all;
 }

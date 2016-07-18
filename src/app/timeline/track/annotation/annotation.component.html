@@ -1,4 +1,4 @@
-<div
+<!--<div
   class="annotation"
   (mousemove)="moveCursor($event)"
   (mouseover)="hoverOver($event)"
@@ -8,4 +8,7 @@
   [style.width.%]="duration"
   [style.backgroundColor]="backcolor"
   >
+
 <div>
+-->
+<app-handlebar [position]="timestamp" [width]="duration" [text]="data.fields.title" [handlebarColor]="'#CCCCCC'"></app-handlebar>
