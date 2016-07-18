@@ -1,0 +1,47 @@
+<!-- TIMELINE -->
+<div class="timeline" (mousemove)="moveCursor($event)" (mousedown)="playheadClick($event)">
+
+<<<<<<< HEAD
+    <!-- <app-cursor [time]="cursorTime" [displayTime]="cursorDisplayTime"></app-cursor> <!-- cursor -->
+    <!-- <app-playhead [time]="playheadTime" [displayTime]="playheadDisplayTime"></app-playhead> <!-- playhead -->
+=======
+    <div class="timeline-header">
+      <app-handlebar class="scrollbar" [width]="'20'" [position]="'40'" [text]="'|||'" [handlebarColor]="'#CCC'"></app-handlebar>
+    </div>
+>>>>>>> master
+
+    <app-track *ngFor="let track of data.tracks" [data]="track"></app-track>
+    <!-- cursor -->
+    <!-- <app-cursor [time]="cursorTime" [displayTime]="cursorDisplayTime"></app-cursor>  -->
+    <!-- playhead -->
+    <!-- <app-playhead [time]="playheadTime" [displayTime]="playheadDisplayTime"></app-playhead>  -->
+
+</div>
+
+<div  style="width:100%;">
+  <div></div>
+</div>
+
+
+<style>
+  .scroll-container {
+    outline:1px solid dodgerblue;
+    height:100px;
+    overflow-x: hidden;
+  }
+  .scrollable {
+    width:2000px;
+    position: relative;
+  }
+  .bar {
+    width:8%; background-color:blue; height:30px; margin: 1em 1%; display:inline-block; }
+</style>
+<div scroll zoom="1000" class="scroll-container row column">
+  <div class="scrollable">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+  </div>
+</div>

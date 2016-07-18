@@ -4,13 +4,14 @@ import { PlayheadComponent } from './playhead';
 import { CursorComponent } from './cursor';
 import { HandlebarComponent } from './handlebar';
 import { Timeline, Annotation } from '../shared/models';
+import { ScrollZoom } from './scroll-zoom.directive';
 
 @Component({
   moduleId: module.id,
   selector: 'app-timeline',
   templateUrl: 'timeline.component.html',
   styleUrls: ['timeline.component.css'],
-  directives: [HandlebarComponent, TrackComponent, PlayheadComponent, CursorComponent]
+  directives: [HandlebarComponent, TrackComponent, PlayheadComponent, CursorComponent, ScrollZoom]
 })
 export class TimelineComponent implements OnInit {
 

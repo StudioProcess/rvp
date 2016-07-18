@@ -54,6 +54,7 @@ export class HandlebarComponent implements OnInit {
     let drag = mousedown$.flatMap( () => mousemove$.skip(1).takeUntil(mouseup$) ).map( wrapEvent('drag') );
     let start = mousedown$.flatMap( () => mousemove$.first() ).map( wrapEvent('dragstart') );
     let end = start.flatMap( () => mouseup$.first() ).map( wrapEvent('dragend') );
+    const up$ = Observable.fromEvent(el, 'mouseup');
     return drag.merge(start, end);
   }
 
