@@ -46,6 +46,7 @@ $handle-content-color: $process-super-light-gray;
   overflow: hidden;
   word-break: break-all;
   color: $black;
+  font-size: 14px;
   &:hover {
     color: $process-dark-gray;
   }
@@ -56,6 +57,7 @@ $handle-content-color: $process-super-light-gray;
   width: 20px !important;
   border-radius: 10px !important;
   color: transparent !important;
+  margin-left: -10px !important;
 
   .handlebar:hover {
     color: $black !important;
