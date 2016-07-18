@@ -5,13 +5,11 @@
     </div> -->
     <div class="column small-12">
       <div class="row column">
-        <div class="row title-row ">
+        <div class="row title-row">
           <div class="column shrink title">
-            <label><i class="ion-clipboard title-icon" title="Start Time"></i>
+            <div class="track-color" [style.color]="data.color"><i class="ion-record track-color-icon" title="Track Color"></i></div>
               <input type="value" class="title-input" title="Track Title" value="{{data.fields.title}}">
-            </label>
           </div>
-          <!-- <div class="column shrink"><div class="track-color" [style.color]="data.color"><i class="ion-paintbucket track-color-icon" title="Track Color"></i></div></div> -->
           <!-- <div class="column shrink"><i class="ion-drag title-icon" title="Reorder Tracks"></i> -->
         </div>
       </div>

@@ -27,7 +27,7 @@ $outline-width: 3px;
 }
 
 .title {
-  display:inline-block;
+  display: inline-block;
 }
 
 .annotation-container {
@@ -40,7 +40,7 @@ $outline-width: 3px;
 
 .title-input {
   display: inline-block;
-  width: 105px;
+  width: 110px;
   font-weight: 500;
   //color: $dark-gray;
   border: 1px solid transparent;
@@ -75,8 +75,8 @@ $outline-width: 3px;
 }
 
 .track-color {
-  height: 3px;
-  width: 124px;
+  width: 20px;
+  display: inline-block;
   // background: red; /* For browsers that do not support gradients */
   // background: -webkit-linear-gradient(left, red , $light-gray, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray); /* For Safari 5.1 to 6.0 */
   // background: -o-linear-gradient(right, red, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray); /* For Opera 11.1 to 12.0 */
