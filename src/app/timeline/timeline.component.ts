@@ -23,14 +23,6 @@ export class TimelineComponent implements OnInit {
   playheadTime = 2;
   playheadDisplayTime = 2;
 
-  annotation:Annotation = {
-    utc_timestamp: 10,
-    duration: 5,
-    fields:{
-      title: "Titel of Annotation",
-      description: "dancer enters stage"
-    }
-  };
 
   moveCursor($moveEvent) {
 
