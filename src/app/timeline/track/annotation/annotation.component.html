@@ -15,4 +15,9 @@
 <app-handlebar [position]="timestamp" [width]="duration" [text]="data.fields.title" [handlebarColor]=backcolor></app-handlebar>
 -->
 
-<app-handlebar [position]="timestamp" [width]="duration" [text]="data.fields.title" [handlebarColor]="'#CCCCCC'"></app-handlebar>
+<app-handlebar
+  [position]="timestamp" [width]="duration"
+  [text]="data.fields.title"
+  [handlebarColor]="'#CCCCCC'"
+  [container]="'.annotations'">
+</app-handlebar>

@@ -20,6 +20,7 @@ export class HandlebarComponent implements OnInit {
   @Input() handlebarColor:string;
   @Input() text:string;
   @Input() minWidth:number;
+  @Input('container') containerSelector:string;
 
   // define outputs
   @Output() centerDrag:Observable<DragEvent>;
@@ -27,10 +28,9 @@ export class HandlebarComponent implements OnInit {
   @Output() rightDrag:Observable<DragEvent>;
 
   isCircle: boolean = false;
+  container:HTMLElement;
 
-  constructor(private hostElement:ElementRef) {
-    this.isCircle = false;
-  }
+  constructor(private hostElement:ElementRef) { }
 
   ngOnInit() {
     // publish drag event streams
@@ -49,11 +49,24 @@ export class HandlebarComponent implements OnInit {
       this.isCircle = true;
     }
 
-    log.debug(this.width);
+    // find reference element to use for sizing and positioning
+    if (this.containerSelector) {
+      let el = this.hostElement.nativeElement;
+      while ( (el = el.parentElement) && !el.matches(this.containerSelector) );
+      this.container = el;
+    } else {
+      // choose parent element by default
+      this.container = this.hostElement.nativeElement.parentElement;
+    }
+    // log.debug('handlebar container', this.container);
 
     // this.centerDrag.subscribe((e) => { log.debug('centerDrag', e) });
     // this.leftDrag.subscribe((e) => { log.debug('leftDrag', e) });
     // this.rightDrag.subscribe((e) => { log.debug('rightDrag', e) });
+  }
+
+  private findParentSelector() {
+    let el = this.hostElement.nativeElement;
   }
 
   private dragStream(selector:string):Observable<DragEvent> {
