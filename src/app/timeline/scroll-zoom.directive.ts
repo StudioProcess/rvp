@@ -9,7 +9,7 @@ export class ScrollZoom implements OnInit {
   // set width of content element: [px]
   // content element is the first child
   @Input() set zoom(value:number) {
-    log.debug('setting zoom', value);
+    // log.debug('setting zoom', value);
     if (value > 0) {
       this._zoom = value;
       if (this.content) {
@@ -21,7 +21,7 @@ export class ScrollZoom implements OnInit {
   // set scroll position of container: 0..100 [%]
   // TODO: need to take into account the width of the container
   @Input() set scroll(value:number) {
-    log.debug('setting scroll', value);
+    // log.debug('setting scroll', value);
     if (value >= 0 && value <= 100) {
       this._scroll = value;
       if (this.container) {
@@ -55,7 +55,7 @@ export class ScrollZoom implements OnInit {
       if (this._zoom) this.zoom = this._zoom;
       if (this._scroll) this.scroll = this._scroll;
 
-      log.debug('scrollzoom', this.container, this.content);
+      // log.debug('scrollzoom', this.container, this.content);
     }, 0);
   }
 }
