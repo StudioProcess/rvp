@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ElementRef, Output } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
 interface DragEvent {
-  type:'dragstart'|'drag'|'dragend'
+  type:'dragstart'|'drag'|'dragend';
   event:MouseEvent;
 }
 
@@ -28,9 +28,12 @@ export class HandlebarComponent implements OnInit {
   @Output() rightDrag:Observable<DragEvent>;
 
   isCircle: boolean = false;
+  host:HTMLElement;
   container:HTMLElement;
 
-  constructor(private hostElement:ElementRef) { }
+  constructor(hostElement:ElementRef) {
+    this.host = hostElement.nativeElement;
+  }
 
   ngOnInit() {
     // publish drag event streams
@@ -51,22 +54,18 @@ export class HandlebarComponent implements OnInit {
 
     // find reference element to use for sizing and positioning
     if (this.containerSelector) {
-      let el = this.hostElement.nativeElement;
+      let el = this.host;
       while ( (el = el.parentElement) && !el.matches(this.containerSelector) );
       this.container = el;
     } else {
       // choose parent element by default
-      this.container = this.hostElement.nativeElement.parentElement;
+      this.container = this.host.parentElement;
     }
     // log.debug('handlebar container', this.container);
 
     // this.centerDrag.subscribe((e) => { log.debug('centerDrag', e) });
     // this.leftDrag.subscribe((e) => { log.debug('leftDrag', e) });
     // this.rightDrag.subscribe((e) => { log.debug('rightDrag', e) });
-  }
-
-  private findParentSelector() {
-    let el = this.hostElement.nativeElement;
   }
 
   private dragStream(selector:string):Observable<DragEvent> {
@@ -77,7 +76,7 @@ export class HandlebarComponent implements OnInit {
     const wrapEvent = (type:'dragstart'|'drag'|'dragend') => ( (event:MouseEvent):DragEvent => {return {type, event}} );
 
     // dom event streams
-    const el = this.hostElement.nativeElement.querySelector(selector); // dom element with the given selector
+    const el = this.host.querySelector(selector); // dom element with the given selector
     const mousedown$ = Observable.fromEvent(el, 'mousedown').do(stopPropagation);
     const mousemove$ = Observable.fromEvent(el, 'mousemove').do(stopPropagation);
     const mouseup$ = Observable.fromEvent(el, 'mouseup').do(stopPropagation);
