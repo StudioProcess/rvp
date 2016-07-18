@@ -23,6 +23,8 @@ export class TimelineComponent implements OnInit {
   playheadTime = 2;
   playheadDisplayTime = 2;
 
+  private static MAX_ZOOM = 100; // px/s
+  private static TEST_ZOOM = 10; // px/s
 
   moveCursor($moveEvent) {
 

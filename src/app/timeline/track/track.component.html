@@ -3,26 +3,22 @@
     <div class="column shrink">
       <div class="track-color-new" [style.backgroundColor]="data.color"></div>
     </div>
-    <div class="column">
+    <div class="column small-11">
       <div class="row column">
-        <!-- <div class="track-color" [style.backgroundColor]="data.color">
-        </div> -->
-        <div class="row column">
-          <div class="row title-row collapse">
-            <div class="column shrink title">
-              <label><i class="ion-clipboard title-icon" title="Start Time"></i>
-                <input id="timestamp-input" type="value" class="title-input" title="Track Title" value="{{data.fields.title}}">
-              </label>
-            </div>
-            <!-- <div class="column shrink"><div class="track-color" [style.color]="data.color"><i class="ion-paintbucket track-color-icon" title="Track Color"></i></div></div> -->
-            <!-- <div class="column shrink"><i class="ion-drag title-icon" title="Reorder Tracks"></i> -->
+        <div class="row title-row collapse">
+          <div class="column shrink title">
+            <label><i class="ion-clipboard title-icon" title="Start Time"></i>
+              <input type="value" class="title-input" title="Track Title" value="{{data.fields.title}}">
+            </label>
           </div>
+          <!-- <div class="column shrink"><div class="track-color" [style.color]="data.color"><i class="ion-paintbucket track-color-icon" title="Track Color"></i></div></div> -->
+          <!-- <div class="column shrink"><i class="ion-drag title-icon" title="Reorder Tracks"></i> -->
         </div>
-        <div class="row annotation-row collapse">
-          <div class="column annotation-container">
-            <div class="annotations">
-              <app-annotation *ngFor="let annotation of data.annotations" [data]="annotation" [backcolor]="data.color"></app-annotation>
-            </div>
+      </div>
+      <div class="row column annotation-row collapse">
+        <div class="annotation-container">
+          <div class="annotations">
+            <app-annotation *ngFor="let annotation of data.annotations" [data]="annotation" [backcolor]="data.color"></app-annotation>
           </div>
         </div>
       </div>

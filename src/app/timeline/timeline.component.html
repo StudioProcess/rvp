@@ -5,7 +5,13 @@
       <app-handlebar class="scrollbar" [width]="'20'" [position]="'40'" [text]="'|||'" [handlebarColor]="'#CCC'"></app-handlebar>
     </div>
 
-    <app-track *ngFor="let track of data.tracks" [data]="track"></app-track>
+    <app-track
+      *ngFor="let track of data.tracks"
+      [data]="track"
+      [scrollContainer]="'.annotation-container'"
+      [scroll]="0"
+      [zoom]="data.duration*10">
+    </app-track>
 
     <!-- cursor -->
     <!-- <app-cursor [time]="cursorTime" [displayTime]="cursorDisplayTime"></app-cursor>  -->

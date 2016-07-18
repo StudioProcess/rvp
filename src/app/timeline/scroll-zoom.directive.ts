@@ -1,9 +1,10 @@
 import { Directive, Input, ElementRef, OnInit } from '@angular/core';
 
 @Directive({
-  selector: '[zoom], [scroll]'
+  selector: '[scrollContainer], [scroll], [zoom]'
 })
 export class ScrollZoom implements OnInit {
+  @Input('scrollContainer') containerSelector;
 
   // set width of content element: [px]
   // content element is the first child
@@ -23,26 +24,38 @@ export class ScrollZoom implements OnInit {
     log.debug('setting scroll', value);
     if (value >= 0 && value <= 100) {
       this._scroll = value;
-      this.container.scrollLeft = this._zoom * this._scroll / 100;
+      if (this.container) {
+        this.container.scrollLeft = this._zoom * this._scroll / 100;
+      }
     }
   }
 
+
   private _zoom;
   private _scroll;
+  private host:HTMLElement;
   private container:HTMLElement;
   private content:HTMLElement;
 
   constructor(hostElement:ElementRef) {
-    this.container = hostElement.nativeElement;
-    this.container.style.overflow = 'hidden';
+    this.host = hostElement.nativeElement;
   }
 
   ngOnInit() {
-    this.content = this.container.firstElementChild as HTMLElement;
     setTimeout(() => {
+      if (this.containerSelector) {
+        this.container = this.host.querySelector(this.containerSelector) as HTMLElement;
+      } else {
+        this.container = this.host;
+      }
+      this.container.style.overflow = 'hidden';
+
+      this.content = this.container.firstElementChild as HTMLElement;
       // trigger setting zoom and scroll, when this.content is available
-      this.zoom = this._zoom;
-      this.scroll = this._scroll;
+      if (this._zoom) this.zoom = this._zoom;
+      if (this._scroll) this.scroll = this._scroll;
+
+      log.debug('scrollzoom', this.container, this.content);
     }, 0);
   }
 }
