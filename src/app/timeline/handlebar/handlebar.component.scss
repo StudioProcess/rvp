@@ -13,8 +13,8 @@ $handle-content-color: $process-super-light-gray;
   height: inherit;
   //flex-direction: row;
   &:hover {
-    color: $process-dark-gray;
-    background-color: $process-light-gray;
+    color: $process-super-light-gray;
+    //background-color: $process-light-gray;
   }
 }
 
@@ -45,4 +45,8 @@ $handle-content-color: $process-super-light-gray;
   pointer-events: none;
   overflow: hidden;
   word-break: break-all;
+  color: $process-super-light-gray;
+  &:hover {
+    color: $process-dark-gray;
+  }
 }
