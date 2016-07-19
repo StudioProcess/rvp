@@ -4,13 +4,13 @@
   },
   "globalDevDependencies": {
     "angular-protractor": "registry:dt/angular-protractor#1.5.0+20160425143459",
-    "jasmine": "registry:dt/jasmine#2.2.0+20160412134438",
+    "jasmine": "registry:dt/jasmine#2.2.0+20160621224255",
     "selenium-webdriver": "registry:dt/selenium-webdriver#2.44.0+20160317120654"
   },
   "globalDependencies": {
-    "es6-shim": "registry:dt/es6-shim#0.31.2+20160317120654",
+    "es6-shim": "registry:dt/es6-shim#0.31.2+20160602141504",
     "foundation-sites": "registry:dt/foundation-sites#6.1.1+20160317120654",
-    "jquery": "registry:dt/jquery#1.10.0+20160417213236",
+    "jquery": "registry:dt/jquery#1.10.0+20160704162008",
     "localforage": "registry:dt/localforage#0.0.0+20160629074517",
     "lodash": "registry:dt/lodash#3.10.0+20160619033623",
     "loglevel": "registry:dt/loglevel#1.4.0+20160412141402",
