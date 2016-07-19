@@ -77,7 +77,17 @@ export class HandlebarComponent implements OnInit {
     this.centerSubscription = this.centerDrag.subscribe(e => {
       // log.debug(e);
       this.position = (e.startOffset.left + e.dx) / this.container.offsetWidth * 100;
+      this.constrainPosition();
     });
+  }
+
+  private constrainPosition() {
+    log.debug(this.position, this.width);
+    if (this.position < 0) {
+      this.position = 0;
+    } else if (this.position + this.width > 100){
+        this.position = 100 - this.width;
+    }
   }
 
   private dragStream(selector):Observable<DragEvent> {
