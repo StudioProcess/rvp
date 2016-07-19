@@ -4,7 +4,9 @@ import { Observable } from 'rxjs/Rx';
 interface DragEvent {
   type:'dragstart'|'drag'|'dragend';
   dx:number; // horizontal displacement
-  dy:number; // vertival displacement
+  dy:number; // vertical displacement
+  sx:number; // horizontal start
+  sy:number; // vertical start
 }
 
 @Component({
@@ -34,12 +36,14 @@ export class HandlebarComponent implements OnInit {
   private leftDrag:Observable<DragEvent>;
   private rightDrag:Observable<DragEvent>;
 
+  private centerSubscription;
+
   constructor(hostElement:ElementRef) {
     this.host = hostElement.nativeElement;
   }
 
   ngOnInit() {
-    // publish drag event streams
+    // drag event streams
     this.centerDrag = this.dragStream('.handlebar');
     this.leftDrag = this.dragStream('.left-handle');
     this.rightDrag = this.dragStream('.right-handle');
@@ -66,11 +70,6 @@ export class HandlebarComponent implements OnInit {
       // choose parent element by default
       this.container = this.host.parentElement;
     }
-    // log.debug('handlebar container', this.container);
-
-    // this.centerDrag.subscribe((e) => { log.debug('centerDrag', e) });
-    // this.leftDrag.subscribe((e) => { log.debug('leftDrag', e) });
-    // this.rightDrag.subscribe((e) => { log.debug('rightDrag', e) });
   }
 
   private dragStream(selector):Observable<DragEvent> {
@@ -82,17 +81,17 @@ export class HandlebarComponent implements OnInit {
     const mousemove$ = Observable.fromEvent(document, 'mousemove').do(stopPropagation);
     const mouseup$ = Observable.fromEvent(document, 'mouseup').do(stopPropagation);
 
-    return mousedown$.flatMap((e:MouseEvent) => {
+    return mousedown$.switchMap((e:MouseEvent) => {
       let startX = e.screenX;
       let startY = e.screenY;
-      let start = Observable.of({type:'dragstart', dx:0, dy:0});
-      let drag = mousemove$.map((e:MouseEvent) => {
-        return {type:'drag', dx:e.screenX-startX, dy:e.screenY-startY};
-      }).takeUntil(mouseup$);
-      let end = mouseup$.first().map((e:MouseEvent) => {
-        return {type:'dragend', dx:e.screenX-startX, dy:e.screenY-startY};
+      let start = Observable.of({type:'dragstart', dx:0, dy:0, sx:startX, sy:startY});
+      let drag = mousemove$.takeUntil(mouseup$).map((e:MouseEvent) => {
+        return {type:'drag', dx:e.screenX-startX, dy:e.screenY-startY, sx:startX, sy:startY};
       });
-      return start.merge(drag).merge(end).share() as Observable<DragEvent>;
+      let end = mouseup$.first().map((e:MouseEvent) => {
+        return {type:'dragend', dx:e.screenX-startX, dy:e.screenY-startY, sx:startX, sy:startY};
+      });
+      return start.merge(drag, end).share() as Observable<DragEvent>;
     });
   }
 }
