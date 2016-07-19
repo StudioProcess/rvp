@@ -92,7 +92,7 @@ export class HandlebarComponent implements OnInit {
       let end = mouseup$.first().map((e:MouseEvent) => {
         return {type:'dragend', dx:e.screenX-startX, dy:e.screenY-startY};
       });
-      return start.merge(drag).merge(end) as Observable<DragEvent>;
+      return start.merge(drag).merge(end).share() as Observable<DragEvent>;
     });
   }
 }
