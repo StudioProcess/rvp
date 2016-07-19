@@ -3,11 +3,6 @@ import { Observable } from 'rxjs/Rx';
 
 interface DragEvent {
   type:'dragstart'|'drag'|'dragend';
-  event:MouseEvent;
-}
-
-interface CustomDragEvent {
-  type:'dragstart'|'drag'|'dragend';
   dx:number; // horizontal displacement
   dy:number; // vertival displacement
 }
@@ -29,15 +24,15 @@ export class HandlebarComponent implements OnInit {
   @Input('container') containerSelector:string;
 
   // define outputs
-  @Output() centerDrag:Observable<DragEvent>;
-  @Output() leftDrag:Observable<DragEvent>;
-  @Output() rightDrag:Observable<DragEvent>;
+
 
   isCircle: boolean = false;
   host:HTMLElement;
   container:HTMLElement;
 
-  private customCenterDrag:Observable<CustomDragEvent>;
+  private centerDrag:Observable<DragEvent>;
+  private leftDrag:Observable<DragEvent>;
+  private rightDrag:Observable<DragEvent>;
 
   constructor(hostElement:ElementRef) {
     this.host = hostElement.nativeElement;
@@ -48,10 +43,7 @@ export class HandlebarComponent implements OnInit {
     this.centerDrag = this.dragStream('.handlebar');
     this.leftDrag = this.dragStream('.left-handle');
     this.rightDrag = this.dragStream('.right-handle');
-
-
-    this.customCenterDrag = this.customDragStream('.handlebar');
-    this.customCenterDrag.subscribe(x => {log.debug(x)});
+    this.centerDrag.subscribe(x => {log.debug(x)});
 
 
     // check if length shorter than minimum width
@@ -81,27 +73,7 @@ export class HandlebarComponent implements OnInit {
     // this.rightDrag.subscribe((e) => { log.debug('rightDrag', e) });
   }
 
-  private dragStream(selector:string):Observable<DragEvent> {
-    // helper functions:
-    // stops propagation on the given MouseEvent
-    const stopPropagation = (e:MouseEvent) => { e.stopPropagation() };
-    // returns a function that wraps a MouseEvent with the type property and returns a DragEvent
-    const wrapEvent = (type:'dragstart'|'drag'|'dragend') => ( (event:MouseEvent):DragEvent => {return {type, event}} );
-
-    // dom event streams
-    const el = this.host.querySelector(selector); // dom element with the given selector
-    const mousedown$ = Observable.fromEvent(el, 'mousedown').do(stopPropagation);
-    const mousemove$ = Observable.fromEvent(el, 'mousemove').do(stopPropagation);
-    const mouseup$ = Observable.fromEvent(el, 'mouseup').do(stopPropagation);
-
-    let drag = mousedown$.flatMap( () => mousemove$.skip(1).takeUntil(mouseup$) ).map( wrapEvent('drag') );
-    let start = mousedown$.flatMap( () => mousemove$.first() ).map( wrapEvent('dragstart') );
-    let end = start.flatMap( () => mouseup$.first() ).map( wrapEvent('dragend') );
-    const up$ = Observable.fromEvent(el, 'mouseup');
-    return drag.merge(start, end);
-  }
-
-  private customDragStream(selector):Observable<CustomDragEvent> {
+  private dragStream(selector):Observable<DragEvent> {
     // stops propagation on the given MouseEvent
     const stopPropagation = (e:MouseEvent) => { e.stopPropagation() };
     // dom event streams
@@ -120,7 +92,7 @@ export class HandlebarComponent implements OnInit {
       let end = mouseup$.first().map((e:MouseEvent) => {
         return {type:'dragend', dx:e.screenX-startX, dy:e.screenY-startY};
       });
-      return start.merge(drag).merge(end) as Observable<CustomDragEvent>;
+      return start.merge(drag).merge(end) as Observable<DragEvent>;
     });
   }
 }
