@@ -1,11 +1,14 @@
 @import '../../settings';
 
-$handle-outer-color: $process-dark-gray;
-$handle-content-color: $process-super-light-gray;
+$background-color: $process-light-gray;
+$text-color: $black;
+$handle-hover-color: $black;
 
 .handlebar-container {
   height: 20px;
   position: absolute;
+  background-color: $background-color;
+  color:$text-color;
 }
 
 .handlebar {

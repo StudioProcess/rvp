@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef, Output } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
 interface DragEvent {
@@ -20,15 +20,13 @@ export class HandlebarComponent implements OnInit {
   // define inputs
   @Input() position:number;
   @Input() width:number;
-  @Input() handlebarColor:string;
-  @Input() text:string;
   @Input() minWidth:number;
   @Input('container') containerSelector:string;
+  @Input() caption:string;
 
   // define outputs
+  @Output() change:EventEmitter<any>;
 
-
-  isCircle: boolean = false;
   host:HTMLElement;
   handlebar:HTMLElement;
   container:HTMLElement;
@@ -56,12 +54,6 @@ export class HandlebarComponent implements OnInit {
     // check if length shorter than minimum width
     if((this.width <= this.minWidth) && (this.width != 0)) {
       this.width = this.minWidth;
-    }
-
-    //check if width under minimum length
-    if((this.width < 1) && (this.width != 0)) {
-      this.width = 1;
-      this.isCircle = true;
     }
 
     this.handlebar = this.host.firstElementChild as HTMLElement;
