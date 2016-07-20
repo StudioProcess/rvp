@@ -2,10 +2,10 @@
 <div class="timeline" (mousemove)="moveCursor($event)" (mousedown)="playheadClick($event)">
 
   <div class="timeline-header">
-    <app-handlebar class="scrollbar" [width]="20" [position]="40" [caption]="'|||'" [minWidth]='30' (drag)="scrollbarDrag($event)"></app-handlebar>
+    <app-handlebar class="scrollbar" [left]="40" [width]="20" [caption]="'|||'" [minWidth]='30' (drag)="scrollbarDrag($event)"></app-handlebar>
 
     <div style="padding-top:20px;text-align:center;">
-      <span>position: {{scrollPosition | number:1.3}}%</span> — <span>width: {{scrollWidth | number:1.3}}%</span>
+      <span>left: {{scrollLeft | number:1.3}}%</span> — <span>width: {{scrollWidth | number:1.3}}%</span>
     </div>
   </div>
 

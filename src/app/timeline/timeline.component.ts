@@ -26,7 +26,7 @@ export class TimelineComponent implements OnInit {
   private static MAX_ZOOM = 100; // px/s
   private static TEST_ZOOM = 10; // px/s
 
-  scrollPosition;
+  scrollLeft;
   scrollWidth;
 
   moveCursor($moveEvent) {
@@ -61,7 +61,7 @@ export class TimelineComponent implements OnInit {
   }
 
   scrollbarDrag(event) {
-    this.scrollPosition = event.position;
+    this.scrollLeft = event.left;
     this.scrollWidth = event.width;
   }
 
