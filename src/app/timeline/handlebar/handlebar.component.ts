@@ -31,7 +31,7 @@ export class HandlebarComponent implements OnInit {
   @Input() caption:string; // caption shown inside handle
 
   // define outputs
-  @Output() drag:Observable<HandlebarDragEvent>; // position and/or width changed
+  @Output() drag:EventEmitter<HandlebarDragEvent> = new EventEmitter<HandlebarDragEvent>(); // position and/or width changed
 
   // dom references
   host:HTMLElement; // host element (app-handlebar)
@@ -98,7 +98,7 @@ export class HandlebarComponent implements OnInit {
       .distinctUntilChanged( (e1, e2) => e1.type == e2.type && e1.position == e2.position && e1.width == e2.width )
       .share();
 
-    this.drag = drag$; // set as output
+    drag$.subscribe(this.drag); // set as output
     // drag$.subscribe(e => log.debug(e));
   }
 
