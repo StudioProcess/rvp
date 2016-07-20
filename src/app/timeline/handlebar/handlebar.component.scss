@@ -50,6 +50,7 @@ $min-width: 25px;
   cursor: ew-resize;
   text-align: left;
   padding-left: 1px;
+  padding-right: 1px;
   &:hover {
     @include hover-left();
   }
@@ -63,6 +64,7 @@ $min-width: 25px;
 .right-handle {
   cursor: ew-resize;
   text-align: right;
+  padding-left: 1px;
   padding-right: 1px;
   &:hover {
     @include hover-right();
