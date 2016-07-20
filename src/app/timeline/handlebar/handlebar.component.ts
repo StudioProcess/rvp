@@ -9,6 +9,12 @@ interface DragEvent {
   dy:number; // vertical displacement
 }
 
+interface HandlebarDragEvent {
+  type:'dragstart'|'drag'|'dragend';
+  position:number;
+  width:number;
+}
+
 @Component({
   moduleId: module.id,
   selector: 'app-handlebar',
@@ -25,7 +31,7 @@ export class HandlebarComponent implements OnInit {
   @Input() caption:string; // caption shown inside handle
 
   // define outputs
-  @Output() drag:EventEmitter<any>; // position and/or width changed
+  @Output() drag:Observable<HandlebarDragEvent>; // position and/or width changed
 
   // dom references
   host:HTMLElement; // host element (app-handlebar)
@@ -33,10 +39,6 @@ export class HandlebarComponent implements OnInit {
   container:HTMLElement; // element specified via 'container' input, used for sizing and positioning
 
   // observables
-  private centerDrag:Observable<DragEvent>;
-  private leftDrag:Observable<DragEvent>;
-  private rightDrag:Observable<DragEvent>;
-
   private centerSubscription;
   private rightSubscription;
   private leftSubscription;
@@ -57,28 +59,32 @@ export class HandlebarComponent implements OnInit {
       this.container = this.host.parentElement;
     }
 
+    // setup event streams
+    this.initStreams();
+  }
+
+  private initStreams() {
     // drag event streams
-    this.centerDrag = this.dragStream('.handlebar');
-    this.leftDrag = this.dragStream('.left-handle');
-    this.rightDrag = this.dragStream('.right-handle');
+    const centerDrag$ = this.dragStream('.handlebar');
+    const leftDrag$ = this.dragStream('.left-handle');
+    const rightDrag$ = this.dragStream('.right-handle');
     // this.centerDrag.subscribe(x => {log.debug(x)});
 
-
-    this.centerSubscription = this.centerDrag.subscribe(e => {
+    this.centerSubscription = centerDrag$.subscribe(e => {
       this.position = (e.startOffset.left + e.dx) / this.container.offsetWidth * 100;
       // constrain position
       if (this.position < 0) this.position = 0;
       else if (this.position + this.width > 100) this.position = 100 - this.width;
     });
 
-    this.rightSubscription = this.rightDrag.subscribe(e => {
+    this.rightSubscription = rightDrag$.subscribe(e => {
       this.width = (e.startOffset.width + e.dx) / this.container.offsetWidth * 100;
       // constrain width
       if (this.width < 0) this.width = 0;
       else if (this.width > 100 - this.position) this.width = 100 - this.position;
     });
 
-    this.leftSubscription = this.leftDrag.subscribe(e => {
+    this.leftSubscription = leftDrag$.subscribe(e => {
       // constrain movement
       let dx = e.dx;
       if (dx < -e.startOffset.left) dx = -e.startOffset.left;
@@ -86,6 +92,14 @@ export class HandlebarComponent implements OnInit {
       this.position = (e.startOffset.left + dx) / this.container.offsetWidth * 100;
       this.width = (e.startOffset.width - dx) / this.container.offsetWidth * 100;
     });
+
+    const drag$:Observable<HandlebarDragEvent> = Observable.merge(centerDrag$, leftDrag$, rightDrag$)
+      .map( e => ({ type:e.type, position:this.position, width:this.width }) )
+      // .distinctUntilChanged( (e1, e2) => e1.type == e2.type && e1.position == e2.position && e1.width == e2.width )
+      .share();
+
+    this.drag = drag$; // set as output
+    // drag$.subscribe(e => log.debug(e));
   }
 
   private dragStream(selector):Observable<DragEvent> {
