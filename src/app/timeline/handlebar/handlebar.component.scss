@@ -22,12 +22,15 @@ $handle-hover-color: $black;
   @include hover-container();
 }
 
-:host.hover-container .left-handle {
-  @include hover-left();
+:host.hover-left {
+  .left-handle { @include hover-left(); }
+  .handlebar { @include hover-container(); }
 }
 
-:host.hover-container .right-handle {
-  @include hover-right();
+
+:host.hover-right {
+  .right-handle { @include hover-right(); }
+  .handlebar { @include hover-container(); }
 }
 
 .handlebar-container {
