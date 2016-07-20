@@ -95,7 +95,7 @@ export class HandlebarComponent implements OnInit {
 
     const drag$:Observable<HandlebarDragEvent> = Observable.merge(centerDrag$, leftDrag$, rightDrag$)
       .map( e => ({ type:e.type, position:this.position, width:this.width }) )
-      // .distinctUntilChanged( (e1, e2) => e1.type == e2.type && e1.position == e2.position && e1.width == e2.width )
+      .distinctUntilChanged( (e1, e2) => e1.type == e2.type && e1.position == e2.position && e1.width == e2.width )
       .share();
 
     this.drag = drag$; // set as output
