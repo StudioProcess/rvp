@@ -4,6 +4,9 @@ $background-color: $process-gray;
 $text-color: $black;
 $handle-hover-color: $black;
 
+// minimum (px) size for handlebar
+$min-width: 25px;
+
 @mixin hover-container() {
   color: $text-color;
 }
@@ -34,6 +37,7 @@ $handle-hover-color: $black;
 }
 
 .handlebar-container {
+  min-width: $min-width;
   height: 20px;
   position: absolute;
   background-color: $background-color;
@@ -42,6 +46,7 @@ $handle-hover-color: $black;
 }
 
 .handlebar {
+  min-width: $min-width;
   display: flex;
   height: inherit;
   &:hover {
