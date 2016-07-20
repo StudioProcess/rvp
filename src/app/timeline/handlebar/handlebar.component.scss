@@ -1,43 +1,68 @@
 @import '../../settings';
 
-$background-color: $process-light-gray;
+$background-color: $process-gray;
 $text-color: $black;
 $handle-hover-color: $black;
+
+@mixin hover-container() {
+  color: $text-color;
+}
+
+@mixin hover-left() {
+  color: $text-color;
+  background-color: $text-color;
+}
+
+@mixin hover-right() {
+  color: $text-color;
+  background-color: $text-color;
+}
+
+:host.hover-container .handlebar {
+  @include hover-container();
+}
+
+:host.hover-container .left-handle {
+  @include hover-left();
+}
+
+:host.hover-container .right-handle {
+  @include hover-right();
+}
 
 .handlebar-container {
   height: 20px;
   position: absolute;
   background-color: $background-color;
-  color:$text-color;
+  color: $background-color;
+
 }
 
 .handlebar {
   display: flex;
   height: inherit;
-  //flex-direction: row;
   &:hover {
-    color: $black;
-    //background-color: $process-light-gray;
+    @include hover-container();
   }
 }
 
 .left-handle {
   cursor: ew-resize;
   text-align: left;
+  padding-left: 1px;
   width: 10px;
   &:hover {
-    color: $black;
-    background-color: $black;
+    @include hover-left();
   }
 }
 
 .right-handle {
   cursor: ew-resize;
   text-align: right;
+  padding-right: 1px;
   width: 10px;
   &:hover {
-    color: $black;
-    background-color: $black;
+    @include hover-right();
   }
 }
 
@@ -48,11 +73,8 @@ $handle-hover-color: $black;
   pointer-events: none;
   overflow: hidden;
   word-break: break-all;
-  color: $black;
+  color: $text-color;
   font-size: 14px;
-  &:hover {
-    color: $process-dark-gray;
-  }
 }
 
 // CIRCULAR LAYOUT FOR ANNOTATIONS WITH NO DURATION
@@ -63,16 +85,16 @@ $handle-hover-color: $black;
   margin-left: -10px !important;
 
   .handlebar:hover {
-    color: $black !important;
+    color: $handle-hover-color !important;
   }
 
   .left-handle:hover {
       color: transparent !important;
-      background-color: $black !important;
+      background-color: $handle-hover-color !important;
   }
 
   .right-handle:hover {
       color: transparent !important;
-      background-color: $black !important;
+      background-color: $handle-hover-color !important;
   }
 }
