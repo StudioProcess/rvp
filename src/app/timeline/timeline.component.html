@@ -12,8 +12,8 @@
     <app-track *ngFor="let track of data.tracks"
       [data]="track"
       [scrollContainer]="'.annotation-container'"
-      [scroll]="0"
-      [zoom]="data.duration*10">
+      [scroll]="scrollLeft"
+      [zoom]="100/scrollWidth * 1607.2">
   </app-track>
 
   <!-- cursor -->
