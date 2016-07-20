@@ -18,19 +18,21 @@ interface DragEvent {
 export class HandlebarComponent implements OnInit {
 
   // define inputs
-  @Input() position:number;
-  @Input() width:number;
-  @Input() minWidth:number;
-  @Input('container') containerSelector:string;
-  @Input() caption:string;
+  @Input() position:number; // position of left edge (in %)
+  @Input() width:number; // width (in %)
+  @Input() minWidth:number; // minimum width (in px)
+  @Input('container') containerSelector:string; // ancestor to use for positioning
+  @Input() caption:string; // caption shown inside handle
 
   // define outputs
-  @Output() change:EventEmitter<any>;
+  @Output() drag:EventEmitter<any>; // position and/or width changed
 
-  host:HTMLElement;
-  handlebar:HTMLElement;
-  container:HTMLElement;
+  // dom references
+  host:HTMLElement; // host element (app-handlebar)
+  handlebar:HTMLElement; // .handlebar-container element
+  container:HTMLElement; // element specified via 'container' input, used for sizing and positioning
 
+  // observables
   private centerDrag:Observable<DragEvent>;
   private leftDrag:Observable<DragEvent>;
   private rightDrag:Observable<DragEvent>;
@@ -44,21 +46,8 @@ export class HandlebarComponent implements OnInit {
   }
 
   ngOnInit() {
-    // drag event streams
-    this.centerDrag = this.dragStream('.handlebar');
-    this.leftDrag = this.dragStream('.left-handle');
-    this.rightDrag = this.dragStream('.right-handle');
-    // this.centerDrag.subscribe(x => {log.debug(x)});
-
-
-    // check if length shorter than minimum width
-    if((this.width <= this.minWidth) && (this.width != 0)) {
-      this.width = this.minWidth;
-    }
-
+    // find dom references
     this.handlebar = this.host.firstElementChild as HTMLElement;
-
-    // find reference element to use for sizing and positioning
     if (this.containerSelector) {
       let el = this.host;
       while ( (el = el.parentElement) && !el.matches(this.containerSelector) );
@@ -67,6 +56,13 @@ export class HandlebarComponent implements OnInit {
       // choose parent element by default
       this.container = this.host.parentElement;
     }
+
+    // drag event streams
+    this.centerDrag = this.dragStream('.handlebar');
+    this.leftDrag = this.dragStream('.left-handle');
+    this.rightDrag = this.dragStream('.right-handle');
+    // this.centerDrag.subscribe(x => {log.debug(x)});
+
 
     this.centerSubscription = this.centerDrag.subscribe(e => {
       this.position = (e.startOffset.left + e.dx) / this.container.offsetWidth * 100;
