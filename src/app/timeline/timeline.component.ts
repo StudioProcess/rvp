@@ -26,6 +26,9 @@ export class TimelineComponent implements OnInit {
   private static MAX_ZOOM = 100; // px/s
   private static TEST_ZOOM = 10; // px/s
 
+  scrollPosition;
+  scrollWidth;
+
   moveCursor($moveEvent) {
 
     function extround(myvalue,n) {
@@ -55,6 +58,11 @@ export class TimelineComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  scrollbarDrag(event) {
+    this.scrollPosition = event.position;
+    this.scrollWidth = event.width;
   }
 
 }
