@@ -1,47 +1,36 @@
 @import 'settings';
-
 .container {
-  min-width:$min-width;
+  min-width: $min-width;
 }
-
 .title {
   margin-top: 2.5em;
   font-weight: lighter;
-  margin-bottom: 0em;
+  margin-bottom: 0;
   font-size: 21px;
   line-height: 21px;
   span {
     font-weight: 500;
   }
 }
-
 .menu-bar {
   margin-top: 1.4em;
   margin-bottom: 0.5em;
-
   .settings {
     text-align: right;
   }
 }
-
 .video-and-inspector {
   margin-bottom: 1em;
-
   .video-component {
     max-height: $video-and-inspector-height;
-    overflow:hidden;
+    overflow: hidden;
   }
-
   .inspector-component {
     max-height: $video-and-inspector-height;
-    overflow:hidden;
+    overflow: hidden;
   }
 }
-
-.timeline-component {
-
-}
-
+.timeline-component {}
 .footer {
   font-family: 'Space Mono', monospace;
   font-size: 10px;
@@ -53,41 +42,92 @@
   right: 0;
   text-align: center;
   color: $dark-gray;
-
   a {
     color: $dark-gray;
     text-decoration: none;
     border-bottom: 1px solid;
   }
 }
-
 .handlebar {
   position: absolute;
 }
-
-  // .browserupgrade {
-  //   margin: 0.2em 0;
-  //   background: #ccc;
-  //   color: #000;
-  //   padding: 0.2em 0;
-  // }
-
-  // // DRAG AND DROP AREA STYLES
-  // .dropArea {
-  //   min-height: 400px;
-  //   max-height: $video-height;
-  //   background-color: $light-gray;
-  //   //border: 1px solid $dark-gray;
-  //   color: $dark-gray;
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: center;
-  // }
-  // .dragged-over {
-  //   background-color: $light-gray;
-  //   color: $light-gray;
-  //   border: 1px solid $black;
-  // }
-  // .manual-upload {
-  //   padding-top: 1em;
-  // }
+.allert {
+  position: absolute;
+  margin-top: 1.5em;
+  margin-right: 1em;
+  top: 0;
+  right: 0;
+}
+/* make keyframes that tell the start state and the end state of our object */
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-moz-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.fade-in {
+  opacity: 0;
+  /* make things invisible upon start */
+  -webkit-animation: fadeIn ease-in 1;
+  /* call our keyframe named fadeIn, use animattion ease-in and repeat it only 1 time */
+  -moz-animation: fadeIn ease-in 1;
+  animation: fadeIn ease-in 1;
+  -webkit-animation-fill-mode: forwards;
+  /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
+  -moz-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-duration: 0.4s;
+  -moz-animation-duration: 0.4s;
+  animation-duration: 0.4s;
+}
+.success {
+  // visibility: hidden;
+  position: absolute;
+  margin-top: 1.5em;
+  margin-right: 1em;
+  top: 0;
+  right: 0;
+}
+// .browserupgrade {
+//   margin: 0.2em 0;
+//   background: #ccc;
+//   color: #000;
+//   padding: 0.2em 0;
+// }
+// // DRAG AND DROP AREA STYLES
+// .dropArea {
+//   min-height: 400px;
+//   max-height: $video-height;
+//   background-color: $light-gray;
+//   //border: 1px solid $dark-gray;
+//   color: $dark-gray;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// }
+// .dragged-over {
+//   background-color: $light-gray;
+//   color: $light-gray;
+//   border: 1px solid $black;
+// }
+// .manual-upload {
+//   padding-top: 1em;
+// }
