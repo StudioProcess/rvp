@@ -4,16 +4,26 @@
     <div class="column">
       <div class="row time-row collapse spacer-right">
         <div class="column timestamp">
-        <label><i class="ion-ios-time-outline timestamp-icon" title="Start Time"></i><input id="timestamp-input" type="value" class="number" title="Start Time" value="{{ data.annotation.utc_timestamp | time }}"></label>
+        <label><i class="ion-ios-time-outline timestamp-icon" title="Start Time"></i>
+          <input id="timestamp-input" class="number" title="Start Time" required
+          [(ngModel)]="data.annotation.utc_timestamp"
+          name="nameStarttime">
+        </label>
         </div>
         <div class="column duration">
-          <label><i class="ion-ios-time duration-icon" title="Duration"></i><input type="value" class="number" title="Duration" value="{{ data.annotation.duration | time }}"></label>
+          <label><i class="ion-ios-time duration-icon" title="Duration"></i>
+            <input class="number" title="Duration" required
+            [(ngModel)]="data.annotation.duration" name="nameDuration">
+          </label>
         </div>
       </div>
       <div class="row text-row collapse spacer-right">
         <div class="column data">
-          <input type="value" class="title" title="Title" value="{{ data.annotation.fields.title }}">
-          <textarea class="description" title="Description" value="{{ data.annotation.fields.description }}"></textarea>
+          <input class="title" title="Title" value="{{ data.annotation.fields.title }}"
+          [(ngModel)]="data.annotation.fields.title" name="nameTitle">
+          <textarea class="description" title="Description" value="{{ data.annotation.fields.description }}"
+            [(ngModel)]="data.annotation.fields.description" name="nameDescription">
+          </textarea>
         </div>
       </div>
     </div>

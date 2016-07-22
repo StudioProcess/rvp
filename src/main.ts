@@ -3,6 +3,7 @@ import { bootstrap } from '@angular/platform-browser-dynamic';
 import * as log from 'loglevel';
 import { AppComponent, environment } from './app/';
 import { TimePipe } from './app/shared/time.pipe';
+import { disableDeprecatedForms, provideForms } from '@angular/forms';
 
 // setup global logger
 log.enableAll();
@@ -24,8 +25,10 @@ if (environment.production) {
 }
 
 // configure global/app providers
-let providers = [
-  { provide: PLATFORM_PIPES, useValue: [TimePipe], multi:true } // globally available pipes
+let providers = [ // globally available pipes
+  { provide: PLATFORM_PIPES, useValue: [TimePipe], multi:true },
+  disableDeprecatedForms(), // new ng2 forms
+  provideForms()
 ];
 
 // run app

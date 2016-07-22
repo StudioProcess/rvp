@@ -98,3 +98,6 @@ $highlight-color: $white;
   padding-right: 1.0em;
   padding-bottom: 1.0em;
 }
+.ng-invalid {
+  border: 3px solid #ff6b6b; /* red */
+}
