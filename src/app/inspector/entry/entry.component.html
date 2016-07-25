@@ -6,12 +6,12 @@
       <div class="row time-row collapse spacer-right">
         <div class="column timestamp">
         <label><i class="ion-ios-time-outline timestamp-icon" title="Start Time"></i>
-          <input formControlName="timestamp" class="number" title="Start Time">
+          <input formControlName="timestamp" class="number" title="Start Time" (keydown)="timeInputGuard($event)">
         </label>
         </div>
         <div class="column duration">
           <label><i class="ion-ios-time duration-icon" title="Duration"></i>
-            <input formControlName="duration" class="number" title="Duration">
+            <input formControlName="duration" class="number" title="Duration" (keydown)="timeInputGuard($event)">
           </label>
         </div>
       </div>

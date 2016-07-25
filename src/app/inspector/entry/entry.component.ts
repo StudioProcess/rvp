@@ -14,7 +14,9 @@ export class EntryComponent implements OnInit {
 
   form:FormGroup;
   color:string;
-  formatTime;
+  formatTime = TimePipe.prototype.transform;
+  timePattern = '([0-9]*:){0,2}[0-9]*(\\.[0-9]*)?'; // Validation pattern for HH:MM:SS.XXX
+  timeRegExp = new RegExp('^' + this.timePattern + '$');
 
   @Input() set data(entry:InspectorEntry) {
     this.color = entry.color;
@@ -26,11 +28,7 @@ export class EntryComponent implements OnInit {
   }
 
   constructor(fb: FormBuilder) {
-    this.formatTime = TimePipe.prototype.transform;
-
-    // Validator for HH:MM:SS.XXX
-    let validateTime = Validators.pattern('([0-9]*:){0,2}[0-9]*(\\.[0-9]*)?');
-
+    let validateTime = Validators.pattern(this.timePattern);
     this.form = fb.group({
       'timestamp': [, [Validators.required, validateTime]],
       'duration': [, validateTime],
@@ -43,6 +41,27 @@ export class EntryComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  // Guard against invalid time input
+  timeInputGuard(e) {
+    // for a keyCode return true if it's a printable key
+    const isPrintable = k =>
+      (k > 47 && k < 58) || // number keys
+      (k == 32) || // spacebar
+      (k == 13)  || // return key
+      (k > 64 && k < 91) || // letter keys
+      (k > 95 && k < 112) || // numpad keys
+      (k > 185 && k < 193) || // ;=,-./` (in order)
+      (k > 218 && k < 223); // [\]' (in order)
+
+    if (!isPrintable(e.keyCode)) return; // allow non-printable keys
+
+    let input = e.target; // the input element
+    let value = input.value; // value of the input
+    let newValue = value.slice(0, input.selectionStart) + e.key + value.slice(input.selectionEnd);
+    // log.debug(newValue, this.timeRegExp.test(newValue));
+    if ( !this.timeRegExp.test(newValue) ) e.preventDefault(); // block printable keys that make the value invalid
   }
 
 }
