@@ -1,28 +1,24 @@
-<div class="row column entry-container">
+<div [formGroup]="form" class="row column entry-container">
+
   <div class="row">
-    <div class="column shrink"><div class="track-color" [style.backgroundColor]="data.color"></div></div>
+    <div class="column shrink"><div class="track-color" [style.backgroundColor]="color"></div></div>
     <div class="column">
       <div class="row time-row collapse spacer-right">
         <div class="column timestamp">
         <label><i class="ion-ios-time-outline timestamp-icon" title="Start Time"></i>
-          <input id="timestamp-input" class="number" title="Start Time" required
-          [(ngModel)]="data.annotation.utc_timestamp"
-          name="nameStarttime">
+          <input formControlName="timestamp" class="number" title="Start Time">
         </label>
         </div>
         <div class="column duration">
           <label><i class="ion-ios-time duration-icon" title="Duration"></i>
-            <input class="number" title="Duration" required
-            [(ngModel)]="data.annotation.duration" name="nameDuration">
+            <input formControlName="duration" class="number" title="Duration">
           </label>
         </div>
       </div>
       <div class="row text-row collapse spacer-right">
         <div class="column data">
-          <input class="title" title="Title" value="{{ data.annotation.fields.title }}"
-          [(ngModel)]="data.annotation.fields.title" name="nameTitle">
-          <textarea class="description" title="Description" value="{{ data.annotation.fields.description }}"
-            [(ngModel)]="data.annotation.fields.description" name="nameDescription">
+          <input formControlName="title" class="title" title="Title">
+          <textarea formControlName="description" class="description" title="Description">
           </textarea>
         </div>
       </div>

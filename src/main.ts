@@ -25,8 +25,8 @@ if (environment.production) {
 }
 
 // configure global/app providers
-let providers = [ // globally available pipes
-  { provide: PLATFORM_PIPES, useValue: [TimePipe], multi:true },
+let providers = [
+  { provide: PLATFORM_PIPES, useValue: [TimePipe], multi:true }, // globally available pipes
   disableDeprecatedForms(), // new ng2 forms
   provideForms()
 ];
