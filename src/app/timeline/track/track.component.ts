@@ -19,4 +19,8 @@ export class TrackComponent implements OnInit {
   ngOnInit() {
   }
 
+  doubleClick($clickEvent){
+    log.debug("double clicked");
+  }
+
 }
