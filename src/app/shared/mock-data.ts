@@ -6,7 +6,9 @@ let data:Project = {
     id: null,
     url: 'http://www.html5videoplayer.net/videos/toystory.mp4',
     meta: {
-      filename: 'toystory.mp4'
+      filename: 'toystory.mp4',
+      length: '',
+      resolution: ''
     }
   },
 
