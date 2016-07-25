@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { InspectorEntry } from '../../shared/models';
 import { REACTIVE_FORM_DIRECTIVES, FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-import { TimePipe } from '../../shared/time.pipe';
+import { TimePipe, UnixTimePipe } from '../../shared/time.pipes';
 
 @Component({
   moduleId: module.id,
@@ -15,6 +15,7 @@ export class EntryComponent implements OnInit {
   form:FormGroup;
   color:string;
   private formatTime;
+  private unixTime;
 
   @Input() set data(entry:InspectorEntry) {
     this.color = entry.color;
@@ -32,12 +33,15 @@ export class EntryComponent implements OnInit {
       'title': [],
       'description': []
     });
+
     this.formatTime = TimePipe.prototype.transform;
+    this.unixTime = UnixTimePipe.prototype.transform;
     // this.form.valueChanges.subscribe(x => log.debug('value changed:', x));
   }
 
   ngOnInit() {
-    log.debug(this.form);
+    // log.debug(this.form);
+    // log.debug( this.unixTime('00:00:01.500') );
   }
 
 }
