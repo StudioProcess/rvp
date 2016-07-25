@@ -11,9 +11,11 @@
     <div class="column logo">
       <img src=".././img/rv-logo_1000px.png" width="40px" alt="Research Video Logo" title="Research Video">
     </div>
+    <!--
     <div class="column settings">
-      <label><a data-open="project-info"><i class="ion-information-circled settings" title="Project Settings"></i> Info</a></label>
+      <label><a data-open="project-info"><i class="ion-information-circled settings" title="About Resarch Video"></i> About Resarch Video</a></label>
     </div>
+    -->
     <div class="column shrink settings">
       <label><a data-open="settings-reveal"><i class="ion-ios-gear settings" title="Project Settings"></i> Project Settings</a></label>
     </div>
@@ -61,7 +63,7 @@
   <h1><img src="../img/rv-logo_1000px.png" width="60px"> Project Handling</h1>
   <app-filepicker (filePicked)="videoFilePicked($event)"></app-filepicker>
   <app-info></app-info>
-  <app-io></app-io>
+  <app-io [videoSrc]="videoSrc | async"></app-io>
   <button class="close-button" data-close aria-label="Close modal" type="button">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -76,6 +78,7 @@
   </button>
 </div>
 
+<!-- Callout for important hints/possibly errors
 <div class="success callout fade-in" data-closable>
   <h5>Annotation Format Hint</h5>
   <p>Annotations need to follow the format <code>HH:MM:SS.XXX</code> to work.</p>
@@ -83,3 +86,4 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
+-->
