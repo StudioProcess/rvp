@@ -9,7 +9,6 @@ import { InspectorEntry } from '../../shared/models';
 })
 export class EntryComponent implements OnInit {
 
-  title = 'inspectorentry works!';
   @Input() data:InspectorEntry;
 
   constructor() {
