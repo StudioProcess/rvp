@@ -18,17 +18,19 @@ export class TimePipe implements PipeTransform {
 }
 
 
-// Transform formatted (HH:MM:SS.XXX) timestamp to unix (seconds) format
+// Transform formatted (DD.HH:MM:SS.XXX) timestamp to unix (seconds) format
+// Supports overflowing hours, minutes and seconds
+// Pass an argument of {moment:true} to get the raw moment instance after parsing
 @Pipe({
   name: 'unixTime',
   pure: true // explicitly mark as pure (the default) i.e. only execute this pipe if input primitive or object reference changes
 })
 export class UnixTimePipe implements PipeTransform {
 
-  transform(formattedTime: string, args?: any): number {
-    let unixMillis = moment.utc('1970-01-01 ' + formattedTime) // parse ISO 8601 time (HH:MM:SS.XXX) in UTC
-      .valueOf(); // unix timestamp in milliseconds
-    return unixMillis / 1000;
+  transform(formattedTime: string, args?:any): any {
+    let momentDuration = moment.duration(formattedTime); // parse moment duration: http://momentjs.com/docs/#/durations/creating/
+    if (args && args.moment) return momentDuration;
+    return momentDuration.asSeconds(); // return length of duration with fractional seconds
   }
 
 }
