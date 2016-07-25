@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { InspectorEntry } from '../../shared/models';
 import { REACTIVE_FORM_DIRECTIVES, FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-import { TimePipe } from '../../shared/time.pipes';
+import { TimePipe, UnixTimePipe } from '../../shared/time.pipes';
 
 @Component({
   moduleId: module.id,
@@ -39,6 +39,7 @@ export class EntryComponent implements OnInit {
     });
 
     // this.form.valueChanges.subscribe(x => log.debug('value changed:', x));
+    this.form.controls['timestamp'].valueChanges.subscribe( x => log.debug('parsed timestamp:', UnixTimePipe.prototype.transform(x)) );
   }
 
   ngOnInit() {
