@@ -29,7 +29,7 @@ export class EntryComponent implements OnInit {
     this.formatTime = TimePipe.prototype.transform;
 
     // Validator for HH:MM:SS.XXX
-    let validateTime = Validators.pattern('([0-9]+:){0,2}[0-9]+(\\.[0-9]*)?');
+    let validateTime = Validators.pattern('([0-9]*:){0,2}[0-9]*(\\.[0-9]*)?');
 
     this.form = fb.group({
       'timestamp': [, [Validators.required, validateTime]],
