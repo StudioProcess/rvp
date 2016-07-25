@@ -49,6 +49,9 @@ $highlight-color: $white;
   color: $black;
   background-color: $highlight-color;
 }
+label {
+  display: inline-block;
+}
 .spacer-right {
   margin-right: 0.1em;
 }
