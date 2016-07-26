@@ -87,7 +87,6 @@ label {
 .number:focus, .duration:focus, .title:focus {
   color: $black;
   background-color: $highlight-color;
-  outline: none;
   border-color: transparent;
   box-shadow: 0 0 0 $white;
 }
@@ -102,5 +101,9 @@ label {
   padding-bottom: 1.0em;
 }
 .ng-invalid {
-  border: 3px solid #ff6b6b; /* red */
+  outline-offset: (-$outline-width);
+  outline: $outline-width solid #ff6b6b;
+}
+input.ng-valid:focus {
+  outline: none;
 }
