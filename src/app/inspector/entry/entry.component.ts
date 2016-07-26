@@ -19,6 +19,7 @@ export class EntryComponent implements OnInit {
   form:FormGroup;
   color:string;
   formatTime = TimePipe.prototype.transform;
+  parseTime = UnixTimePipe.prototype.transform;
   timePattern = '([0-9]*:){0,2}[0-9]*(\\.[0-9]*)?'; // Validation pattern for HH:MM:SS.XXX
   timeRegExp = new RegExp('^' + this.timePattern + '$');
 
@@ -82,8 +83,8 @@ export class EntryComponent implements OnInit {
     if (this.form.dirty && this.form.valid) {
       // log.debug('submit', this.form.value);
       let newAnnotation:Annotation = {
-        utc_timestamp: this.form.value.timestamp,
-        duration: this.form.value.duration,
+        utc_timestamp: this.parseTime(this.form.value.timestamp),
+        duration: this.parseTime(this.form.value.duration),
         fields: {
           title: this.form.value.title,
           description: this.form.value.description
