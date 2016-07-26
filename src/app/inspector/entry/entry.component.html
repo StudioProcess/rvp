@@ -11,14 +11,14 @@
         </div>
         <div class="column duration">
           <label><i class="ion-ios-time duration-icon" title="Duration"></i>
-            <input formControlName="duration" class="number" title="Duration" (keydown)="timeInputGuard($event)">
+            <input formControlName="duration" class="number" title="Duration" placeholder="0" (keydown)="timeInputGuard($event)">
           </label>
         </div>
       </div>
       <div class="row text-row collapse spacer-right">
         <div class="column data">
-          <input formControlName="title" class="title" title="Title">
-          <textarea formControlName="description" class="description" title="Description">
+          <input formControlName="title" class="title" title="Title" placeholder="Title (optional)">
+          <textarea formControlName="description" class="description" title="Description" placeholder="Description (optional)">
           </textarea>
         </div>
       </div>
