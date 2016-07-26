@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ElementRef } from '@angular/core';
 import { InspectorEntry } from '../../shared/models';
 import { REACTIVE_FORM_DIRECTIVES, FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { TimePipe, UnixTimePipe } from '../../shared/time.pipes';
@@ -27,7 +27,7 @@ export class EntryComponent implements OnInit {
     (this.form.controls['description'] as FormControl).updateValue(entry.annotation.fields.description);
   }
 
-  constructor(fb: FormBuilder) {
+  constructor(private hostElement: ElementRef, fb: FormBuilder) {
     let validateTime = Validators.pattern(this.timePattern);
     this.form = fb.group({
       'timestamp': [, [Validators.required, validateTime]],
@@ -37,7 +37,9 @@ export class EntryComponent implements OnInit {
     });
 
     // this.form.valueChanges.subscribe(x => log.debug('value changed:', x));
-    this.form.controls['timestamp'].valueChanges.subscribe( x => log.debug('parsed timestamp:', UnixTimePipe.prototype.transform(x)) );
+    // this.form.controls['timestamp'].valueChanges.subscribe( x => log.debug('parsed timestamp:', UnixTimePipe.prototype.transform(x)) );
+
+    // this.form.valueChanges.subscribe(x => log.debug('form value', x));
   }
 
   ngOnInit() {
@@ -49,7 +51,7 @@ export class EntryComponent implements OnInit {
     const isPrintable = k =>
       (k > 47 && k < 58) || // number keys
       (k == 32) || // spacebar
-      (k == 13)  || // return key
+      // (k == 13)  || // return key // don't count as printable, therefore don't guard against it
       (k > 64 && k < 91) || // letter keys
       (k > 95 && k < 112) || // numpad keys
       (k > 185 && k < 193) || // ;=,-./` (in order)
@@ -62,6 +64,15 @@ export class EntryComponent implements OnInit {
     let newValue = value.slice(0, input.selectionStart) + e.key + value.slice(input.selectionEnd);
     // log.debug(newValue, this.timeRegExp.test(newValue));
     if ( !this.timeRegExp.test(newValue) ) e.preventDefault(); // block printable keys that make the value invalid
+  }
+
+  // Send updated values of this component
+  submit(e) {
+    if (this.form.dirty && this.form.valid) {
+      // blur (= give up focus) all input fields
+      this.hostElement.nativeElement.querySelectorAll('input').forEach(el => el.blur());
+      log.debug('submit', this.form.value);
+    }
   }
 
 }

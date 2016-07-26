@@ -1,4 +1,4 @@
-<div [formGroup]="form" class="row column entry-container">
+<form [formGroup]="form" (ngSubmit)="submit($event)" class="row column entry-container">
 
   <div class="row">
     <div class="column shrink"><div class="track-color" [style.backgroundColor]="color"></div></div>
@@ -6,26 +6,27 @@
       <div class="row time-row collapse spacer-right">
         <div class="column timestamp">
         <label><i class="ion-ios-time-outline timestamp-icon" title="Start Time"></i>
-          <input formControlName="timestamp" class="number" title="Start Time" (keydown)="timeInputGuard($event)">
+          <input formControlName="timestamp" class="number" title="Start Time" (keydown)="timeInputGuard($event)" (change)="submit($event)">
         </label>
         </div>
         <div class="column duration">
           <label><i class="ion-ios-time duration-icon" title="Duration"></i>
-            <input formControlName="duration" class="number" title="Duration" placeholder="0" (keydown)="timeInputGuard($event)">
+            <input formControlName="duration" class="number" title="Duration" placeholder="0" (keydown)="timeInputGuard($event)" (change)="submit($event)">
           </label>
         </div>
       </div>
       <div class="row text-row collapse spacer-right">
         <div class="column data">
-          <input formControlName="title" class="title" title="Title" placeholder="Title (optional)">
-          <textarea formControlName="description" class="description" title="Description" placeholder="Description (optional)">
+          <input formControlName="title" class="title" title="Title" placeholder="Title (optional)" (change)="submit($event)">
+          <textarea formControlName="description" class="description" title="Description" placeholder="Description (optional)" (change)="submit($event)">
           </textarea>
         </div>
       </div>
+      <input type="submit" style="display:none;">
     </div>
   </div>
 
-</div>
+</form>
 
 <!-- <div class="annotation-track-color"></div>
 <div class="timedisplay">
