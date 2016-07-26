@@ -7,18 +7,18 @@ export const stubReducer = (state, action) => {
   }
 }
 
-export const annotationReducer = (state, action) => {
+export const annotationReducer = (state:Project, action) => {
   log.debug(action, state);
 
   switch (action.type) {
     case 'UPDATE_ANNOTATION':
-      // newState = Object.assign({}, state, );
-      // find track to change
-      // let updateInfo = state.timeline.tracks.reduce( (acc, track) => {
-      //   let oldAnnotationIndex = track.annotations.indexOf(action.payload.old);
-      //   if (oldAnnotationIndex > 0) return {track, index:oldAnnotationIndex};
-      // }, {});
-      // log.debug('update', updateInfo);
+      // TODO: optimize with immutable data structures
+      state.timeline.tracks.forEach((track) => {
+        let index = track.annotations.indexOf(action.payload.old);
+        if (index >= 0) {
+          track.annotations[index] = action.payload.new;
+        }
+      });
       return state;
 
     case 'ADD_ANNOTATION':
