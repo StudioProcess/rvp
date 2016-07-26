@@ -18,26 +18,9 @@ export class TimePipe implements PipeTransform {
 }
 
 
-// // Transform formatted (DD.HH:MM:SS.XXX) timestamp to unix (seconds) format
-// // Supports overflowing hours, minutes and seconds
-// // Pass an argument of {moment:true} to get the raw moment instance after parsing
-// @Pipe({
-//   name: 'unixTime',
-//   pure: true // explicitly mark as pure (the default) i.e. only execute this pipe if input primitive or object reference changes
-// })
-// export class UnixTimePipe implements PipeTransform {
-//
-//   transform(formattedTime: string, args?:any): any {
-//     let momentDuration = moment.duration(formattedTime); // parse moment duration: http://momentjs.com/docs/#/durations/creating/
-//     if (args && args.moment) return momentDuration;
-//     return momentDuration.asSeconds(); // return length of duration with fractional seconds
-//   }
-//
-// }
-
-
 // Transform formatted (DD.HH:MM:SS.XXX) timestamp to unix (seconds) format
 // Supports overflowing hours, minutes and seconds
+// returns null if parsing fails
 @Pipe({
   name: 'unixTime',
   pure: true // explicitly mark as pure (the default) i.e. only execute this pipe if input primitive or object reference changes
@@ -52,7 +35,6 @@ export class UnixTimePipe implements PipeTransform {
 
     let pattern = minutesAndHours + seconds + millis;
     let result = new RegExp(pattern).exec(formattedTime);
-    // log.debug(result);
     if (result == null) return null;
 
     let m1 = result[1] ? parseInt(result[1], 10) : 0;
@@ -60,7 +42,7 @@ export class UnixTimePipe implements PipeTransform {
     let m2 = result[3] ? parseInt(result[3], 10) : 0;
     let s = result[4] ? parseInt(result[4], 10) : 0;
     let sFract = result[5] ? parseFloat('.'+result[5]) : 0; // milliseconds, parsed as fractional seconds
-    log.debug( h + ':' + (m1+m2) + ':' + (s+sFract) );
+    // log.debug( h + ':' + (m1+m2) + ':' + (s+sFract) );
     return h*3600 + m1*60 + m2*60 + s + sFract;
   }
 
