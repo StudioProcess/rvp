@@ -70,15 +70,17 @@ export class EntryComponent implements OnInit {
     if ( !this.timeRegExp.test(newValue) ) e.preventDefault(); // block printable keys that make the value invalid
   }
 
+  blurOnReturnKey(e) {
+    if (e.keyCode == 13) { // Enter/Return or Numpad Return Key
+      e.stopPropagation(); // prevent bubbling to e.g. timeInputGuard
+      e.target.blur(); // emits blur event which triggers submit()
+    }
+  }
+
   // Send updated values of this component
   submit(e) {
     if (this.form.dirty && this.form.valid) {
-
-      e.preventDefault();
-
-      // blur (= give up focus) all input fields
-      this.hostElement.nativeElement.querySelectorAll('input').forEach(el => el.blur());
-      log.debug('submit', this.form.value);
+      // log.debug('submit', this.form.value);
       let newAnnotation:Annotation = {
         utc_timestamp: this.form.value.timestamp,
         duration: this.form.value.duration,
@@ -87,7 +89,7 @@ export class EntryComponent implements OnInit {
           description: this.form.value.description
         }
       };
-      this.store.dispatch({ type: 'UPDATE_ANNOTATION', payload: newAnnotation });
+      this.store.dispatch( {type:'UPDATE_ANNOTATION', payload:newAnnotation} );
     }
   }
 
