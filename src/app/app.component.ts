@@ -2,7 +2,7 @@ import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { Store, provideStore } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { stubReducer } from './reducers';
+import { masterReducer } from './reducers';
 import { Project, InspectorEntry, Timeline } from './shared/models';
 import mockData from './shared/mock-data';
 
@@ -25,7 +25,7 @@ declare var $:any;
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
   directives: [TimelineComponent, InspectorComponent, VideoComponent, FilepickerComponent, InfoComponent, IoComponent, HandlebarComponent],
-  providers: [provideStore({stubReducer}, mockData), LocalStorageService, SimpleBackendService]
+  providers: [provideStore(masterReducer, mockData), LocalStorageService, SimpleBackendService]
 })
 export class AppComponent implements AfterViewInit {
 
