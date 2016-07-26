@@ -16,15 +16,15 @@ import { Store } from '@ngrx/store';
 })
 export class EntryComponent implements OnInit {
 
+  _data:InspectorEntry; // updated by data() setter
   form:FormGroup;
-  color:string;
   formatTime = TimePipe.prototype.transform;
   parseTime = UnixTimePipe.prototype.transform;
   timePattern = '([0-9]*:){0,2}[0-9]*(\\.[0-9]*)?'; // Validation pattern for HH:MM:SS.XXX
   timeRegExp = new RegExp('^' + this.timePattern + '$');
 
   @Input() set data(entry:InspectorEntry) {
-    this.color = entry.color;
+    this._data = entry;
     // TODO: update in RC5: use FormGroup.updateValue() to set all form values in one step
     (this.form.controls['timestamp'] as FormControl).updateValue(this.formatTime(entry.annotation.utc_timestamp));
     (this.form.controls['duration'] as FormControl).updateValue(this.formatTime(entry.annotation.duration));
@@ -90,7 +90,10 @@ export class EntryComponent implements OnInit {
           description: this.form.value.description
         }
       };
-      this.store.dispatch( {type:'UPDATE_ANNOTATION', payload:newAnnotation} );
+      this.store.dispatch({
+        type: 'UPDATE_ANNOTATION',
+        payload: { old:this._data.annotation, new:newAnnotation }
+      });
     }
   }
 
