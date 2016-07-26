@@ -57,6 +57,7 @@ export class AppComponent implements AfterViewInit {
     // timeline data
     this.timelineData = store.select('timeline') as Observable<Timeline>;
 
+
     // this.timelineData.subscribe(data => {
     //   log.debug('timeline data', data);
     // })

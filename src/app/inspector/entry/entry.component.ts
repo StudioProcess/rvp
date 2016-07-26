@@ -2,6 +2,10 @@ import { Component, OnInit, Input, ElementRef } from '@angular/core';
 import { InspectorEntry } from '../../shared/models';
 import { REACTIVE_FORM_DIRECTIVES, FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { TimePipe, UnixTimePipe } from '../../shared/time.pipes';
+import { Annotation } from '../../shared/models';
+
+import { Store } from '@ngrx/store';
+
 
 @Component({
   moduleId: module.id,
@@ -27,7 +31,7 @@ export class EntryComponent implements OnInit {
     (this.form.controls['description'] as FormControl).updateValue(entry.annotation.fields.description);
   }
 
-  constructor(private hostElement: ElementRef, fb: FormBuilder) {
+  constructor(private hostElement: ElementRef, fb: FormBuilder, private store: Store<any>) {
     let validateTime = Validators.pattern(this.timePattern);
     this.form = fb.group({
       'timestamp': [, [Validators.required, validateTime]],
@@ -69,9 +73,21 @@ export class EntryComponent implements OnInit {
   // Send updated values of this component
   submit(e) {
     if (this.form.dirty && this.form.valid) {
+
+      e.preventDefault();
+
       // blur (= give up focus) all input fields
       this.hostElement.nativeElement.querySelectorAll('input').forEach(el => el.blur());
       log.debug('submit', this.form.value);
+      let newAnnotation:Annotation = {
+        utc_timestamp: this.form.value.timestamp,
+        duration: this.form.value.duration,
+        fields: {
+          title: this.form.value.title,
+          description: this.form.value.description
+        }
+      };
+      this.store.dispatch({ type: 'UPDATE_ANNOTATION', payload: newAnnotation });
     }
   }
 
