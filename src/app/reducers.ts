@@ -1,5 +1,15 @@
 import { Project } from './shared/models';
 
+// Utility function from Redux to combine reducers. Expects an object with state property keys mapped to reducer functions. See: http://redux.js.org/docs/api/combineReducers.html
+const combineReducers = (reducers) => {
+  return (state = {}, action) => {
+    return Object.keys(reducers).reduce( (nextState, key) => {
+      nextState[key] = reducers[key]( state[key], action );
+      return nextState;
+    }, {});
+  };
+};
+
 export const stubReducer = (state, action) => {
   switch (action.type) {
     default:
