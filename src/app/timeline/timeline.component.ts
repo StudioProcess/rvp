@@ -5,6 +5,7 @@ import { CursorComponent } from './cursor';
 import { HandlebarComponent } from './handlebar';
 import { Timeline, Annotation } from '../shared/models';
 import { ScrollZoom } from './scroll-zoom.directive';
+import { TimeService } from '../shared/time.service';
 
 @Component({
   moduleId: module.id,
@@ -54,7 +55,7 @@ export class TimelineComponent implements OnInit {
 
   }
 
-  constructor() {
+  constructor(private ts: TimeService) {
   }
 
   ngOnInit() {
