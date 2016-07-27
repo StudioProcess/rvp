@@ -30,8 +30,9 @@ export class TrackComponent implements OnInit {
         description: ''
       }
     };
-    this.store.dispatch( { type: 'ADD_ANNOTATION', payload: newAnnotation } );
-    log.debug("new annotation dispatched");
+    this.store.dispatch( { type: 'ADD_ANNOTATION', payload: { annotation: newAnnotation, track: this.data }} );
+    //     this.cursorTime = $moveEvent.offsetX / $moveEvent.currentTarget.offsetWidth * 100,100;
+    log.debug($clickEvent.offsetX);// - $('timeline').offset().left);
   }
 
 }

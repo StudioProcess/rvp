@@ -32,6 +32,11 @@ export const annotationReducer = (state:Project, action) => {
       return state;
 
     case 'ADD_ANNOTATION':
+      state.timeline.tracks.forEach((track) =>  {
+        if (action.payload.track == track) {
+          track.annotations.push(action.payload.annotation);
+        }
+      });
       return state;
 
     case 'DELETE_ANNOTATION':
