@@ -42,11 +42,6 @@ $min-width: 25px;
   }
 }
 
-:host.active .handlebar-container {
-  outline-offset: (-$outline-width);
-  outline: $outline-width solid $black;
-}
-
 :host.hover-left {
   .left-handle { @include hover-left(); }
   .handlebar { @include hover-container(); }
