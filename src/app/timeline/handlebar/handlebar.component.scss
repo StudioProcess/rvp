@@ -3,6 +3,7 @@
 $background-color: $process-gray;
 $text-color: $black;
 $handle-hover-color: $black;
+$outline-width: 3px;
 
 // minimum (px) size for handlebar
 $min-width: 25px;
@@ -39,6 +40,11 @@ $min-width: 25px;
   &:hover {
     @include hover-container();
   }
+}
+
+:host.active .handlebar-container {
+  outline-offset: (-$outline-width);
+  outline: $outline-width solid $black;
 }
 
 :host.hover-left {
