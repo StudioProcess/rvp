@@ -5,15 +5,15 @@
     <app-handlebar class="scrollbar" [left]="0" [width]="100" [caption]="'|||'" [minWidth]='30' (drag)="scrollbarDrag($event)"></app-handlebar>
 
     <div style="padding-top:20px;text-align:center;">
-      <span>left: {{scrollLeft | number:1.3}}%</span> — <span>width: {{scrollWidth | number:1.3}}%</span>
+      <span>left: {{scrollbarLeft | number:'.2-2'}}%</span> — <span>width: {{scrollbarWidth | number:'.2-2'}}% — {{timelineWidth|number:'.0-0'}}px</span>
     </div>
   </div>
 
     <app-track *ngFor="let track of data.tracks"
       [data]="track"
       [scrollContainer]="'.annotation-container'"
-      [scroll]="scrollLeft"
-      [zoom]="100/scrollWidth * 1607.2">
+      [scroll]="scrollbarLeft"
+      [zoom]="timelineWidth">
     </app-track>
 
   <!-- cursor -->

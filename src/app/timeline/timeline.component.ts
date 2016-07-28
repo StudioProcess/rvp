@@ -21,8 +21,9 @@ export class TimelineComponent implements OnInit {
 
   @Input() data:Timeline;
 
-  scrollLeft;
-  scrollWidth;
+  scrollbarLeft;
+  scrollbarWidth;
+  timelineWidth;
 
   cursorTime;
   cursorDisplayTime;
@@ -42,11 +43,15 @@ export class TimelineComponent implements OnInit {
         this.timeService.setTimelineViewportWidth(width);
       });
     }, 0);
+
+    this.timeService.timelineWidthStream.subscribe(width => this.timelineWidth = width);
   }
 
   scrollbarDrag(event) {
-    this.scrollLeft = event.left;
-    this.scrollWidth = event.width;
+    this.scrollbarLeft = event.left;
+    this.scrollbarWidth = event.width;
+    // set zoom level in time service
+    this.timeService.zoomLevelRelative = event.width / 100;
   }
 
   moveCursor($moveEvent) {
