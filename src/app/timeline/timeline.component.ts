@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ElementRef } from '@angular/core';
 import { TrackComponent } from './track';
 import { PlayheadComponent } from './playhead';
 import { CursorComponent } from './cursor';
@@ -6,6 +6,7 @@ import { HandlebarComponent } from './handlebar';
 import { Timeline, Annotation } from '../shared/models';
 import { ScrollZoom } from './scroll-zoom.directive';
 import { TimeService } from '../shared/time.service';
+import { Observable } from 'rxjs/Rx';
 
 @Component({
   moduleId: module.id,
@@ -18,17 +19,33 @@ export class TimelineComponent implements OnInit {
 
   @Input() data:Timeline;
 
+  scrollLeft;
+  scrollWidth;
+
   cursorTime;
   cursorDisplayTime;
 
   playheadTime = 2;
   playheadDisplayTime = 2;
 
-  private static MAX_ZOOM = 100; // px/s
-  private static TEST_ZOOM = 10; // px/s
+  constructor(private el:ElementRef, private timeService:TimeService) {}
 
-  scrollLeft;
-  scrollWidth;
+  ngOnInit() {
+    // TODO: need to use setTimeout here, otherwise width = 0
+    setTimeout(() => {
+      Observable.fromEvent(window, 'resize')
+      .startWith(null)
+      .map(() => this.el.nativeElement.offsetWidth)
+      .subscribe( (width) => {
+        this.timeService.setTimelineViewportWidth(width);
+      });
+    }, 0);
+  }
+
+  scrollbarDrag(event) {
+    this.scrollLeft = event.left;
+    this.scrollWidth = event.width;
+  }
 
   moveCursor($moveEvent) {
 
@@ -53,17 +70,6 @@ export class TimelineComponent implements OnInit {
     this.playheadTime = $clickEvent.offsetX / $clickEvent.currentTarget.offsetWidth * 100,100;
     this.playheadDisplayTime = extround($clickEvent.offsetX / $clickEvent.currentTarget.offsetWidth * 100,100);
 
-  }
-
-  constructor(private ts: TimeService) {
-  }
-
-  ngOnInit() {
-  }
-
-  scrollbarDrag(event) {
-    this.scrollLeft = event.left;
-    this.scrollWidth = event.width;
   }
 
 }

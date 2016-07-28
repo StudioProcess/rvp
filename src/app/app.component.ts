@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Store, provideStore } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
@@ -28,17 +28,15 @@ declare var $:any;
   directives: [TimelineComponent, InspectorComponent, VideoComponent, FilepickerComponent, InfoComponent, IoComponent, HandlebarComponent],
   providers: [provideStore(masterReducer, mockData), TimeService, LocalStorageService, SimpleBackendService]
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit {
 
   videoSrc:Observable<string>;
   inspectorEntries:Observable<InspectorEntry[]>;
   timelineData:Observable<Timeline>;
   @ViewChild(VideoComponent) private video:VideoComponent; // inject video component child (available AfterViewInit)
 
-  constructor(ts:TimeService, private store:Store<Project>) {
+  constructor(private timeService:TimeService, private store:Store<Project>, private el:ElementRef) {
     log.debug('app component');
-
-    // ts.init({}); // TODO supply inital values to time service
 
     // video data
     this.videoSrc = store.select('video', 'url') as Observable<string>;
@@ -81,6 +79,29 @@ export class AppComponent implements AfterViewInit {
     // }).catch(err => {
     //   log.error('retrieve video:', err);
     // });
+  }
+
+  ngOnInit() {
+    log.debug('app init');
+
+    let td;
+    this.timelineData.first().subscribe(t => td=t.duration);
+    log.debug('t duration', td);
+
+    // initialize time service
+    this.timeService.init({
+      timelineDuration: td,
+      timelineViewportWidth: 1000,
+      zoomLevel: 10,
+      maxZoomLevel: 100
+    });
+
+    log.debug('t width', this.timeService.timelineWidth);
+
+    // let at = this.el.nativeElement.querySelector('app-timeline');
+    // let ac = this.el.nativeElement.querySelector('.scrollbar');
+    // log.debug('app-timeline', at);
+    // log.debug('.timeline', ac);
   }
 
   ngAfterViewInit() {

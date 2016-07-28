@@ -1,4 +1,7 @@
 @import '../settings';
+
+:host { display:block; width:100%; }
+
 .timeline {
   position: relative;
   min-height: 50px;
