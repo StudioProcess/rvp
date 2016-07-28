@@ -91,7 +91,7 @@ export class EntryComponent implements OnInit {
           title: this.form.value.title,
           description: this.form.value.description
         },
-        isSelected: false
+        isSelected: true
       };
       this.store.dispatch({
         type: 'UPDATE_ANNOTATION',
@@ -103,10 +103,10 @@ export class EntryComponent implements OnInit {
   clickAnnotation($clickEvent){
 
     let newAnnotation:Annotation = this._data.annotation;
-    this.store.dispatch( { type: 'SELECT_ANNOTATION', payload: newAnnotation } );
-    log.debug(newAnnotation);
-
-    //$clickEvent.stopPropagation();
+    if(newAnnotation.isSelected != true ){
+      this.store.dispatch( { type: 'SELECT_ANNOTATION', payload: newAnnotation } );
+      $clickEvent.stopPropagation();
+    }
   }
 
 }

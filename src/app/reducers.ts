@@ -18,7 +18,7 @@ export const stubReducer = (state, action) => {
 }
 
 export const annotationReducer = (state:Project, action) => {
-  log.debug(action, state);
+  // log.debug(action, state);
 
   switch (action.type) {
     case 'UPDATE_ANNOTATION':
