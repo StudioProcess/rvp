@@ -79,7 +79,9 @@ export class TimeService {
   //    New zoom level (zoomLevel)
   //    New timeline width [px] (timelineWidth)
   set zoomLevel(zoom: number) {
-    if (zoom <= 0) throw new Error('Invalid zoom level. (Needs to be > 0)');
+    // if (zoom <= 0) throw new Error('Invalid zoom level. (Needs to be > 0)');
+    // TODO: enable error checking
+    if (zoom <= 0) return;
     if (this._minZoomLevel && zoom < this._minZoomLevel) { zoom = this._minZoomLevel; }
     else if (this._maxZoomLevel && zoom > this._maxZoomLevel) { zoom = this._maxZoomLevel; }
     this._zoomLevel.next(zoom);
