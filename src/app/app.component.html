@@ -7,7 +7,7 @@
   <!-- HEADER END -->
 
   <!-- MENU BAR START -->
-  <div class="row align-right menu-bar">
+  <div class="row align-right menu-bar" (click)="deselectAnnotations($event)">
     <div class="column logo">
       <img src=".././img/rv-logo_1000px.png" width="40px" alt="Research Video Logo" title="Research Video">
     </div>
@@ -24,7 +24,7 @@
 
   <!-- MAIN LAYOUT -->
   <div class="row video-and-inspector">
-    <div class="column video-component">
+    <div class="column video-component" (click)="deselectAnnotations($event)">
       <!-- VIDEO COMPONENT -->
       <app-video [videoSrc]="videoSrc | async" (timeupdate)="onVideoTimeupdate($event)"></app-video>
     </div>

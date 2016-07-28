@@ -105,7 +105,6 @@ export class EntryComponent implements OnInit {
     let newAnnotation:Annotation = this._data.annotation;
     if(newAnnotation.isSelected != true ){
       this.store.dispatch( { type: 'SELECT_ANNOTATION', payload: newAnnotation } );
-      $clickEvent.stopPropagation();
     }
   }
 

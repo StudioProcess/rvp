@@ -6,6 +6,8 @@ import { HandlebarComponent } from './handlebar';
 import { Timeline, Annotation } from '../shared/models';
 import { ScrollZoom } from './scroll-zoom.directive';
 import { TimeService } from '../shared/time.service';
+import { Store } from '@ngrx/store';
+import { Project } from '../shared/models';
 
 @Component({
   moduleId: module.id,
@@ -55,7 +57,7 @@ export class TimelineComponent implements OnInit {
 
   }
 
-  constructor(private ts: TimeService) {
+  constructor(private ts: TimeService, private store:Store<Project>) {
   }
 
   ngOnInit() {
@@ -64,6 +66,12 @@ export class TimelineComponent implements OnInit {
   scrollbarDrag(event) {
     this.scrollLeft = event.left;
     this.scrollWidth = event.width;
+  }
+
+  // deselect all annotations
+  deselectAnnotations(){
+    // dispatch
+    this.store.dispatch({ type: 'DESELECT_ANNOTATIONS' });
   }
 
 }

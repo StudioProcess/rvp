@@ -55,7 +55,12 @@ export const annotationReducer = (state:Project, action) => {
         });
         return state;
 
-    case 'UNSELECT_ANNOTATIONS':
+    case 'DESELECT_ANNOTATIONS':
+    state.timeline.tracks.forEach((track) => {
+      track.annotations.forEach((annotation) => {
+        annotation.isSelected = false;
+      });
+    });
     return state;
 
     default:

@@ -1,7 +1,7 @@
 <!-- TIMELINE -->
 <div class="timeline" (mousemove)="moveCursor($event)" (mousedown)="playheadClick($event)">
 
-  <div class="timeline-header">
+  <div class="timeline-header" (click)="deselectAnnotations($event)">
     <app-handlebar class="scrollbar" [left]="40" [width]="20" [caption]="'|||'" [minWidth]='30' (drag)="scrollbarDrag($event)"></app-handlebar>
 
     <div style="padding-top:20px;text-align:center;">
