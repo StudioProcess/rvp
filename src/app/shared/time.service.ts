@@ -28,7 +28,9 @@ export class TimeService {
   timelineWidthStream: Observable<number>;
   zoomLevelStream: Observable<number>; // can also change on viewport resize
 
-  constructor(initial: TimeServiceInitialValues) {
+  constructor() {}
+
+  init(initial: TimeServiceInitialValues) {
     // set the three independent vars
     this._timelineDuration = new BehaviorSubject(initial.timelineDuration);
     this._timelineViewportWidth = new BehaviorSubject(initial.timelineViewportWidth);
@@ -42,7 +44,7 @@ export class TimeService {
     this.timelineViewportWidthStream = this._timelineViewportWidth.asObservable();
     this.timelineWidthStream = this._timelineWidth.asObservable();
     this.zoomLevelStream = this._zoomLevel.asObservable();
-  }
+  };
 
   // // utility to resend the current value of a BehaviorSubject
   // private resend<T>(sub: BehaviorSubject<T>) {

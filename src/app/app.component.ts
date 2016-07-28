@@ -35,8 +35,10 @@ export class AppComponent implements AfterViewInit {
   timelineData:Observable<Timeline>;
   @ViewChild(VideoComponent) private video:VideoComponent; // inject video component child (available AfterViewInit)
 
-  constructor(private store:Store<Project>) {
+  constructor(ts:TimeService, private store:Store<Project>) {
     log.debug('app component');
+
+    // ts.init({}); // TODO supply inital values to time service
 
     // video data
     this.videoSrc = store.select('video', 'url') as Observable<string>;
