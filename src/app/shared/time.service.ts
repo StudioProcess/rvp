@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs/Rx';
 
-
-interface TimeServiceOptions {
+// Initialization object needed to create a TimeService instance
+// (Essentially constructor params)
+interface TimeServiceInitialValues {
   timelineDuration: number;
   timelineViewportWidth: number;
   zoomLevel: number;
@@ -27,15 +28,16 @@ export class TimeService {
   timelineWidthStream: Observable<number>;
   zoomLevelStream: Observable<number>; // can also change on viewport resize
 
-  constructor() {
-    this._timelineDuration = new BehaviorSubject(null);
-    this._timelineViewportWidth = new BehaviorSubject(null);
-    this._timelineWidth = new BehaviorSubject(null);
-    this._zoomLevel = new BehaviorSubject(null);
-
-    this._minZoomLevel = null;
-    this._maxZoomLevel = 100;
-
+  constructor(initial: TimeServiceInitialValues) {
+    // set the three independent vars
+    this._timelineDuration = new BehaviorSubject(initial.timelineDuration);
+    this._timelineViewportWidth = new BehaviorSubject(initial.timelineViewportWidth);
+    this._zoomLevel = new BehaviorSubject(initial.zoomLevel);
+    // set dependent vars
+    this._timelineWidth = new BehaviorSubject(initial.timelineDuration*initial.zoomLevel);
+    this._minZoomLevel = initial.timelineViewportWidth / initial.timelineDuration;
+    this._maxZoomLevel = initial.maxZoomLevel;
+    // 'export' public streams
     this.timelineDurationStream = this._timelineDuration.asObservable();
     this.timelineViewportWidthStream = this._timelineViewportWidth.asObservable();
     this.timelineWidthStream = this._timelineWidth.asObservable();
