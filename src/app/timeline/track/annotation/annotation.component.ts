@@ -57,7 +57,6 @@ export class AnnotationComponent implements OnInit {
   clickAnnotation($clickEvent){
 
     let newAnnotation:Annotation = this.data;
-    //newAnnotation.isSelected = false;
     this.store.dispatch( { type: 'SELECT_ANNOTATION', payload: newAnnotation } );
     log.debug(newAnnotation);
 

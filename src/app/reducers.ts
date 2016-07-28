@@ -55,6 +55,9 @@ export const annotationReducer = (state:Project, action) => {
         });
         return state;
 
+    case 'UNSELECT_ANNOTATIONS':
+    return state;
+
     default:
       return state;
   }
