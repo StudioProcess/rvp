@@ -91,6 +91,15 @@ export class TimeService {
     return this._zoomLevel.value;
   }
 
+  // Set zoom level [%] (0,1)
+  set zoomLevelRelative(percent: number) {
+    this.zoomLevel =  (1-percent) * (this._maxZoomLevel - this._minZoomLevel);
+  }
+
+  get zoomLevelRelative() {
+    return 1 - this._zoomLevel.value / (this._maxZoomLevel - this._minZoomLevel);
+  }
+
   // Set width of visible part of timeline (viewport) [px] (> 0)
   // => Broadcasts:
   //    New viewport width (timelineViewportWidth)
