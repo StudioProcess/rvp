@@ -64,7 +64,7 @@ export class TimeService {
   set timelineDuration(duration: number) {
     if (duration <= 0) throw new Error('Invalid timeline duration. (Needs to be > 0)');
     this._timelineDuration.next(duration);
-    if (!this._zoomLevel.value) return;
+    // if (!this._zoomLevel.value) return;
     this._timelineWidth.next(duration * this._zoomLevel.value);
   }
 
@@ -81,7 +81,7 @@ export class TimeService {
     if (this._minZoomLevel && zoom < this._minZoomLevel) { zoom = this._minZoomLevel; }
     else if (this._maxZoomLevel && zoom > this._maxZoomLevel) { zoom = this._maxZoomLevel; }
     this._zoomLevel.next(zoom);
-    if (!this._timelineDuration.value) return;
+    // if (!this._timelineDuration.value) return;
     this._timelineWidth.next(zoom * this._timelineDuration.value);
   }
 
@@ -99,13 +99,13 @@ export class TimeService {
     this._timelineViewportWidth.next(width);
 
     // Adjust min zoom level to new width
-    if (!this._minZoomLevel || !this._timelineDuration) return;
+    // if (!this._minZoomLevel || !this._timelineDuration) return;
     let minZoomOld = this._minZoomLevel;
     this._minZoomLevel = width / this._timelineDuration.value;
     let minZoomNew = this._minZoomLevel;
 
     // Interpolate new zoom level
-    if (!this._zoomLevel.value) return;
+    // if (!this._zoomLevel.value) return;
     let zoomOld = this._zoomLevel.value;
     let maxZoom = this._maxZoomLevel;
     let scale = (zoomOld-minZoomOld) / (maxZoom - minZoomOld);
