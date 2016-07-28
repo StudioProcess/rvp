@@ -7,7 +7,7 @@ $highlight-color: $white;
   border: $black solid transparent;
   //margin-bottom: 0.3em;
 }
-.entry-container:hover {
+:host.selected .entry-container {
   outline-offset: (-$outline-width);
   outline: $outline-width solid $black;
 }

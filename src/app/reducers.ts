@@ -42,6 +42,19 @@ export const annotationReducer = (state:Project, action) => {
     case 'DELETE_ANNOTATION':
       return state;
 
+    case 'SELECT_ANNOTATION':
+        state.timeline.tracks.forEach((track) => {
+          track.annotations.forEach((annotation) => {
+            // set annotation from payload as selected
+            if (action.payload == annotation) {
+              annotation.isSelected = true;
+            } else { // deselect rest of annotations
+              annotation.isSelected = false;
+            }
+          });
+        });
+        return state;
+
     default:
       return state;
   }

@@ -16,7 +16,7 @@
       <div class="row column annotation-row collapse">
         <div class="annotation-container">
           <div class="annotations">
-            <app-annotation *ngFor="let annotation of data.annotations" [data]="annotation" [backcolor]="data.color"></app-annotation>
+            <app-annotation *ngFor="let annotation of data.annotations" [data]="annotation" [backcolor]="data.color" [isSelected]="annotation.isSelected"></app-annotation>
           </div>
         </div>
       </div>

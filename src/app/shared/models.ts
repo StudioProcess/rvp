@@ -27,6 +27,7 @@ export interface Annotation {
   utc_timestamp: Time;
   duration: Time;
   fields?: Fields;
+  isSelected?: boolean;
 }
 
 export interface InspectorEntry {

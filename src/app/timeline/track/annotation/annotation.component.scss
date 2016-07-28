@@ -9,7 +9,7 @@ $outline-width: 3px;
   // background-color: $dark-gray;
 }
 
-:host.active .handlebar-container {
+:host.selected .handlebar-container {
   outline-offset: (-$outline-width);
   outline: $outline-width solid $black;
 }

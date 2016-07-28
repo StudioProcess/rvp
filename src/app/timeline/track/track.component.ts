@@ -28,7 +28,8 @@ export class TrackComponent implements OnInit {
       fields: {
         title: '',
         description: ''
-      }
+      },
+      isSelected: false
     };
     this.store.dispatch( { type: 'ADD_ANNOTATION', payload: { annotation: newAnnotation, track: this.data }} );
     //     this.cursorTime = $moveEvent.offsetX / $moveEvent.currentTarget.offsetWidth * 100,100;

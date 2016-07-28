@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, HostBinding } from '@angular/core';
 import { InspectorEntry } from '../../shared/models';
 import { REACTIVE_FORM_DIRECTIVES, FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { TimePipe, UnixTimePipe } from '../../shared/time.pipes';
@@ -16,12 +16,15 @@ import { Store } from '@ngrx/store';
 })
 export class EntryComponent implements OnInit {
 
+  @Input() isSelected:boolean;
+
   _data:InspectorEntry; // updated by data() setter
   form:FormGroup;
   formatTime = TimePipe.prototype.transform;
   parseTime = UnixTimePipe.prototype.transform;
   timePattern = '([0-9]*:){0,2}[0-9]*(\\.[0-9]*)?'; // Validation pattern for HH:MM:SS.XXX
   timeRegExp = new RegExp('^' + this.timePattern + '$');
+  @HostBinding('class.selected') selected = 'isSelected';
 
   @Input() set data(entry:InspectorEntry) {
     this._data = entry;
@@ -88,7 +91,8 @@ export class EntryComponent implements OnInit {
         fields: {
           title: this.form.value.title,
           description: this.form.value.description
-        }
+        },
+        isSelected: false
       };
       this.store.dispatch({
         type: 'UPDATE_ANNOTATION',

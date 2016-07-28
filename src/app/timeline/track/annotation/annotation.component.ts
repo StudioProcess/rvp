@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, Inject, forwardRef } from '@angular/core';
+import { Component, OnInit, Input, Inject, forwardRef, HostBinding } from '@angular/core';
 import { TimelineComponent } from '../../timeline.component';
 import { Annotation, Timeline } from '../../../shared/models';
 import { HandlebarComponent } from '../../handlebar/handlebar.component';
+import { Store } from '@ngrx/store';
 
 @Component({
   moduleId: module.id,
@@ -16,17 +17,20 @@ export class AnnotationComponent implements OnInit {
 
   @Input() data:Annotation;
   @Input() backcolor:string;
+  @Input() @HostBinding('class.selected') isSelected:boolean;
 
   timeline:TimelineComponent;
   timestamp:number;
   duration:number;
   handlebar:HandlebarComponent;
+  // @HostBinding('class.selected') selected = '';
 
-  constructor(@Inject(forwardRef(() => TimelineComponent)) timeline) {
+  constructor(@Inject(forwardRef(() => TimelineComponent)) timeline, private store:Store<any>) {
     this.timeline = timeline;
   }
 
   ngOnInit() {
+    // this.isSelected = false;
     this.timestamp = this.data.utc_timestamp / this.timeline.data.duration * 100;
     if (this.data.duration == 0) {
       this.duration = 0.1;
@@ -51,6 +55,12 @@ export class AnnotationComponent implements OnInit {
   }
 
   clickAnnotation($clickEvent){
-    $clickEvent.stopPropagation();
+
+    let newAnnotation:Annotation = this.data;
+    //newAnnotation.isSelected = false;
+    this.store.dispatch( { type: 'SELECT_ANNOTATION', payload: newAnnotation } );
+    log.debug(newAnnotation);
+
+    //$clickEvent.stopPropagation();
   }
 }
