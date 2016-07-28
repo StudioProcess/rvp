@@ -18,7 +18,7 @@ export const stubReducer = (state, action) => {
 }
 
 export const annotationReducer = (state:Project, action) => {
-  log.debug(action, state);
+  // log.debug(action, state);
 
   switch (action.type) {
     case 'UPDATE_ANNOTATION':
@@ -54,6 +54,14 @@ export const annotationReducer = (state:Project, action) => {
           });
         });
         return state;
+
+    case 'DESELECT_ANNOTATIONS':
+    state.timeline.tracks.forEach((track) => {
+      track.annotations.forEach((annotation) => {
+        annotation.isSelected = false;
+      });
+    });
+    return state;
 
     default:
       return state;

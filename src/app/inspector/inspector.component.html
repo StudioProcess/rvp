@@ -1,3 +1,3 @@
 <div class="scroll-container">
-  <div app-entry *ngFor="let entry of entries" [data]="entry" [isSelected]=true></div>
+  <div app-entry *ngFor="let entry of entries" [data]="entry" [isSelected]="entry.annotation.isSelected"></div>
 </div>

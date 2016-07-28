@@ -133,6 +133,12 @@ export class AppComponent implements OnInit, AfterViewInit {
     log.debug('video time updated:', time);
   }
 
+  // deselect all annotations
+  deselectAnnotations(){
+    // dispatch
+    this.store.dispatch({ type: 'DESELECT_ANNOTATIONS' });
+  }
+
   // compare function to sort entries by timestamp
   private compareEntries(a:InspectorEntry, b:InspectorEntry):number {
     return a.annotation.utc_timestamp - b.annotation.utc_timestamp;

@@ -16,7 +16,7 @@ import { Store } from '@ngrx/store';
 })
 export class EntryComponent implements OnInit {
 
-  @Input() isSelected:boolean;
+  @Input() @HostBinding('class.selected') isSelected:boolean;
 
   _data:InspectorEntry; // updated by data() setter
   form:FormGroup;
@@ -24,7 +24,6 @@ export class EntryComponent implements OnInit {
   parseTime = UnixTimePipe.prototype.transform;
   timePattern = '([0-9]*:){0,2}[0-9]*(\\.[0-9]*)?'; // Validation pattern for HH:MM:SS.XXX
   timeRegExp = new RegExp('^' + this.timePattern + '$');
-  @HostBinding('class.selected') selected = 'isSelected';
 
   @Input() set data(entry:InspectorEntry) {
     this._data = entry;
@@ -92,12 +91,20 @@ export class EntryComponent implements OnInit {
           title: this.form.value.title,
           description: this.form.value.description
         },
-        isSelected: false
+        isSelected: true
       };
       this.store.dispatch({
         type: 'UPDATE_ANNOTATION',
         payload: { old:this._data.annotation, new:newAnnotation }
       });
+    }
+  }
+
+  clickAnnotation($clickEvent){
+
+    let newAnnotation:Annotation = this._data.annotation;
+    if(newAnnotation.isSelected != true ){
+      this.store.dispatch( { type: 'SELECT_ANNOTATION', payload: newAnnotation } );
     }
   }
 

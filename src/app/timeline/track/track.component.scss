@@ -6,9 +6,7 @@ $outline-width: 3px;
 .track-container {
   padding-top: 0.4em;
   padding-bottom: 0.4em;
-  padding-left: 0.4em;
-  padding-right: 0.4em;
-  min-height: 65px;
+  min-height: 100px;
   margin-top: 0.2em;
   margin-bottom: 0.2em;
   background-color: $process-super-light-gray;
@@ -72,6 +70,7 @@ $outline-width: 3px;
 .annotation-row {
   height: 20px;
   background-color: $process-light-gray;
+  margin-bottom: 0.7em;
 }
 
 .track-color {

@@ -6,7 +6,9 @@ import { HandlebarComponent } from './handlebar';
 import { Timeline, Annotation } from '../shared/models';
 import { ScrollZoom } from './scroll-zoom.directive';
 import { TimeService } from '../shared/time.service';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Rx';
+import { Project } from '../shared/models';
 
 @Component({
   moduleId: module.id,
@@ -28,7 +30,7 @@ export class TimelineComponent implements OnInit {
   playheadTime = 2;
   playheadDisplayTime = 2;
 
-  constructor(private el:ElementRef, private timeService:TimeService) {}
+  constructor(private el:ElementRef, private timeService:TimeService, private store:Store<Project>) {}
 
   ngOnInit() {
     // TODO: need to use setTimeout here, otherwise width = 0
@@ -70,6 +72,13 @@ export class TimelineComponent implements OnInit {
     this.playheadTime = $clickEvent.offsetX / $clickEvent.currentTarget.offsetWidth * 100,100;
     this.playheadDisplayTime = extround($clickEvent.offsetX / $clickEvent.currentTarget.offsetWidth * 100,100);
 
+  }
+
+
+  // deselect all annotations
+  deselectAnnotations(){
+    // dispatch
+    this.store.dispatch({ type: 'DESELECT_ANNOTATIONS' });
   }
 
 }
