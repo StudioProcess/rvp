@@ -119,6 +119,10 @@ export class TimeService {
     return this._timelineViewportWidth.value;
   }
 
+  get timelineWidth() {
+    return this._timelineWidth.value;
+  }
+
 
   // Conversion Functions (one time)
   convertPixelsToSeconds(px: number): number {
