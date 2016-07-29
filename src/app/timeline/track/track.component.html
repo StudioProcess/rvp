@@ -1,4 +1,4 @@
-<div class="track-container" (dblclick)="doubleClick($event)">
+<div class="track-container" >
   <div class="row">
     <!-- <div class="column shrink">
       <div class="track-color-new" [style.backgroundColor]="data.color"></div>
@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="row column annotation-row collapse">
-        <div class="annotation-container">
+        <div class="annotation-container" (dblclick)="doubleClick($event)">
           <div class="annotations">
             <app-annotation *ngFor="let annotation of data.annotations" [data]="annotation" [backcolor]="data.color" [isSelected]="annotation.isSelected"></app-annotation>
           </div>
