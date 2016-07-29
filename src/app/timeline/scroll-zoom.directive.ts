@@ -50,7 +50,9 @@ export class ScrollZoom implements OnInit {
       }
       this.container.style.overflow = 'hidden';
 
+
       this.content = this.container.firstElementChild as HTMLElement;
+      this.content.style.position = 'relative';
       // trigger setting zoom and scroll, when this.content is available
       if (this._zoom) this.zoom = this._zoom;
       if (this._scroll) this.scroll = this._scroll;

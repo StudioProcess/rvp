@@ -11,8 +11,22 @@
   -o-user-select: none;
   user-select: none;
 }
+
 .timeline-header {
   background-color: $process-super-light-gray;
   height: 40px;
   position: relative;
+}
+
+.playhead-container {
+  position:absolute;
+  top:0;
+  height:100%;
+  width:100%;
+  pointer-events:none;
+}
+
+app-playhead {
+  display:block;
+  height:100%;
 }

@@ -1,5 +1,5 @@
 <!-- TIMELINE -->
-<div class="timeline" (mousemove)="moveCursor($event)" (mousedown)="playheadClick($event)">
+<div class="timeline">
 
   <div class="timeline-header"  (click)="deselectAnnotations($event)">
     <app-handlebar class="scrollbar" [left]="0" [width]="100" [caption]="'|||'" [minWidth]='30' (drag)="scrollbarDrag($event)"></app-handlebar>
@@ -9,16 +9,19 @@
     </div>
   </div>
 
-    <app-track *ngFor="let track of data.tracks"
-      [data]="track"
-      [scrollContainer]="'.annotation-container'"
-      [scroll]="scrollbarLeft"
-      [zoom]="timelineWidth">
-    </app-track>
+  <app-track *ngFor="let track of data.tracks"
+    [data]="track"
+    [scrollContainer]="'.annotation-container'"
+    [scroll]="scrollbarLeft"
+    [zoom]="timelineWidth">
+  </app-track>
 
-  <!-- cursor -->
-  <!-- <app-cursor [time]="cursorTime" [displayTime]="cursorDisplayTime"></app-cursor> -->
+  <div class="playhead-container" [scroll]="scrollbarLeft" [zoom]="timelineWidth" style="">
+    <!-- cursor -->
+    <!-- <app-cursor [time]="cursorTime" [displayTime]="cursorDisplayTime"></app-cursor> -->
 
-  <!-- playhead -->
-  <app-playhead [time]="playheadTime" [displayTime]="playheadDisplayTime"></app-playhead>
+    <!-- playhead -->
+    <app-playhead [time]="playheadTime" [displayTime]="playheadDisplayTime"></app-playhead>
+  </div>
+
 </div>
