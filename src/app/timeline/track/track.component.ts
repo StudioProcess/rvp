@@ -35,6 +35,8 @@ export class TrackComponent implements OnInit {
       },
       isSelected: false
     };
+
     this.store.dispatch( { type: 'ADD_ANNOTATION', payload: { annotation: newAnnotation, track: this.data } } );
+    this.store.dispatch( { type: 'SELECT_ANNOTATION', payload: newAnnotation } );
   }
 }
