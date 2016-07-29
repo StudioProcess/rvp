@@ -80,11 +80,10 @@ export const annotationReducer = (state:Project, action) => {
       let newTrack:Track = {
 
         annotations: [],
-        color: '#' + (Math.random()*0xFFFFFF<<0).toString(16),
+        color: '#' + ('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6),
         fields: { title: '' }
 
       };
-
       state.timeline.tracks.push(newTrack);
     return state;
 
