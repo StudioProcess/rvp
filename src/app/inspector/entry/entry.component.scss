@@ -4,16 +4,17 @@ $outline-width: 3px;
 $highlight-color: $white;
 .entry-container {
   // margin-bottom: 3px;
-  background-color: $process-light-gray;
+  //background-color: $process-light-gray;
+  background-color: #f8f8f8;
   border: $black solid transparent;
-  //margin-bottom: 0.3em;
 }
 :host.selected .entry-container {
+  background-color: $process-super-light-gray;
   outline-offset: (-$outline-width);
   outline: $outline-width solid $black;
 }
 :host:nth-child(even) .entry-container {
-  background-color: $process-super-light-gray;
+  background-color: #f1f1f1;
 }
 .track-color {
   width: $annotation-trackcolor-width;
@@ -66,18 +67,21 @@ label {
 }
 .duration-icon {
   // color: $dark-gray;
-  color: #8e8e8e;
+  // color: #8e8e8e;
   padding-right: 2px;
+  color: #a9a9a9;
 }
 .timestamp-icon {
   // color: $dark-gray;
-  color: #8e8e8e;
+  // color: #8e8e8e;
+  color: #a9a9a9;
   padding-right: 2px;
 }
 .number, .timestamp {
   font-weight: 500;
   // color: $dark-gray;
-  color: #727272;
+  // color: #727272;
+  color: #898989;
   width: 88px;
   border: 1px solid transparent;
   background-color: inherit;
