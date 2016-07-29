@@ -52,6 +52,10 @@ export class EntryComponent implements OnInit {
   ngOnInit() {
   }
 
+  stopPropagation(e){
+    e.stopPropagation();
+  }
+
   // Guard against invalid time input
   timeInputGuard(e) {
     // for a keyCode return true if it's a printable key
