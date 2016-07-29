@@ -2,17 +2,22 @@
 
 $highlight-color: $white;
 $outline-width: 3px;
+$outline-hover: 1px;
 
 .track-container {
   padding-top: 0.4em;
-  padding-bottom: 0.4em;
-  min-height: 100px;
-  margin-top: 0.2em;
-  margin-bottom: 0.2em;
-  background-color: $process-super-light-gray;
+  padding-bottom: 1.4em;
+  //min-height: 60px;
+  //margin-top: 0.2em;
+  margin-bottom: 0.4em;
+  background-color: #f0f0f0;
+  //background-color: $process-super-light-gray;
 
   &:hover{
     background-color: #f8f8f8;
+    // background-color: $white;
+    // outline-offset: (-$outline-hover);
+    // outline: $outline-hover solid $process-gray;
   }
 
 }
@@ -69,7 +74,8 @@ $outline-width: 3px;
 
 .annotation-row {
   height: 20px;
-  background-color: $process-light-gray;
+  background-color: #d9d9d9;
+  //background-color: $process-light-gray;
   margin-bottom: 0.7em;
 }
 
