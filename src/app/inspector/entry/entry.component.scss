@@ -3,6 +3,7 @@ $annotation-trackcolor-width: 10px;
 $outline-width: 3px;
 $highlight-color: $white;
 .entry-container {
+  // margin-bottom: 3px;
   background-color: $process-light-gray;
   border: $black solid transparent;
   //margin-bottom: 0.3em;
@@ -24,9 +25,6 @@ $highlight-color: $white;
   border: 1px solid transparent;
   background-color: inherit;
 }
-.title:hover {
-  color: $dark-gray;
-}
 .title:focus {
   color: $black;
   background-color: $highlight-color;
@@ -43,7 +41,7 @@ $highlight-color: $white;
   background-color: inherit;
 }
 .description:hover {
-  color: $dark-gray;
+  // color: $dark-gray;
 }
 .description:focus {
   color: $black;
@@ -67,22 +65,25 @@ label {
   box-shadow: 0 0 0 $white;
 }
 .duration-icon {
-  color: $dark-gray;
-  padding-right: 5px;
+  // color: $dark-gray;
+  color: #8e8e8e;
+  padding-right: 2px;
 }
 .timestamp-icon {
-  color: $dark-gray;
-  padding-right: 5px;
+  // color: $dark-gray;
+  color: #8e8e8e;
+  padding-right: 2px;
 }
 .number, .timestamp {
   font-weight: 500;
-  color: $dark-gray;
+  // color: $dark-gray;
+  color: #727272;
   width: 88px;
   border: 1px solid transparent;
   background-color: inherit;
 }
 .number:hover {
-  color: $process-dark-gray;
+  color: #353535;
 }
 .number:focus, .duration:focus, .title:focus {
   color: $black;

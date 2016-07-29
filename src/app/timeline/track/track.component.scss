@@ -10,11 +10,12 @@ $outline-hover: 1px;
   //min-height: 60px;
   //margin-top: 0.2em;
   margin-bottom: 0.4em;
-  background-color: #f0f0f0;
+  background-color: #f8f8f8;
+
   //background-color: $process-super-light-gray;
 
   &:hover{
-    background-color: #f8f8f8;
+    background-color: #FFF;
     // background-color: $white;
     // outline-offset: (-$outline-hover);
     // outline: $outline-hover solid $process-gray;
@@ -74,7 +75,8 @@ $outline-hover: 1px;
 
 .annotation-row {
   height: 20px;
-  background-color: #d9d9d9;
+  background-color: #dfdfdf;
+  //background-color: #d9d9d9;
   //background-color: $process-light-gray;
   margin-bottom: 0.7em;
 }
