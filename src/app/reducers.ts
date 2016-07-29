@@ -81,7 +81,7 @@ export const annotationReducer = (state:Project, action) => {
 
         annotations: [],
         color: '#' + (Math.random()*0xFFFFFF<<0).toString(16),
-        fields: { title: 'Enter Track Title' }
+        fields: { title: '' }
 
       };
 
