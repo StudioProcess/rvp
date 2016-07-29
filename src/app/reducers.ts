@@ -77,12 +77,13 @@ export const annotationReducer = (state:Project, action) => {
     return state;
 
     case 'ADD_TRACK':
-      let newTrack:Track;
-      newTrack.color = (Math.random()*0xFFFFFF<<0).toString(16);
-      newTrack.fields = {
-        title: 'New Track'
-      }
-      newTrack.annotations = [];
+      let newTrack:Track = {
+
+        annotations: [],
+        color: '#' + (Math.random()*0xFFFFFF<<0).toString(16),
+        fields: { title: 'Enter Track Title' }
+
+      };
 
       state.timeline.tracks.push(newTrack);
     return state;
