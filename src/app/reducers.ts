@@ -1,4 +1,4 @@
-import { Project } from './shared/models';
+import { Project, Track, Annotation } from './shared/models';
 
 // Utility function from Redux to combine reducers. Expects an object with state property keys mapped to reducer functions. See: http://redux.js.org/docs/api/combineReducers.html
 const combineReducers = (reducers) => {
@@ -56,24 +56,38 @@ export const annotationReducer = (state:Project, action) => {
         return state;
 
     case 'DESELECT_ANNOTATIONS':
-    state.timeline.tracks.forEach((track) => {
-      track.annotations.forEach((annotation) => {
-        annotation.isSelected = false;
+      state.timeline.tracks.forEach((track) => {
+        track.annotations.forEach((annotation) => {
+          annotation.isSelected = false;
+        });
       });
-    });
     return state;
 
     case 'DELETE_SELECTED_ANNOTATION':
-    state.timeline.tracks.forEach((track) => {
-      track.annotations.forEach((annotation) => {
-        if(annotation.isSelected == true) {
-          // delete annotation
-          if(track.annotations.indexOf(annotation) >= 0){
-            track.annotations.splice(track.annotations.indexOf(annotation), 1);
+      state.timeline.tracks.forEach((track) => {
+        track.annotations.forEach((annotation) => {
+          if(annotation.isSelected == true) {
+            // delete annotation
+            if(track.annotations.indexOf(annotation) >= 0){
+              track.annotations.splice(track.annotations.indexOf(annotation), 1);
+            }
           }
-        }
+        });
       });
-    });
+    return state;
+
+    case 'ADD_TRACK':
+      let newTrack:Track;
+      newTrack.color = (Math.random()*0xFFFFFF<<0).toString(16);
+      newTrack.fields = {
+        title: 'New Track'
+      }
+      newTrack.annotations = [];
+
+      state.timeline.tracks.push(newTrack);
+    return state;
+
+    case 'DELETE_TRACK':
     return state;
 
     default:
