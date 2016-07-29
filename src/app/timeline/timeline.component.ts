@@ -6,6 +6,7 @@ import { HandlebarComponent } from './handlebar';
 import { Timeline, Annotation } from '../shared/models';
 import { ScrollZoom } from './scroll-zoom.directive';
 import { TimeService } from '../shared/time.service';
+import { PlayheadService } from '../shared/playhead.service';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Rx';
 import { Project } from '../shared/models';
@@ -28,10 +29,10 @@ export class TimelineComponent implements OnInit {
   cursorTime;
   cursorDisplayTime;
 
-  playheadTime = 2;
-  playheadDisplayTime = 2;
+  playheadTime;
+  playheadDisplayTime;
 
-  constructor(private el:ElementRef, private timeService:TimeService, private store:Store<Project>) {}
+  constructor(private el:ElementRef, private timeService:TimeService, private store:Store<Project>, private playheadService:PlayheadService) {}
 
   ngOnInit() {
     // TODO: need to use setTimeout here, otherwise width = 0
@@ -45,6 +46,14 @@ export class TimelineComponent implements OnInit {
     }, 0);
 
     this.timeService.timelineWidthStream.subscribe(width => this.timelineWidth = width);
+
+    this.playheadService.timeStream.subscribe(time => {
+      this.playheadDisplayTime = time;
+    });
+
+    this.playheadService.relativeStream.subscribe(relativePosition => {
+      this.playheadTime = (relativePosition * 100); // TODO: use relative position instead of time
+    });
   }
 
   scrollbarDrag(event) {
