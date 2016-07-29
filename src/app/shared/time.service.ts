@@ -140,8 +140,16 @@ export class TimeService {
     return px / this._zoomLevel.value;
   }
 
+  convertPercentToSeconds(percent: number): number {
+    return this.convertPixelsToSeconds(percent * this.timelineWidth);
+  }
+
   convertSecondsToPixels(s:number): number {
     return s * this._zoomLevel.value;
+  }
+
+  convertSecondsToPercent(s:number): number {
+    return this.convertSecondsToPixels(s) / this.timelineWidth;
   }
 
   // Streaming Conversion Functions
