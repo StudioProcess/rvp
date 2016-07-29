@@ -63,6 +63,19 @@ export const annotationReducer = (state:Project, action) => {
     });
     return state;
 
+    case 'DELETE_SELECTED_ANNOTATION':
+    state.timeline.tracks.forEach((track) => {
+      track.annotations.forEach((annotation) => {
+        if(annotation.isSelected == true) {
+          // delete annotation
+          if(track.annotations.indexOf(annotation) >= 0){
+            track.annotations.splice(track.annotations.indexOf(annotation), 1);
+          }
+        }
+      });
+    });
+    return state;
+
     default:
       return state;
   }

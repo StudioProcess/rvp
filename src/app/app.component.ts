@@ -103,6 +103,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     // let ac = this.el.nativeElement.querySelector('.scrollbar');
     // log.debug('app-timeline', at);
     // log.debug('.timeline', ac);
+
+    window.addEventListener('keydown', this.onKeyDown.bind(this));
   }
 
   ngAfterViewInit() {
@@ -139,6 +141,13 @@ export class AppComponent implements OnInit, AfterViewInit {
   deselectAnnotations(){
     // dispatch
     this.store.dispatch({ type: 'DESELECT_ANNOTATIONS' });
+  }
+
+  onKeyDown($event){
+    if($event.keyCode == 8){
+      $event.preventDefault();
+      this.store.dispatch( { type: 'DELETE_SELECTED_ANNOTATION' });
+    }
   }
 
   // compare function to sort entries by timestamp
