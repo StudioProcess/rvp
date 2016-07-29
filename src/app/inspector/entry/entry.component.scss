@@ -3,10 +3,13 @@ $annotation-trackcolor-width: 10px;
 $outline-width: 3px;
 $highlight-color: $white;
 .entry-container {
-  // margin-bottom: 3px;
+  margin-bottom: 3px;
   //background-color: $process-light-gray;
   background-color: #f8f8f8;
   border: $black solid transparent;
+}
+.entry-container:hover {
+  background-color: $white;
 }
 :host.selected .entry-container {
   background-color: $process-super-light-gray;
@@ -14,7 +17,10 @@ $highlight-color: $white;
   outline: $outline-width solid $black;
 }
 :host:nth-child(even) .entry-container {
-  background-color: #f1f1f1;
+  background-color: #f8f8f8;
+}
+:host:nth-child(even) .entry-container:hover {
+  background-color: $white;
 }
 .track-color {
   width: $annotation-trackcolor-width;
@@ -46,7 +52,7 @@ $highlight-color: $white;
 }
 .description:focus {
   color: $black;
-  background-color: $highlight-color;
+  // background-color: $highlight-color;
 }
 label {
   display: inline-block;
@@ -69,19 +75,19 @@ label {
   // color: $dark-gray;
   // color: #8e8e8e;
   padding-right: 2px;
-  color: #a9a9a9;
+  // color: #a9a9a9;
 }
 .timestamp-icon {
   // color: $dark-gray;
   // color: #8e8e8e;
-  color: #a9a9a9;
+  // color: #a9a9a9;
   padding-right: 2px;
 }
 .number, .timestamp {
   font-weight: 500;
   // color: $dark-gray;
   // color: #727272;
-  color: #898989;
+  // color: #898989;
   width: 88px;
   border: 1px solid transparent;
   background-color: inherit;
@@ -100,7 +106,6 @@ label {
   padding-right: 1.0em;
   padding-bottom: 0.5em;
 }
-
 .text-row {
   padding-right: 1.0em;
   padding-bottom: 1.0em;
