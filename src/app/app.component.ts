@@ -148,7 +148,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       $event.preventDefault();
       this.store.dispatch( { type: 'DELETE_SELECTED_ANNOTATION' });
     }
-    if($event.keyCode == 187 || $event.keyCode == 219){
+    if($event.keyCode == 187 || $event.keyCode == 221){
       $event.preventDefault();
       this.store.dispatch( { type: 'ADD_TRACK'} );
     }
