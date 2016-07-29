@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Inject, forwardRef, HostBinding } from '@angular/core';
+import { Component, OnInit, Input, Inject, forwardRef, HostBinding, ViewChild } from '@angular/core';
 import { TimelineComponent } from '../../timeline.component';
 import { Annotation, Timeline } from '../../../shared/models';
 import { HandlebarComponent } from '../../handlebar/handlebar.component';
@@ -10,56 +10,35 @@ import { Store } from '@ngrx/store';
   templateUrl: 'annotation.component.html',
   styleUrls: ['annotation.component.css'],
   directives: [HandlebarComponent]
-  // providers: [TimelineComponent]
 })
 
 export class AnnotationComponent implements OnInit {
+  @ViewChild(HandlebarComponent) handlebar:HandlebarComponent;
 
   @Input() data:Annotation;
   @Input() backcolor:string;
   @Input() @HostBinding('class.selected') isSelected:boolean;
 
-  timeline:TimelineComponent;
   timestamp:number;
   duration:number;
-  handlebar:HandlebarComponent;
-  // @HostBinding('class.selected') selected = '';
 
-  constructor(@Inject(forwardRef(() => TimelineComponent)) timeline, private store:Store<any>) {
-    this.timeline = timeline;
+  constructor(@Inject(forwardRef(() => TimelineComponent)) private timeline, private store:Store<any> ) {
   }
 
   ngOnInit() {
-    // this.isSelected = false;
     this.timestamp = this.data.utc_timestamp / this.timeline.data.duration * 100;
     if (this.data.duration == 0) {
       this.duration = 0.1;
     } else {
       this.duration = this.data.duration / this.timeline.data.duration * 100;
     }
-
-    log.debug('timeline duration', this.timeline.data.duration, 'annotation', this.timestamp, this.duration);
-  }
-
-  hoverOver($hoverEvent){
-    //this.backcolor = "#FF0000";
-  }
-
-  hoverOut($hoverEvent){
-    //this.backcolor = "#FFFFFF";
-  }
-
-  moveCursor($moveEvent) {
-    //log.debug($moveEvent);
-    $moveEvent.stopPropagation();
+    // log.debug('timeline duration', this.timeline.data.duration, 'annotation', this.timestamp, this.duration);
   }
 
   clickAnnotation($clickEvent){
-
-    let newAnnotation:Annotation = this.data;
-    this.store.dispatch( { type: 'SELECT_ANNOTATION', payload: newAnnotation } );
-    log.debug(newAnnotation);
-
+    this.store.dispatch( { type: 'SELECT_ANNOTATION', payload: this.data } );
+    // log.debug(newAnnotation);
     //$clickEvent.stopPropagation();
   }
+
 }
