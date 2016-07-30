@@ -1,9 +1,11 @@
 @import '../../settings';
 $annotation-trackcolor-width: 10px;
 $outline-width: 3px;
-$highlight-color: $white;
+// $highlight-color: $white;
+$highlight-color: #0a0a0a;
+
 .entry-container {
-  margin-bottom: 3px;
+  // margin-bottom: 3px;
   //background-color: $process-light-gray;
   background-color: #f8f8f8;
   border: $black solid transparent;
@@ -13,6 +15,11 @@ $highlight-color: $white;
 }
 :host.selected .entry-container {
   background-color: $process-super-light-gray;
+  outline-offset: (-$outline-width);
+  outline: $outline-width solid $black;
+}
+:host.selected .entry-container:hover {
+  background-color: $white;
   outline-offset: (-$outline-width);
   outline: $outline-width solid $black;
 }
@@ -31,6 +38,7 @@ $highlight-color: $white;
   font-weight: 500;
   border: 1px solid transparent;
   background-color: inherit;
+  padding: 0.2em;
 }
 .title:focus {
   color: $black;
@@ -65,8 +73,6 @@ label {
   justify-content: flex-end;
 }
 .duration:focus {
-  color: $black;
-  background-color: $highlight-color;
   outline: none;
   border-color: transparent;
   box-shadow: 0 0 0 $white;
@@ -95,8 +101,8 @@ label {
 .number:hover {
   color: #353535;
 }
-.number:focus, .duration:focus, .title:focus {
-  color: $black;
+.number:focus, .duration:focus, .title:focus, .description:focus {
+  color: $white;
   background-color: $highlight-color;
   border-color: transparent;
   box-shadow: 0 0 0 $white;
@@ -116,4 +122,7 @@ label {
 }
 input.ng-valid:focus {
   outline: none;
+}
+textarea {
+  min-height: 5px !important;
 }
