@@ -52,7 +52,7 @@ $outline-hover: 1px;
 }
 .title-input {
   display: inline-block;
-  width: 190px;
+  width: 100px;
   font-weight: 500;
   //color: $dark-gray;
   border: 1px solid transparent;
@@ -76,7 +76,7 @@ $outline-hover: 1px;
 }
 .title-row {
   padding-bottom: 0.5em;
-  justify-content: space-between;
+  // justify-content: space-between;
 }
 .annotation-row {
   height: 20px;
@@ -100,7 +100,7 @@ hr {
   height: 1px;
 }
 .track-options {
-  align-items: flex-end;
+  align-items: flex-start;
   //visibility: hidden;
   opacity: 0;
   li {
