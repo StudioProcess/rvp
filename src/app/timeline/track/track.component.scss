@@ -1,9 +1,7 @@
 @import '../../settings';
-
 $highlight-color: $white;
 $outline-width: 3px;
 $outline-hover: 1px;
-
 .track-container {
   padding-top: 0.4em;
   padding-bottom: 1.4em;
@@ -11,37 +9,47 @@ $outline-hover: 1px;
   //margin-top: 0.2em;
   margin-bottom: 0.4em;
   background-color: #f8f8f8;
-
   //background-color: $process-super-light-gray;
-
-  &:hover{
+  &:hover {
     background-color: #FFF;
     // background-color: $white;
     // outline-offset: (-$outline-hover);
     // outline: $outline-hover solid $process-gray;
   }
-
 }
-
+.track-container:hover {
+  .track-options {
+    opacity: 0;
+    /* make things invisible upon start */
+    -webkit-animation: fadeIn ease-in 1;
+    /* call our keyframe named fadeIn, use animattion ease-in and repeat it only 1 time */
+    -moz-animation: fadeIn ease-in 1;
+    animation: fadeIn ease-in 1;
+    -webkit-animation-fill-mode: forwards;
+    /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
+    -moz-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+    -webkit-animation-duration: 1s;
+    -moz-animation-duration: 1s;
+    animation-duration: 0.2s;
+    z-index: 100;
+  }
+}
 :host.highlighted {
   .track-container {
     outline-offset: (-$outline-width);
     outline: $outline-width solid $black;
   }
 }
-
 .title {
   display: inline-block;
 }
-
 .annotation-container {
-  height:100%;
+  height: 100%;
 }
-
 .annotations {
   position: relative;
 }
-
 .title-input {
   display: inline-block;
   width: 190px;
@@ -50,11 +58,9 @@ $outline-hover: 1px;
   border: 1px solid transparent;
   background-color: inherit;
 }
-
 .title-input:hover {
   color: $dark-gray;
 }
-
 .title-input:focus {
   color: $black;
   background-color: $highlight-color;
@@ -62,17 +68,16 @@ $outline-hover: 1px;
   border-color: transparent;
   box-shadow: 0 0 0 $white;
 }
-
-.title-icon, .track-color-icon {
+.title-icon,
+.track-color-icon {
   //color: $dark-gray;
   padding-left: 5px;
   padding-right: 1px;
 }
-
 .title-row {
   padding-bottom: 0.5em;
+  justify-content: space-between;
 }
-
 .annotation-row {
   height: 20px;
   background-color: #dfdfdf;
@@ -80,15 +85,9 @@ $outline-hover: 1px;
   //background-color: $process-light-gray;
   margin-bottom: 0.7em;
 }
-
 .track-color {
   width: 20px;
   display: inline-block;
-  // background: red; /* For browsers that do not support gradients */
-  // background: -webkit-linear-gradient(left, red , $light-gray, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray); /* For Safari 5.1 to 6.0 */
-  // background: -o-linear-gradient(right, red, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray); /* For Opera 11.1 to 12.0 */
-  // background: -moz-linear-gradient(right, red, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray); /* For Firefox 3.6 to 15 */
-  // background: linear-gradient(to right, red , $light-gray, $light-gray, $light-gray, $light-gray, $light-gray, $light-gray); /* Standard syntax */
 }
 .track-color-new {
   width: 10px;
@@ -96,7 +95,17 @@ $outline-hover: 1px;
   min-height: 65px;
 }
 hr {
-     color: #f00;
-     background: #f00;
-     height: 1px;
+  color: #f00;
+  background: #f00;
+  height: 1px;
+}
+.track-options {
+  align-items: flex-end;
+  //visibility: hidden;
+  opacity: 0;
+  li {
+    .menu-item:hover {
+      background-color: $process-super-light-gray;
+    }
+  }
 }
