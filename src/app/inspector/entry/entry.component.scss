@@ -7,7 +7,8 @@ $highlight-color: #0a0a0a;
 .entry-container {
   // margin-bottom: 3px;
   //background-color: $process-light-gray;
-  background-color: #f8f8f8;
+  // background-color: #f8f8f8;
+  background-color: $process-super-light-gray;
   border: $black solid transparent;
 }
 .entry-container:hover {
