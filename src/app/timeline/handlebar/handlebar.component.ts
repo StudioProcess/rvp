@@ -29,7 +29,7 @@ export class HandlebarComponent implements OnInit {
   @Input() minWidth:number; // minimum width (in px)
   @Input('container') containerSelector:string; // ancestor to use for positioning
   @Input() caption:string; // caption shown inside handle
-
+  
   // define outputs
   @Output() drag:EventEmitter<HandlebarDragEvent> = new EventEmitter<HandlebarDragEvent>(); // position and/or width changed
 
