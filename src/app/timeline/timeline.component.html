@@ -5,7 +5,7 @@
     <app-handlebar class="scrollbar" [left]="0" [width]="100" [caption]="'|||'" [minWidth]='30' (drag)="scrollbarDrag($event)"></app-handlebar>
 
     <div style="padding-top:20px;text-align:center;">
-      <span>left: {{scrollbarLeft | number:'.2-2'}}%</span> — <span>width: {{scrollbarWidth | number:'.2-2'}}% — {{timelineWidth|number:'.0-0'}}px</span>
+      <!-- <span>left: {{scrollbarLeft | number:'.2-2'}}%</span> — <span>width: {{scrollbarWidth | number:'.2-2'}}% — {{timelineWidth|number:'.0-0'}}px</span> -->
     </div>
   </div>
 
@@ -16,7 +16,7 @@
     [zoom]="timelineWidth">
   </app-track>
 
-  <div class="row column add-track" (onlick)="addTrack()">
+  <div class="row column add-track">
     <button class="ion-android-add track-add-icon" title="Add new Track" alt="Add new Track" (click)="addTrack()"> Add Track</button>
   </div>
 

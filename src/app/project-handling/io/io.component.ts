@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   moduleId: module.id,
@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['io.component.css']
 })
 export class IoComponent implements OnInit {
+
+  @Input() videoSrc:string;
 
   constructor() { }
 
