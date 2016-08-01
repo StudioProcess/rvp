@@ -17,7 +17,8 @@
   "scripts": {
     "start": "ng serve",
     "chrome": "open -a 'google chrome' http://localhost:4200",
-    "postinstall": "npm link angular-cli && typings install",
+    "link-cli": "npm link angular-cli",
+    "postinstall": "typings install",
     "reinstall": "rm -rf node_modules dist tmp typings && npm install",
     "update": "git pull && npm prune && npm install",
     "typings": "typings",
@@ -57,7 +58,7 @@
     "zone.js": "0.6.12"
   },
   "devDependencies": {
-    "angular-cli": "1.0.0-beta.9",
+    "angular-cli": "1.0.0-beta.10",
     "codelyzer": "0.0.20",
     "ember-cli-inject-live-reload": "1.4.0",
     "jasmine-core": "2.4.1",
