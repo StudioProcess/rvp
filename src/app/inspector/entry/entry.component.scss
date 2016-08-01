@@ -7,7 +7,7 @@ $outline-width: 3px;
   // margin-bottom: 3px;
   //background-color: $process-light-gray;
   // background-color: #f8f8f8;
-  background-color: $process-super-light-gray;
+  background-color: #f2f1f1;
   border: $black solid transparent;
 }
 .entry-container:hover {
@@ -24,7 +24,7 @@ $outline-width: 3px;
   outline: $outline-width solid $black;
 }
 :host:nth-child(even) .entry-container {
-  background-color: #f8f8f8;
+  background-color: $process-super-light-gray;
 }
 :host:nth-child(even) .entry-container:hover {
   background-color: $white;
