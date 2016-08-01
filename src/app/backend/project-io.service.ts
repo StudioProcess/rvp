@@ -12,7 +12,13 @@ export class ProjectIOService {
     log.debug('jszip', JSZip);
   }
 
-  export(data: Project, filename?: string) {
+  export(data: Project, videoBlob: Blob, filename?: string) {
+    let zip = new JSZip();
+    let filesaver:any = saveAs;
+    zip.file('project.json', JSON.stringify(data));
+    // zip.file('video.mp4', videoBlob, {binary: true});
+    let blob = zip.generate({type: 'blob'});
+    filesaver(blob, filename || 'project.rvp');
   }
 
   import(filename): Project {

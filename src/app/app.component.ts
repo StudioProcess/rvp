@@ -72,6 +72,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     });
 
 
+    // store.first().subscribe(data => {
+    //   this.projectIO.export(data, null, 'project.zip');
+    // });
+
     // this.timelineData.subscribe(data => {
     //   log.debug('timeline data', data);
     // })
