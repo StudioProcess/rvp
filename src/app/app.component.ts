@@ -93,7 +93,8 @@ export class AppComponent implements OnInit, AfterViewInit {
       timelineDuration: td,
       timelineViewportWidth: 1000,
       zoomLevel: 10,
-      maxZoomLevel: 100
+      maxZoomLevel: 100,
+      scrollPosition: 0
     });
 
     log.debug('t width', this.timeService.timelineWidth);

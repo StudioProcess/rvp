@@ -54,12 +54,17 @@ export class TimelineComponent implements OnInit {
     this.playheadService.relativeStream.subscribe(relativePosition => {
       this.playheadTime = (relativePosition * 100); // TODO: use relative position instead of time
     });
+
+    this.timeService.scrollPositionStream.subscribe(pos => {
+      log.debug('scroll', pos);
+    });
   }
 
   scrollbarDrag(event) {
     this.scrollbarLeft = event.left;
     this.scrollbarWidth = event.width;
     // set zoom level in time service
+    this.timeService.scrollPositionRelative = event.left / 100;
     this.timeService.zoomLevelRelative = event.width / 100;
   }
 

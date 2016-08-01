@@ -8,6 +8,7 @@ interface TimeServiceInitialValues {
   timelineViewportWidth: number;
   zoomLevel: number;
   maxZoomLevel: number;
+  scrollPosition: number;
 }
 
 
@@ -18,6 +19,7 @@ export class TimeService {
   private _timelineViewportWidth: BehaviorSubject<number>;
   private _timelineWidth: BehaviorSubject<number>;
   private _zoomLevel: BehaviorSubject<number>;
+  private _scrollPosition: BehaviorSubject<number>;
 
   private _minZoomLevel: number;
   private _maxZoomLevel: number;
@@ -27,6 +29,7 @@ export class TimeService {
   timelineViewportWidthStream: Observable<number>; // broadcast
   timelineWidthStream: Observable<number>;
   zoomLevelStream: Observable<number>; // can also change on viewport resize
+  scrollPositionStream: Observable<number>; // can also change on viewport resize
 
   constructor() {}
 
@@ -35,6 +38,7 @@ export class TimeService {
     this._timelineDuration = new BehaviorSubject(initial.timelineDuration);
     this._timelineViewportWidth = new BehaviorSubject(initial.timelineViewportWidth);
     this._zoomLevel = new BehaviorSubject(initial.zoomLevel);
+    this._scrollPosition = new BehaviorSubject(initial.scrollPosition);
     // set dependent vars
     this._timelineWidth = new BehaviorSubject(initial.timelineDuration*initial.zoomLevel);
     this._minZoomLevel = initial.timelineViewportWidth / initial.timelineDuration;
@@ -44,6 +48,7 @@ export class TimeService {
     this.timelineViewportWidthStream = this._timelineViewportWidth.asObservable();
     this.timelineWidthStream = this._timelineWidth.asObservable();
     this.zoomLevelStream = this._zoomLevel.asObservable();
+    this.scrollPositionStream = this._scrollPosition.asObservable().distinctUntilChanged();
   };
 
   // // utility to resend the current value of a BehaviorSubject
@@ -102,6 +107,26 @@ export class TimeService {
     return 1 - this._zoomLevel.value / (this._maxZoomLevel - this._minZoomLevel);
   }
 
+  set scrollPosition(scroll: number) {
+    if (scroll < 0) { scroll = 0; }
+    else if (scroll > this._timelineWidth.value) { scroll = this._timelineWidth.value; }
+    this._scrollPosition.next(scroll);
+  }
+
+  get scrollPosition() {
+    return this._scrollPosition.value;
+  }
+
+  set scrollPositionRelative(percent: number) {
+    if (percent < 0) { percent = 0; }
+    else if (percent > 100) { percent = 100; }
+    this._scrollPosition.next(percent * this._timelineWidth.value);
+  }
+
+  get scrollPositionRelative() {
+    return this._scrollPosition.value / this._timelineWidth.value;
+  }
+
   // Set width of visible part of timeline (viewport) [px] (> 0)
   // => Broadcasts:
   //    New viewport width (timelineViewportWidth)
@@ -150,6 +175,10 @@ export class TimeService {
 
   convertSecondsToPercent(s:number): number {
     return this.convertSecondsToPixels(s) / this.timelineWidth;
+  }
+
+  convertViewportPixelsToSeconds(px:number): number {
+    return  this.convertPixelsToSeconds(this._scrollPosition.value + px);
   }
 
   // Streaming Conversion Functions
