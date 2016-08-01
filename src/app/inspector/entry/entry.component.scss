@@ -2,7 +2,6 @@
 $annotation-trackcolor-width: 10px;
 $outline-width: 3px;
 // $highlight-color: $white;
-$highlight-color: #0a0a0a;
 
 .entry-container {
   // margin-bottom: 3px;
@@ -42,7 +41,6 @@ $highlight-color: #0a0a0a;
   padding: 0.2em;
 }
 .title:focus {
-  color: $black;
   background-color: $highlight-color;
 }
 .description {

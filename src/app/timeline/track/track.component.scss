@@ -1,5 +1,5 @@
 @import '../../settings';
-$highlight-color: $white;
+
 $outline-width: 3px;
 $outline-hover: 1px;
 .track-container {
@@ -52,7 +52,6 @@ $outline-hover: 1px;
 }
 .title-input {
   display: inline-block;
-  width: 100px;
   font-weight: 500;
   //color: $dark-gray;
   border: 1px solid transparent;
@@ -62,7 +61,7 @@ $outline-hover: 1px;
   color: $dark-gray;
 }
 .title-input:focus {
-  color: $black;
+  color: $white;
   background-color: $highlight-color;
   outline: none;
   border-color: transparent;
@@ -100,7 +99,7 @@ hr {
   height: 1px;
 }
 .track-options {
-  align-items: flex-start;
+  display: inline-block;
   //visibility: hidden;
   opacity: 0;
   li {
