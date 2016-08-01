@@ -7,7 +7,7 @@ import { Project, InspectorEntry, Timeline } from './shared/models';
 import mockData from './shared/mock-data';
 
 import { TimeService, PlayheadService, PlayerService } from './shared';
-import { SimpleBackendService } from './backend';
+import { SimpleBackendService, ProjectIOService } from './backend';
 
 import { VideoComponent } from './video';
 import { InspectorComponent } from './inspector';
@@ -24,7 +24,7 @@ declare var $:any;
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
   directives: [TimelineComponent, InspectorComponent, VideoComponent, FilepickerComponent, InfoComponent, IoComponent, HandlebarComponent],
-  providers: [provideStore(masterReducer, mockData), TimeService, PlayheadService, PlayerService, SimpleBackendService]
+  providers: [provideStore(masterReducer, mockData), TimeService, PlayheadService, PlayerService, SimpleBackendService, ProjectIOService]
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
@@ -33,7 +33,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   timelineData:Observable<Timeline>;
   @ViewChild(VideoComponent) private video:VideoComponent; // inject video component child (available AfterViewInit)
 
-  constructor(private timeService:TimeService, private playheadService:PlayheadService, private store:Store<Project>, private backendService:SimpleBackendService, private el:ElementRef) {
+  constructor(private timeService:TimeService, private playheadService:PlayheadService, private store:Store<Project>, private backendService:SimpleBackendService, private el:ElementRef, private projectIO:ProjectIOService) {
     log.debug('app component');
 
     // video data

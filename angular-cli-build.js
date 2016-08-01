@@ -28,7 +28,9 @@ module.exports = function(defaults) {
       '@ngrx/**/*.+(js|js.map)',
       'localforage/dist/*.js',
       'loglevel/dist/*.js',
-      'moment/*.js'
+      'moment/*.js',
+      'file-saver/*.js',
+      'jszip/dist/*.js'
     ]
   });
 };

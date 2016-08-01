@@ -18,7 +18,9 @@ const map: any = {
   '@ngrx': 'vendor/@ngrx',
   'localforage': 'vendor/localforage',
   'loglevel': 'vendor/loglevel',
-  'moment': 'vendor/moment'
+  'moment': 'vendor/moment',
+  'file-saver': 'vendor/file-saver',
+  'jszip': 'vendor/jszip/dist'
 };
 
 /** User packages configuration. */
@@ -39,6 +41,12 @@ const packages: any = {
   },
   'moment': {
     main: 'moment.js'
+  },
+  'file-saver': {
+    main: 'FileSaver.js'
+  },
+  'jszip': {
+    main: 'jszip.js'
   }
 };
 
