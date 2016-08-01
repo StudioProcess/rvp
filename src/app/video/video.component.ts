@@ -86,6 +86,10 @@ export class VideoComponent implements OnInit {
         case 'pause':
           this.player.pause();
           break;
+        case 'toggle':
+          if (this.player.paused()) { this.player.play(); }
+          else { this.player.pause(); }
+          break;
       }
     });
   }
