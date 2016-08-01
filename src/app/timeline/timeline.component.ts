@@ -95,4 +95,8 @@ export class TimelineComponent implements OnInit {
     this.store.dispatch({ type: 'DESELECT_ANNOTATIONS' });
   }
 
+  addTrack(){
+    this.store.dispatch( { type: 'ADD_TRACK'} );
+  }
+
 }

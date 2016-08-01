@@ -31,3 +31,15 @@ app-playhead {
   display:block;
   height:100%;
 }
+
+.add-track {
+  font-size: 13px;
+  text-align: right;
+  padding-right: 5px !important;
+  :focus {
+    outline: none;
+  }
+  :hover {
+    text-decoration: underline;
+  }
+}

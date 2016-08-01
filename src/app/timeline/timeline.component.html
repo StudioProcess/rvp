@@ -16,6 +16,10 @@
     [zoom]="timelineWidth">
   </app-track>
 
+  <div class="row column add-track" (onlick)="addTrack()">
+    <button class="ion-android-add track-add-icon" title="Add new Track" alt="Add new Track" (click)="addTrack()"> Add Track</button>
+  </div>
+
   <div class="playhead-container" [scroll]="scrollbarLeft" [zoom]="timelineWidth" style="">
     <!-- cursor -->
     <!-- <app-cursor [time]="cursorTime" [displayTime]="cursorDisplayTime"></app-cursor> -->
