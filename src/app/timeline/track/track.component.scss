@@ -75,7 +75,7 @@ $outline-hover: 1px;
 }
 .title-row {
   padding-bottom: 0.5em;
-  // justify-content: space-between;
+  justify-content: space-between;
 }
 .annotation-row {
   height: 20px;
@@ -107,4 +107,7 @@ hr {
       background-color: $process-super-light-gray;
     }
   }
+}
+.track-delete-icon {
+  padding-right: 5px;
 }
