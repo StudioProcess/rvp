@@ -17,8 +17,9 @@ export class ProjectIOService {
     let filesaver:any = saveAs;
     zip.file('project.json', JSON.stringify(data));
     // zip.file('video.mp4', videoBlob, {binary: true});
-    let blob = zip.generate({type: 'blob'});
-    filesaver(blob, filename || 'project.rvp');
+    zip.generateAsync({type: 'blob'}).then( blob => {
+      filesaver(blob, filename || 'project.rvp');
+    });
   }
 
   import(filename): Project {
