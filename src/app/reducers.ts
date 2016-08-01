@@ -88,6 +88,11 @@ export const annotationReducer = (state:Project, action) => {
     return state;
 
     case 'DELETE_TRACK':
+      state.timeline.tracks.forEach((track) => {
+        if(track == action.payload.track) {
+          state.timeline.tracks.splice(state.timeline.tracks.indexOf(track), 1);
+        }
+      })
     return state;
 
     default:

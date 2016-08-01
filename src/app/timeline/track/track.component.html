@@ -11,7 +11,7 @@
             <input type="value" class="title-input" placeholder="Track Title" title="Track Title" value="{{data.fields.title}}">
           </div>
           <div class="column shrink track-options">
-            <i class="ion-android-close track-close-icon" title="Delete Track" alt="Delete Track"></i>
+            <button class="ion-android-close track-delete-icon" title="Delete Track" alt="Delete Track" (click)="deleteTrack()"></button>
             <!-- <ul class="dropdown menu is-dropdown-submenu-parent" data-dropdown-menu>
               <li>
                 <a href="#"></a>
