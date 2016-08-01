@@ -9,7 +9,7 @@ import mockData from './shared/mock-data';
 import { TimeService, PlayheadService, PlayerService } from './shared';
 import * as localforage from 'localforage';
 // import { BackendService } from './backend';
-import { LocalStorageService, SimpleBackendService } from './backend';
+import { SimpleBackendService } from './backend';
 
 import { VideoComponent } from './video';
 import { InspectorComponent } from './inspector';
@@ -26,7 +26,7 @@ declare var $:any;
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
   directives: [TimelineComponent, InspectorComponent, VideoComponent, FilepickerComponent, InfoComponent, IoComponent, HandlebarComponent],
-  providers: [provideStore(masterReducer, mockData), TimeService, PlayheadService, PlayerService, LocalStorageService, SimpleBackendService]
+  providers: [provideStore(masterReducer, mockData), TimeService, PlayheadService, PlayerService, SimpleBackendService]
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
