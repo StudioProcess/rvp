@@ -6,8 +6,7 @@ import { masterReducer } from './reducers';
 import { Project, InspectorEntry, Timeline } from './shared/models';
 import mockData from './shared/mock-data';
 
-import { TimeService } from './shared/time.service';
-import { PlayheadService } from './shared/playhead.service';
+import { TimeService, PlayheadService, PlayerService } from './shared';
 import * as localforage from 'localforage';
 // import { BackendService } from './backend';
 import { LocalStorageService, SimpleBackendService } from './backend';
@@ -27,7 +26,7 @@ declare var $:any;
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
   directives: [TimelineComponent, InspectorComponent, VideoComponent, FilepickerComponent, InfoComponent, IoComponent, HandlebarComponent],
-  providers: [provideStore(masterReducer, mockData), TimeService, PlayheadService, LocalStorageService, SimpleBackendService]
+  providers: [provideStore(masterReducer, mockData), TimeService, PlayheadService, PlayerService, LocalStorageService, SimpleBackendService]
 })
 export class AppComponent implements OnInit, AfterViewInit {
 

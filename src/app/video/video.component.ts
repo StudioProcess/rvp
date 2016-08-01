@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, ElementRef, EventEmitter } from '@angular/core';
 import 'video.js'; // creates global videojs() function
 import { Observable } from 'rxjs/Rx';
+import { PlayerService } from '../shared/player.service';
 
 @Component({
   moduleId: module.id,
@@ -31,7 +32,7 @@ export class VideoComponent implements OnInit {
     return null;
   }
 
-  constructor(public hostElement: ElementRef) {
+  constructor(public hostElement: ElementRef, private playerService:PlayerService) {
     let resolveFn;
     this.playerReady = new Promise(function(resolve) {
       resolveFn = resolve;
@@ -47,6 +48,7 @@ export class VideoComponent implements OnInit {
       window.addEventListener('resize', () => {
         this.fitPlayer();
       });
+      this.setupRequestHandling();
     });
 
     // setup player event streams
@@ -70,6 +72,22 @@ export class VideoComponent implements OnInit {
   private fitPlayer() {
     let elementDim = this.hostElement.nativeElement.getBoundingClientRect();
     this.player.dimensions(elementDim.width, elementDim.height);
+  }
+
+  private setupRequestHandling() {
+    this.playerService.actionStream.subscribe(action => {
+      switch (action.type) {
+        case 'setTime':
+          this.player.currentTime(action['time']);
+          break;
+        case 'play':
+          this.player.play();
+          break;
+        case 'pause':
+          this.player.pause();
+          break;
+      }
+    });
   }
 
 
