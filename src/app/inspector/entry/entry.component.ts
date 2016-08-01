@@ -104,11 +104,10 @@ export class EntryComponent implements OnInit {
     }
   }
 
-  clickAnnotation($clickEvent){
-
+  selectAnnotation() {
     let newAnnotation:Annotation = this._data.annotation;
-    if(newAnnotation.isSelected != true ){
-      this.store.dispatch( { type: 'SELECT_ANNOTATION', payload: newAnnotation } );
+    if (newAnnotation.isSelected != true ) { // it's not already selected
+      this.store.dispatch( {type: 'SELECT_ANNOTATION', payload: newAnnotation} );
     }
   }
 
