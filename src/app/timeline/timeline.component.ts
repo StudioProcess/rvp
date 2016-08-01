@@ -5,8 +5,7 @@ import { CursorComponent } from './cursor';
 import { HandlebarComponent } from './handlebar';
 import { Timeline, Annotation } from '../shared/models';
 import { ScrollZoom } from './scroll-zoom.directive';
-import { TimeService } from '../shared/time.service';
-import { PlayheadService } from '../shared/playhead.service';
+import { TimeService, PlayheadService, PlayerService } from '../shared';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Rx';
 import { Project } from '../shared/models';
@@ -32,7 +31,7 @@ export class TimelineComponent implements OnInit {
   playheadTime;
   playheadDisplayTime;
 
-  constructor(private el:ElementRef, private timeService:TimeService, private store:Store<Project>, private playheadService:PlayheadService) {}
+  constructor(private el:ElementRef, private timeService:TimeService, private store:Store<Project>, private playheadService:PlayheadService, private playerService:PlayerService) {}
 
   ngOnInit() {
     // TODO: need to use setTimeout here, otherwise width = 0
@@ -102,6 +101,12 @@ export class TimelineComponent implements OnInit {
 
   addTrack(){
     this.store.dispatch( { type: 'ADD_TRACK'} );
+  }
+
+  placePlayhead(e) {
+    let time = this.timeService.convertViewportPixelsToSeconds(e.offsetX)
+    // log.debug('place playhead', time);
+    this.playerService.setTime(time);
   }
 
 }
