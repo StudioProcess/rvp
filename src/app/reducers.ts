@@ -18,9 +18,14 @@ export const stubReducer = (state, action) => {
 }
 
 export const annotationReducer = (state:Project, action) => {
-  // log.debug(action, state);
+  // log.debug("reducing", action, state);
 
   switch (action.type) {
+    case 'HYDRATE':
+      // TODO: can this be replaced by something @ngrx/store provides?
+      if (action.payload) { return action.payload; }
+      return state;
+
     case 'UPDATE_ANNOTATION':
       // TODO: optimize with immutable data structures
       state.timeline.tracks.forEach((track) => {

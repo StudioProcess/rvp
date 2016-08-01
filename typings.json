@@ -11,7 +11,6 @@
     "es6-shim": "registry:dt/es6-shim#0.31.2+20160602141504",
     "foundation-sites": "registry:dt/foundation-sites#6.1.1+20160317120654",
     "jquery": "registry:dt/jquery#1.10.0+20160704162008",
-    "localforage": "registry:dt/localforage#0.0.0+20160629074517",
     "lodash": "registry:dt/lodash#3.10.0+20160619033623",
     "loglevel": "registry:dt/loglevel#1.4.0+20160412141402",
     "pouchdb/pouch": "registry:dt/pouchdb/pouch#0.1.0+20160608101805",

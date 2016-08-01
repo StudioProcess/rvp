@@ -7,8 +7,6 @@ import { Project, InspectorEntry, Timeline } from './shared/models';
 import mockData from './shared/mock-data';
 
 import { TimeService, PlayheadService, PlayerService } from './shared';
-import * as localforage from 'localforage';
-// import { BackendService } from './backend';
 import { SimpleBackendService } from './backend';
 
 import { VideoComponent } from './video';
@@ -35,7 +33,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   timelineData:Observable<Timeline>;
   @ViewChild(VideoComponent) private video:VideoComponent; // inject video component child (available AfterViewInit)
 
-  constructor(private timeService:TimeService, private playheadService:PlayheadService, private store:Store<Project>, private el:ElementRef) {
+  constructor(private timeService:TimeService, private playheadService:PlayheadService, private store:Store<Project>, private backendService:SimpleBackendService, private el:ElementRef) {
     log.debug('app component');
 
     // video data
@@ -57,6 +55,21 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     // timeline data
     this.timelineData = store.select('timeline') as Observable<Timeline>;
+
+
+    // setup state persistence
+    // (skip initial state and hydration)
+    store.skip(2).subscribe( data => {
+      this.backendService.storeData(data).then((...args) => {
+        // log.debug("state saved", args);
+      });
+    });
+
+    // hydrate state
+    // this.backendService.clearData();
+    this.backendService.retrieveData().then( data => {
+      if (data != null) store.dispatch( {type: 'HYDRATE', payload: data} );
+    });
 
 
     // this.timelineData.subscribe(data => {

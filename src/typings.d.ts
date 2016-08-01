@@ -12,7 +12,8 @@ declare module 'docuri' {
 }
 
 
-// // module declaration for video.js
-// declare module 'video.js' {
-//   export default VideoJSStatic;
-// }
+// manually declare localforage, since dt~localforage typings doesn't seem to work
+// TODO: remove this and use proper typings
+declare module 'localforage' {
+  export var createInstance;
+}

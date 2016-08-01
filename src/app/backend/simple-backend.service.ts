@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
-import { localforage } from 'localforage';
+import * as localforage from 'localforage';
 import { Project } from '../shared/models';
 
 @Injectable()
 export class SimpleBackendService {
 
-  private storage: LocalForage;
+  private storage;
 
   constructor() {
-    this.storage = localforage.createInstance( {name:'rvp'} );
+    this.storage = localforage.createInstance({
+      name: 'Research Video',
+      storeName: 'rvp'
+    });
   }
 
   storeVideo(blob: Blob): Promise<any> {
