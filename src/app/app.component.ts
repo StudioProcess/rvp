@@ -139,13 +139,12 @@ export class AppComponent implements OnInit, AfterViewInit {
     // this.video.timeupdate.subscribe((time) => { log.debug(time) });
   }
 
-  videoFilePicked(event) {
-    // log.info('video file picked:', event);
-    let src = URL.createObjectURL(event.file);
-    let fileMetadata:File = event.file;
+  videoFilePicked(file:File) {
+    log.info('video file picked:', file);
+    let src = URL.createObjectURL(file);
     this.store.dispatch({
       type: 'CHANGE_VIDEO',
-      payload: {src, meta:fileMetadata}
+      payload: {src, meta:file}
     });
   }
 
