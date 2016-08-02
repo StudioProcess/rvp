@@ -3,6 +3,7 @@ import { InspectorEntry } from '../../shared/models';
 import { REACTIVE_FORM_DIRECTIVES, FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { TimePipe, UnixTimePipe } from '../../shared/time.pipes';
 import { Annotation } from '../../shared/models';
+import { KeyDirective } from '../../shared/key.directive';
 
 import { Store } from '@ngrx/store';
 
@@ -12,7 +13,7 @@ import { Store } from '@ngrx/store';
   selector: '[app-entry]',
   templateUrl: 'entry.component.html',
   styleUrls: ['entry.component.css'],
-  directives: [REACTIVE_FORM_DIRECTIVES]
+  directives: [REACTIVE_FORM_DIRECTIVES, KeyDirective]
 })
 export class EntryComponent implements OnInit {
 
