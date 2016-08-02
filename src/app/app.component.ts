@@ -33,7 +33,15 @@ export class AppComponent implements OnInit, AfterViewInit {
   timelineData:Observable<Timeline>;
   @ViewChild(VideoComponent) private video:VideoComponent; // inject video component child (available AfterViewInit)
 
-  constructor(private timeService:TimeService, private playheadService:PlayheadService, private store:Store<Project>, private backendService:SimpleBackendService, private el:ElementRef, private projectIO:ProjectIOService) {
+  constructor(
+    private timeService:TimeService,
+    private playheadService:PlayheadService,
+    private playerService:PlayerService,
+    private store:Store<Project>,
+    private backendService:SimpleBackendService,
+    private el:ElementRef,
+    private projectIO:ProjectIOService
+  ) {
     log.debug('app component');
 
     // video data
@@ -121,7 +129,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     // log.debug('app-timeline', at);
     // log.debug('.timeline', ac);
 
-    window.addEventListener('keydown', this.onKeyDown.bind(this));
+    window.addEventListener( 'keydown', this.handleHotkeys.bind(this) );
   }
 
   ngAfterViewInit() {
@@ -160,14 +168,18 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.store.dispatch({ type: 'DESELECT_ANNOTATIONS' });
   }
 
-  onKeyDown($event){
-    if($event.keyCode == 8){
-      $event.preventDefault();
-      this.store.dispatch( { type: 'DELETE_SELECTED_ANNOTATION' });
-    }
-    if($event.keyCode == 187 || $event.keyCode == 221){
-      $event.preventDefault();
+  // Global hotkeys
+  handleHotkeys(e) {
+    // log.debug('keydown', e.keyCode, e.key);
+    if (e.keyCode == 8) { // BACKSPACE
+      e.preventDefault();
+      this.store.dispatch( { type: 'DELETE_SELECTED_ANNOTATION' } );
+    } else if (e.keyCode == 187 || e.keyCode == 221) { // + or ]
+      e.preventDefault();
       this.store.dispatch( { type: 'ADD_TRACK'} );
+    } else if (e.keyCode == 32) { // SPACE
+      this.playerService.toggle();
+      e.preventDefault();
     }
   }
 
