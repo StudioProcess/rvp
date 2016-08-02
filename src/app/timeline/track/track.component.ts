@@ -3,13 +3,14 @@ import { AnnotationComponent } from './annotation';
 import { Track, Annotation } from '../../shared/models';
 import { Store } from '@ngrx/store';
 import { TimeService } from '../../shared/time.service';
+import { KeyDirective } from '../../shared/key.directive';
 
 @Component({
   moduleId: module.id,
   selector: 'app-track',
   templateUrl: 'track.component.html',
   styleUrls: ['track.component.css'],
-  directives: [AnnotationComponent]
+  directives: [AnnotationComponent, KeyDirective]
 })
 export class TrackComponent implements OnInit {
 

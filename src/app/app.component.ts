@@ -15,6 +15,8 @@ import { TimelineComponent } from './timeline';
 import { FilepickerComponent, InfoComponent, IoComponent } from './project-handling';
 import { HandlebarComponent } from './timeline/handlebar';
 
+import { KeyDirective } from './shared/key.directive';
+
 declare var $:any;
 
 
@@ -23,7 +25,7 @@ declare var $:any;
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
-  directives: [TimelineComponent, InspectorComponent, VideoComponent, FilepickerComponent, InfoComponent, IoComponent, HandlebarComponent],
+  directives: [TimelineComponent, InspectorComponent, VideoComponent, FilepickerComponent, InfoComponent, IoComponent, HandlebarComponent, KeyDirective],
   providers: [provideStore(masterReducer, mockData), TimeService, PlayheadService, PlayerService, SimpleBackendService, ProjectIOService]
 })
 export class AppComponent implements OnInit, AfterViewInit {
