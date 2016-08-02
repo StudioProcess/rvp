@@ -21,9 +21,11 @@ export class VideoComponent implements OnInit {
 
   @Input() set videoSrc(src) {
     this.playerReady.then(() => {
-      this.player.src(src);
+      if (src) { this.player.src(src); }
     });
   }
+
+  @Input() fileMetadata;
 
   get videoSrc() {
     if (this.player) {
@@ -42,13 +44,12 @@ export class VideoComponent implements OnInit {
 
   ngOnInit() {
     this.player = videojs('videojs', this.playerOptions, () => {
-      // player ready
+      // player ready (callback has no args)
       this.playerReady.resolve();
       this.fitPlayer();
-      window.addEventListener('resize', () => {
-        this.fitPlayer();
-      });
+      window.addEventListener('resize', this.fitPlayer.bind(this));
       this.setupRequestHandling();
+      this.player.on('loadedmetadata', this.onMetadataLoaded.bind(this));
     });
 
     // setup player event streams
@@ -94,6 +95,18 @@ export class VideoComponent implements OnInit {
     });
   }
 
+  private onMetadataLoaded() {
+    let metadata = {
+      type: this.player.currentType(),
+      src: this.player.currentSrc(),
+      duration: this.player.duration(),
+      width: this.player.videoWidth(),
+      height: this.player.videoHeight(),
+      file: this.fileMetadata
+    };
+    this.playerService.videoLoaded(metadata);
+    log.debug('video loaded', metadata);
+  }
 
   /*
     Video.js Player API: http://docs.videojs.com/docs/api/player.html
@@ -102,8 +115,8 @@ export class VideoComponent implements OnInit {
     - currentType() : Get the current source type e.g. video/mp4
     - currentSrc() : Returns the fully qualified URL of the current source value e.g. http://mysite.com/video.mp4
     - duration() : Get the length in time of the video in seconds
-    - videoHeight() : Get video height
     - videoWidth() : Get video width
+    - videoHeight() : Get video height
 
     - pause()
     - paused()
