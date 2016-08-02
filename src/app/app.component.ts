@@ -140,21 +140,13 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   videoFilePicked(event) {
-    log.info('video file picked:', event);
-    // this.videoSrc = URL.createObjectURL(event.file);
-    //
-    // let meta = {
-    //   name: event.file.name,
-    //   type: event.file.type,
-    //   size: event.file.size,
-    //   lastModified: event.file.lastModified,
-    //   lastModifiedDate: event.file.lastModifiedDate
-    // };
-    // this.backend.storeVideo(event.file, meta).then((result) => {
-    //   log.debug('video stored:', result);
-    // }).catch(err => {
-    //   log.error('store video:', err);
-    // });
+    // log.info('video file picked:', event);
+    let src = URL.createObjectURL(event.file);
+    let fileMetadata:File = event.file;
+    this.store.dispatch({
+      type: 'CHANGE_VIDEO',
+      payload: {src, meta:fileMetadata}
+    });
   }
 
   onVideoTimeupdate(time) {
