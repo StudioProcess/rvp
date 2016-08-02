@@ -24,6 +24,7 @@ $outline-width: 3px;
 .inputfile:focus + label, .inputfile + label:hover {
   color: $white;
   background-color: $black;
+  cursor: pointer;
 }
 
 .inputfile {

@@ -23,6 +23,7 @@ $outline-width: 3px;
 .inputfile:focus + label, .inputfile + label:hover {
   color: $white;
   background-color: $black;
+  cursor: pointer;
 }
 
 .inputfile {
@@ -32,4 +33,23 @@ $outline-width: 3px;
 	overflow: hidden;
 	position: absolute;
 	z-index: -1;
+}
+
+.button-export {
+    // font-size: 1.25em;
+    // font-weight: 700;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: white;
+    background-color: black;
+    display: inline-block;
+    color: $black;
+    background-color: $process-light-gray;
+}
+
+.button-export:hover {
+  color: $white;
+  background-color: $black;
 }
