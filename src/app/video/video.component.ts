@@ -18,6 +18,7 @@ export class VideoComponent implements OnInit {
 
   // emits player time updates (in seconds)
   @Output() timeupdate = new EventEmitter<number>();
+  @Output() videoLoaded = new EventEmitter<any>(); // TODO: use proper Type
 
   @Input() set videoSrc(src) {
     this.playerReady.then(() => {
@@ -104,6 +105,7 @@ export class VideoComponent implements OnInit {
       height: this.player.videoHeight(),
       file: this.fileMetadata
     };
+    this.videoLoaded.emit(metadata);
     this.playerService.videoLoaded(metadata);
     log.debug('video loaded', metadata);
   }
