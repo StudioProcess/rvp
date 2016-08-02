@@ -1,5 +1,36 @@
+@import '../../settings';
+$outline-width: 3px;
+
 .title-settings {
   font-size: 16px;
   font-weight: 500;
   margin-top: 1em;
+}
+
+.inputfile + label {
+    // font-size: 1.25em;
+    // font-weight: 700;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: white;
+    background-color: black;
+    display: inline-block;
+    color: $black;
+    background-color: $process-light-gray;
+}
+
+.inputfile:focus + label, .inputfile + label:hover {
+  color: $white;
+  background-color: $black;
+}
+
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
 }
