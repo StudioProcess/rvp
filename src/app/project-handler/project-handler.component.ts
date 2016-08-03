@@ -13,6 +13,7 @@ export class ProjectHandlerComponent implements OnInit {
   @Input() videoSrc:string;
   @Output() projectExport = new EventEmitter<void>();
   @Output() projectImport = new EventEmitter<File>();
+  @Output() projectReset = new EventEmitter<void>();
 
   constructor() { }
 
@@ -32,6 +33,12 @@ export class ProjectHandlerComponent implements OnInit {
     this.projectExport.emit(null);
     e.preventDefault();
     log.debug('export button clicked');
+  }
+
+  resetButtonClicked(e) {
+    this.projectReset.emit(null);
+    e.preventDefault();
+    log.debug('reset button clicked');
   }
 
 }

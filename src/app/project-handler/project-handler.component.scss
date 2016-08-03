@@ -7,8 +7,6 @@ $outline-width: 3px;
   margin-top: 1em;
 }
 .inputfile + label {
-    // font-size: 1.25em;
-    // font-weight: 700;
     padding-left: 15px;
     padding-right: 15px;
     padding-top: 5px;
@@ -36,14 +34,11 @@ $outline-width: 3px;
 }
 
 .button-export {
-    // font-size: 1.25em;
-    // font-weight: 700;
     padding-left: 15px;
     padding-right: 15px;
     padding-top: 5px;
     padding-bottom: 5px;
     color: white;
-    background-color: black;
     display: inline-block;
     color: $black;
     background-color: $process-light-gray;
@@ -52,4 +47,24 @@ $outline-width: 3px;
 .button-export:hover {
   color: $white;
   background-color: $black;
+}
+
+.button-reset {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: white;
+    display: inline-block;
+    color: $white;
+    background-color: red;
+}
+
+.button-reset:hover {
+  color: $white;
+  background-color: $black;
+}
+
+a {
+  font-weight: 500;
 }

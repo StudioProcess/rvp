@@ -1,5 +1,3 @@
-<h3 class="title-settings">Information</h3>
-Research Video is auto-saving, no need to save manually. If you want to send the project to somebody or preserve it for later use, simply export it as an archive.
 <!-- Tracks: X<br />
 Annotations: X<br /> -->
 <div class="row">
@@ -16,3 +14,16 @@ Annotations: X<br /> -->
   </div>
 </div>
 <app-filepicker (filePicked)="videoFilePicked($event)">></app-filepicker>
+<div class="row">
+  <div class="column">
+    <h3 class="title-settings">Reset Project</h3>
+    <a class="button-reset" href="#" (click)="resetButtonClicked($event)">Reset</a>
+  </div>
+</div>
+<div class="row">
+  <div class="column">
+    <h3 class="title-settings">Information</h3>
+    <p>Research Video is auto-saving, no need to save manually. If you want to send the project to somebody or preserve it for later use, simply export it as an archive.</p>
+    <p>Feel free to share your feedback with us! Contact us directly via <a href="mailto:contact@process.studio">contact@process.studio</a>, start a new issue on <a href="https://github.com/StudioProcess/rvp/issues">github</a> or join the conversation in our <a href="https://docs.google.com/document/d/138X8Mwrqro1Um0N85-0xUM5yru1hoRt6Rob0vzt7svE/edit">public document</a>.</p>
+  </div>
+</div>
