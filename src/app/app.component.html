@@ -63,7 +63,7 @@
   <!-- <div class="row column">Project</div> -->
 
   <div class="row column">
-    <app-project-handler></app-project-handler>
+    <app-project-handler (projectReset)="onProjectReset()"></app-project-handler>
     <button class="close-button" data-close aria-label="Close modal" type="button">
       <span aria-hidden="true">&times;</span>
     </button>

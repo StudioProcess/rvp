@@ -13,8 +13,7 @@ import { VideoComponent } from './video';
 import { InspectorComponent } from './inspector';
 import { TimelineComponent } from './timeline';
 import { HandlebarComponent } from './timeline/handlebar';
-
-import { ProjectHandlerComponent } from './project-handler/project-handler.component';
+import { ProjectHandlerComponent } from './project-handler';
 
 import { KeyDirective } from './shared/key.directive';
 
@@ -180,5 +179,10 @@ export class AppComponent implements OnInit, AfterViewInit {
   // compare function to sort entries by timestamp
   private compareEntries(a:InspectorEntry, b:InspectorEntry):number {
     return a.annotation.utc_timestamp - b.annotation.utc_timestamp;
+  }
+
+  // Reset button clicked in Project modal window
+  onProjectReset() {
+    this.store.dispatch( {type: 'HYDRATE', payload: mockData} );
   }
 }
