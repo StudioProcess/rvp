@@ -185,4 +185,20 @@ export class AppComponent implements OnInit, AfterViewInit {
   onProjectReset() {
     this.store.dispatch( {type: 'HYDRATE', payload: mockData} );
   }
+
+  // Export button clicked in Project modal window
+  onProjectExport() {
+    log.debug('app project export');
+  }
+
+  // Import file selected in Project modal window
+  onProjectImport(file: File) {
+    log.debug('app project import', file);
+  }
+
+  // Video file selected in Project modal window
+  onVideoFileOpened(file: File) {
+    log.debug('app video file openend', file);
+  }
+
 }
