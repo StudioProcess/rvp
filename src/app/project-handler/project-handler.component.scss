@@ -1,6 +1,12 @@
 @import '../settings';
 $outline-width: 3px;
 
+h2 {
+  font-size: 23px;
+  font-weight: 500;
+  margin-bottom: 1em;
+}
+
 .title-settings {
   font-size: 16px;
   font-weight: 500;
@@ -67,4 +73,19 @@ $outline-width: 3px;
 
 a {
   font-weight: 500;
+}
+
+.title-information {
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 3em;
+}
+
+label {
+  font-weight: 500;
+}
+
+.buttons {
+  margin-bottom: 1em;
+  margin-bottom: 1em;
 }
