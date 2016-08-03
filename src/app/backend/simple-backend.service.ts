@@ -23,7 +23,7 @@ export class SimpleBackendService {
   }
 
   clearVideo(): Promise<any> {
-    return this.storage.clear();
+    return this.storage.removeItem('video');
   }
 
   storeData(data: Project): Promise<any> {
@@ -35,7 +35,7 @@ export class SimpleBackendService {
   }
 
   clearData(): Promise<any> {
-    return this.storage.clear();
+    return this.storage.removeItem('project');
   }
 
 }
