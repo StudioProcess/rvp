@@ -10,9 +10,10 @@ export class FilepickerComponent implements OnInit {
 
   @Output() filePicked = new EventEmitter<File>();
 
-  constructor() {}
+  constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   fileSelected(event) {
     event.preventDefault();

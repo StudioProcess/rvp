@@ -12,8 +12,9 @@ import { SimpleBackendService, ProjectIOService } from './backend';
 import { VideoComponent } from './video';
 import { InspectorComponent } from './inspector';
 import { TimelineComponent } from './timeline';
-import { FilepickerComponent, InfoComponent, IoComponent } from './project-handling';
 import { HandlebarComponent } from './timeline/handlebar';
+
+import { ProjectHandlerComponent } from './project-handler/project-handler.component';
 
 import { KeyDirective } from './shared/key.directive';
 
@@ -25,7 +26,7 @@ declare var $:any;
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
-  directives: [TimelineComponent, InspectorComponent, VideoComponent, FilepickerComponent, InfoComponent, IoComponent, HandlebarComponent, KeyDirective],
+  directives: [TimelineComponent, InspectorComponent, VideoComponent, HandlebarComponent, KeyDirective, ProjectHandlerComponent],
   providers: [provideStore(masterReducer, mockData), TimeService, PlayheadService, PlayerService, SimpleBackendService, ProjectIOService]
 })
 export class AppComponent implements OnInit, AfterViewInit {

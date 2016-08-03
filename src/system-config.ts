@@ -96,6 +96,8 @@ const barrels: string[] = [
   'app/timeline/playhead',
   'app/timeline/cursor',
   'app/timeline/handlebar',
+  'app/project-handler',
+  'app/project-handler/filepicker',
   /** @cli-barrel */
 ];
 

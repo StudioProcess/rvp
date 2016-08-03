@@ -1,12 +1,14 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { FilepickerComponent } from './filepicker/filepicker.component';
 
 @Component({
   moduleId: module.id,
-  selector: 'app-io',
-  templateUrl: 'io.component.html',
-  styleUrls: ['io.component.css']
+  selector: 'app-project-handler',
+  templateUrl: 'project-handler.component.html',
+  styleUrls: ['project-handler.component.css'],
+  directives: [ FilepickerComponent ]
 })
-export class IoComponent implements OnInit {
+export class ProjectHandlerComponent implements OnInit {
 
   @Input() videoSrc:string;
   @Output() projectExport = new EventEmitter<void>();

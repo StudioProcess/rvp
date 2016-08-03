@@ -1,3 +1,7 @@
+<h3 class="title-settings">Information</h3>
+Research Video is auto-saving, no need to save manually. If you want to send the project to somebody or preserve it for later use, simply export it as an archive.
+<!-- Tracks: X<br />
+Annotations: X<br /> -->
 <div class="row">
   <div class="column">
     <h3 class="title-settings">Open Project</h3>
@@ -11,8 +15,4 @@
     <a class="button-export" href="#" (click)="exportButtonClicked($event)">Export</a>
   </div>
 </div>
-<!-- <div class="row column">
-  Current Video URL: <code><span style="font-size: 12px">{{ videoSrc }}</span></code><br />
-  <hr>
-</div> -->
-<!-- <i class="ion-ios-download-outline export-project-icon" title="Export Project" alt="Export Project" (click)=""> Add Track</i> -->
+<app-filepicker (filePicked)="videoFilePicked($event)">></app-filepicker>

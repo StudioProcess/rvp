@@ -3,11 +3,11 @@
 import { By }           from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { addProviders, async, inject } from '@angular/core/testing';
-import { InfoComponent } from './info.component';
+import { ProjectHandlerComponent } from './project-handler.component';
 
-describe('Component: Info', () => {
+describe('Component: ProjectHandler', () => {
   it('should create an instance', () => {
-    let component = new InfoComponent();
+    let component = new ProjectHandlerComponent();
     expect(component).toBeTruthy();
   });
 });
