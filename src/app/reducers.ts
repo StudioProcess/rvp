@@ -23,7 +23,11 @@ export const annotationReducer = (state:Project, action) => {
   switch (action.type) {
     case 'HYDRATE':
       // TODO: can this be replaced by something @ngrx/store provides?
-      if (action.payload) { return action.payload; }
+      if (action.payload) {
+        // log.debug("video: "+action.payload.video); // reset video file
+        log.debug("video: "+state.video);
+        return action.payload;
+      }
       return state;
 
     case 'UPDATE_ANNOTATION':
