@@ -30,10 +30,16 @@ declare var $:any;
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
-  videoSrc: string;
+  _videoSrc: string;
+  _videoFile: Blob;
   inspectorEntries:Observable<InspectorEntry[]>;
   timelineData:Observable<Timeline>;
   @ViewChild(VideoComponent) private video:VideoComponent; // inject video component child (available AfterViewInit)
+
+  set videoFile(file: Blob) {
+    this._videoSrc = URL.createObjectURL(file);
+    this._videoFile = file;
+  }
 
   constructor(
     private timeService:TimeService,
@@ -50,7 +56,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     // this.videoSrc = store.select('video', 'url') as Observable<string>;
     this.backendService.retrieveVideo().then(blob => {
       log.debug('video retrieved', blob);
-      if (blob) { this.videoSrc = URL.createObjectURL(blob); }
+      if (blob) { this.videoFile = blob; }
     });
 
     // inspector data
@@ -193,17 +199,27 @@ export class AppComponent implements OnInit, AfterViewInit {
   // Export button clicked in Project modal window
   onProjectExport() {
     log.debug('app project export');
+    this.store.first().subscribe(data => {
+      this.projectIO.export(data, this._videoFile);
+    });
   }
 
   // Import file selected in Project modal window
   onProjectImport(file: File) {
     log.debug('app project import', file);
+    this.projectIO.import(file).then(imported => {
+      log.debug('imported', imported);
+      this.store.dispatch( {type:'HYDRATE', payload:imported.data} );
+      this.videoFile = imported.videoBlob;
+    }).catch(err => {
+      log.trace(err);
+    });
   }
 
   // Video file selected in Project modal window
   onVideoFileOpened(file: File) {
     log.debug('app video file openend', file);
-    this.videoSrc = URL.createObjectURL(file);
+    this.videoFile = file;
     this.backendService.storeVideo(file).then(() => {
       log.debug('video stored');
     });

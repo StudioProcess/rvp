@@ -26,7 +26,7 @@
   <div class="row video-and-inspector">
     <div class="column video-component" (click)="deselectAnnotations($event)">
       <!-- VIDEO COMPONENT -->
-      <app-video [videoSrc]="videoSrc"   (timeupdate)="onVideoTimeupdate($event)"></app-video>
+      <app-video [videoSrc]="_videoSrc" (timeupdate)="onVideoTimeupdate($event)"></app-video>
     </div>
 
     <div class="column small-4 inspector-component">

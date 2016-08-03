@@ -16,7 +16,7 @@ export class ProjectIOService {
     let zip = new JSZip();
     let filesaver:any = saveAs;
     zip.file('project.json', JSON.stringify(data));
-    // zip.file('video.mp4', videoBlob, {binary: true});
+    if (videoBlob) zip.file('video.m4v', videoBlob, {binary: true});
     return zip.generateAsync({type: 'blob'}).then( blob => {
       filesaver(blob, filename || 'project.rv');
     });
@@ -25,17 +25,19 @@ export class ProjectIOService {
   import(zipfile: File): Promise<any> {
     let zip = new JSZip();
     return zip.loadAsync(zipfile).then(zip => {
+      let projectFile = zip.file('project.json');
+      let videoBlob = zip.file('video.m4v');
+      log.debug('unzipping', zip, projectFile, videoBlob);
 
-      let dataPromise = zip.file('project.json').async('string').then(json => {
+      let dataPromise = projectFile.async('string').then(json => {
         return JSON.parse(json);
       });
-      let videoBlobPromise = zip.file('video.mp4').async('uint8array').then(uint8array => {
+      let videoBlobPromise = videoBlob.async('uint8array').then(uint8array => {
         return new Blob([uint8array]);
       });
       return Promise.all([dataPromise, videoBlobPromise]).then( ([data, videoBlob]) => {
         return {data, videoBlob};
       });
-
     });
   }
 
