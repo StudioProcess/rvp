@@ -21,13 +21,17 @@ export class ProjectHandlerComponent implements OnInit {
   ngOnInit() { }
 
   resetButtonClicked(e) {
-    this.projectReset.emit(null);
+    if(window.confirm("Reset the whole project? All data will be lost.")){
+      this.projectReset.emit(null);
+    }
     e.preventDefault();
     // log.debug('reset button clicked');
   }
 
   exportButtonClicked(e) {
-    this.projectExport.emit(null);
+    if(window.confirm("Export an archive of the project?")){
+      this.projectExport.emit(null);
+    }
     e.preventDefault();
     // log.debug('export button clicked');
   }

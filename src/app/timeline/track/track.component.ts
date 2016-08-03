@@ -42,6 +42,8 @@ export class TrackComponent implements OnInit {
   }
 
   deleteTrack(){
-    this.store.dispatch( { type: 'DELETE_TRACK', payload: { track: this.data } } );
+    if(window.confirm("Really delete track? All annotations will be deleted, too.")){
+      this.store.dispatch( { type: 'DELETE_TRACK', payload: { track: this.data } } );
+    }
   }
 }
