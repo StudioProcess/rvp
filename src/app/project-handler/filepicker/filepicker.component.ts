@@ -21,7 +21,6 @@ export class FilepickerComponent implements OnInit {
     if (!fileList.length) return; // no file selected
     let file = fileList[0];
     this.filePicked.emit(file);
-    // log.debug('video file selected', file);
   }
 
 }

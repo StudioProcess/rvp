@@ -10,14 +10,26 @@ import { FilepickerComponent } from './filepicker/filepicker.component';
 })
 export class ProjectHandlerComponent implements OnInit {
 
-  @Input() videoSrc:string;
-  @Output() projectExport = new EventEmitter<void>();
-  @Output() projectImport = new EventEmitter<File>();
   @Output() projectReset = new EventEmitter<void>();
+  @Output() projectExport = new EventEmitter<void>();
+
+  @Output() projectImport = new EventEmitter<File>();
+  @Output() videoFileOpened = new EventEmitter<File>();
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit() { }
+
+  resetButtonClicked(e) {
+    this.projectReset.emit(null);
+    e.preventDefault();
+    // log.debug('reset button clicked');
+  }
+
+  exportButtonClicked(e) {
+    this.projectExport.emit(null);
+    e.preventDefault();
+    // log.debug('export button clicked');
   }
 
   importFileSelected(e) {
@@ -26,19 +38,12 @@ export class ProjectHandlerComponent implements OnInit {
     let file = fileList[0];
     this.projectImport.emit(file);
     e.preventDefault();
-    log.debug('import file selected', file);
+    // log.debug('import file selected', file);
   }
 
-  exportButtonClicked(e) {
-    this.projectExport.emit(null);
-    e.preventDefault();
-    log.debug('export button clicked');
-  }
-
-  resetButtonClicked(e) {
-    this.projectReset.emit(null);
-    e.preventDefault();
-    log.debug('reset button clicked');
+  videoFileSelected(file: File) {
+    this.videoFileOpened.emit(file);
+    // log.debug('video file selected', file);
   }
 
 }
