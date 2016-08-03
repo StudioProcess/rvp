@@ -30,7 +30,7 @@ declare var $:any;
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
-  videoSrc:Observable<string>;
+  videoSrc: string;
   inspectorEntries:Observable<InspectorEntry[]>;
   timelineData:Observable<Timeline>;
   @ViewChild(VideoComponent) private video:VideoComponent; // inject video component child (available AfterViewInit)
@@ -46,8 +46,12 @@ export class AppComponent implements OnInit, AfterViewInit {
   ) {
     log.debug('app component');
 
-    // video data
-    this.videoSrc = store.select('video', 'url') as Observable<string>;
+    // load video data
+    // this.videoSrc = store.select('video', 'url') as Observable<string>;
+    this.backendService.retrieveVideo().then(blob => {
+      log.debug('video retrieved', blob);
+      if (blob) { this.videoSrc = URL.createObjectURL(blob); }
+    });
 
     // inspector data
     this.inspectorEntries = store.select(state => {
@@ -199,6 +203,11 @@ export class AppComponent implements OnInit, AfterViewInit {
   // Video file selected in Project modal window
   onVideoFileOpened(file: File) {
     log.debug('app video file openend', file);
+    this.videoSrc = URL.createObjectURL(file);
+    this.backendService.storeVideo(file).then(() => {
+      log.debug('video stored');
+    });
   }
+
 
 }
