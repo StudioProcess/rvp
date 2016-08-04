@@ -15,7 +15,14 @@ export class SimpleBackendService {
   }
 
   storeVideo(blob: Blob): Promise<any> {
-    return this.storage.setItem('video', blob);
+    if (blob.toString() != '[object Blob]') {
+      blob = blob.slice();
+      // log.debug('Blob object type', blob.toString());
+    }
+    return this.storage.setItem('video', blob).catch(err => {
+      log.error(err);
+      return null;
+    });
   }
 
   retrieveVideo(): Promise<Blob> {
