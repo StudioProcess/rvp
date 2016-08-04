@@ -164,24 +164,32 @@ export const getMockData = () => ({
       {
         color: '#333745', //'#f4bd28', // orange
         fields: {
-          title: 'Highlights'
+          title: 'Ruler'
         },
         annotations: [
           {
-            utc_timestamp: 5,
-            duration: 40,
+            utc_timestamp: 0,
+            duration: 10,
             fields: {
-              title: 'A long annotation.',
-              description: "Annotation starts at 5 seconds and lasts 40 seconds. Yes, that's a pretty long annotation."
+              title: 'Start',
+              description: "Right at the beginning of the timeline, this annotation lasts 10 seconds"
             }
           },
           {
-            utc_timestamp: 50,
-            duration: 15,
+            utc_timestamp: 105,
+            duration: 0,
             fields: {
-              title: 'A medium-length annotation of 15 seconds.',
-              description: "Start ist at 50 seconds — lasting for 15 seconds."
+              title: 'Midpoint',
+              description: "Marks the Midpoint of the timeline at 1:45 min (105 sec)."
             }
+          },
+          {
+            utc_timestamp: 200,
+            duration: 10,
+            fields: {
+              title: 'End',
+              description: "This annotation lasts from 3:20 min (200 sec) right till the end of the timeline."
+            },
           }
         ]
       }

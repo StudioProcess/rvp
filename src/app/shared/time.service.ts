@@ -49,6 +49,8 @@ export class TimeService {
     this.timelineWidthStream = this._timelineWidth.asObservable();
     this.zoomLevelStream = this._zoomLevel.asObservable();
     this.scrollPositionStream = this._scrollPosition.asObservable().distinctUntilChanged();
+
+    log.debug('time service initialized', initial, this);
   };
 
   // // utility to resend the current value of a BehaviorSubject
@@ -84,6 +86,7 @@ export class TimeService {
   //    New zoom level (zoomLevel)
   //    New timeline width [px] (timelineWidth)
   set zoomLevel(zoom: number) {
+      log.debug('setting zoom level', zoom);
     // if (zoom <= 0) throw new Error('Invalid zoom level. (Needs to be > 0)');
     // TODO: enable error checking
     if (zoom <= 0) return;
@@ -100,6 +103,7 @@ export class TimeService {
 
   // Set zoom level [%] (0,1)
   set zoomLevelRelative(percent: number) {
+    log.debug('setting zoom level (relative)', percent);
     this.zoomLevel =  (1-percent) * (this._maxZoomLevel - this._minZoomLevel);
   }
 
@@ -108,6 +112,7 @@ export class TimeService {
   }
 
   set scrollPosition(scroll: number) {
+    log.debug('setting scroll position', scroll);
     if (scroll < 0) { scroll = 0; }
     else if (scroll > this._timelineWidth.value) { scroll = this._timelineWidth.value; }
     this._scrollPosition.next(scroll);
@@ -118,6 +123,7 @@ export class TimeService {
   }
 
   set scrollPositionRelative(percent: number) {
+    log.debug('setting scroll position (relative)', percent);
     if (percent < 0) { percent = 0; }
     else if (percent > 100) { percent = 100; }
     this._scrollPosition.next(percent * this._timelineWidth.value);
@@ -133,6 +139,7 @@ export class TimeService {
   //    New zoom level [px/s] (zoomLevel)
   // => Calculates: new minimum zoom level
   setTimelineViewportWidth(width: number) {
+    log.debug('setting viewport width', width);
     if (width <= 0) throw new Error('Invalid viewport width. (Needs to be > 0)');
     this._timelineViewportWidth.next(width);
 

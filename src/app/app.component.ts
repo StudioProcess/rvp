@@ -128,7 +128,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     // initialize time service
     this.timeService.init({
       timelineDuration: td,
-      timelineViewportWidth: 1000,
+      timelineViewportWidth: 1000, // iniital value, will be set correctly by timeline component
       zoomLevel: 10,
       maxZoomLevel: 100,
       scrollPosition: 0
@@ -203,7 +203,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   onProjectReset() {
     this.playerService.reset(); // reset player
     this.backendService.clearVideo(); // clear video from storage
-    this.store.dispatch( {type: 'HYDRATE', payload: getTutorialData()} );
+    this.store.dispatch( {type: 'HYDRATE', payload: getMockData()} );
   }
 
   // Export button clicked in Project modal window
