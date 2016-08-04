@@ -81,7 +81,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     // (skip initial state and hydration)
     store.skip(2).subscribe( data => {
       this.backendService.storeData(data).then((...args) => {
-        // log.debug("state saved", args);
+        log.debug("state saved", args);
       });
     });
 
@@ -123,7 +123,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     let td;
     this.timelineData.first().subscribe(t => td=t.duration);
-    log.debug('t duration', td);
+    log.debug('timeline duration', td);
 
     // initialize time service
     this.timeService.init({
@@ -134,7 +134,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       scrollPosition: 0
     });
 
-    log.debug('t width', this.timeService.timelineWidth);
+    log.debug('timeline width', this.timeService.timelineWidth);
 
     // let at = this.el.nativeElement.querySelector('app-timeline');
     // let ac = this.el.nativeElement.querySelector('.scrollbar');
@@ -163,6 +163,14 @@ export class AppComponent implements OnInit, AfterViewInit {
   onVideoTimeupdate(time) {
     this.playheadService.time = time;
     //log.debug('video time updated:', time);
+  }
+
+  onVideoLoaded(metadata) {
+    log.debug('video loaded', metadata);
+    if (metadata.duration) {
+      this.timeService.timelineDuration = metadata.duration;
+      this.store.dispatch( {type:'SET_TIMELINE_DURATION', payload:metadata.duration} );
+    }
   }
 
   // deselect all annotations
@@ -224,6 +232,5 @@ export class AppComponent implements OnInit, AfterViewInit {
       log.debug('video stored');
     });
   }
-
 
 }

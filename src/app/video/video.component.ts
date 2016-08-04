@@ -107,7 +107,7 @@ export class VideoComponent implements OnInit {
     };
     this.videoLoaded.emit(metadata);
     this.playerService.videoLoaded(metadata);
-    log.debug('video loaded', metadata);
+    // log.debug('video loaded', metadata);
   }
 
   /*
