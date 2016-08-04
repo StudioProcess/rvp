@@ -217,10 +217,10 @@ export class AppComponent implements OnInit, AfterViewInit {
   // Import file selected in Project modal window
   onProjectImport(file: File) {
     log.debug('app project import', file);
-    this.projectIO.import(file).then(imported => {
-      log.debug('imported', imported);
-      this.store.dispatch( {type:'HYDRATE', payload:imported.data} );
-      this.videoFile = imported.videoBlob;
+    this.projectIO.import(file).then( ({data, videoBlob}) => {
+      log.debug('imported', data, videoBlob);
+      if (data) { this.store.dispatch( {type:'HYDRATE', payload:data} ) };
+      if (videoBlob) { this.videoFile = videoBlob; }
     }).catch(err => {
       log.trace(err);
     });
