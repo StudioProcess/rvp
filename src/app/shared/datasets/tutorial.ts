@@ -13,7 +13,7 @@ export const getTutorialData = () => ({
   },
 
   timeline: {
-    duration: 150, // 3:30 min
+    duration: 120, // 2:00 min
     playhead: 1 * 60, // 1 min
     zoom: 1,
     pan: 0,
@@ -26,27 +26,27 @@ export const getTutorialData = () => ({
         },
         annotations: [
           {
-            utc_timestamp: 60,
+            utc_timestamp: 10,
             duration: 0,
+            fields: {
+              title: '10 seconds',
+              description: 'Marks 10 seconds elapsed.'
+            }
+          },
+          {
+            utc_timestamp: 60,
+            duration: 10,
             fields: {
               title: '1 min',
-              description: 'Marks one minute elapsed'
+              description: 'Marks one minute elapsed. Duration is 10 seconds.'
             }
           },
           {
-            utc_timestamp: 120,
+            utc_timestamp: 80,
             duration: 0,
             fields: {
-              title: '2 min',
-              description: 'Marks two minutes elapsed'
-            }
-          },
-          {
-            utc_timestamp: 180,
-            duration: 0,
-            fields: {
-              title: '3 min',
-              description: 'Marks three minutes elapsed'
+              title: '80 seconds',
+              description: 'Marks 1 minute 20 seconds elapsed'
             }
           }
         ]
@@ -64,7 +64,7 @@ export const getTutorialData = () => ({
             duration: 1,
             fields: {
               title: '1 sec',
-              description: 'A one second long annotation'
+              description: 'A one second long annotation at 30 seconds.'
             }
           },
           {
@@ -84,7 +84,7 @@ export const getTutorialData = () => ({
             }
           },
           {
-            utc_timestamp: 120,
+            utc_timestamp: 100,
             duration: 8,
             fields: {
               title: '8 secs',
@@ -131,30 +131,6 @@ export const getTutorialData = () => ({
             fields: {
               title: 'D',
               description: "We call this annotation 'D'. It's at 1:30 mins and lasts 20 seconds."
-            }
-          },
-          {
-            utc_timestamp: 135,
-            duration: 0,
-            fields: {
-              title: 'E',
-              description: "We call this annotation 'E'. It's a marker at 2:15 mins."
-            }
-          },
-          {
-            utc_timestamp: 150,
-            duration: 30,
-            fields: {
-              title: 'F',
-              description: "We call this annotation 'F'. It's at 2:30 mins and lasts 30 seconds."
-            }
-          },
-          {
-            utc_timestamp: 195,
-            duration: 0,
-            fields: {
-              title: 'G',
-              description: "We call this annotation 'G'. It's a marker at 3:15 mins."
             }
           }
         ]
