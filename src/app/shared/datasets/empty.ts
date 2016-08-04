@@ -3,14 +3,14 @@ import { Project } from '../models';
 export const getEmptyData = () => ({
   video: {
     id: null,
-    url: '',
+    url: null,
   },
 
   timeline: {
-    duration: 150, // 3:30 min
-    playhead: 1 * 60, // 1 min
-    zoom: 1,
-    pan: 0,
+    duration: 60,
+    playhead: null,
+    zoom: null,
+    pan: null,
     tracks: []
   }
 });
