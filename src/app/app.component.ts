@@ -26,7 +26,7 @@ declare var $:any;
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
   directives: [TimelineComponent, InspectorComponent, VideoComponent, HandlebarComponent, KeyDirective, ProjectHandlerComponent],
-  providers: [provideStore(masterReducer, getEmptyData()), TimeService, PlayheadService, PlayerService, SimpleBackendService, ProjectIOService]
+  providers: [provideStore(masterReducer, getRulerData()), TimeService, PlayheadService, PlayerService, SimpleBackendService, ProjectIOService]
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
@@ -91,31 +91,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       if (data != null) store.dispatch( {type: 'HYDRATE', payload: data} );
     });
 
-
-    // store.first().subscribe(data => {
-    //   this.projectIO.export(data, null, 'project.zip');
-    // });
-
-    // this.timelineData.subscribe(data => {
-    //   log.debug('timeline data', data);
-    // })
-
-    // log.debug(store);
-
-    // this.inspectorEntries.subscribe(entries => {
-    //   log.debug(entries);
-    // });
-
-    // this.store.subscribe(data => {
-    //   log.debug(data);
-    // });
-
-    // this.backend.retrieveVideo().then(blob => {
-    //   this.videoSrc = URL.createObjectURL(blob);
-    //   log.info('video retrieved:', blob);
-    // }).catch(err => {
-    //   log.error('retrieve video:', err);
-    // });
   }
 
   ngOnInit() {
@@ -151,14 +126,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     // this.video.timeupdate.subscribe((time) => { log.debug(time) });
   }
 
-  videoFilePicked(file:File) {
-    log.info('video file picked:', file);
-    let src = URL.createObjectURL(file);
-    this.store.dispatch({
-      type: 'CHANGE_VIDEO',
-      payload: {src, meta:file}
-    });
-  }
 
   onVideoTimeupdate(time) {
     this.playheadService.time = time;
