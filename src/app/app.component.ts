@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { masterReducer } from './reducers';
 import { Project, InspectorEntry, Timeline } from './shared/models';
-import { getEmptyData, getTutorialData, getMockData } from './shared/datasets';
+import { getEmptyData, getTutorialData, getMockData, getRulerData } from './shared/datasets';
 
 import { TimeService, PlayheadService, PlayerService } from './shared';
 import { SimpleBackendService, ProjectIOService } from './backend';
@@ -203,7 +203,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   onProjectReset() {
     this.playerService.reset(); // reset player
     this.backendService.clearVideo(); // clear video from storage
-    this.store.dispatch( {type: 'HYDRATE', payload: getMockData()} );
+    this.store.dispatch( {type: 'HYDRATE', payload: getRulerData()} );
   }
 
   // Export button clicked in Project modal window
