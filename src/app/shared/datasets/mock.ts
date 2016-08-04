@@ -1,19 +1,19 @@
-import { Project } from './models';
+import { Project } from '../models';
 
-let data:Project = {
+export const getMockData = () => ({
 
   video: {
     id: null,
-    url: '',
+    url: 'http://www.html5videoplayer.net/videos/toystory.mp4',
     meta: {
-      filename: '',
+      filename: 'toystory.mp4',
       length: '',
       resolution: ''
     }
   },
 
   timeline: {
-    duration: 150, // 3:30 min
+    duration: 210, // 3:30 min
     playhead: 1 * 60, // 1 min
     zoom: 1,
     pan: 0,
@@ -22,7 +22,7 @@ let data:Project = {
       {
         color: '#f6d751', // '#ff3d3d', // red
         fields: {
-          title: 'Example Track'
+          title: 'Minute marks'
         },
         annotations: [
           {
@@ -158,10 +158,34 @@ let data:Project = {
             }
           }
         ]
+      },
+
+      // 4th track
+      {
+        color: '#333745', //'#f4bd28', // orange
+        fields: {
+          title: 'Highlights'
+        },
+        annotations: [
+          {
+            utc_timestamp: 5,
+            duration: 40,
+            fields: {
+              title: 'A long annotation.',
+              description: "Annotation starts at 5 seconds and lasts 40 seconds. Yes, that's a pretty long annotation."
+            }
+          },
+          {
+            utc_timestamp: 50,
+            duration: 15,
+            fields: {
+              title: 'A medium-length annotation of 15 seconds.',
+              description: "Start ist at 50 seconds — lasting for 15 seconds."
+            }
+          }
+        ]
       }
     ]
   }
 
-};
-
-export default data;
+});

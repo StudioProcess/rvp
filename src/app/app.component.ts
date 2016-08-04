@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { masterReducer } from './reducers';
 import { Project, InspectorEntry, Timeline } from './shared/models';
-import mockData from './shared/mock-data';
+import { getEmptyData, getTutorialData, getMockData } from './shared/datasets';
 
 import { TimeService, PlayheadService, PlayerService } from './shared';
 import { SimpleBackendService, ProjectIOService } from './backend';
@@ -26,7 +26,7 @@ declare var $:any;
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
   directives: [TimelineComponent, InspectorComponent, VideoComponent, HandlebarComponent, KeyDirective, ProjectHandlerComponent],
-  providers: [provideStore(masterReducer, mockData), TimeService, PlayheadService, PlayerService, SimpleBackendService, ProjectIOService]
+  providers: [provideStore(masterReducer, getEmptyData()), TimeService, PlayheadService, PlayerService, SimpleBackendService, ProjectIOService]
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
@@ -201,7 +201,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   // Reset button clicked in Project modal window
   onProjectReset() {
-    this.store.dispatch( {type: 'HYDRATE', payload: mockData} );
+    this.store.dispatch( {type: 'HYDRATE', payload: getTutorialData()} );
   }
 
   // Export button clicked in Project modal window
