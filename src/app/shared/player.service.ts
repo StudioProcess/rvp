@@ -3,7 +3,7 @@ import { TimeService } from './time.service';
 import { Observable, Subject } from 'rxjs/Rx';
 
 interface PlayerAction {
-  type: 'setTime'|'play'|'pause'|'toggle';
+  type: 'setTime'|'play'|'pause'|'toggle'|'reset';
   [key:string]: any;
 }
 
@@ -58,6 +58,10 @@ export class PlayerService {
 
   toggle() {
     this._action.next( {type:'toggle'} );
+  }
+
+  reset() {
+    this._action.next( {type:'reset'} );
   }
 
   // Events (Player -> App)

@@ -22,7 +22,7 @@ export class VideoComponent implements OnInit {
 
   @Input() set videoSrc(src) {
     this.playerReady.then(() => {
-      if (src) { this.player.src(src); }
+      this.player.src(src);
     });
   }
 
@@ -91,6 +91,9 @@ export class VideoComponent implements OnInit {
         case 'toggle':
           if (this.player.paused()) { this.player.play(); }
           else { this.player.pause(); }
+          break;
+        case 'reset':
+          this.player.reset();
           break;
       }
     });
