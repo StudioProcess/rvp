@@ -10,18 +10,18 @@ const combineReducers = (reducers) => {
   };
 };
 
-export const stubReducer = (state, action) => {
+export const emptyReducer = (state, action) => {
   switch (action.type) {
     default:
       return state;
   }
 }
 
-export const annotationReducer = (state:Project, action) => {
+export const masterReducer = (state:Project, action) => {
   // log.debug("reducing", action, state);
 
   switch (action.type) {
-    case 'HYDRATE':
+    case 'HYDRATE': // TODO: probably needs a better name
       // TODO: can this be replaced by something @ngrx/store provides?
       if (action.payload) {
         // log.debug("video: "+action.payload.video); // reset video file
@@ -48,21 +48,18 @@ export const annotationReducer = (state:Project, action) => {
       });
       return state;
 
-    case 'DELETE_ANNOTATION':
-      return state;
-
     case 'SELECT_ANNOTATION':
-        state.timeline.tracks.forEach((track) => {
-          track.annotations.forEach((annotation) => {
-            // set annotation from payload as selected
-            if (action.payload == annotation) {
-              annotation.isSelected = true;
-            } else { // deselect rest of annotations
-              annotation.isSelected = false;
-            }
-          });
+      state.timeline.tracks.forEach((track) => {
+        track.annotations.forEach((annotation) => {
+          // set annotation from payload as selected
+          if (action.payload == annotation) {
+            annotation.isSelected = true;
+          } else { // deselect rest of annotations
+            annotation.isSelected = false;
+          }
         });
-        return state;
+      });
+      return state;
 
     case 'DESELECT_ANNOTATIONS':
       state.timeline.tracks.forEach((track) => {
@@ -70,7 +67,7 @@ export const annotationReducer = (state:Project, action) => {
           annotation.isSelected = false;
         });
       });
-    return state;
+      return state;
 
     case 'DELETE_SELECTED_ANNOTATION':
       state.timeline.tracks.forEach((track) => {
@@ -83,32 +80,26 @@ export const annotationReducer = (state:Project, action) => {
           }
         });
       });
-    return state;
+      return state;
 
     case 'ADD_TRACK':
       let newTrack:Track = {
-
         annotations: [],
         color: '#' + ('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6),
         fields: { title: '' }
-
       };
       state.timeline.tracks.push(newTrack);
-    return state;
+      return state;
 
     case 'DELETE_TRACK':
       state.timeline.tracks.forEach((track) => {
         if(track == action.payload.track) {
           state.timeline.tracks.splice(state.timeline.tracks.indexOf(track), 1);
         }
-      })
-    return state;
+      });
+      return state;
 
     default:
       return state;
   }
 }
-
-export const masterReducer = (state, action) => {
-  return annotationReducer(state, action);
-};
