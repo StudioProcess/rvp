@@ -25,9 +25,13 @@ export const masterReducer = (state:Project, action) => {
       // TODO: can this be replaced by something @ngrx/store provides?
       if (action.payload) {
         // log.debug("video: "+action.payload.video); // reset video file
-        log.debug("video: "+state.video);
         return action.payload;
       }
+      return state;
+
+    case 'SET_TIMELINE_DURATION':
+      state.timeline.duration = action.payload;
+      log.debug('setting timeline', action.payload, state);
       return state;
 
     case 'UPDATE_ANNOTATION':
