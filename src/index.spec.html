@@ -5,6 +5,7 @@
   <title>Tape Spec Runner</title>
   <script src="vendor/systemjs/dist/system.src.js"></script>
   <script src="vendor/tape/tape-jspm.js"></script>
+  <script src="vendor/reflect-metadata/Reflect.js"></script> <!-- for decorators -->
 </head>
 <body>
 
@@ -13,7 +14,8 @@
       var specs = {
         'test': 'vendor/tape/test.spec.js',
         'blobStore': 'app/backend/modules/blobStore.spec.js',
-        'pm25': 'app/backend/modules/pm25.spec.js'
+        'pm25': 'app/backend/modules/pm25.spec.js',
+        'time.service': 'app/shared/time.service.tapespec.js'
       };
     </script>
 
