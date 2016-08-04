@@ -34,15 +34,19 @@ export class TimeService {
   constructor() {}
 
   init(initial: TimeServiceInitialValues) {
-    // set the three independent vars
+    // set independent vars
     this._timelineDuration = new BehaviorSubject(initial.timelineDuration);
     this._timelineViewportWidth = new BehaviorSubject(initial.timelineViewportWidth);
+    // (these are actually only semi-independent)
     this._zoomLevel = new BehaviorSubject(initial.zoomLevel);
     this._scrollPosition = new BehaviorSubject(initial.scrollPosition);
+
     // set dependent vars
     this._timelineWidth = new BehaviorSubject(initial.timelineDuration*initial.zoomLevel);
     this._minZoomLevel = initial.timelineViewportWidth / initial.timelineDuration;
     this._maxZoomLevel = initial.maxZoomLevel;
+    this.zoomLevel = initial.zoomLevel;
+
     // 'export' public streams
     this.timelineDurationStream = this._timelineDuration.asObservable();
     this.timelineViewportWidthStream = this._timelineViewportWidth.asObservable();
@@ -52,19 +56,6 @@ export class TimeService {
 
     log.debug('time service initialized', initial, this);
   };
-
-  // // utility to resend the current value of a BehaviorSubject
-  // private resend<T>(sub: BehaviorSubject<T>) {
-  //   if (sub.value != null) { sub.next(sub.value); }
-  // }
-  //
-  // //
-  // flushStreams() {
-  //   this.resend(this._timelineDuration);
-  //   this.resend(this._timelineViewportWidth);
-  //   this.resend(this._timelineWidth);
-  //   this.resend(this._zoomLevel);
-  // }
 
   // Set timeline duration [s] (> 0)
   // => Broadcasts:

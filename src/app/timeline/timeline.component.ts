@@ -55,7 +55,7 @@ export class TimelineComponent implements OnInit {
     });
 
     this.timeService.scrollPositionStream.subscribe(pos => {
-      log.debug('scroll', pos);
+      // log.debug('scroll', pos);
     });
   }
 
@@ -65,6 +65,7 @@ export class TimelineComponent implements OnInit {
     // set zoom level in time service
     this.timeService.scrollPositionRelative = event.left / 100;
     this.timeService.zoomLevelRelative = event.width / 100;
+    log.debug('scrollbar drag', event);
   }
 
   moveCursor($moveEvent) {
