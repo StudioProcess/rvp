@@ -1,5 +1,7 @@
 @import '../settings';
 
+$outline-width: 3px;
+
 :host { display:block; width:100%; }
 
 .timeline {
@@ -11,6 +13,7 @@
   -moz-user-select: none;
   -o-user-select: none;
   user-select: none;
+  min-height: 157px;
 }
 
 .timeline-header {
@@ -33,13 +36,14 @@ app-playhead {
 }
 
 .add-track {
-  font-size: 13px;
+  font-size: 15px;
   text-align: right;
+  font-weight: 500;
   padding-right: 5px !important;
   :focus {
     outline: none;
   }
   :hover {
-    text-decoration: underline;
+    color: $process-gray;
   }
 }

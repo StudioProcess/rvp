@@ -12,12 +12,26 @@
     font-weight: 500;
   }
 }
+.logo {
+  font-size: 15px;
+  font-weight: 500;
+}
 .menu-bar {
   margin-top: 1.4em;
   margin-bottom: 0.5em;
   .settings {
     text-align: right;
+    label {
+      font-size: 15px;
+      font-weight: 500;
+    }
+    :hover {
+      color: $process-gray;
+    }
   }
+}
+.settings-icon {
+  padding-right: 0.5em;
 }
 .video-and-inspector {
   margin-bottom: 1em;
@@ -30,7 +44,9 @@
     overflow: hidden;
   }
 }
-.timeline-component {}
+.timeline-component {
+  min-height: 157px;
+}
 .footer {
   font-family: 'Space Mono', monospace;
   font-size: 10px;
@@ -41,9 +57,9 @@
   left: 0;
   right: 0;
   text-align: center;
-  color: $dark-gray;
+  color: $process-dark-gray;
   a {
-    color: $dark-gray;
+    color: $process-dark-gray;
     text-decoration: none;
     border-bottom: 1px solid;
   }
