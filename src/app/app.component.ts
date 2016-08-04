@@ -202,6 +202,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   // Reset button clicked in Project modal window
   onProjectReset() {
     this.store.dispatch( {type: 'HYDRATE', payload: getTutorialData()} );
+    this.playerService.reset();
   }
 
   // Export button clicked in Project modal window
