@@ -17,7 +17,7 @@
   "scripts": {
     "start": "ng serve",
     "chrome": "open -a 'google chrome' http://localhost:4200",
-    "link-cli": "npm link angular-cli",
+    "link": "npm link angular-cli",
     "postinstall": "typings install",
     "reinstall": "rm -rf node_modules dist tmp typings && npm install",
     "update": "git pull && npm prune && npm install",
