@@ -28,7 +28,7 @@ let newValues = {
   timelineDuration: 60,
   viewportWidth: 500,
   zoom: 0.5,
-  scroll: 0.3
+  scroll: 0.5
 };
 
 test('create instance', t => {
@@ -98,5 +98,29 @@ test('set scroll', t => {
   ts.scroll = newValues.scroll;
   values.scroll = newValues.scroll;
   checkOutputStreams(t);
+  t.end();
+});
+
+
+// let newValues2 = {
+//   timelineDuration: 120,
+//   viewportWidth: 1000,
+//   zoom: 0.5,
+//   scroll: 0.25
+// };
+
+test('convertPixelsToSeconds', t => {
+  ts.init(newValues);
+  t.equals( ts.convertPixelsToSeconds(0), 0 );
+  t.equals( ts.convertPixelsToSeconds(1000), 60 );
+  t.equals( ts.convertPixelsToSeconds(500), 30 );
+  t.end();
+});
+
+test('convertPercentToSeconds', t => {
+  ts.init(newValues);
+  t.equals( ts.convertPercentToSeconds(0), 0 );
+  t.equals( ts.convertPercentToSeconds(1.00), 60 );
+  t.equals( ts.convertPercentToSeconds(0.50), 30 );
   t.end();
 });
