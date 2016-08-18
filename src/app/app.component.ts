@@ -6,7 +6,7 @@ import { masterReducer } from './reducers';
 import { Project, InspectorEntry, Timeline } from './shared/models';
 import { getEmptyData, getTutorialData, getMockData, getRulerData } from './shared/datasets';
 
-import { TimeService, PlayheadService, PlayerService } from './shared';
+import { TimelineService, PlayheadService, PlayerService } from './shared';
 import { SimpleBackendService, ProjectIOService } from './backend';
 
 import { VideoComponent } from './video';
@@ -26,7 +26,7 @@ declare var $:any;
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
   directives: [TimelineComponent, InspectorComponent, VideoComponent, HandlebarComponent, KeyDirective, ProjectHandlerComponent],
-  providers: [provideStore(masterReducer, getRulerData()), TimeService, PlayheadService, PlayerService, SimpleBackendService, ProjectIOService]
+  providers: [provideStore(masterReducer, getRulerData()), TimelineService, PlayheadService, PlayerService, SimpleBackendService, ProjectIOService]
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
@@ -42,7 +42,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   constructor(
-    private timeService:TimeService,
+    private timeService:TimelineService,
     private playheadService:PlayheadService,
     private playerService:PlayerService,
     private store:Store<Project>,
@@ -103,10 +103,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     // initialize time service
     this.timeService.init({
       timelineDuration: td,
-      timelineViewportWidth: 1000, // iniital value, will be set correctly by timeline component
-      zoomLevel: 10,
-      maxZoomLevel: 100,
-      scrollPosition: 0
+      viewportWidth: 1000, // inital value, will be set correctly by timeline component
+      zoom: 1.0,
+      scroll: 0.0
     });
 
     log.debug('timeline width', this.timeService.timelineWidth);

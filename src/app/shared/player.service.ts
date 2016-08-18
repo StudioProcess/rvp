@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TimeService } from './time.service';
+import { TimelineService } from './timeline.service';
 import { Observable, Subject } from 'rxjs/Rx';
 
 interface PlayerAction {
@@ -31,7 +31,7 @@ export class PlayerService {
   actionStream: Observable<PlayerAction>; // Actions (App    -> Player)
   eventStream: Observable<PlayerEvent>;   // Events  (Player ->    App)
 
-  constructor(private timeService: TimeService) {
+  constructor(private timeService: TimelineService) {
     this._action = new Subject<PlayerAction>();
     this._event = new Subject<PlayerEvent>();
     this.actionStream = this._action.asObservable();

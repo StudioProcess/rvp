@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TimeService } from './time.service';
+import { TimelineService } from './timeline.service';
 import { Observable, BehaviorSubject } from 'rxjs/Rx';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class PlayheadService {
   positionStream: Observable<number>;
   relativeStream: Observable<number>;
 
-  constructor(private ts: TimeService) {
+  constructor(private ts: TimelineService) {
     this._time = new BehaviorSubject(0);
     this.timeStream = this._time.asObservable();
     this.positionStream = this.timeStream.map( time => ts.convertSecondsToPixels(time) );

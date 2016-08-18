@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { AnnotationComponent } from './annotation';
 import { Track, Annotation } from '../../shared/models';
 import { Store } from '@ngrx/store';
-import { TimeService } from '../../shared/time.service';
+import { TimelineService } from '../../shared';
 import { KeyDirective } from '../../shared/key.directive';
 
 @Component({
@@ -16,7 +16,7 @@ export class TrackComponent implements OnInit {
 
   @Input() data:Track;
 
-  constructor(private store:Store<any>, private timeService:TimeService) {
+  constructor(private store:Store<any>, private timeService:TimelineService) {
   }
 
   ngOnInit() {
