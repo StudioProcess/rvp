@@ -16,7 +16,8 @@ window['log'] = {
   debug: function() {}
 };
 
-let ts;
+let ts; // timeline service instance
+
 let values = {
   timelineDuration: 120,
   viewportWidth: 1000,
@@ -30,6 +31,7 @@ let newValues = {
   zoom: 0.5,
   scroll: 0.5
 };
+Object.freeze(newValues);
 
 test('create instance', t => {
   t.false(ts, 'empty variable');
@@ -45,25 +47,25 @@ test('initialize', t => {
   t.end();
 });
 
-let checkOutputStreams = (t, values) => {
+let checkOutputStreams = (t, expected) => {
   ts.timelineDurationStream.first().subscribe(x => {
-    t.equals(x, values.timelineDuration);
+    t.equals(x, expected.timelineDuration);
   });
 
   ts.viewportWidthStream.first().subscribe(x => {
-    t.equals(x, values.viewportWidth);
+    t.equals(x, expected.viewportWidth);
   });
 
   ts.zoomStream.first().subscribe(x => {
-    t.equals(x, values.zoom);
+    t.equals(x, expected.zoom);
   });
 
   ts.scrollStream.first().subscribe(x => {
-    t.equals(x, values.scroll);
+    t.equals(x, expected.scroll);
   });
 
   ts.timelineWidthStream.first().subscribe(x => {
-    t.equals(x, values.viewportWidth / values.zoom);
+    t.equals(x, expected.viewportWidth / expected.zoom);
   });
 };
 
@@ -108,6 +110,7 @@ let newValues2 = {
   zoom: 0.5,
   scroll: 0.25
 };
+Object.freeze(newValues2);
 
 test('convertPixelsToSeconds', t => {
   ts.init(newValues);
@@ -134,5 +137,44 @@ test('convertPercentToSeconds', t => {
   t.equals( ts.convertPercentToSeconds(1.00), 120 );
   t.equals( ts.convertPercentToSeconds(0.50), 60 );
   t.equals( ts.convertPercentToSeconds(0.25), 30 );
+  t.end();
+});
+
+
+test('convertViewportPixelsToSeconds', t => {
+  ts.init({
+    timelineDuration: 120,
+    viewportWidth: 1000,
+    zoom: 0.5,
+    scroll: 0
+  });
+  t.equals( ts.convertViewportPixelsToSeconds(0), 0 );
+  t.equals( ts.convertViewportPixelsToSeconds(500), 30 );
+  t.equals( ts.convertViewportPixelsToSeconds(1000), 60 );
+  ts.scroll = 0.5;
+  t.equals( ts.convertViewportPixelsToSeconds(500), 60 );
+  t.equals( ts.convertViewportPixelsToSeconds(0), 30 );
+  t.equals( ts.convertViewportPixelsToSeconds(1000), 90 );
+  ts.scroll = 1;
+  t.equals( ts.convertViewportPixelsToSeconds(0), 60 );
+  t.equals( ts.convertViewportPixelsToSeconds(1000), 120 );
+  t.equals( ts.convertViewportPixelsToSeconds(500), 90 );
+  ts.init({
+    timelineDuration: 60,
+    viewportWidth: 500,
+    zoom: 0.25,
+    scroll: 0
+  });
+  t.equals( ts.convertViewportPixelsToSeconds(0), 0 );
+  t.equals( ts.convertViewportPixelsToSeconds(250), 7.5 );
+  t.equals( ts.convertViewportPixelsToSeconds(500), 15 );
+  ts.scroll = 0.5;
+  t.equals( ts.convertViewportPixelsToSeconds(0), 22.5 );
+  t.equals( ts.convertViewportPixelsToSeconds(250), 30 );
+  t.equals( ts.convertViewportPixelsToSeconds(500), 37.5 );
+  ts.scroll = 1;
+  t.equals( ts.convertViewportPixelsToSeconds(0), 45 );
+  t.equals( ts.convertViewportPixelsToSeconds(250), 52.5 );
+  t.equals( ts.convertViewportPixelsToSeconds(500), 60 );
   t.end();
 });

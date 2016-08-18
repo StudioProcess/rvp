@@ -102,10 +102,12 @@ export class TimelineService {
   convertPercentToSeconds(percent: number): number {
     return percent * this._inputs.value.timelineDuration;
   }
-  //
-  // convertViewportPixelsToSeconds(px:number): number {
-  //   return  this.convertPixelsToSeconds(this._scrollPosition.value + px);
-  // }
+
+  convertViewportPixelsToSeconds(pixels:number): number {
+    let scrollOffset = this.convertPercentToSeconds((1 - this._inputs.value.zoom) * this._inputs.value.scroll);
+    return scrollOffset + this.convertPixelsToSeconds(pixels);
+  }
+
   //
   // convertSecondsToPixels(s:number): number {
   //   return s * this._zoomLevel.value;
