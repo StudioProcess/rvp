@@ -51,22 +51,26 @@ let checkOutputStreams = (t, expected) => {
   ts.timelineDurationStream.first().subscribe(x => {
     t.equals(x, expected.timelineDuration);
   });
-
   ts.viewportWidthStream.first().subscribe(x => {
     t.equals(x, expected.viewportWidth);
   });
-
   ts.zoomStream.first().subscribe(x => {
     t.equals(x, expected.zoom);
   });
-
   ts.scrollStream.first().subscribe(x => {
     t.equals(x, expected.scroll);
   });
-
   ts.timelineWidthStream.first().subscribe(x => {
     t.equals(x, expected.viewportWidth / expected.zoom);
   });
+};
+
+let checkOutputGetters = (t, expected) => {
+  t.equals(ts.timelineDuration, expected.timelineDuration);
+  t.equals(ts.viewportWidth, expected.viewportWidth);
+  t.equals(ts.zoom, expected.zoom);
+  t.equals(ts.scroll, expected.scroll);
+  t.equals(ts.timelineWidth, expected.viewportWidth / expected.zoom);
 };
 
 test('check output streams', t => {
@@ -99,6 +103,40 @@ test('set scroll', t => {
   ts.scroll = newValues.scroll;
   values.scroll = newValues.scroll;
   checkOutputStreams(t, values);
+  t.end();
+});
+
+test('check output getters', t => {
+  checkOutputGetters(t, values);
+  t.end();
+});
+
+test('check setters and getters', t => {
+  let values = {
+    timelineDuration: 120,
+    viewportWidth: 1000,
+    zoom: 1,
+    scroll: 0
+  };
+  let newValues = {
+    timelineDuration: 60,
+    viewportWidth: 500,
+    zoom: 0.5,
+    scroll: 0.5
+  };
+  ts.init(values);
+  ts.timelineDuration = newValues.timelineDuration;
+  values.timelineDuration = newValues.timelineDuration;
+  checkOutputGetters(t, values);
+  ts.viewportWidth = newValues.viewportWidth;
+  values.viewportWidth = newValues.viewportWidth;
+  checkOutputGetters(t, values);
+  ts.zoom = newValues.zoom;
+  values.zoom = newValues.zoom;
+  checkOutputGetters(t, values);
+  ts.scroll = newValues.scroll;
+  values.scroll = newValues.scroll;
+  checkOutputGetters(t, values);
   t.end();
 });
 

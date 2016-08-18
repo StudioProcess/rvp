@@ -53,9 +53,9 @@ export class TimelineService {
     this.changeInputValue('timelineDuration', duration);
   }
 
-  // get timelineDuration() {
-  //   return this._timelineDuration.value;
-  // }
+  get timelineDuration() {
+    return this._inputs.value.timelineDuration;
+  }
 
   // Set width of visible part of timeline (viewport) [px] (> 0)
   set viewportWidth(width: number) {
@@ -64,9 +64,9 @@ export class TimelineService {
     this.changeInputValue('viewportWidth', width);
   }
 
-  // get viewportWidth() {
-  //   return this._timelineViewportWidth.value;
-  // }
+  get viewportWidth() {
+    return this._inputs.value.viewportWidth;
+  }
 
   // Set zoom level [0..1]
   set zoom(zoom: number) {
@@ -76,9 +76,9 @@ export class TimelineService {
     this.changeInputValue('zoom', zoom);
   }
 
-  // get zoom() {
-  //   return this._zoomLevel.value;
-  // }
+  get zoom() {
+    return this._inputs.value.zoom;
+  }
 
   // Set scroll position [0..1]
   set scroll(scroll: number) {
@@ -88,9 +88,13 @@ export class TimelineService {
     this.changeInputValue('scroll', scroll);
   }
 
-  // get scroll() {
-  //   return this._scrollPosition.value;
-  // }
+  get scroll() {
+    return this._inputs.value.scroll;
+  }
+
+  get timelineWidth() {
+    return this._timelineWidth.value;
+  }
 
 
   // Conversion Functions (one time)
