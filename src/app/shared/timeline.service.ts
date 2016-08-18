@@ -14,7 +14,7 @@ interface TimelineInputValues {
 export class TimelineService {
 
   private _inputs: BehaviorSubject<TimelineInputValues>;
-  private _timelineWidth: number;
+  private _timelineWidth: BehaviorSubject<number>;
 
   // Observable Outputs
   timelineDurationStream: Observable<number>;
@@ -31,9 +31,12 @@ export class TimelineService {
     this.viewportWidthStream = this._inputs.pluck('viewportWidth').distinctUntilChanged() as Observable<number>;
     this.zoomStream = this._inputs.pluck('zoom').distinctUntilChanged() as Observable<number>;
     this.scrollStream = this._inputs.pluck('scroll').distinctUntilChanged() as Observable<number>;
-    this.timelineWidthStream = Observable.combineLatest(this.viewportWidthStream, this.zoomStream).map( ([viewportWidth, zoom]) => {
-      return this._timelineWidth = viewportWidth/zoom;
-    });
+    // calculate timeline width [px] (from viewport width and zoom)
+    this._timelineWidth = new BehaviorSubject<number>(null);
+    Observable.combineLatest(this.viewportWidthStream, this.zoomStream)
+      .map( ([viewportWidth, zoom]) => viewportWidth/zoom )
+      .subscribe(this._timelineWidth);
+    this.timelineWidthStream = this._timelineWidth.asObservable().distinctUntilChanged();
     log.debug('time service initialized', initial, this);
   };
 
@@ -93,7 +96,7 @@ export class TimelineService {
 
   // Conversion Functions (one time)
   convertPixelsToSeconds(pixels: number): number {
-    return pixels / this._timelineWidth * this._inputs.value.timelineDuration;
+    return pixels / this._timelineWidth.value * this._inputs.value.timelineDuration;
   }
 
   convertPercentToSeconds(percent: number): number {

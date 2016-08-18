@@ -45,7 +45,7 @@ test('initialize', t => {
   t.end();
 });
 
-let checkOutputStreams = (t) => {
+let checkOutputStreams = (t, values) => {
   ts.timelineDurationStream.first().subscribe(x => {
     t.equals(x, values.timelineDuration);
   });
@@ -68,7 +68,7 @@ let checkOutputStreams = (t) => {
 };
 
 test('check output streams', t => {
-  checkOutputStreams(t);
+  checkOutputStreams(t, values);
   t.end();
 });
 
@@ -76,42 +76,48 @@ test('check output streams', t => {
 test('set timelineDuration', t => {
   ts.timelineDuration = newValues.timelineDuration;
   values.timelineDuration = newValues.timelineDuration;
-  checkOutputStreams(t);
+  checkOutputStreams(t, values);
   t.end();
 });
 
 test('set viewportWidth', t => {
   ts.viewportWidth = newValues.viewportWidth;
   values.viewportWidth = newValues.viewportWidth;
-  checkOutputStreams(t);
+  checkOutputStreams(t, values);
   t.end();
 });
 
 test('set zoom', t => {
   ts.zoom = newValues.zoom;
   values.zoom = newValues.zoom;
-  checkOutputStreams(t);
+  checkOutputStreams(t, values);
   t.end();
 });
 
 test('set scroll', t => {
   ts.scroll = newValues.scroll;
   values.scroll = newValues.scroll;
-  checkOutputStreams(t);
+  checkOutputStreams(t, values);
   t.end();
 });
 
 
-// let newValues2 = {
-//   timelineDuration: 120,
-//   viewportWidth: 1000,
-//   zoom: 0.5,
-//   scroll: 0.25
-// };
+let newValues2 = {
+  timelineDuration: 120,
+  viewportWidth: 1000,
+  zoom: 0.5,
+  scroll: 0.25
+};
 
 test('convertPixelsToSeconds', t => {
   ts.init(newValues);
   t.equals( ts.convertPixelsToSeconds(0), 0 );
+  t.equals( ts.convertPixelsToSeconds(1000), 60 );
+  t.equals( ts.convertPixelsToSeconds(500), 30 );
+  t.equals( ts.convertPixelsToSeconds(250), 15 );
+  ts.init(newValues2);
+  t.equals( ts.convertPixelsToSeconds(0), 0 );
+  t.equals( ts.convertPixelsToSeconds(2000), 120 );
   t.equals( ts.convertPixelsToSeconds(1000), 60 );
   t.equals( ts.convertPixelsToSeconds(500), 30 );
   t.end();
@@ -122,5 +128,11 @@ test('convertPercentToSeconds', t => {
   t.equals( ts.convertPercentToSeconds(0), 0 );
   t.equals( ts.convertPercentToSeconds(1.00), 60 );
   t.equals( ts.convertPercentToSeconds(0.50), 30 );
+  t.equals( ts.convertPercentToSeconds(0.25), 15 );
+  ts.init(newValues2);
+  t.equals( ts.convertPercentToSeconds(0), 0 );
+  t.equals( ts.convertPercentToSeconds(1.00), 120 );
+  t.equals( ts.convertPercentToSeconds(0.50), 60 );
+  t.equals( ts.convertPercentToSeconds(0.25), 30 );
   t.end();
 });
