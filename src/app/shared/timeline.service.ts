@@ -93,7 +93,6 @@ export class TimelineService {
   // }
 
 
-
   // Conversion Functions (one time)
   convertPixelsToSeconds(pixels: number): number {
     return pixels / this._timelineWidth.value * this._inputs.value.timelineDuration;
@@ -112,8 +111,8 @@ export class TimelineService {
     return seconds / this._inputs.value.timelineDuration * this._timelineWidth.value;
   }
 
-  // convertSecondsToPercent(s:number): number {
-  //   return s * this._zoomLevel.value;
-  // }
+  convertSecondsToPercent(seconds:number): number {
+    return seconds / this._inputs.value.timelineDuration;
+  }
 
 }

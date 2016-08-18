@@ -199,3 +199,27 @@ test('convertSecondsToPixels', t => {
   t.equals( ts.convertSecondsToPixels(60), 1000 );
   t.end();
 });
+
+test('convertSecondsToPercent', t => {
+  ts.init({
+    timelineDuration: 120,
+    viewportWidth: 1000,
+    zoom: 0.5,
+    scroll: 0.33
+  });
+  // timelineWidth = 2000
+  t.equals( ts.convertSecondsToPercent(0), 0 );
+  t.equals( ts.convertSecondsToPercent(60), 0.5 );
+  t.equals( ts.convertSecondsToPercent(120), 1 );
+  ts.init({
+    timelineDuration: 60,
+    viewportWidth: 250,
+    zoom: 0.25,
+    scroll: 0
+  });
+  // timelineWidth = 1000
+  t.equals( ts.convertSecondsToPercent(0), 0 );
+  t.equals( ts.convertSecondsToPercent(30), 0.5 );
+  t.equals( ts.convertSecondsToPercent(60), 1 );
+  t.end();
+});
