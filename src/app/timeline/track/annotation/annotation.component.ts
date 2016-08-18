@@ -3,7 +3,7 @@ import { TimelineComponent } from '../../timeline.component';
 import { Annotation, Timeline } from '../../../shared/models';
 import { HandlebarComponent } from '../../handlebar/handlebar.component';
 import { Store } from '@ngrx/store';
-import { TimeService } from '../../../shared/time.service';
+import { TimelineService } from '../../../shared';
 
 @Component({
   moduleId: module.id,
@@ -26,7 +26,7 @@ export class AnnotationComponent implements OnInit {
   constructor(
     @Inject(forwardRef(() => TimelineComponent)) private timeline,
     private store:Store<any>,
-    private timeService:TimeService
+    private timeService:TimelineService
   ) {}
 
   ngOnInit() {

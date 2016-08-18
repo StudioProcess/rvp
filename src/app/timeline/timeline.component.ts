@@ -5,7 +5,7 @@ import { CursorComponent } from './cursor';
 import { HandlebarComponent } from './handlebar';
 import { Timeline, Annotation } from '../shared/models';
 import { ScrollZoom } from './scroll-zoom.directive';
-import { TimeService, PlayheadService, PlayerService } from '../shared';
+import { TimelineService, PlayheadService, PlayerService } from '../shared';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Rx';
 import { Project } from '../shared/models';
@@ -31,7 +31,7 @@ export class TimelineComponent implements OnInit {
   playheadTime;
   playheadDisplayTime;
 
-  constructor(private el:ElementRef, private timeService:TimeService, private store:Store<Project>, private playheadService:PlayheadService, private playerService:PlayerService) {}
+  constructor(private el:ElementRef, private timeService:TimelineService, private store:Store<Project>, private playheadService:PlayheadService, private playerService:PlayerService) {}
 
   ngOnInit() {
     // TODO: need to use setTimeout here, otherwise width = 0
@@ -40,7 +40,7 @@ export class TimelineComponent implements OnInit {
       .startWith(null)
       .map(() => this.el.nativeElement.offsetWidth)
       .subscribe( (width) => {
-        this.timeService.setTimelineViewportWidth(width);
+        this.timeService.viewportWidth = width;
       });
     }, 0);
 
@@ -54,18 +54,20 @@ export class TimelineComponent implements OnInit {
       this.playheadTime = (relativePosition * 100); // TODO: use relative position instead of time
     });
 
-    this.timeService.scrollPositionStream.subscribe(pos => {
-      // log.debug('scroll', pos);
-    });
+    // this.timeService.scrollPositionStream.subscribe(pos => {
+    //   // log.debug('scroll', pos);
+    // });
   }
 
   scrollbarDrag(event) {
     this.scrollbarLeft = event.left;
     this.scrollbarWidth = event.width;
-    // set zoom level in time service
-    this.timeService.scrollPositionRelative = event.left / 100;
-    this.timeService.zoomLevelRelative = event.width / 100;
-    log.debug('scrollbar drag', event);
+
+    // set zoom and scroll in timeline service
+    this.timeService.zoom = event.width / 100;
+    this.timeService.scroll = (event.left / (100 - event.width));
+
+    log.debug('scrollbar:', 'zoom', this.timeService.zoom, 'scroll', this.timeService.scroll);
   }
 
   moveCursor($moveEvent) {
