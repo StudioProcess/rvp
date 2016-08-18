@@ -108,11 +108,10 @@ export class TimelineService {
     return scrollOffset + this.convertPixelsToSeconds(pixels);
   }
 
-  //
-  // convertSecondsToPixels(s:number): number {
-  //   return s * this._zoomLevel.value;
-  // }
-  //
+  convertSecondsToPixels(seconds:number): number {
+    return seconds / this._inputs.value.timelineDuration * this._timelineWidth.value;
+  }
+
   // convertSecondsToPercent(s:number): number {
   //   return s * this._zoomLevel.value;
   // }

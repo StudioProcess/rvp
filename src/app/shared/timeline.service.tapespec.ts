@@ -74,7 +74,6 @@ test('check output streams', t => {
   t.end();
 });
 
-
 test('set timelineDuration', t => {
   ts.timelineDuration = newValues.timelineDuration;
   values.timelineDuration = newValues.timelineDuration;
@@ -102,7 +101,6 @@ test('set scroll', t => {
   checkOutputStreams(t, values);
   t.end();
 });
-
 
 let newValues2 = {
   timelineDuration: 120,
@@ -140,7 +138,6 @@ test('convertPercentToSeconds', t => {
   t.end();
 });
 
-
 test('convertViewportPixelsToSeconds', t => {
   ts.init({
     timelineDuration: 120,
@@ -176,5 +173,29 @@ test('convertViewportPixelsToSeconds', t => {
   t.equals( ts.convertViewportPixelsToSeconds(0), 45 );
   t.equals( ts.convertViewportPixelsToSeconds(250), 52.5 );
   t.equals( ts.convertViewportPixelsToSeconds(500), 60 );
+  t.end();
+});
+
+test('convertSecondsToPixels', t => {
+  ts.init({
+    timelineDuration: 120,
+    viewportWidth: 1000,
+    zoom: 0.5,
+    scroll: 0.33
+  });
+  // timelineWidth = 2000
+  t.equals( ts.convertSecondsToPixels(0), 0 );
+  t.equals( ts.convertSecondsToPixels(60), 1000 );
+  t.equals( ts.convertSecondsToPixels(120), 2000 );
+  ts.init({
+    timelineDuration: 60,
+    viewportWidth: 250,
+    zoom: 0.25,
+    scroll: 0
+  });
+  // timelineWidth = 1000
+  t.equals( ts.convertSecondsToPixels(0), 0 );
+  t.equals( ts.convertSecondsToPixels(30), 500 );
+  t.equals( ts.convertSecondsToPixels(60), 1000 );
   t.end();
 });
