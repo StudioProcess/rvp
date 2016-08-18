@@ -82,8 +82,8 @@ export class TimelineService {
 
   // Set scroll position [0..1]
   set scroll(scroll: number) {
-    log.debug('setting scroll position', scroll);
-    if (scroll < 0) { scroll = 0; }
+    // log.debug('setting scroll position', scroll);
+    if (scroll < 0 || !scroll) { scroll = 0; } // also catch falsy values like NaN etc.
     else if (scroll > 1) { scroll = 1; }
     this.changeInputValue('scroll', scroll);
   }
