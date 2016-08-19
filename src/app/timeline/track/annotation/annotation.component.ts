@@ -38,11 +38,6 @@ export class AnnotationComponent implements OnInit {
     }
     // log.debug('timeline duration', this.timeline.data.duration, 'annotation', this.timestamp, this.duration);
 
-    // Select annotation on dragstart (= click)
-    this.handlebar.drag.filter(e => e.type == 'dragstart').subscribe(e => {
-      this.store.dispatch( { type: 'SELECT_ANNOTATION', payload: this.data } );
-    });
-
     // Update this annotation on dragend
     this.handlebar.drag.filter(e => e.type == 'dragend').subscribe(e => {
       // log.debug(e);
@@ -53,6 +48,12 @@ export class AnnotationComponent implements OnInit {
       // log.debug(newAnnotation);
       this.store.dispatch({ type: 'UPDATE_ANNOTATION', payload: { old: this.data, new: newAnnotation } });
     });
+  }
+
+  // Select annotation (called on mousedown)
+  select(e: MouseEvent) {
+    this.store.dispatch( { type: 'SELECT_ANNOTATION', payload: this.data } );
+    e.stopPropagation();
   }
 
 }
