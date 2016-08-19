@@ -71,7 +71,7 @@ export class HandlebarComponent implements OnInit {
     const centerDrag$ = this.dragStream('.handlebar');
     const leftDrag$ = this.dragStream('.left-handle');
     const rightDrag$ = this.dragStream('.right-handle');
-    centerDrag$.subscribe(x => {log.debug(x)});
+    // centerDrag$.subscribe(x => {log.debug(x)});
 
     // react to center drag
     this.centerSubscription = centerDrag$.subscribe(e => {
