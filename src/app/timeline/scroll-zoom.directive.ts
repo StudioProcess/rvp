@@ -12,9 +12,7 @@ export class ScrollZoom implements OnInit {
     // log.debug('setting zoom', value);
     if (value > 0) {
       this._zoom = value;
-      if (this.content) {
-        this.content.style.width = this._zoom + "px";
-      }
+      this.updateDOM();
     }
   }
 
@@ -24,9 +22,7 @@ export class ScrollZoom implements OnInit {
     // log.debug('setting scroll', value);
     if (value >= 0 && value <= 100) {
       this._scroll = value;
-      if (this.container) {
-        this.container.scrollLeft = this._zoom * this._scroll / 100;
-      }
+      this.updateDOM();
     }
   }
 
@@ -59,5 +55,16 @@ export class ScrollZoom implements OnInit {
 
       // log.debug('scrollzoom', this.container, this.content);
     }, 0);
+  }
+
+  // Update DOM according to scroll and zoom values
+  // Always update both together (since scroll depends on the zoom value)
+  updateDOM() {
+    if (this.content) {
+      this.content.style.width = this._zoom + "px";
+    }
+    if (this.container) {
+      this.container.scrollLeft = this._zoom * this._scroll / 100;
+    }
   }
 }
