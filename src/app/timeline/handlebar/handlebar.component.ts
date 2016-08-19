@@ -29,9 +29,10 @@ export class HandlebarComponent implements OnInit {
   @Input() minWidth:number; // minimum width (in px)
   @Input('container') containerSelector:string; // ancestor to use for positioning
   @Input() caption:string; // caption shown inside handle
-  
+
   // define outputs
   @Output() drag:EventEmitter<HandlebarDragEvent> = new EventEmitter<HandlebarDragEvent>(); // position and/or width changed
+  @Output() mousedown:EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>(); // mousedown
 
   // dom references
   host:HTMLElement; // host element (app-handlebar)
@@ -64,12 +65,15 @@ export class HandlebarComponent implements OnInit {
   }
 
   private initStreams() {
+    // custom mousedown event stream (before event propagation is stopped in dragStream() calls)
+    Observable.fromEvent(this.host.querySelectorAll('.handlebar,.left-handle,.right-handle'), 'mousedown').subscribe(this.mousedown);
     // drag event streams
     const centerDrag$ = this.dragStream('.handlebar');
     const leftDrag$ = this.dragStream('.left-handle');
     const rightDrag$ = this.dragStream('.right-handle');
-    // this.centerDrag.subscribe(x => {log.debug(x)});
+    centerDrag$.subscribe(x => {log.debug(x)});
 
+    // react to center drag
     this.centerSubscription = centerDrag$.subscribe(e => {
       this.left = (e.startOffset.left + e.dx) / this.container.offsetWidth * 100;
       // constrain position
@@ -77,6 +81,7 @@ export class HandlebarComponent implements OnInit {
       else if (this.left + this.width > 100) this.left = 100 - this.width;
     });
 
+    // react to right drag
     this.rightSubscription = rightDrag$.subscribe(e => {
       this.width = (e.startOffset.width + e.dx) / this.container.offsetWidth * 100;
       // constrain width
@@ -84,6 +89,7 @@ export class HandlebarComponent implements OnInit {
       else if (this.width > 100 - this.left) this.width = 100 - this.left;
     });
 
+    // react to left drag
     this.leftSubscription = leftDrag$.subscribe(e => {
       // constrain movement
       let dx = e.dx;
@@ -93,6 +99,7 @@ export class HandlebarComponent implements OnInit {
       this.width = (e.startOffset.width - dx) / this.container.offsetWidth * 100;
     });
 
+    // combined drag stream for center, left, right
     const drag$:Observable<HandlebarDragEvent> = Observable.merge(centerDrag$, leftDrag$, rightDrag$)
       .map( e => ({ type:e.type, left:this.left, width:this.width }) )
       .distinctUntilChanged( (e1, e2) => e1.type == e2.type && e1.left == e2.left && e1.width == e2.width )
@@ -120,14 +127,13 @@ export class HandlebarComponent implements OnInit {
       };
       let startX = e.screenX;
       let startY = e.screenY;
-      let start = Observable.of({type:'dragstart', dx:0, dy:0, event:e, startOffset});
-      let drag = mousemove$.takeUntil(mouseup$).map((e:MouseEvent) => {
-        return {type:'drag', dx:e.screenX-startX, dy:e.screenY-startY, event:e, startOffset};
-      });
-      let end = mouseup$.first().map((e:MouseEvent) => {
-        return {type:'dragend', dx:e.screenX-startX, dy:e.screenY-startY, event:e, startOffset};
-      });
-      return start.merge(drag, end).share() as Observable<DragEvent>;
+      const dragEvent = (type, e) => {
+        return {type, dx:e.screenX-startX, dy:e.screenY-startY, event:e, startOffset};
+      };
+      let start = mousemove$.first().takeUntil(mouseup$).map( e => dragEvent('dragstart', e) );
+      let drag = start.switchMapTo(mousemove$.takeUntil(mouseup$).map(e => dragEvent('drag', e)));
+      let end = start.switchMapTo(mouseup$.first().map(e => dragEvent('dragend', e)));
+      return Observable.merge(start, drag, end);
     });
   }
 }
