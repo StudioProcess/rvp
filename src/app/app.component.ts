@@ -26,7 +26,7 @@ declare var $:any;
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
   directives: [TimelineComponent, InspectorComponent, VideoComponent, HandlebarComponent, KeyDirective, ProjectHandlerComponent],
-  providers: [provideStore(masterReducer, getRulerData()), TimelineService, PlayheadService, PlayerService, SimpleBackendService, ProjectIOService]
+  providers: [provideStore(masterReducer, getEmptyData()), TimelineService, PlayheadService, PlayerService, SimpleBackendService, ProjectIOService]
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
@@ -169,7 +169,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   onProjectReset() {
     this.playerService.reset(); // reset player
     this.backendService.clearVideo(); // clear video from storage
-    this.store.dispatch( {type: 'HYDRATE', payload: getRulerData()} );
+    this.store.dispatch( {type: 'HYDRATE', payload: getTutorialData()} );
   }
 
   // Export button clicked in Project modal window
