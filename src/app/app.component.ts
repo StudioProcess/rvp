@@ -175,7 +175,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   onProjectReset() {
     this.playerService.reset(); // reset player
     this.backendService.clearVideo(); // clear video from storage
-    this.store.dispatch( {type: 'HYDRATE', payload: getTutorialData()} );
+    this.backendService.clearData(); // clear data from storage
+    this.store.dispatch( {type: 'HYDRATE', payload: getEmptyData()} );
+    this.importProjectFromURL('assets/projects/initial.rv');
   }
 
   // Export button clicked in Project modal window
