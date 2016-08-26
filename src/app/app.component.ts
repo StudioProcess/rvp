@@ -52,13 +52,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   ) {
     log.debug('app component');
 
-    // load video data
-    // this.videoSrc = store.select('video', 'url') as Observable<string>;
-    this.backendService.retrieveVideo().then(blob => {
-      log.debug('video retrieved', blob);
-      if (blob) { this.videoFile = blob; }
-    });
-
     // inspector data
     this.inspectorEntries = store.select(state => {
       return state.timeline.tracks.reduce( (acc, track) => {
@@ -76,7 +69,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     // timeline data
     this.timelineData = store.select('timeline') as Observable<Timeline>;
 
-
     // setup state persistence
     // (skip initial state and hydration)
     store.skip(2).subscribe( data => {
@@ -85,10 +77,21 @@ export class AppComponent implements OnInit, AfterViewInit {
       });
     });
 
-    // hydrate state
-    // this.backendService.clearData();
-    this.backendService.retrieveData().then( data => {
-      if (data != null) store.dispatch( {type: 'HYDRATE', payload: data} );
+    this.backendService.hasData().then(hasData => {
+      if (hasData) {
+        // load video data
+        this.backendService.retrieveVideo().then(blob => {
+          log.debug('video retrieved', blob);
+          if (blob) { this.videoFile = blob; }
+        });
+        // load state data and hydrate state
+        // this.backendService.clearData();
+        this.backendService.retrieveData().then( data => {
+          if (data != null) store.dispatch( {type: 'HYDRATE', payload: data} );
+        });
+      } else {
+        log.debug('no local data');
+      }
     });
 
   }

@@ -14,6 +14,13 @@ export class SimpleBackendService {
     });
   }
 
+  // check if a key is present in localforage
+  private _hasKey(key): Promise<any> {
+    return this.storage.keys().then(keys => {
+      return keys.includes(key);
+    });
+  }
+
   storeVideo(blob: Blob): Promise<any> {
     if (blob.toString() != '[object Blob]') {
       blob = blob.slice();
@@ -33,6 +40,10 @@ export class SimpleBackendService {
     return this.storage.removeItem('video');
   }
 
+  hasVideo(): Promise<any> {
+    return this._hasKey('video');
+  }
+
   storeData(data: Project): Promise<any> {
     return this.storage.setItem('project', data);
   }
@@ -43,6 +54,10 @@ export class SimpleBackendService {
 
   clearData(): Promise<any> {
     return this.storage.removeItem('project');
+  }
+
+  hasData(): Promise<any> {
+    return this._hasKey('project');
   }
 
 }
