@@ -56,4 +56,9 @@ export class AnnotationComponent implements OnInit {
     e.stopPropagation();
   }
 
+  // Prevent events from bubbling up (e.g. for dblClick)
+  stopPropagation(e) {
+    e.stopPropagation();
+  }
+
 }

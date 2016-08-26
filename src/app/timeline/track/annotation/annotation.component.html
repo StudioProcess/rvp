@@ -2,5 +2,6 @@
   [left]="timestamp" [width]="duration"
   [caption]="data.fields.title"
   [container]="'.annotations'"
-  (mousedown)="select($event)">
+  (mousedown)="select($event)"
+  (dblclick)="stopPropagation($event)">
 </app-handlebar>
