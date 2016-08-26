@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+// import { Http, Headers } from '@angular/http';
 import { Store, provideStore } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
@@ -49,6 +50,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private backendService:SimpleBackendService,
     private el:ElementRef,
     private projectIO:ProjectIOService
+    // ,private http:Http
   ) {
     log.debug('app component');
 
@@ -90,7 +92,8 @@ export class AppComponent implements OnInit, AfterViewInit {
           if (data != null) store.dispatch( {type: 'HYDRATE', payload: data} );
         });
       } else {
-        log.debug('no local data');
+        log.debug('no local data, importing initial project');
+        this.importProjectFromURL('assets/projects/initial.rv');
       }
     });
 
@@ -202,6 +205,25 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.backendService.storeVideo(file).then(() => {
       log.debug('video stored');
     });
+  }
+
+  // Load project via HTTP GET from an url
+  // TODO: return promise, so we can react when it's loaded
+  importProjectFromURL(url:string) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = 'blob';
+    xhr.onload = e => {
+      let blob = xhr.response;
+      // log.debug(blob);
+      this.projectIO.import(blob).then( ({data, videoBlob}) => {
+        if (data) { this.store.dispatch( {type:'HYDRATE', payload:data} ) };
+        if (videoBlob) { this.onVideoFileOpened(videoBlob); } // set and store video
+      }).catch(err => {
+        log.trace(err);
+      });
+    };
+    xhr.send();
   }
 
 }

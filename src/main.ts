@@ -4,6 +4,7 @@ import * as log from 'loglevel';
 import { AppComponent, environment } from './app/';
 import { TimePipe, UnixTimePipe } from './app/shared/time.pipes';
 import { disableDeprecatedForms, provideForms } from '@angular/forms';
+// import { HTTP_PROVIDERS } from '@angular/http';
 
 // setup global logger
 log.enableAll();
@@ -29,6 +30,7 @@ let providers = [
   { provide: PLATFORM_PIPES, useValue: [TimePipe, UnixTimePipe], multi:true }, // globally available pipes
   disableDeprecatedForms(), // new ng2 forms
   provideForms()
+  // ,HTTP_PROVIDERS
 ];
 
 // run app
