@@ -3,7 +3,7 @@ import { TimelineComponent } from '../../timeline.component';
 import { Annotation, Timeline } from '../../../shared/models';
 import { HandlebarComponent } from '../../handlebar/handlebar.component';
 import { Store } from '@ngrx/store';
-import { TimelineService } from '../../../shared';
+import { TimelineService, PlayerService } from '../../../shared';
 
 @Component({
   moduleId: module.id,
@@ -26,7 +26,8 @@ export class AnnotationComponent implements OnInit {
   constructor(
     @Inject(forwardRef(() => TimelineComponent)) private timeline,
     private store:Store<any>,
-    private timeService:TimelineService
+    private timeService:TimelineService,
+    private playerService:PlayerService
   ) {}
 
   ngOnInit() {
@@ -56,9 +57,9 @@ export class AnnotationComponent implements OnInit {
     e.stopPropagation();
   }
 
-  // Prevent events from bubbling up (e.g. for dblClick)
-  stopPropagation(e) {
-    e.stopPropagation();
+  onDblclick(e) {
+    this.playerService.setTime(this.data.utc_timestamp);
+    e.stopPropagation(); // Prevent this dblclick event from bubbling up
   }
 
 }
