@@ -95,19 +95,19 @@ export class TimelineComponent implements OnInit {
 
   }
 
-
   // deselect all annotations
-  deselectAnnotations(){
+  deselectAnnotations() {
     // dispatch
     this.store.dispatch({ type: 'DESELECT_ANNOTATIONS' });
   }
 
-  addTrack(){
+  addTrack() {
     this.store.dispatch( { type: 'ADD_TRACK'} );
   }
 
   placePlayhead(e) {
-    let time = this.timeService.convertViewportPixelsToSeconds(e.offsetX)
+    let position = e.offsetX + e.target.offsetLeft; // adjust for offset in clicked layer
+    let time = this.timeService.convertViewportPixelsToSeconds(position);
     // log.debug('place playhead', time);
     this.playerService.setTime(time);
   }
