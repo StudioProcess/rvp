@@ -46,4 +46,16 @@ export class TrackComponent implements OnInit {
       this.store.dispatch( { type: 'DELETE_TRACK', payload: { track: this.data } } );
     }
   }
+
+  blurOnReturnKey(e) {
+    if (e.keyCode == 13) { // Enter/Return or Numpad Return Key
+      e.stopPropagation(); // prevent bubbling to e.g. timeInputGuard
+      e.target.blur(); // emits blur event which triggers submit()
+    }
+  }
+
+  setTitle(newTitle:string) {
+    // log.debug('setting new title', newTitle);
+    this.store.dispatch( { type: 'SET_TRACK_TITLE', payload: { title: newTitle, track: this.data } } );
+  }
 }

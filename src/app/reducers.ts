@@ -103,6 +103,10 @@ export const masterReducer = (state:Project, action) => {
       });
       return state;
 
+    case 'SET_TRACK_TITLE':
+      action.payload.track.fields.title = action.payload.title;
+      return state;
+
     default:
       return state;
   }

@@ -8,7 +8,7 @@
         <div class="row title-row">
           <div class="column shrink title">
             <div class="track-color" [style.color]="data.color"><i class="ion-record track-color-icon" title="Track Color"></i></div>
-            <input type="value" class="title-input" placeholder="Track Title" title="Track Title" value="{{data.fields.title}}">
+            <input #title type="value" class="title-input" placeholder="Track Title" title="Track Title" value="{{data.fields.title}}" (keydown)="blurOnReturnKey($event)" (blur)="setTitle(title.value)">
           </div>
           <div class="column shrink track-options">
             <button class="ion-android-close track-delete-icon" title="Delete Track" alt="Delete Track" (click)="deleteTrack()"></button>
