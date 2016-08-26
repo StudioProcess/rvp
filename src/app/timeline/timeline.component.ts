@@ -59,8 +59,9 @@ export class TimelineComponent implements OnInit {
     // });
 
     // set playhead when dragging
-    this.getDragStream().subscribe((e) => {
+    this.getDragStream().subscribe((e:MouseEvent) => {
       this.placePlayhead(e);
+      log.debug(e.clientX, e, {el:this.el.nativeElement});
     });
   }
 
@@ -111,7 +112,7 @@ export class TimelineComponent implements OnInit {
   }
 
   placePlayhead(e) {
-    let position = e.offsetX + e.target.offsetLeft; // adjust for offset in clicked layer
+    let position = e.clientX - this.el.nativeElement.offsetLeft; // adjust for offset in clicked layer
     let time = this.timeService.convertViewportPixelsToSeconds(position);
     this.playerService.setTime(time);
     // preemptively set playhead position (for responsiveness, especially when dragging)
@@ -121,10 +122,10 @@ export class TimelineComponent implements OnInit {
   getDragStream() {
     const mousedown$ = Observable.fromEvent(this.el.nativeElement, 'mousedown');
     const mousemove$ = Observable.fromEvent(this.el.nativeElement, 'mousemove');
-    const mouseup$ = Observable.fromEvent(this.el.nativeElement, 'mouseup');
+    const mouseup$ = Observable.fromEvent(document, 'mouseup');
 
     return mousedown$.switchMap(() => {
       return mousemove$.takeUntil(mouseup$);
-    });
+    }).distinctUntilChanged();
   }
 }
