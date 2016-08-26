@@ -6,7 +6,7 @@ import { masterReducer } from './reducers';
 import { Project, InspectorEntry, Timeline } from './shared/models';
 import { getEmptyData, getTutorialData, getMockData, getRulerData } from './shared/datasets';
 
-import { TimelineService, PlayheadService, PlayerService } from './shared';
+import { TimelineService, PlayheadService, PlayerService, InspectorService } from './shared';
 import { SimpleBackendService, ProjectIOService } from './backend';
 
 import { VideoComponent } from './video';
@@ -26,7 +26,7 @@ declare var $:any;
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
   directives: [TimelineComponent, InspectorComponent, VideoComponent, HandlebarComponent, KeyDirective, ProjectHandlerComponent],
-  providers: [provideStore(masterReducer, getEmptyData()), TimelineService, PlayheadService, PlayerService, SimpleBackendService, ProjectIOService]
+  providers: [provideStore(masterReducer, getEmptyData()), TimelineService, PlayheadService, PlayerService, SimpleBackendService, ProjectIOService, InspectorService]
 })
 export class AppComponent implements OnInit, AfterViewInit {
 

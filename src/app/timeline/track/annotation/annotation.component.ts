@@ -3,7 +3,7 @@ import { TimelineComponent } from '../../timeline.component';
 import { Annotation, Timeline } from '../../../shared/models';
 import { HandlebarComponent } from '../../handlebar/handlebar.component';
 import { Store } from '@ngrx/store';
-import { TimelineService, PlayerService } from '../../../shared';
+import { TimelineService, PlayerService, InspectorService } from '../../../shared';
 
 @Component({
   moduleId: module.id,
@@ -27,7 +27,8 @@ export class AnnotationComponent implements OnInit {
     @Inject(forwardRef(() => TimelineComponent)) private timeline,
     private store:Store<any>,
     private timeService:TimelineService,
-    private playerService:PlayerService
+    private playerService:PlayerService,
+    private inspectorService:InspectorService
   ) {}
 
   ngOnInit() {
@@ -55,6 +56,7 @@ export class AnnotationComponent implements OnInit {
   select(e: MouseEvent) {
     this.store.dispatch( { type: 'SELECT_ANNOTATION', payload: this.data } );
     e.stopPropagation();
+    this.inspectorService.scrollToAnnotation(this.data);
   }
 
   onDblclick(e) {

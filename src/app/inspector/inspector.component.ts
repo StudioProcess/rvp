@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ElementRef } from '@angular/core';
 import { EntryComponent } from './entry';
 import { InspectorEntry } from '../shared/models';
+import { InspectorService } from '../shared';
 
 @Component({
   moduleId: module.id,
@@ -13,7 +14,9 @@ export class InspectorComponent implements OnInit {
 
   @Input() entries:InspectorEntry[];
 
-  constructor() { }
+  constructor(private el:ElementRef, inspectorService:InspectorService) {
+    inspectorService.scrollToAnnotationStream.subscribe(annotation => this.scrollToAnnotation(annotation));
+  }
 
   ngOnInit() { }
 
@@ -23,6 +26,22 @@ export class InspectorComponent implements OnInit {
     // Use annotation object reference, so the DOM is not changed due to a new InspectorEntry objects
     // TODO: Use a generated entry ID, or have the entries have persistence in the state
     return entry.annotation;
+  }
+
+  scrollToAnnotation(annotation) {
+    log.debug('scroll to', annotation);
+    let idx = this.entries.reduce((val, entry, idx) => {
+      if (entry.annotation == annotation) { return idx; }
+      return val;
+    }, null);
+    // log.debug('scroll to inspector entry #', idx);
+    if (idx == null) return;
+    
+    let node = this.el.nativeElement.querySelectorAll('div[app-entry]')[idx];
+    let scrollContainer = this.el.nativeElement.querySelector('.scroll-container');
+    log.debug('scroll to', node);
+    let centerOffset = (scrollContainer.offsetHeight - node.offsetHeight) / 2;
+    scrollContainer.scrollTop = node.offsetTop - scrollContainer.offsetTop - centerOffset;
   }
 
 }
