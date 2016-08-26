@@ -57,6 +57,11 @@ export class TimelineComponent implements OnInit {
     // this.timeService.scrollPositionStream.subscribe(pos => {
     //   // log.debug('scroll', pos);
     // });
+
+    // set playhead when dragging
+    this.getDragStream().subscribe((e) => {
+      this.placePlayhead(e);
+    });
   }
 
   scrollbarDrag(event) {
@@ -108,8 +113,18 @@ export class TimelineComponent implements OnInit {
   placePlayhead(e) {
     let position = e.offsetX + e.target.offsetLeft; // adjust for offset in clicked layer
     let time = this.timeService.convertViewportPixelsToSeconds(position);
-    // log.debug('place playhead', time);
     this.playerService.setTime(time);
+    // preemptively set playhead position (for responsiveness, especially when dragging)
+    this.playheadService.time = time;
   }
 
+  getDragStream() {
+    const mousedown$ = Observable.fromEvent(this.el.nativeElement, 'mousedown');
+    const mousemove$ = Observable.fromEvent(this.el.nativeElement, 'mousemove');
+    const mouseup$ = Observable.fromEvent(this.el.nativeElement, 'mouseup');
+
+    return mousedown$.switchMap(() => {
+      return mousemove$.takeUntil(mouseup$);
+    });
+  }
 }
