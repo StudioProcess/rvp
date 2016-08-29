@@ -47,7 +47,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
     this.player = videojs('videojs', this.playerOptions, () => {
       // player ready (callback has no args)
       this.playerReady.resolve();
-      // this.fitPlayer(); // moved to ngAfterViewInit
+      this.fitPlayer();
       window.addEventListener('resize', this.fitPlayer.bind(this));
       this.setupRequestHandling();
       this.player.on('loadedmetadata', this.onMetadataLoaded.bind(this));
@@ -71,17 +71,19 @@ export class VideoComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // this.playerReady.then( this.fitPlayer.bind(this) );
-    this.playerReady.then(() => {
-      log.warn('ngAfterViewInit: calling fitPlayer');
-      this.fitPlayer();
-    });
+    // setTimeout(() => {
+    //   window.addEventListener('load', this.fitPlayer.bind(this));
+    //   document.addEventListener('DOMContentLoaded', this.fitPlayer.bind(this));
+    //   // log.warn('ngAfterViewInit: calling fitPlayer');
+    //   // this.fitPlayer();
+    // }, 0);
   }
 
   // fit player to available space (use on window resize)
   private fitPlayer() {
     let elementDim = this.hostElement.nativeElement.getBoundingClientRect();
-    this.player.dimensions(elementDim.width, elementDim.height);
+    // this.player.dimensions(elementDim.width, elementDim.height);
+    this.player.dimensions(elementDim.width, 450);
     log.warn('fitting player: ', elementDim.width, elementDim.height);
   }
 
