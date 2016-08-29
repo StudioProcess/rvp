@@ -128,4 +128,13 @@ export class TimelineComponent implements OnInit {
       return mousemove$.takeUntil(mouseup$);
     }).distinctUntilChanged();
   }
+
+  onMouseWheel(e) {
+    // log.debug('wheel', Math.abs(e.deltaX));
+    // disable 'history back' action on horizontal swipe (chrome)
+    if ( Math.abs(e.deltaX) > Math.abs(e.deltaY) ) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }
 }
