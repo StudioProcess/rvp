@@ -46,3 +46,13 @@ body {
 textarea {
   min-height: 10px !important;
 }
+
+// globally disable text selection
+// (often happens by accident while dragging things)
+body {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
