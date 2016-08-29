@@ -12,18 +12,21 @@
   <link rel="stylesheet" href="app/global.css" class="css">
 </head>
 
-<body>
+<body class="loading">
 
-  <app-root>
-    <div class="loading">
-      <div class="image">
-        <img src="./img/rv_animation.gif" width="200px">
-      </div>
-      <div class="text">
-        <strong>Research Video</strong>&nbsp;Zürcher Hochschule der Künste
-      </div>
+  <app-root></app-root>
+
+  <div class="loading-overlay">
+    <div class="image">
+      <img src="./img/rv_animation.gif" width="200px">
     </div>
-  </app-root>
+    <div class="text">
+      <strong>Research Video</strong>&nbsp;Zürcher Hochschule der Künste
+    </div>
+    <div class="progress secondary" role="progressbar">
+      <div class="progress-meter"></div>
+    </div>
+  </div>
 
   {{#each scripts.polyfills}}
   <script src="{{.}}"></script>

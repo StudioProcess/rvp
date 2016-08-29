@@ -21,17 +21,27 @@ body {
   height:auto;
 }
 
-.loading {
+body {
+  overflow: auto;
+  .loading-overlay { display:none; }
+}
+
+body.loading {
+  overflow: hidden;
+  .loading-overlay { display:flex; }
+}
+
+.loading-overlay {
+  display: flex;
   position:absolute;
   top:0;
   bottom:0;
   left:0;
   right:0;
-  display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-
+  background-color:$white;
 
   .text {
     font-weight: lighter;
@@ -41,6 +51,8 @@ body {
   .image {
     padding-bottom: 0.5em;
   }
+
+  .progress { width:225px; height:8px; margin-top:1.5em; }
 }
 
 textarea {

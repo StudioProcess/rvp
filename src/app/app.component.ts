@@ -90,6 +90,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         // this.backendService.clearData();
         this.backendService.retrieveData().then( data => {
           if (data != null) store.dispatch( {type: 'HYDRATE', payload: data} );
+          this.hideLoadingOverlay();
         });
       } else {
         log.debug('no local data, importing initial project');
@@ -173,6 +174,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   // Reset button clicked in Project modal window
   onProjectReset() {
+    this.showLoadingOverlay();
     this.playerService.reset(); // reset player
     this.backendService.clearVideo(); // clear video from storage
     this.backendService.clearData(); // clear data from storage
@@ -223,9 +225,29 @@ export class AppComponent implements OnInit, AfterViewInit {
         if (videoBlob) { this.onVideoFileOpened(videoBlob); } // set and store video
       }).catch(err => {
         log.trace(err);
-      });
+      }).then(() => {
+        this.hideLoadingOverlay();
+      })
+    };
+    xhr.onprogress = e => {
+      if (e.lengthComputable) {
+        this.loadingOverlayProgress(e.loaded / e.total);
+      }
     };
     xhr.send();
   }
 
+  // TODO: possibly put loading overlay functions in a service
+  showLoadingOverlay() {
+    document.querySelector('body').classList.add('loading');
+  }
+
+  hideLoadingOverlay() {
+    document.querySelector('body').classList.remove('loading');
+  }
+
+  loadingOverlayProgress(progress: number) {
+    let el = document.querySelector('.progress-meter') as HTMLElement;
+    el.style.width = progress*100 + '%';
+  }
 }
