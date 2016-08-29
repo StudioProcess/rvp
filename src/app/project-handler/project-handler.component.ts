@@ -23,6 +23,7 @@ export class ProjectHandlerComponent implements OnInit {
   resetButtonClicked(e) {
     if(window.confirm("Reset the whole project? All data will be lost.")){
       this.projectReset.emit(null);
+      this.closeModal();
     }
     e.preventDefault();
     // log.debug('reset button clicked');
@@ -41,13 +42,21 @@ export class ProjectHandlerComponent implements OnInit {
     if (!fileList.length) return; // no file selected
     let file = fileList[0];
     this.projectImport.emit(file);
+    this.closeModal();
     e.preventDefault();
     // log.debug('import file selected', file);
   }
 
   videoFileSelected(file: File) {
     this.videoFileOpened.emit(file);
+    this.closeModal();
     // log.debug('video file selected', file);
+  }
+
+  // Close the settings modal window
+  closeModal() {
+    let modal = $('#settings-reveal') as any;
+    modal.foundation('close');
   }
 
 }
