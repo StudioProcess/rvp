@@ -2,11 +2,13 @@
 <div class="timeline" (mousedown)="placePlayhead($event)">
 
   <div class="timeline-header"  (click)="deselectAnnotations($event)">
-    <app-handlebar class="scrollbar" [left]="0" [width]="100" [caption]="'|||'" [minWidth]='30' (drag)="scrollbarDrag($event)"></app-handlebar>
-
-    <div style="padding-top:20px;text-align:center;">
-      <!-- <span>left: {{scrollbarLeft | number:'.2-2'}}%</span> — <span>width: {{scrollbarWidth | number:'.2-2'}}% — {{timelineWidth|number:'.0-0'}}px</span> -->
+    <div class="scrollbar-container">
+      <app-handlebar class="scrollbar" [left]="0" [width]="100" [caption]="'|||'" [minWidth]='30' (drag)="scrollbarDrag($event)"></app-handlebar>
     </div>
+
+    <!-- <div style="padding-top:20px;text-align:center;"> -->
+      <!-- <span>left: {{scrollbarLeft | number:'.2-2'}}%</span> — <span>width: {{scrollbarWidth | number:'.2-2'}}% — {{timelineWidth|number:'.0-0'}}px</span> -->
+    <!-- </div> -->
   </div>
 
   <app-track *ngFor="let track of data.tracks"

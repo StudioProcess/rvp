@@ -17,9 +17,16 @@ $outline-width: 3px;
 }
 
 .timeline-header {
-  //background-color: $process-super-light-gray;
+  // background-color: $process-light-gray;
   height: 40px;
   position: relative;
+}
+
+.scrollbar-container{
+  // background-color: #e8e8e8;
+  height: 20px;
+  position: relative;
+  border-bottom: 2px solid #444444;
 }
 
 .playhead-container {
@@ -51,5 +58,17 @@ app-playhead {
 // override scrollbar style
 :host .scrollbar .handlebar-container {
   // TODO: place style here
-  background-color: lightskyblue !important;
+  background-color: #444444 !important;
+  // color: $process-dark-gray !important;
+  .content {
+    color: #e8e8e8 !important;
+  }
+  :hover {
+    color: #e8e8e8 !important;
+    background-color: #545454 !important;
+  }
+  // .right-handle, .left-handle{
+  //   color: $white;
+  //   background-color: #444444;
+  // }
 }
