@@ -26,7 +26,8 @@
     "test": "ng test",
     "pree2e": "webdriver-manager update",
     "e2e": "protractor",
-    "tape": "live-server dist/ --open='index.spec.html?myspec' --browser='google chrome'"
+    "tape": "live-server dist/ --open='index.spec.html?myspec' --browser='google chrome'",
+    "build": "rm -rf dist && ng build -prod && open dist"
   },
   "dependencies": {
     "@angular/common": "2.0.0-rc.4",
