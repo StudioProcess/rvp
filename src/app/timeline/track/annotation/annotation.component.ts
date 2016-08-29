@@ -24,7 +24,6 @@ export class AnnotationComponent implements OnInit {
   duration:number;
 
   constructor(
-    @Inject(forwardRef(() => TimelineComponent)) private timeline,
     private store:Store<any>,
     private timeService:TimelineService,
     private playerService:PlayerService,
@@ -32,12 +31,15 @@ export class AnnotationComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.timestamp = this.data.utc_timestamp / this.timeline.data.duration * 100;
-    if (this.data.duration == 0) {
-      this.duration = 0.1;
-    } else {
-      this.duration = this.data.duration / this.timeline.data.duration * 100;
-    }
+    this.timeService.timelineDurationStream.subscribe(timelineDuration => {
+      this.timestamp = this.data.utc_timestamp / timelineDuration * 100;
+      if (this.data.duration == 0) {
+        this.duration = 0.1;
+      } else {
+        this.duration = this.data.duration / timelineDuration * 100;
+      }
+    });
+
     // log.debug('timeline duration', this.timeline.data.duration, 'annotation', this.timestamp, this.duration);
 
     // Update this annotation on dragend
