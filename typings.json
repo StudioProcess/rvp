@@ -16,7 +16,7 @@
     "lodash": "registry:dt/lodash#3.10.0+20160619033623",
     "loglevel": "registry:dt/loglevel#1.4.0+20160412141402",
     "pouchdb/pouch": "registry:dt/pouchdb/pouch#0.1.0+20160608101805",
-    "videojs": "registry:dt/videojs#0.0.0+20160316155526"
+    "videojs": "registry:dt/videojs#0.0.0+20160809071925"
   },
   "dependencies": {
     "node-uuid": "registry:npm/node-uuid#1.4.7+20160503013124"
