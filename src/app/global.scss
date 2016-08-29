@@ -78,7 +78,7 @@ body {
   -moz-user-select: none;
   user-select: none;
 
-  z-index: 2000;
+  z-index: 1000;
   position: fixed;
   margin: auto;
   top: 250px;
@@ -107,7 +107,7 @@ body {
 
   max-width: 360px;
   position: fixed;
-  z-index: 2000;
+  z-index: 1000;
   display: block;
   position: absolute;
   top: 0;
