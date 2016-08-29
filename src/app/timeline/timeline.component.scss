@@ -47,3 +47,9 @@ app-playhead {
     color: $process-gray;
   }
 }
+
+// override scrollbar style
+:host .scrollbar .handlebar-container {
+  // TODO: place style here
+  background-color: lightskyblue !important;
+}
