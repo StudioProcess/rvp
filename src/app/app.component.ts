@@ -229,11 +229,6 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.hideLoadingOverlay();
       })
     };
-    xhr.onprogress = e => {
-      if (e.lengthComputable) {
-        this.loadingOverlayProgress(e.loaded / e.total);
-      }
-    };
     xhr.send();
   }
 
@@ -244,10 +239,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   hideLoadingOverlay() {
     document.querySelector('body').classList.remove('loading');
-  }
-
-  loadingOverlayProgress(progress: number) {
-    let el = document.querySelector('.progress-meter') as HTMLElement;
-    el.style.width = progress*100 + '%';
+    document.querySelector('.pace').classList.add('pace-inactive');
   }
 }
