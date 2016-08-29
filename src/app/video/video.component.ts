@@ -71,13 +71,18 @@ export class VideoComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.playerReady.then( this.fitPlayer.bind(this) );
+    // this.playerReady.then( this.fitPlayer.bind(this) );
+    this.playerReady.then(() => {
+      log.warn('ngAfterViewInit: calling fitPlayer');
+      this.fitPlayer();
+    });
   }
 
   // fit player to available space (use on window resize)
   private fitPlayer() {
     let elementDim = this.hostElement.nativeElement.getBoundingClientRect();
     this.player.dimensions(elementDim.width, elementDim.height);
+    log.warn('fitting player: ', elementDim.width, elementDim.height);
   }
 
   private setupRequestHandling() {

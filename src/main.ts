@@ -21,7 +21,7 @@ if (console) {
 
 // setup production environment
 if (environment.production) {
-  log.setLevel('error');
+  log.setLevel('warn');
   enableProdMode();
 }
 
