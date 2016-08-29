@@ -30,7 +30,8 @@ module.exports = function(defaults) {
       'loglevel/dist/*.js',
       'moment/*.js',
       'file-saver/*.js',
-      'jszip/dist/*.js'
+      'jszip/dist/*.js',
+      'pace-progress/*.js'
     ]
   });
 };
