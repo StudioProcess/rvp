@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, ElementRef, EventEmitter } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, Output, ElementRef, EventEmitter } from '@angular/core';
 import 'video.js'; // creates global videojs() function
 import { Observable } from 'rxjs/Rx';
 import { PlayerService } from '../shared/player.service';
@@ -9,7 +9,7 @@ import { PlayerService } from '../shared/player.service';
   templateUrl: 'video.component.html',
   styleUrls: ['video.component.css']
 })
-export class VideoComponent implements OnInit {
+export class VideoComponent implements OnInit, AfterViewInit {
 
   private player; // VideoJS Player instance
   private playerReady; // Promise that resolves when player is ready
@@ -47,7 +47,7 @@ export class VideoComponent implements OnInit {
     this.player = videojs('videojs', this.playerOptions, () => {
       // player ready (callback has no args)
       this.playerReady.resolve();
-      this.fitPlayer();
+      // this.fitPlayer(); // moved to ngAfterViewInit
       window.addEventListener('resize', this.fitPlayer.bind(this));
       this.setupRequestHandling();
       this.player.on('loadedmetadata', this.onMetadataLoaded.bind(this));
@@ -68,6 +68,10 @@ export class VideoComponent implements OnInit {
     // forward to output
     timeupdateStream.subscribe(this.timeupdate);
     // this.timeupdate.subscribe((time) => { log.debug('time updated', time) }); // test
+  }
+
+  ngAfterViewInit() {
+    this.playerReady.then( this.fitPlayer.bind(this) );
   }
 
   // fit player to available space (use on window resize)
