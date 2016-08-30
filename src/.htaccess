@@ -98,18 +98,18 @@
 <IfModule mod_expires.c>
 
     ExpiresActive on
-    ExpiresDefault                                      "access plus 1 month"
+    ExpiresDefault                                      "access plus 1 week"
 
   # CSS
 
-    ExpiresByType text/css                              "access plus 1 day"
+    ExpiresByType text/css                              "access plus 1 hour"
 
 
   # JavaScript
 
-    ExpiresByType application/javascript                "access plus 1 day"
-    ExpiresByType application/x-javascript              "access plus 1 day"
-    ExpiresByType text/javascript                       "access plus 1 day"
+    ExpiresByType application/javascript                "access plus 1 hour"
+    ExpiresByType application/x-javascript              "access plus 1 hour"
+    ExpiresByType text/javascript                       "access plus 1 hour"
 
 
   # Data interchange
@@ -145,37 +145,37 @@
 
   # Media files
 
-    ExpiresByType audio/ogg                             "access plus 1 month"
-    ExpiresByType image/bmp                             "access plus 1 month"
-    ExpiresByType image/gif                             "access plus 1 month"
-    ExpiresByType image/jpeg                            "access plus 1 month"
-    ExpiresByType image/png                             "access plus 1 month"
-    ExpiresByType image/svg+xml                         "access plus 1 month"
-    ExpiresByType image/webp                            "access plus 1 month"
-    ExpiresByType video/mp4                             "access plus 1 month"
-    ExpiresByType video/ogg                             "access plus 1 month"
-    ExpiresByType video/webm                            "access plus 1 month"
+    ExpiresByType audio/ogg                             "access plus 1 week"
+    ExpiresByType image/bmp                             "access plus 1 week"
+    ExpiresByType image/gif                             "access plus 1 week"
+    ExpiresByType image/jpeg                            "access plus 1 week"
+    ExpiresByType image/png                             "access plus 1 week"
+    ExpiresByType image/svg+xml                         "access plus 1 week"
+    ExpiresByType image/webp                            "access plus 1 week"
+    ExpiresByType video/mp4                             "access plus 1 week"
+    ExpiresByType video/ogg                             "access plus 1 week"
+    ExpiresByType video/webm                            "access plus 1 week"
 
 
   # Web fonts
 
     # Embedded OpenType (EOT)
-    ExpiresByType application/vnd.ms-fontobject         "access plus 1 month"
-    ExpiresByType font/eot                              "access plus 1 month"
+    ExpiresByType application/vnd.ms-fontobject         "access plus 1 week"
+    ExpiresByType font/eot                              "access plus 1 week"
 
     # OpenType
-    ExpiresByType font/opentype                         "access plus 1 month"
+    ExpiresByType font/opentype                         "access plus 1 week"
 
     # TrueType
-    ExpiresByType application/x-font-ttf                "access plus 1 month"
+    ExpiresByType application/x-font-ttf                "access plus 1 week"
 
     # Web Open Font Format (WOFF) 1.0
-    ExpiresByType application/font-woff                 "access plus 1 month"
-    ExpiresByType application/x-font-woff               "access plus 1 month"
-    ExpiresByType font/woff                             "access plus 1 month"
+    ExpiresByType application/font-woff                 "access plus 1 week"
+    ExpiresByType application/x-font-woff               "access plus 1 week"
+    ExpiresByType font/woff                             "access plus 1 week"
 
     # Web Open Font Format (WOFF) 2.0
-    ExpiresByType application/font-woff2                "access plus 1 month"
+    ExpiresByType application/font-woff2                "access plus 1 week"
 
 
   # Other
