@@ -8,7 +8,7 @@
   <script src="/ember-cli-live-reload.js" type="text/javascript"></script>
   {{/unless}}
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script>paceOptions = { ajax:true, document:false, eventLag:false, restartOnRequestAfter:2000, maxProgressPerFrame:20, initialRate:0.01, ghostTime:1000 }</script>
+  <script>paceOptions = { ajax:true, document:true, eventLag:true, restartOnRequestAfter:2000, maxProgressPerFrame:20, initialRate:0.01, ghostTime:1000, target:'.progress' }</script>
   <script src="vendor/pace-progress/pace.min.js" type="text/javascript"></script>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" href="app/global.css" class="css">
@@ -25,6 +25,7 @@
     <div class="text">
       <strong>Research Video</strong>&nbsp;Zürcher Hochschule der Künste
     </div>
+    <div class="progress"></div>
   </div>
 
   {{#each scripts.polyfills}}

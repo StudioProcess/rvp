@@ -51,8 +51,6 @@ body.loading {
   .image {
     padding-bottom: 0.5em;
   }
-
-  .progress { width:225px; height:8px; margin-top:1.5em; }
 }
 
 textarea {
@@ -78,7 +76,7 @@ body {
   -moz-user-select: none;
   user-select: none;
 
-  z-index: 1000;
+  // z-index: 1000;
   position: fixed;
   margin: auto;
   top: 250px;
@@ -107,7 +105,7 @@ body {
 
   max-width: 360px;
   position: fixed;
-  z-index: 1000;
+  // z-index: 1000;
   display: block;
   position: absolute;
   top: 0;
@@ -117,6 +115,6 @@ body {
   background: $black;
 }
 
-.pace.pace-inactive {
-  display: none;
-}
+// .pace.pace-inactive {
+//   display: none;
+// }
