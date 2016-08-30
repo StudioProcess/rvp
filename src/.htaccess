@@ -1,3 +1,7 @@
+AddType application/octet-stream .rv .rvp .rvx
+# Disable gzip for .rv files so they are transferred with Content-Length header and show up in the progress bar
+SetEnvIfNoCase Request_URI \.(rv|rvp|rvx)$ no-gzip dont-vary
+
 # ----------------------------------------------------------------------
 # | Compression                                                        |
 # ----------------------------------------------------------------------
