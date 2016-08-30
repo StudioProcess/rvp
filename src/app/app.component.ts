@@ -214,6 +214,10 @@ export class AppComponent implements OnInit, AfterViewInit {
   // Load project via HTTP GET from an url
   // TODO: return promise, so we can react when it's loaded
   importProjectFromURL(url:string) {
+    // TODO: fix pace not picking up this request properly
+    let pace = window['Pace'] as any;
+    console.log('restarting pace');
+    pace.restart();
     let xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.responseType = 'blob';
