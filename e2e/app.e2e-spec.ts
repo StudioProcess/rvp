@@ -1,14 +1,14 @@
-import { RvpPage } from './app.po';
+import { RvpMigrationPage } from './app.po';
 
-describe('rvp App', function() {
-  let page: RvpPage;
+describe('rvp-migration App', () => {
+  let page: RvpMigrationPage;
 
   beforeEach(() => {
-    page = new RvpPage();
+    page = new RvpMigrationPage();
   });
 
-  it('should display message saying app works', () => {
+  it('should display welcome message', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('app works!');
+    expect(page.getParagraphText()).toEqual('Welcome to app!');
   });
 });
