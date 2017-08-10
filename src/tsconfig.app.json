@@ -12,6 +12,7 @@
   },
   "exclude": [
     "test.ts",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "app/shared/timeline.service.tapespec.ts"
   ]
 }
