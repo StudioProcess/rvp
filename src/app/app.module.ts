@@ -1,7 +1,5 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
-import { AppComponent } from './app.component';
+import { BrowserModule } from '@angular/platform-browser';
 
 /* Pipes */
 import { TimePipe, UnixTimePipe } from './shared';
@@ -13,13 +11,18 @@ import { KeyDirective } from './shared';
 import { InspectorService, PlayerService, PlayheadService, TimelineService } from './shared';
 import { SimpleBackendService, ProjectIOService } from './backend';
 
+/* Components */
+import { AppComponent } from './app.component';
+import { VideoComponent } from './video';
+
 @NgModule({
   declarations: [
-    AppComponent,
     TimePipe, UnixTimePipe,
     KeyDirective,
     InspectorService, PlayerService, PlayheadService, TimelineService,
-    SimpleBackendService, ProjectIOService
+    SimpleBackendService, ProjectIOService,
+    AppComponent,
+    VideoComponent
   ],
   imports: [
     BrowserModule

@@ -1,0 +1,19 @@
+@import '/node_modules/video.js/dist/video-js.css';
+@import '../../settings';
+
+$video-height: 450px;
+.video-title {
+  font-weight: 500;
+  text-align: left;
+  margin-bottom: 1.0em;
+}
+.video-area {
+  min-height: $video-height;
+  max-height: $video-height;
+  background-color: $light-gray;
+  color: $dark-gray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow:hidden; // fixes video content slightly overflowing the container 
+}

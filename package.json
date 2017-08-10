@@ -49,6 +49,7 @@
     "@types/jquery": "^3.2.11",
     "@types/loglevel": "^1.4.29",
     "@types/node": "~6.0.85",
+    "@types/video.js": "^5.16.0",
     "codelyzer": "~3.0.1",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
