@@ -10,19 +10,16 @@ import { TimePipe, UnixTimePipe } from './shared';
 import { KeyDirective } from './shared';
 
 /* Services */
-import { 
-  InspectorService, 
-  PlayerService, 
-  PlayheadService, 
-  TimelineService 
-} from './shared';
+import { InspectorService, PlayerService, PlayheadService, TimelineService } from './shared';
+import { SimpleBackendService, ProjectIOService } from './backend';
 
 @NgModule({
   declarations: [
     AppComponent,
     TimePipe, UnixTimePipe,
     KeyDirective,
-    InspectorService, PlayerService, PlayheadService, TimelineService
+    InspectorService, PlayerService, PlayheadService, TimelineService,
+    SimpleBackendService, ProjectIOService
   ],
   imports: [
     BrowserModule
