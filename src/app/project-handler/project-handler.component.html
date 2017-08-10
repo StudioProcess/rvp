@@ -1,0 +1,36 @@
+<!-- Tracks: X<br />
+Annotations: X<br /> -->
+<div class="row column">
+  <h2><i class="ion-ios-folder icon-title" title="Project Settings"></i>Project</h2>
+</div>
+<div class="row buttons">
+  <div class="column">
+    <h3 class="title-settings">Open Project</h3>
+    <!-- <i class="ion-ios-upload-outline" title="Import Project" alt="Import Project"></i>  -->
+    <input type="file" name="projectFile" id="projectFile" class="inputfile" accept=".rv" (change)="importFileSelected($event)">
+    <label for="projectFile">Open...</label>
+  </div>
+  <div class="column">
+    <h3 class="title-settings">Export Project</h3>
+    <!-- <i class="ion-ios-download-outline" title="Export Project" alt="Export Project"></i>  -->
+    <a class="button-export" href="#" (click)="exportButtonClicked($event)">Export</a>
+  </div>
+</div>
+<div class="row buttons">
+  <div class="column">
+    <app-filepicker (filePicked)="videoFileSelected($event)"></app-filepicker>
+  </div>
+  <div class="column">
+    <h3 class="title-settings">Reset Project</h3>
+    <a class="button-reset" href="#" (click)="resetButtonClicked($event)">Reset</a>
+  </div>
+</div>
+<div class="row">
+  <div class="column">
+    <h3 class="title-information">Information</h3>
+    <p>Preferred Video Formats: H.264 and AAC in MP4 Container.</p>
+    <p>Due to a <a href="https://github.com/StudioProcess/rvp/issues/130" target="_blank">bug</a>, maximum file size is temporarily limited to 127 MB.</p>
+<p>Research Video is auto-saving, no need to save manually. If you want to send the project to somebody or preserve it for later use, simply export it as an archive.</p>
+    <p>Find general instructions in this <a href="https://docs.google.com/document/d/1D3rKJY6E4kpEqv7arxR7JDy_hGbBNBZxurHqVWyzdvk/edit" target="_blank">manual</a>. <br />Feel free to share your feedback directly via <a href="mailto:contact@process.studio">contact@process.studio</a>, start a new issue on <a href="https://github.com/StudioProcess/rvp/issues" target="_blank">github</a> or join the conversation in our <a href="https://docs.google.com/document/d/138X8Mwrqro1Um0N85-0xUM5yru1hoRt6Rob0vzt7svE/edit" target="_blank">public document</a>.</p>
+  </div>
+</div>
