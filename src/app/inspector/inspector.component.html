@@ -1,0 +1,3 @@
+<div class="scroll-container">
+  <div app-entry *ngFor="let entry of entries; trackBy:entryTrackingId" [data]="entry" [isSelected]="entry.annotation.isSelected"></div>
+</div>

@@ -15,6 +15,7 @@ import { SimpleBackendService, ProjectIOService } from './backend';
 import { AppComponent } from './app.component';
 import { VideoComponent } from './video';
 import { ProjectHandlerComponent } from './project-handler';
+import { InspectorComponent } from './inspector';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { ProjectHandlerComponent } from './project-handler';
     SimpleBackendService, ProjectIOService,
     AppComponent,
     VideoComponent,
-    ProjectHandlerComponent
+    ProjectHandlerComponent,
+    InspectorComponent
   ],
   imports: [
     BrowserModule

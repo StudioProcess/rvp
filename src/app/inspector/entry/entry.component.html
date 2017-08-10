@@ -1,0 +1,41 @@
+<div [formGroup]="form" class="row column entry-container" (mousedown)="selectAnnotation()">
+
+  <div class="row">
+    <div class="column shrink"><div class="track-color" [style.backgroundColor]="_data.color"></div></div>
+    <div class="column">
+      <div class="row time-row collapse spacer-right">
+        <div class="column timestamp">
+        <label><i class="ion-ios-time-outline timestamp-icon" title="Start Time"></i>
+          <input formControlName="timestamp" class="number" title="Start Time" (keydown)="blurOnReturnKey($event); timeInputGuard($event); stopPropagation($event)" (blur)="submit($event)">
+        </label>
+        </div>
+        <div class="column duration">
+          <label><i class="ion-ios-time duration-icon" title="Duration"></i>
+            <input formControlName="duration" class="number" title="Duration" placeholder="0" (keydown)="blurOnReturnKey($event); timeInputGuard($event); stopPropagation($event)" (blur)="submit($event)">
+          </label>
+        </div>
+      </div>
+      <div class="row text-row collapse spacer-right">
+        <div class="column data">
+          <input formControlName="title" class="title" title="Title" placeholder="Title (optional)" (keydown)="blurOnReturnKey($event); stopPropagation($event)" (blur)="submit($event)">
+          <textarea formControlName="description" class="description" title="Description" placeholder="Description (optional)" (blur)="submit($event)" (keyDown)="stopPropagation($event)">
+          </textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- <div class="annotation-track-color"></div>
+<div class="timedisplay">
+  <div class="row column icon">
+    <img src="../../img/clock_start.png" alt="annotation start time"  title="annotation start time" width="10px"><input type="value" class="number" value="{{ data.utc_timestamp | time }}">
+  </div>
+  <div class="row column icon">
+    <img src="../../img/clock_duration.png" alt="annotation duration"  title="annotation duration" width="10px"><input type="value" class="number" value="{{ data.duration | time }}">
+  </div>
+</div>
+<div class="column">
+  <textarea class="description" value="{{ data.fields.description }}"></textarea>
+</div> -->
