@@ -1,0 +1,33 @@
+<!-- TIMELINE -->
+<div class="timeline" (mousedown)="placePlayhead($event)" (wheel)="onMouseWheel($event)">
+
+  <div class="timeline-header"  (click)="deselectAnnotations($event)">
+    <div class="scrollbar-container">
+      <app-handlebar class="scrollbar" [left]="0" [width]="100" [caption]="'|||'" [minWidth]='30' (drag)="scrollbarDrag($event)"></app-handlebar>
+    </div>
+
+    <!-- <div style="padding-top:20px;text-align:center;"> -->
+      <!-- <span>left: {{scrollbarLeft | number:'.2-2'}}%</span> — <span>width: {{scrollbarWidth | number:'.2-2'}}% — {{timelineWidth|number:'.0-0'}}px</span> -->
+    <!-- </div> -->
+  </div>
+
+  <app-track *ngFor="let track of data.tracks"
+    [data]="track"
+    [scrollContainer]="'.annotation-container'"
+    [scroll]="scrollbarLeft"
+    [zoom]="timelineWidth">
+  </app-track>
+
+  <div class="row column add-track">
+    <button class="ion-plus track-add-icon" title="Add new Track" alt="Add new Track" (click)="addTrack()"> Add Track</button>
+  </div>
+
+  <div class="playhead-container" [scroll]="scrollbarLeft" [zoom]="timelineWidth" style="">
+    <!-- cursor -->
+    <!-- <app-cursor [time]="cursorTime" [displayTime]="cursorDisplayTime"></app-cursor> -->
+
+    <!-- playhead -->
+    <app-playhead [time]="playheadTime" [displayTime]="playheadDisplayTime"></app-playhead>
+  </div>
+
+</div>

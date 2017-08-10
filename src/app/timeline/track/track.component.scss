@@ -1,0 +1,113 @@
+@import '../../../settings';
+
+$outline-width: 3px;
+$outline-hover: 1px;
+.track-container {
+  padding-top: 0.4em;
+  padding-bottom: 1em;
+  //min-height: 60px;
+  //margin-top: 0.2em;
+  margin-bottom: 0;
+  background-color: #f8f8f8;
+  //background-color: $process-super-light-gray;
+  &:hover {
+    background-color: #FFF;
+    // background-color: $white;
+    // outline-offset: (-$outline-hover);
+    // outline: $outline-hover solid $process-gray;
+  }
+}
+.track-container:hover {
+  .track-options {
+    opacity: 0;
+    /* make things invisible upon start */
+    -webkit-animation: fadeIn ease-in 1;
+    /* call our keyframe named fadeIn, use animattion ease-in and repeat it only 1 time */
+    -moz-animation: fadeIn ease-in 1;
+    animation: fadeIn ease-in 1;
+    -webkit-animation-fill-mode: forwards;
+    /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
+    -moz-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+    -webkit-animation-duration: 1s;
+    -moz-animation-duration: 1s;
+    animation-duration: 0.2s;
+    z-index: 100;
+  }
+}
+:host.highlighted {
+  .track-container {
+    outline-offset: (-$outline-width);
+    outline: $outline-width solid $black;
+  }
+}
+.title {
+  display: inline-block;
+}
+.annotation-container {
+  height: 100%;
+}
+.annotations {
+  position: relative;
+}
+.title-input {
+  display: inline-block;
+  font-weight: 500;
+  //color: $dark-gray;
+  border: 1px solid transparent;
+  background-color: inherit;
+}
+.title-input:hover {
+  color: $dark-gray;
+}
+.title-input:focus {
+  color: $white;
+  background-color: $highlight-color;
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 $white;
+}
+.title-icon,
+.track-color-icon {
+  //color: $dark-gray;
+  padding-left: 5px;
+  padding-right: 1px;
+}
+.title-row {
+  padding-bottom: 0.5em;
+  justify-content: space-between;
+}
+.annotation-row {
+  height: 20px;
+  background-color: #dfdfdf;
+  //background-color: #d9d9d9;
+  //background-color: $process-light-gray;
+  margin-bottom: 0.7em;
+}
+.track-color {
+  width: 20px;
+  display: inline-block;
+}
+.track-color-new {
+  width: 10px;
+  height: 100%;
+  min-height: 65px;
+}
+hr {
+  color: #f00;
+  background: #f00;
+  height: 1px;
+}
+.track-options {
+  display: inline-block;
+  //visibility: hidden;
+  opacity: 0;
+  li {
+    .menu-item:hover {
+      background-color: $process-super-light-gray;
+    }
+  }
+}
+.track-delete-icon {
+  padding-right: 5px;
+}

@@ -6,6 +6,7 @@ import { TimePipe, UnixTimePipe } from './shared';
 
 /* Directives */
 import { KeyDirective } from './shared';
+import { ScrollZoom } from './timeline/';
 
 /* Services */
 import { InspectorService, PlayerService, PlayheadService, TimelineService } from './shared';
@@ -17,16 +18,31 @@ import { VideoComponent } from './video';
 import { ProjectHandlerComponent } from './project-handler';
 import { InspectorComponent } from './inspector';
 
+import { CursorComponent } from './timeline/cursor';
+import { HandlebarComponent } from './timeline/handlebar';
+import { PlayheadComponent } from './timeline/playhead';
+import { AnnotationComponent } from './timeline/track/annotation';
+import { TrackComponent } from './timeline/track';
+import { TimelineComponent } from './timeline';
+
 @NgModule({
   declarations: [
     TimePipe, UnixTimePipe,
-    KeyDirective,
+    KeyDirective, ScrollZoom,
     InspectorService, PlayerService, PlayheadService, TimelineService,
     SimpleBackendService, ProjectIOService,
+    
     AppComponent,
     VideoComponent,
     ProjectHandlerComponent,
-    InspectorComponent
+    InspectorComponent,
+    
+    CursorComponent,
+    HandlebarComponent,
+    PlayheadComponent,
+    AnnotationComponent,
+    TrackComponent,
+    TimelineComponent
   ],
   imports: [
     BrowserModule

@@ -1,0 +1,15 @@
+@import '../../../../settings';
+
+$outline-width: 3px;
+
+.annotation {
+  // position: absolute;
+  // height: 20px;
+  // top: 0;
+  // background-color: $dark-gray;
+}
+
+:host.selected .handlebar-container {
+  outline-offset: (-$outline-width);
+  outline: $outline-width solid $black;
+}
