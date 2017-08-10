@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { ReactiveFormsModule } from '@angular/forms';
 
 /* Pipes */
 import { TimePipe, UnixTimePipe } from './shared';
@@ -15,9 +16,10 @@ import { SimpleBackendService, ProjectIOService } from './backend';
 /* Components */
 import { AppComponent } from './app.component';
 import { VideoComponent } from './video';
+import { FilepickerComponent } from './project-handler/filepicker';
 import { ProjectHandlerComponent } from './project-handler';
+import { EntryComponent } from './inspector/entry';
 import { InspectorComponent } from './inspector';
-
 import { CursorComponent } from './timeline/cursor';
 import { HandlebarComponent } from './timeline/handlebar';
 import { PlayheadComponent } from './timeline/playhead';
@@ -29,14 +31,13 @@ import { TimelineComponent } from './timeline';
   declarations: [
     TimePipe, UnixTimePipe,
     KeyDirective, ScrollZoom,
-    InspectorService, PlayerService, PlayheadService, TimelineService,
-    SimpleBackendService, ProjectIOService,
     
     AppComponent,
     VideoComponent,
+    FilepickerComponent,
     ProjectHandlerComponent,
+    EntryComponent,
     InspectorComponent,
-    
     CursorComponent,
     HandlebarComponent,
     PlayheadComponent,
@@ -45,9 +46,12 @@ import { TimelineComponent } from './timeline';
     TimelineComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule, ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    InspectorService, PlayerService, PlayheadService, TimelineService,
+    SimpleBackendService, ProjectIOService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
