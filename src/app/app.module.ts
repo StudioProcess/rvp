@@ -1,6 +1,10 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
+import { StoreModule } from '@ngrx/store';
+
+import { masterReducer } from './reducers';
+import { getEmptyData, getTutorialData, getMockData, getRulerData } from './shared/datasets';
 
 /* Pipes */
 import { TimePipe, UnixTimePipe } from './shared';
@@ -46,7 +50,8 @@ import { TimelineComponent } from './timeline';
     TimelineComponent
   ],
   imports: [
-    BrowserModule, ReactiveFormsModule
+    BrowserModule, ReactiveFormsModule,
+    StoreModule.forRoot( {root : masterReducer} )
   ],
   providers: [
     InspectorService, PlayerService, PlayheadService, TimelineService,
