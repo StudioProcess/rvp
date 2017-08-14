@@ -1,5 +1,9 @@
 import { Component, OnInit, AfterViewInit, Input, Output, ElementRef, EventEmitter } from '@angular/core';
-import * as videojs from 'video.js';
+
+// NOTE: this doesn't load the videojs function as expected, but under the 'default' property
+// because of this, can't used types (@types/video.js) since they expect the plain videojs function
+import * as vjs from 'video.js';
+var videojs = vjs.default;
 
 import { Observable } from 'rxjs/Rx';
 import { PlayerService } from '../shared/player.service';
@@ -45,6 +49,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.player = videojs('videojs', this.playerOptions, () => {
+      log.debug('player ready');
       // player ready (callback has no args)
       this.playerReady.resolve();
       this.fitPlayer();

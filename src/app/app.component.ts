@@ -132,6 +132,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     $(document).foundation();
 
     // this.video.timeupdate.subscribe((time) => { log.debug(time) });
+    
+    // TODO: remove
+    this.hideLoadingOverlay();
   }
 
 

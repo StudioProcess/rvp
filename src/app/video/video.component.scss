@@ -1,4 +1,6 @@
-@import '../../../node_modules/video.js/dist/video-js.css';
+// NOTE: the following is loaded globally (see .angular-cli.json), otherwise it's not scoped correctly
+//@import '../../../node_modules/video.js/dist/video-js.css'; 
+
 @import '../../settings';
 
 $video-height: 450px;
