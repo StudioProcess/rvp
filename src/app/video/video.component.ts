@@ -26,7 +26,9 @@ export class VideoComponent implements OnInit, AfterViewInit {
 
   @Input() set videoSrc(src) {
     this.playerReady.then(() => {
-      this.player.src(src);
+      // TODO: Updated videojs. Doesn't work without type anymore. Harcoded for now.
+      // this.player.src(src); // NOTE: VIDEOJS: ERROR: (CODE:4 MEDIA_ERR_SRC_NOT_SUPPORTED) No compatible source was found for this media.
+      this.player.src({src: src, type: 'video/mp4'});
     });
   }
 
@@ -49,13 +51,13 @@ export class VideoComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.player = videojs('videojs', this.playerOptions, () => {
-      log.debug('player ready');
       // player ready (callback has no args)
-      this.playerReady.resolve();
+      log.debug('player ready');
       this.fitPlayer();
       window.addEventListener('resize', this.fitPlayer.bind(this));
       this.setupRequestHandling();
       this.player.on('loadedmetadata', this.onMetadataLoaded.bind(this));
+      this.playerReady.resolve();
     });
 
     // setup player event streams

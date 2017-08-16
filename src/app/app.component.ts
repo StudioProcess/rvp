@@ -37,7 +37,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild(VideoComponent) private video:VideoComponent; // inject video component child (available AfterViewInit)
 
   set videoFile(file: Blob) {
-    this._videoSrc = URL.createObjectURL(file);
+    let url = URL.createObjectURL(file);
+    // log.debug(url);
+    this._videoSrc = url;
     this._videoFile = file;
   }
 
