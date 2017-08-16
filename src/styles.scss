@@ -6,11 +6,9 @@
 // foundation base
 @import 'node_modules/foundation-sites/scss/foundation';
 
-// include foundation globals
-@include foundation-global-styles;
-
 // include foundation features
-@include foundation-everything(true);
+$xy-grid: false; // Override variable in settings TODO: Upgrade to XY-Grid of foundation 6.4
+@include foundation-everything(true); // passing true to enable flexbox
 
 // fonts & icons
 @import 'assets/fonts/roboto/Roboto.css';
