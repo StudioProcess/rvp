@@ -1,14 +1,26 @@
 {
-  "name": "rvp-migration",
-  "version": "0.0.0",
-  "license": "MIT",
+  "name": "rvp",
+  "version": "0.0.7",
+  "description": "Research Video Prototype",
+  "author": "Studio Process <contact@process.studio>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/StudioProcess/rvp.git"
+  },
+  "license": "GPL-3.0",
+  "engines": {
+    "node": ">=8.0.0",
+    "npm": ">=5.0.0"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "reinstall": "rm -rf node_modules dist tmp && npm install",
+    "chrome": "open -a 'google chrome' http://localhost:4200"
   },
   "private": true,
   "dependencies": {
