@@ -56,7 +56,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     log.debug('app component');
     
     // inspector data
-    // TODO: this selector could be refactored using createSelector
+    // TODO: this selector could be refactored using createSelector (to use memoization)
     // see: https://github.com/ngrx/platform/blob/master/docs/store/selectors.md
     this.inspectorEntries = store.select(state => {
       return state.project.timeline.tracks.reduce( (acc, track) => {
@@ -134,8 +134,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     $(document).foundation();
 
     // this.video.timeupdate.subscribe((time) => { log.debug(time) });
-    
-    this.hideLoadingOverlay(); // TODO: remove
   }
 
 
