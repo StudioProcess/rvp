@@ -1,8 +1,16 @@
-# RvpMigration
+# Research Video
+Research Video is a tool developed by [Studio Process](http://process.studio).
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.2.1.
+
+For updates follow Studio Process on [Twitter](http://twitter.com/studioprocess), [Instagram](https://www.instagram.com/process.studio/) and [Facebook](https://www.facebook.com/studioprocess).
+
+
+Live version: http://rv.process.studio
+
 
 ## Development server
+
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.2.1.
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
