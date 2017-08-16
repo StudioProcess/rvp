@@ -1,4 +1,6 @@
-export class RvpPage {
+import { browser, by, element } from 'protractor';
+
+export class RvpMigrationPage {
   navigateTo() {
     return browser.get('/');
   }

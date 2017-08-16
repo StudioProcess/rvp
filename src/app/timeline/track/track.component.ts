@@ -1,16 +1,15 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { AnnotationComponent } from './annotation';
+// import { AnnotationComponent } from './annotation';
 import { Track, Annotation } from '../../shared/models';
 import { Store } from '@ngrx/store';
 import { TimelineService } from '../../shared';
-import { KeyDirective } from '../../shared/key.directive';
+// import { KeyDirective } from '../../shared/key.directive';s
 
 @Component({
-  moduleId: module.id,
   selector: 'app-track',
   templateUrl: 'track.component.html',
-  styleUrls: ['track.component.css'],
-  directives: [AnnotationComponent, KeyDirective]
+  styleUrls: ['track.component.scss']
+  // directives: [AnnotationComponent, KeyDirective]
 })
 export class TrackComponent implements OnInit {
 

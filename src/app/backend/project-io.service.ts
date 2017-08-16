@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Project } from '../shared/models';
 
-import * as saveAs from 'file-saver';
+import { saveAs } from 'file-saver';
 import * as JSZip from 'jszip';
 
 // interface ProjectData {
@@ -16,11 +16,10 @@ export class ProjectIOService {
 
   export(data: Project, videoBlob: Blob, filename?: string): Promise<any> {
     let zip = new JSZip();
-    let filesaver:any = saveAs;
     zip.file('project.json', JSON.stringify(data));
     if (videoBlob) zip.file('video.m4v', videoBlob, {binary: true});
     return zip.generateAsync({type: 'blob'}).then( blob => {
-      filesaver(blob, filename || 'project.rv');
+      saveAs(blob, filename || 'project.rv');
     });
   }
 

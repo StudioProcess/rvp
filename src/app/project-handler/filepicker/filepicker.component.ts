@@ -1,10 +1,9 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  moduleId: module.id,
   selector: 'app-filepicker',
   templateUrl: 'filepicker.component.html',
-  styleUrls: ['filepicker.component.css']
+  styleUrls: ['filepicker.component.scss']
 })
 export class FilepickerComponent implements OnInit {
 

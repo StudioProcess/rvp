@@ -4,11 +4,9 @@ import { InspectorEntry } from '../shared/models';
 import { InspectorService } from '../shared';
 
 @Component({
-  moduleId: module.id,
   selector: 'app-inspector',
   templateUrl: 'inspector.component.html',
-  styleUrls: ['inspector.component.css'],
-  directives: [EntryComponent]
+  styleUrls: ['inspector.component.scss'],
 })
 export class InspectorComponent implements OnInit {
 

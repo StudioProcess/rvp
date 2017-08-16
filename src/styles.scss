@@ -1,3 +1,5 @@
+/* You can add global styles to this file, and also import other style files */
+
 // foundation settings (variables)
 @import 'settings';
 
@@ -11,10 +13,11 @@
 @include foundation-everything(true);
 
 // fonts & icons
-@import '../fonts/roboto/Roboto.css';
-@import '../fonts/space_mono/SpaceMono.css';
-@import '../fonts/foundation-icons/foundation-icons.css';
-@import '../fonts/ionicons/ionicons.css';
+@import 'assets/fonts/roboto/Roboto.css';
+@import 'assets/fonts/space_mono/SpaceMono.css';
+@import 'assets/fonts/foundation-icons/foundation-icons.css';
+@import 'assets/fonts/ionicons/ionicons.css';
+
 
 body {
   font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;

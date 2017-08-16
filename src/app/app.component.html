@@ -1,15 +1,9 @@
 <div class="container">
 
-  <!-- HEADER START -->
-  <!-- <div class="row column title">
-    <span>Research Video</span>&nbsp;Zürcher Hochschule der Künste
-  </div> -->
-  <!-- HEADER END -->
-
   <!-- MENU BAR START -->
   <div class="row align-right menu-bar" (click)="deselectAnnotations($event)">
     <div class="column logo setting">
-      <img src=".././img/rv-logo_1000px.png" width="40px" alt="Research Video Logo" title="Research Video">
+      <img src="assets/img/rv-logo_1000px.png" width="40px" alt="Research Video Logo" title="Research Video">
     </div>
     <!--
     <div class="column settings">
@@ -35,12 +29,6 @@
     </div>
   </div>
 
-  <!-- HANDLEBAR ROW -->
-  <!-- <div class="row column handlebar">
-    <app-handlebar [position]="20" [width]="20" [handlebarColor]="'#CCCCCC'"></app-handlebar>
-  </div> -->
-  <!-- HANDLEBAR ROW END -->
-
   <!-- TIMELINE COMPONENT -->
   <div class="row column timeline-component">
     <app-timeline [data]='timelineData | async'></app-timeline>
@@ -49,13 +37,12 @@
   <!-- MAIN LAYOUT END -->
 
   <!-- FOOTER -->
-
   <div class="footer row column">
     <strong>Research Video is a project by <a href="http://zhdk.ch">Zurich University of the Arts</a> and <a href="http://process.studio">Studio Process</a>.</strong>
   </div>
-
   <!-- FOOTER END -->
-</div>
+
+</div> <!-- CONTAINER END -->
 
 
 <!-- MODAL: PROJECT HANDLING -->

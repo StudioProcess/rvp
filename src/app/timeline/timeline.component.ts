@@ -1,21 +1,20 @@
 import { Component, OnInit, Input, ElementRef } from '@angular/core';
-import { TrackComponent } from './track';
-import { PlayheadComponent } from './playhead';
-import { CursorComponent } from './cursor';
-import { HandlebarComponent } from './handlebar';
+// import { TrackComponent } from './track';
+// import { PlayheadComponent } from './playhead';
+// import { CursorComponent } from './cursor';
+// import { HandlebarComponent } from './handlebar';
 import { Timeline, Annotation } from '../shared/models';
-import { ScrollZoom } from './scroll-zoom.directive';
+// import { ScrollZoom } from './scroll-zoom.directive';
 import { TimelineService, PlayheadService, PlayerService } from '../shared';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Rx';
 import { Project } from '../shared/models';
 
 @Component({
-  moduleId: module.id,
   selector: 'app-timeline',
   templateUrl: 'timeline.component.html',
-  styleUrls: ['timeline.component.css'],
-  directives: [HandlebarComponent, TrackComponent, PlayheadComponent, CursorComponent, ScrollZoom]
+  styleUrls: ['timeline.component.scss']
+  // directives: [HandlebarComponent, TrackComponent, PlayheadComponent, CursorComponent, ScrollZoom]
 })
 export class TimelineComponent implements OnInit {
 

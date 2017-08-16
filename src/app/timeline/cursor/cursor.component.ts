@@ -1,10 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  moduleId: module.id,
   selector: 'app-cursor',
   templateUrl: 'cursor.component.html',
-  styleUrls: ['cursor.component.css']
+  styleUrls: ['cursor.component.scss']
 })
 export class CursorComponent implements OnInit {
 

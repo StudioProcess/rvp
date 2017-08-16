@@ -1,16 +1,15 @@
 import { Component, OnInit, Input, Inject, forwardRef, HostBinding, ViewChild } from '@angular/core';
-import { TimelineComponent } from '../../timeline.component';
+import { TimelineComponent } from '../..';
 import { Annotation, Timeline } from '../../../shared/models';
-import { HandlebarComponent } from '../../handlebar/handlebar.component';
+import { HandlebarComponent } from '../../handlebar';
 import { Store } from '@ngrx/store';
 import { TimelineService, PlayerService, InspectorService } from '../../../shared';
 
 @Component({
-  moduleId: module.id,
   selector: 'app-annotation',
   templateUrl: 'annotation.component.html',
-  styleUrls: ['annotation.component.css'],
-  directives: [HandlebarComponent]
+  styleUrls: ['annotation.component.scss']
+  // directives: [HandlebarComponent]
 })
 
 export class AnnotationComponent implements OnInit {

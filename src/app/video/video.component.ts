@@ -1,13 +1,17 @@
 import { Component, OnInit, AfterViewInit, Input, Output, ElementRef, EventEmitter } from '@angular/core';
-import 'video.js'; // creates global videojs() function
+
+// NOTE: this doesn't load the videojs function as expected, but under the 'default' property
+// because of this, can't used types (@types/video.js) since they expect the plain videojs function
+import * as vjs from 'video.js';
+var videojs = vjs.default;
+
 import { Observable } from 'rxjs/Rx';
 import { PlayerService } from '../shared/player.service';
 
 @Component({
-  moduleId: module.id,
   selector: 'app-video',
   templateUrl: 'video.component.html',
-  styleUrls: ['video.component.css']
+  styleUrls: ['video.component.scss']
 })
 export class VideoComponent implements OnInit, AfterViewInit {
 
@@ -22,7 +26,9 @@ export class VideoComponent implements OnInit, AfterViewInit {
 
   @Input() set videoSrc(src) {
     this.playerReady.then(() => {
-      this.player.src(src);
+      // TODO: Updated videojs. Doesn't work without type anymore. Harcoded for now.
+      // this.player.src(src); // NOTE: VIDEOJS: ERROR: (CODE:4 MEDIA_ERR_SRC_NOT_SUPPORTED) No compatible source was found for this media.
+      this.player.src({src: src, type: 'video/mp4'});
     });
   }
 
@@ -46,11 +52,12 @@ export class VideoComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.player = videojs('videojs', this.playerOptions, () => {
       // player ready (callback has no args)
-      this.playerReady.resolve();
+      log.debug('player ready');
       this.fitPlayer();
       window.addEventListener('resize', this.fitPlayer.bind(this));
       this.setupRequestHandling();
       this.player.on('loadedmetadata', this.onMetadataLoaded.bind(this));
+      this.playerReady.resolve();
     });
 
     // setup player event streams

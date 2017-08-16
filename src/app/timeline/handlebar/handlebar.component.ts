@@ -16,10 +16,9 @@ interface HandlebarDragEvent {
 }
 
 @Component({
-  moduleId: module.id,
   selector: 'app-handlebar',
   templateUrl: 'handlebar.component.html',
-  styleUrls: ['handlebar.component.css']
+  styleUrls: ['handlebar.component.scss']
 })
 export class HandlebarComponent implements OnInit {
 

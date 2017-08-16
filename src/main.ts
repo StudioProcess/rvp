@@ -1,12 +1,10 @@
-import { enableProdMode, PLATFORM_PIPES } from '@angular/core';
-import { bootstrap } from '@angular/platform-browser-dynamic';
-import * as log from 'loglevel';
-import { AppComponent, environment } from './app/';
-import { TimePipe, UnixTimePipe } from './app/shared/time.pipes';
-import { disableDeprecatedForms, provideForms } from '@angular/forms';
-// import { HTTP_PROVIDERS } from '@angular/http';
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-// setup global logger
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
+
+// setup logging
 log.enableAll();
 window['log'] = log;
 if (console) {
@@ -19,19 +17,11 @@ if (console) {
   console.error = log.error;
 }
 
-// setup production environment
 if (environment.production) {
   log.setLevel('warn');
   enableProdMode();
 }
 
-// configure global/app providers
-let providers = [
-  { provide: PLATFORM_PIPES, useValue: [TimePipe, UnixTimePipe], multi:true }, // globally available pipes
-  disableDeprecatedForms(), // new ng2 forms
-  provideForms()
-  // ,HTTP_PROVIDERS
-];
+log.debug("logging enabled"); // TODO: remove this line
 
-// run app
-bootstrap(AppComponent, providers);
+platformBrowserDynamic().bootstrapModule(AppModule);

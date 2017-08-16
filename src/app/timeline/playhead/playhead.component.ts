@@ -1,10 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  moduleId: module.id,
   selector: 'app-playhead',
   templateUrl: 'playhead.component.html',
-  styleUrls: ['playhead.component.css']
+  styleUrls: ['playhead.component.scss']
 })
 export class PlayheadComponent implements OnInit {
 

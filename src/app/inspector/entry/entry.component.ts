@@ -1,19 +1,15 @@
 import { Component, OnInit, Input, ElementRef, HostBinding } from '@angular/core';
-import { InspectorEntry } from '../../shared/models';
-import { REACTIVE_FORM_DIRECTIVES, FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-import { TimePipe, UnixTimePipe } from '../../shared/time.pipes';
-import { Annotation } from '../../shared/models';
-import { KeyDirective } from '../../shared/key.directive';
+import { InspectorEntry, Annotation } from '../../shared/models';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { TimePipe, UnixTimePipe, KeyDirective } from '../../shared';
 
 import { Store } from '@ngrx/store';
 
 
 @Component({
-  moduleId: module.id,
   selector: '[app-entry]',
   templateUrl: 'entry.component.html',
-  styleUrls: ['entry.component.css'],
-  directives: [REACTIVE_FORM_DIRECTIVES, KeyDirective]
+  styleUrls: ['entry.component.scss']
 })
 export class EntryComponent implements OnInit {
 
@@ -28,11 +24,19 @@ export class EntryComponent implements OnInit {
 
   @Input() set data(entry:InspectorEntry) {
     this._data = entry;
-    // TODO: update in RC5: use FormGroup.updateValue() to set all form values in one step
-    (this.form.controls['timestamp'] as FormControl).updateValue(this.formatTime(entry.annotation.utc_timestamp));
-    (this.form.controls['duration'] as FormControl).updateValue(this.formatTime(entry.annotation.duration));
-    (this.form.controls['title'] as FormControl).updateValue(entry.annotation.fields.title);
-    (this.form.controls['description'] as FormControl).updateValue(entry.annotation.fields.description);
+    this.form.setValue({
+      'timestamp': this.formatTime(entry.annotation.utc_timestamp),
+      'duration': this.formatTime(entry.annotation.duration),
+      'title': entry.annotation.fields.title,
+      'description': entry.annotation.fields.description
+    });
+    
+    // TODO: Remove the following. (Updated above to use FormGroup.setValue())
+    // OLD NOTE: update in RC5: use FormGroup.updateValue() to set all form values in one step
+    // (this.form.controls['timestamp'] as FormControl).updateValue(this.formatTime(entry.annotation.utc_timestamp));
+    // (this.form.controls['duration'] as FormControl).updateValue(this.formatTime(entry.annotation.duration));
+    // (this.form.controls['title'] as FormControl).updateValue(entry.annotation.fields.title);
+    // (this.form.controls['description'] as FormControl).updateValue(entry.annotation.fields.description);
   }
 
   constructor(private hostElement: ElementRef, fb: FormBuilder, private store: Store<any>) {
