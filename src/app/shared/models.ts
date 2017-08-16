@@ -63,3 +63,7 @@ export interface Project {
   video: Video;
   timeline: Timeline;
 }
+
+export interface State {
+  project: Project;
+}

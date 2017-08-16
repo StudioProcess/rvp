@@ -1,13 +1,12 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 // import { Http, Headers } from '@angular/http';
 
-// import { Store, provideStore } from '@ngrx/store';
 import { Store } from '@ngrx/store';
 
 import { Observable } from 'rxjs';
 
 import { masterReducer } from './reducers';
-import { Project, InspectorEntry, Timeline } from './shared/models';
+import { State, Project, InspectorEntry, Timeline } from './shared/models';
 import { getEmptyData, getTutorialData, getMockData, getRulerData } from './shared/datasets';
 
 import { TimelineService, PlayheadService, PlayerService, InspectorService } from './shared';
@@ -46,18 +45,19 @@ export class AppComponent implements OnInit, AfterViewInit {
     private timeService:TimelineService,
     private playheadService:PlayheadService,
     private playerService:PlayerService,
-    private store:Store<Project>,
+    private store:Store<State>,
     private backendService:SimpleBackendService,
     private el:ElementRef,
     private projectIO:ProjectIOService
     // ,private http:Http
   ) {
     log.debug('app component');
-    if (true==true) return;
     
     // inspector data
+    // TODO: this selector could be refactored using createSelector
+    // see: https://github.com/ngrx/platform/blob/master/docs/store/selectors.md
     this.inspectorEntries = store.select(state => {
-      return state.timeline.tracks.reduce( (acc, track) => {
+      return state.project.timeline.tracks.reduce( (acc, track) => {
         // map annotations to [ [annotation, color], ...]
         let color = track.color;
         let annotationsWithColor = track.annotations.map(annotation => {
@@ -67,15 +67,15 @@ export class AppComponent implements OnInit, AfterViewInit {
         return acc;
       }, [] );
     });
-    // this.inspectorEntries.subscribe((data) => { log.debug(data); })
-
+    // this.inspectorEntries.subscribe((data) => { log.debug("inspector entries", data); })
+    
     // timeline data
-    this.timelineData = store.select('timeline') as Observable<Timeline>;
-
+    this.timelineData = store.select('project', 'timeline') as Observable<Timeline>;
+    
     // setup state persistence
     // (skip initial state and hydration)
-    store.skip(2).subscribe( data => {
-      this.backendService.storeData(data).then((...args) => {
+    store.skip(2).subscribe( state => {
+      this.backendService.storeData(state.project).then((...args) => {
         log.debug("state saved", args);
       });
     });
@@ -90,6 +90,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         // load state data and hydrate state
         // this.backendService.clearData();
         this.backendService.retrieveData().then( data => {
+          log.debug('data retrieved', data);
           if (data != null) store.dispatch( {type: 'HYDRATE', payload: data} );
           this.hideLoadingOverlay();
         });
@@ -103,7 +104,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     log.debug('app init');
-    if (true==true) return;
     
     let td;
     this.timelineData.first().subscribe(t => td=t.duration);
@@ -133,8 +133,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     // this.video.timeupdate.subscribe((time) => { log.debug(time) });
     
-    // TODO: remove
-    this.hideLoadingOverlay();
+    this.hideLoadingOverlay(); // TODO: remove
   }
 
 
@@ -190,8 +189,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   // Export button clicked in Project modal window
   onProjectExport() {
     log.debug('app project export');
-    this.store.first().subscribe(data => {
-      this.projectIO.export(data, this._videoFile);
+    this.store.first().subscribe(state => {
+      this.projectIO.export(state.project, this._videoFile);
     });
   }
 

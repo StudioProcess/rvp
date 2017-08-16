@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Project, Track, Annotation } from './shared/models';
+import { Project, Track, Annotation, State } from './shared/models';
 
 // Action type with payload property added back in (migration from ngrx 2 to 4)
 interface MyAction extends Action {
@@ -7,6 +7,7 @@ interface MyAction extends Action {
 }
 
 // Utility function from Redux to combine reducers. Expects an object with state property keys mapped to reducer functions. See: http://redux.js.org/docs/api/combineReducers.html
+// TODO: not needed anymore, since ngrx 4 provides this
 const combineReducers = (reducers) => {
   return (state = {}, action) => {
     return Object.keys(reducers).reduce( (nextState, key) => {

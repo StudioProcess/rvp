@@ -51,7 +51,7 @@ import { TimelineComponent } from './timeline';
   ],
   imports: [
     BrowserModule, ReactiveFormsModule,
-    StoreModule.forRoot( {root : masterReducer} )
+    StoreModule.forRoot( {project: masterReducer}, {initialState: {project: getEmptyData()}} )
   ],
   providers: [
     InspectorService, PlayerService, PlayheadService, TimelineService,
