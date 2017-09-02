@@ -1,5 +1,3 @@
-import { Project } from '../models';
-
 export const getTutorialData = () => ({
 
   video: {
