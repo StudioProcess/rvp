@@ -24,8 +24,8 @@ export type Time = number;
 
 // Marker with metadata
 export interface Annotation {
-  utc_timestamp: Time;
-  duration: Time;
+  utc_timestamp: Time|null;
+  duration: Time|null;
   fields?: Fields;
   isSelected?: boolean;
 }
@@ -65,5 +65,5 @@ export interface Project {
 }
 
 export interface State {
-  project: Project;
+  project: Project|null;
 }
