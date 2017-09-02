@@ -40,8 +40,8 @@ export class TimelineService {
     log.debug('time service initialized', initial, this);
   };
 
-  private changeInputValue(key, value) {
-    let obj = {};
+  private changeInputValue(key: string, value: number) {
+    let obj: {[key: string]: number} = {};
     obj[key] = value;
     let newValues = Object.assign( {}, this._inputs.value, obj );
     this._inputs.next(newValues);
