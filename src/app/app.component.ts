@@ -212,7 +212,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     let xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.responseType = 'blob';
-    xhr.onload = e => {
+    xhr.onload = () => {
       let blob = xhr.response;
       // log.debug(blob);
       this.projectIO.import(blob).then( ({data, videoBlob}) => {
