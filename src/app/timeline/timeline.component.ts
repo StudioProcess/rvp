@@ -20,15 +20,15 @@ export class TimelineComponent implements OnInit {
 
   @Input() data:Timeline;
 
-  scrollbarLeft;
-  scrollbarWidth;
-  timelineWidth;
+  scrollbarLeft: any;
+  scrollbarWidth: any;
+  timelineWidth: any;
 
-  cursorTime;
-  cursorDisplayTime;
+  cursorTime: any;
+  cursorDisplayTime: any;
 
-  playheadTime;
-  playheadDisplayTime;
+  playheadTime: any;
+  playheadDisplayTime: any;
 
   constructor(private el:ElementRef, private timeService:TimelineService, private store:Store<Project>, private playheadService:PlayheadService, private playerService:PlayerService) {}
 
@@ -64,7 +64,7 @@ export class TimelineComponent implements OnInit {
     });
   }
 
-  scrollbarDrag(event) {
+  scrollbarDrag(event: any) {
     this.scrollbarLeft = event.left;
     this.scrollbarWidth = event.width;
 
@@ -75,9 +75,9 @@ export class TimelineComponent implements OnInit {
     log.debug('scrollbar:', 'zoom', this.timeService.zoom, 'scroll', this.timeService.scroll);
   }
 
-  moveCursor($moveEvent) {
+  moveCursor($moveEvent: any) {
 
-    function extround(myvalue,n) {
+    function extround(myvalue: any, n: any) {
       myvalue = (Math.round(myvalue * n) / n);
       return myvalue;
     }
@@ -88,9 +88,9 @@ export class TimelineComponent implements OnInit {
     //log.debug($event.currentTarget.className);
   }
 
-  playheadClick($clickEvent) {
+  playheadClick($clickEvent: any) {
 
-    function extround(myvalue,n) {
+    function extround(myvalue: any, n: any) {
       myvalue = (Math.round(myvalue * n) / n);
       return myvalue;
     }
@@ -110,7 +110,7 @@ export class TimelineComponent implements OnInit {
     this.store.dispatch( { type: 'ADD_TRACK'} );
   }
 
-  placePlayhead(e) {
+  placePlayhead(e: MouseEvent) {
     let position = e.clientX - this.el.nativeElement.offsetLeft; // adjust for offset in clicked layer
     let time = this.timeService.convertViewportPixelsToSeconds(position);
     this.playerService.setTime(time);
@@ -128,7 +128,7 @@ export class TimelineComponent implements OnInit {
     }).distinctUntilChanged();
   }
 
-  onMouseWheel(e) {
+  onMouseWheel(e: MouseWheelEvent) {
     // log.debug('wheel', Math.abs(e.deltaX));
     // disable 'history back' action on horizontal swipe (chrome)
     if ( Math.abs(e.deltaX) > Math.abs(e.deltaY) ) {
