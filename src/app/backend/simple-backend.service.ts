@@ -5,7 +5,7 @@ import { Project } from '../shared/models';
 @Injectable()
 export class SimpleBackendService {
 
-  private storage;
+  private storage: LocalForage;
 
   constructor() {
     this.storage = localforage.createInstance({
@@ -15,7 +15,7 @@ export class SimpleBackendService {
   }
 
   // check if a key is present in localforage
-  private _hasKey(key): Promise<any> {
+  private _hasKey(key: string): Promise<any> {
     return this.storage.keys().then(keys => {
       return keys.includes(key);
     });
