@@ -9,7 +9,7 @@ import * as moment from 'moment';
 })
 export class TimePipe implements PipeTransform {
 
-  transform(unixTime: number, args?: any): string {
+  transform(unixTime: number): string {
     return moment.unix(unixTime) // parse unix timestamp
       .utc()
       .format('HH:mm:ss.SSS');
@@ -27,7 +27,7 @@ export class TimePipe implements PipeTransform {
 })
 export class UnixTimePipe implements PipeTransform {
 
-  transform(formattedTime: string, args?:any): number {
+  transform(formattedTime: string): number|null {
     let millis ='(?:\\.([0-9]*))?$';
     let seconds = '([0-9]*)';
     let minutesAndHours = '^(?:(?:([0-9]*):)|(?:([0-9]*):([0-9]*):))?'; // has 3 capturing parantheses. the 1st is defined when ONLY minutes are matched. the 2nd and 3rd are defined when hours (2nd) AND minutes (3rd) are matched.
