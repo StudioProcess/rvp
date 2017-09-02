@@ -1,13 +1,14 @@
 import { Component, OnInit, Input, ElementRef, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
+import {Subscription} from 'rxjs/Subscription'
 
-interface DragEvent {
-  type:'dragstart'|'drag'|'dragend';
-  event:MouseEvent;
-  startOffset: {left:number, top:number, width:number; height:number};
-  dx:number; // horizontal displacement
-  dy:number; // vertical displacement
-}
+// interface DragEvent {
+//   type:'dragstart'|'drag'|'dragend';
+//   event:MouseEvent;
+//   startOffset: {left:number, top:number, width:number; height:number};
+//   dx:number; // horizontal displacement
+//   dy:number; // vertical displacement
+// }
 
 interface HandlebarDragEvent {
   type:'dragstart'|'drag'|'dragend';
@@ -31,17 +32,17 @@ export class HandlebarComponent implements OnInit {
 
   // define outputs
   @Output() drag:EventEmitter<HandlebarDragEvent> = new EventEmitter<HandlebarDragEvent>(); // position and/or width changed
-  @Output() mousedown:EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>(); // mousedown
+  @Output() mousedown:EventEmitter<any> = new EventEmitter(); // mousedown
 
   // dom references
-  host:HTMLElement; // host element (app-handlebar)
+  host:any; // host element (app-handlebar)
   handlebar:HTMLElement; // .handlebar-container element
-  container:HTMLElement; // element specified via 'container' input, used for sizing and positioning
+  container:any; // element specified via 'container' input, used for sizing and positioning
 
   // observables
-  private centerSubscription;
-  private rightSubscription;
-  private leftSubscription;
+  private centerSubscription: Subscription;
+  private rightSubscription: Subscription;
+  private leftSubscription: Subscription;
 
   constructor(hostElement:ElementRef) {
     this.host = hostElement.nativeElement;
@@ -73,7 +74,7 @@ export class HandlebarComponent implements OnInit {
     // centerDrag$.subscribe(x => {log.debug(x)});
 
     // react to center drag
-    this.centerSubscription = centerDrag$.subscribe(e => {
+    this.centerSubscription = centerDrag$.subscribe((e: any) => {
       this.left = (e.startOffset.left + e.dx) / this.container.offsetWidth * 100;
       // constrain position
       if (this.left < 0) this.left = 0;
@@ -81,7 +82,7 @@ export class HandlebarComponent implements OnInit {
     });
 
     // react to right drag
-    this.rightSubscription = rightDrag$.subscribe(e => {
+    this.rightSubscription = rightDrag$.subscribe((e: any) => {
       this.width = (e.startOffset.width + e.dx) / this.container.offsetWidth * 100;
       // constrain width
       if (this.width < 0) this.width = 0;
@@ -89,7 +90,7 @@ export class HandlebarComponent implements OnInit {
     });
 
     // react to left drag
-    this.leftSubscription = leftDrag$.subscribe(e => {
+    this.leftSubscription = leftDrag$.subscribe((e: any) => {
       // constrain movement
       let dx = e.dx;
       if (dx < -e.startOffset.left) dx = -e.startOffset.left;
@@ -100,7 +101,7 @@ export class HandlebarComponent implements OnInit {
 
     // combined drag stream for center, left, right
     const drag$:Observable<HandlebarDragEvent> = Observable.merge(centerDrag$, leftDrag$, rightDrag$)
-      .map( e => ({ type:e.type, left:this.left, width:this.width }) )
+      .map( (e: any) => ({ type:e.type, left:this.left, width:this.width }) )
       .distinctUntilChanged( (e1, e2) => e1.type == e2.type && e1.left == e2.left && e1.width == e2.width )
       .share();
 
@@ -108,31 +109,35 @@ export class HandlebarComponent implements OnInit {
     // drag$.subscribe(e => log.debug(e));
   }
 
-  private dragStream(selector):Observable<DragEvent> {
+  private dragStream(selector: string) {
     // stops propagation on the given MouseEvent
     const stopPropagation = (e:MouseEvent) => { e.stopPropagation() };
     // dom event streams
     const el = this.host.querySelector(selector); // dom element with the given selector
-    const mousedown$ = Observable.fromEvent(el, 'mousedown').do(stopPropagation);
-    const mousemove$ = Observable.fromEvent(document, 'mousemove').do(stopPropagation);
-    const mouseup$ = Observable.fromEvent(document, 'mouseup').do(stopPropagation);
+    if(el !== null) {
+      const mousedown$ = Observable.fromEvent(el, 'mousedown').do(stopPropagation)
+      const mousemove$ = Observable.fromEvent(document, 'mousemove').do(stopPropagation);
+      const mouseup$ = Observable.fromEvent(document, 'mouseup').do(stopPropagation);
 
-    return mousedown$.switchMap((e:MouseEvent) => {
-      let startOffset = {
-        left: this.handlebar.offsetLeft,
-        top: this.handlebar.offsetTop,
-        width: this.handlebar.offsetWidth,
-        height: this.handlebar.offsetHeight
-      };
-      let startX = e.screenX;
-      let startY = e.screenY;
-      const dragEvent = (type, e) => {
-        return {type, dx:e.screenX-startX, dy:e.screenY-startY, event:e, startOffset};
-      };
-      let start = mousemove$.first().takeUntil(mouseup$).map( e => dragEvent('dragstart', e) );
-      let drag = start.switchMapTo(mousemove$.takeUntil(mouseup$).map(e => dragEvent('drag', e)));
-      let end = start.switchMapTo(mouseup$.first().map(e => dragEvent('dragend', e)));
-      return Observable.merge(start, drag, end);
-    });
+      return mousedown$.switchMap((e:MouseEvent) => {
+        let startOffset = {
+          left: this.handlebar.offsetLeft,
+          top: this.handlebar.offsetTop,
+          width: this.handlebar.offsetWidth,
+          height: this.handlebar.offsetHeight
+        };
+        let startX = e.screenX;
+        let startY = e.screenY;
+        const dragEvent = (type: string, e: any) => {
+          return {type, dx:e.screenX-startX, dy:e.screenY-startY, event:e, startOffset};
+        };
+        let start = mousemove$.first().takeUntil(mouseup$).map( e => dragEvent('dragstart', e) );
+        let drag = start.switchMapTo(mousemove$.takeUntil(mouseup$).map(e => dragEvent('drag', e)));
+        let end = start.switchMapTo(mouseup$.first().map(e => dragEvent('dragend', e)));
+        return Observable.merge(start, drag, end);
+      });
+    } else {
+      return Observable.empty()
+    }
   }
 }
