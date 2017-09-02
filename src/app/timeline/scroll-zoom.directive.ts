@@ -4,7 +4,7 @@ import { Directive, Input, ElementRef, OnInit } from '@angular/core';
   selector: '[scrollContainer], [scroll], [zoom]'
 })
 export class ScrollZoom implements OnInit {
-  @Input('scrollContainer') containerSelector;
+  @Input('scrollContainer') containerSelector: any;
 
   // set width of content element: [px]
   // content element is the first child
@@ -27,8 +27,8 @@ export class ScrollZoom implements OnInit {
   }
 
 
-  private _zoom;
-  private _scroll;
+  private _zoom: any;
+  private _scroll: any;
   private host:HTMLElement;
   private container:HTMLElement;
   private content:HTMLElement;
