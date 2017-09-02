@@ -25,10 +25,10 @@ export class EntryComponent implements OnInit {
   @Input() set data(entry:InspectorEntry) {
     this._data = entry;
     this.form.setValue({
-      'timestamp': this.formatTime(entry.annotation.utc_timestamp),
-      'duration': this.formatTime(entry.annotation.duration),
-      'title': entry.annotation.fields.title,
-      'description': entry.annotation.fields.description
+      'timestamp': entry.annotation.utc_timestamp !== null ? this.formatTime(entry.annotation.utc_timestamp) : null,
+      'duration': entry.annotation.duration !== null ? this.formatTime(entry.annotation.duration) : null,
+      'title': entry.annotation.fields ? entry.annotation.fields.title : undefined,
+      'description': entry.annotation.fields ? entry.annotation.fields.description : undefined
     });
     
     // TODO: Remove the following. (Updated above to use FormGroup.setValue())
