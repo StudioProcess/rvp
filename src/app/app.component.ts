@@ -23,7 +23,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   _videoFile: Blob;
   inspectorEntries:Observable<InspectorEntry[]>;
   timelineData:Observable<Timeline>;
-  @ViewChild(VideoComponent) private video:VideoComponent; // inject video component child (available AfterViewInit)
 
   set videoFile(file: Blob) {
     let url = URL.createObjectURL(file);
@@ -38,7 +37,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     private playerService:PlayerService,
     private store:Store<State>,
     private backendService:SimpleBackendService,
-    private el:ElementRef,
     private projectIO:ProjectIOService
     // ,private http:Http
   ) {
