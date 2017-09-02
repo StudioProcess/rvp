@@ -3,8 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 
-import { masterReducer } from './reducers';
-import { getEmptyData, getTutorialData, getMockData, getRulerData } from './shared/datasets';
+import { reducers } from './reducers';
+import { getEmptyData/*, getTutorialData, getMockData, getRulerData */} from './shared/datasets';
 
 /* Pipes */
 import { TimePipe, UnixTimePipe } from './shared';
@@ -51,7 +51,7 @@ import { TimelineComponent } from './timeline';
   ],
   imports: [
     BrowserModule, ReactiveFormsModule,
-    StoreModule.forRoot( {project: masterReducer}, {initialState: {project: getEmptyData()}} )
+    StoreModule.forRoot(reducers, {initialState: {project: getEmptyData()}} )
   ],
   providers: [
     InspectorService, PlayerService, PlayheadService, TimelineService,
