@@ -7,8 +7,8 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class ProjectHandlerComponent implements OnInit {
 
-  @Output() projectReset = new EventEmitter<void>();
-  @Output() projectExport = new EventEmitter<void>();
+  @Output() projectReset = new EventEmitter<null>();
+  @Output() projectExport = new EventEmitter<null>();
 
   @Output() projectImport = new EventEmitter<File>();
   @Output() videoFileOpened = new EventEmitter<File>();
