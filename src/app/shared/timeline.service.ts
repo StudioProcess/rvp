@@ -32,7 +32,7 @@ export class TimelineService {
     this.zoomStream = this._inputs.pluck('zoom').distinctUntilChanged() as Observable<number>;
     this.scrollStream = this._inputs.pluck('scroll').distinctUntilChanged() as Observable<number>;
     // calculate timeline width [px] (from viewport width and zoom)
-    this._timelineWidth = new BehaviorSubject<number>(null);
+    this._timelineWidth = new BehaviorSubject<number>(1);
     Observable.combineLatest(this.viewportWidthStream, this.zoomStream)
       .map( ([viewportWidth, zoom]) => viewportWidth/zoom )
       .subscribe(this._timelineWidth);
