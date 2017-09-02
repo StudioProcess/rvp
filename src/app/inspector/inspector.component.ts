@@ -25,7 +25,7 @@ export class InspectorComponent implements OnInit {
     return entry.annotation;
   }
 
-  scrollToAnnotation(annotation) {
+  scrollToAnnotation(annotation: any) {
     log.debug('scroll to', annotation);
     let idx = this.entries.reduce((val, entry, idx) => {
       if (entry.annotation == annotation) { return idx; }
