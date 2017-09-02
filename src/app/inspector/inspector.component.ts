@@ -27,18 +27,15 @@ export class InspectorComponent implements OnInit {
 
   scrollToAnnotation(annotation: any) {
     log.debug('scroll to', annotation);
-    let idx = this.entries.reduce((val, entry, idx) => {
-      if (entry.annotation == annotation) { return idx; }
-      return val;
-    }, null);
-    // log.debug('scroll to inspector entry #', idx);
-    if (idx == null) return;
-    
-    let node = this.el.nativeElement.querySelectorAll('div[app-entry]')[idx];
-    let scrollContainer = this.el.nativeElement.querySelector('.scroll-container');
-    log.debug('scroll to', node);
-    let centerOffset = (scrollContainer.offsetHeight - node.offsetHeight) / 2;
-    scrollContainer.scrollTop = node.offsetTop - scrollContainer.offsetTop - centerOffset;
+    let idx = this.entries.findIndex(entry => entry.annotation === annotation)
+
+    if(idx !== -1) {
+      let node = this.el.nativeElement.querySelectorAll('div[app-entry]')[idx];
+      let scrollContainer = this.el.nativeElement.querySelector('.scroll-container');
+      log.debug('scroll to', node);
+      let centerOffset = (scrollContainer.offsetHeight - node.offsetHeight) / 2;
+      scrollContainer.scrollTop = node.offsetTop - scrollContainer.offsetTop - centerOffset;
+    }
   }
 
 }
