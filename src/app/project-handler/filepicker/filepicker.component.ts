@@ -14,7 +14,7 @@ export class FilepickerComponent implements OnInit {
   ngOnInit() {
   }
 
-  fileSelected(event) {
+  fileSelected(event: any) {
     event.preventDefault();
     let fileList = event.target.files;
     if (!fileList.length) return; // no file selected
