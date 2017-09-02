@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, ElementRef } from '@angular/core';
-import { EntryComponent } from './entry';
 import { InspectorEntry } from '../shared/models';
 import { InspectorService } from '../shared';
 
@@ -20,7 +19,7 @@ export class InspectorComponent implements OnInit {
 
   // Entry identity for tracking via ngFor
   // If the return value changes for an entry, it's DOM is recreated
-  entryTrackingId(index, entry) {
+  entryTrackingId(entry: any) {
     // Use annotation object reference, so the DOM is not changed due to a new InspectorEntry objects
     // TODO: Use a generated entry ID, or have the entries have persistence in the state
     return entry.annotation;
