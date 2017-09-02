@@ -22,7 +22,7 @@ export class TrackComponent implements OnInit {
   }
 
   // add annotation
-  doubleClick(e) {
+  doubleClick(e: any) {
     let clickPosition = e.offsetX + e.target.scrollLeft;
     let clickTime = this.timeService.convertPixelsToSeconds(clickPosition);
 
@@ -46,7 +46,7 @@ export class TrackComponent implements OnInit {
     }
   }
 
-  blurOnReturnKey(e) {
+  blurOnReturnKey(e: any) {
     if (e.keyCode == 13) { // Enter/Return or Numpad Return Key
       e.stopPropagation(); // prevent bubbling to e.g. timeInputGuard
       e.target.blur(); // emits blur event which triggers submit()
