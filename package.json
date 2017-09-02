@@ -20,7 +20,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "reinstall": "rm -rf node_modules dist tmp && npm install",
-    "chrome": "open -a 'google chrome' http://localhost:4200"
+    "chrome": "open -a 'google chrome' http://localhost:4200",
+    "tslint:app": "tslint -c tslint.json -p src/tsconfig.app.json --type-check true --format stylish",
+    "tsc:app": "tsc -p src/tsconfig.app.json"
   },
   "private": true,
   "dependencies": {
