@@ -1,9 +1,11 @@
 import { Component, OnInit, AfterViewInit, Input, Output, ElementRef, EventEmitter } from '@angular/core';
 
-// NOTE: this doesn't load the videojs function as expected, but under the 'default' property
-// because of this, can't used types (@types/video.js) since they expect the plain videojs function
-import * as vjs from 'video.js';
-var videojs = vjs.default;
+/**
+ * NOTE (09/2017): @types/video.js only offers ambient declarations for video.js 5.16.
+ * Therefore, a short ambient module is declared in src/types/declarations.d.ts,
+ *  declaring all imports from 'video.js' explicitly as any.
+ */ 
+import videojs from 'video.js'
 
 import { Observable } from 'rxjs/Rx';
 import { PlayerService } from '../shared/player.service';
