@@ -3,7 +3,7 @@ import { Component, OnInit, Input, ElementRef } from '@angular/core';
 // import { PlayheadComponent } from './playhead';
 // import { CursorComponent } from './cursor';
 // import { HandlebarComponent } from './handlebar';
-import { Timeline, Annotation } from '../shared/models';
+import { Timeline } from '../shared/models';
 // import { ScrollZoom } from './scroll-zoom.directive';
 import { TimelineService, PlayheadService, PlayerService } from '../shared';
 import { Store } from '@ngrx/store';
