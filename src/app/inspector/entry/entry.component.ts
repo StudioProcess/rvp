@@ -39,7 +39,7 @@ export class EntryComponent implements OnInit {
     // (this.form.controls['description'] as FormControl).updateValue(entry.annotation.fields.description);
   }
 
-  constructor(private hostElement: ElementRef, fb: FormBuilder, private store: Store<any>) {
+  constructor(fb: FormBuilder, private store: Store<any>) {
     let validateTime = Validators.pattern(this.timePattern);
     this.form = fb.group({
       'timestamp': [, [Validators.required, validateTime]],
