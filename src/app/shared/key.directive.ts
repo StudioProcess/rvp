@@ -1,4 +1,4 @@
-import { Directive, Input, HostListener } from '@angular/core';
+import { Directive, HostListener } from '@angular/core';
 
 @Directive({
   selector: 'input, textarea'
@@ -9,7 +9,7 @@ export class KeyDirective {
     }
 
     @HostListener('keydown', ['$event'])
-    preventKey($event) {
+    preventKey($event: Event) {
       $event.stopPropagation();
     }
 }
