@@ -1,31 +1,20 @@
-import { Action } from '@ngrx/store';
-import { Project, Track, Annotation, State } from './shared/models';
+import { ActionReducerMap } from '@ngrx/store';
+import { Project, Track } from './shared/models';
+import * as actions from './actions'
 
-// Action type with payload property added back in (migration from ngrx 2 to 4)
-interface MyAction extends Action {
-  payload?: any;
+export interface State {
+  project: Project
 }
 
-// Utility function from Redux to combine reducers. Expects an object with state property keys mapped to reducer functions. See: http://redux.js.org/docs/api/combineReducers.html
-// TODO: not needed anymore, since ngrx 4 provides this
-const combineReducers = (reducers) => {
-  return (state = {}, action) => {
-    return Object.keys(reducers).reduce( (nextState, key) => {
-      nextState[key] = reducers[key]( state[key], action );
-      return nextState;
-    }, {});
-  };
-};
-
-export function emptyReducer(state:Project, action:MyAction) {
-  return state;
+export const reducers: ActionReducerMap<State> = {
+  project: masterReducer
 }
 
-export function masterReducer(state:Project, action:MyAction):Project {
+export function masterReducer(state:Project, action: actions.Actions):Project {
   // log.debug("reducing", action, state);
 
   switch (action.type) {
-    case 'HYDRATE': // TODO: probably needs a better name
+    case actions.HYDRATE: // TODO: probably needs a better name
       // TODO: can this be replaced by something @ngrx/store provides?
       if (action.payload) {
         // log.debug("video: "+action.payload.video); // reset video file
@@ -33,12 +22,12 @@ export function masterReducer(state:Project, action:MyAction):Project {
       }
       return state;
 
-    case 'SET_TIMELINE_DURATION':
+    case actions.SET_TIMELINE_DURATION:
       state.timeline.duration = action.payload;
       log.debug('setting timeline', action.payload, state);
       return state;
 
-    case 'UPDATE_ANNOTATION':
+    case actions.UPDATE_ANNOTATION:
       // TODO: optimize with immutable data structures
       state.timeline.tracks.forEach((track) => {
         let index = track.annotations.indexOf(action.payload.old);
@@ -48,7 +37,7 @@ export function masterReducer(state:Project, action:MyAction):Project {
       });
       return state;
 
-    case 'ADD_ANNOTATION':
+    case actions.ADD_ANNOTATION:
       state.timeline.tracks.forEach((track) =>  {
         if (action.payload.track == track) {
           track.annotations.push(action.payload.annotation);
@@ -56,7 +45,7 @@ export function masterReducer(state:Project, action:MyAction):Project {
       });
       return state;
 
-    case 'SELECT_ANNOTATION':
+    case actions.SELECT_ANNOTATION:
       state.timeline.tracks.forEach((track) => {
         track.annotations.forEach((annotation) => {
           // set annotation from payload as selected
@@ -69,7 +58,7 @@ export function masterReducer(state:Project, action:MyAction):Project {
       });
       return state;
 
-    case 'DESELECT_ANNOTATIONS':
+    case actions.DESELECT_ANNOTATION:
       state.timeline.tracks.forEach((track) => {
         track.annotations.forEach((annotation) => {
           annotation.isSelected = false;
@@ -77,7 +66,7 @@ export function masterReducer(state:Project, action:MyAction):Project {
       });
       return state;
 
-    case 'DELETE_SELECTED_ANNOTATION':
+    case actions.DELETE_SELECTED_ANNOTATION:
       state.timeline.tracks.forEach((track) => {
         track.annotations.forEach((annotation) => {
           if(annotation.isSelected == true) {
@@ -90,7 +79,7 @@ export function masterReducer(state:Project, action:MyAction):Project {
       });
       return state;
 
-    case 'ADD_TRACK':
+    case actions.ADD_TRACK:
       let newTrack:Track = {
         annotations: [],
         color: '#' + ('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6),
@@ -99,7 +88,7 @@ export function masterReducer(state:Project, action:MyAction):Project {
       state.timeline.tracks.push(newTrack);
       return state;
 
-    case 'DELETE_TRACK':
+    case actions.DELETE_TRACK:
       state.timeline.tracks.forEach((track) => {
         if(track == action.payload.track) {
           state.timeline.tracks.splice(state.timeline.tracks.indexOf(track), 1);
@@ -107,7 +96,7 @@ export function masterReducer(state:Project, action:MyAction):Project {
       });
       return state;
 
-    case 'SET_TRACK_TITLE':
+    case actions.SET_TRACK_TITLE:
       action.payload.track.fields.title = action.payload.title;
       return state;
 
