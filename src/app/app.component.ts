@@ -229,11 +229,21 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   // TODO: possibly put loading overlay functions in a service
   showLoadingOverlay() {
-    document.querySelector('body').classList.add('loading');
+    const body = document.querySelector('body')
+    if(body !== null) {
+      body.classList.add('loading');
+    }
   }
 
   hideLoadingOverlay() {
-    document.querySelector('body').classList.remove('loading');
-    document.querySelector('.pace').classList.add('pace-inactive');
+    const body = document.querySelector('body')
+    if(body !== null) {
+      body.classList.remove('loading');
+    }
+
+    const pace = document.querySelector('.pace')
+    if(pace) {
+      pace.classList.add('pace-inactive');
+    }
   }
 }
