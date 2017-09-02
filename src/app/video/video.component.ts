@@ -3,7 +3,7 @@ import { Component, OnInit, AfterViewInit, Input, Output, ElementRef, EventEmitt
 /**
  * NOTE (09/2017): @types/video.js only offers ambient declarations for video.js 5.16.
  * Therefore, a short ambient module is declared in src/types/declarations.d.ts,
- *  declaring all imports from 'video.js' explicitly as any.
+ * declaring all imports from 'video.js' explicitly as any.
  */ 
 import videojs from 'video.js'
 
@@ -17,9 +17,9 @@ import { PlayerService } from '../shared/player.service';
 })
 export class VideoComponent implements OnInit, AfterViewInit {
 
-  private player; // VideoJS Player instance
-  private playerReady; // Promise that resolves when player is ready
-  private playerOptions = {}; // Options to pass to VideoJS player
+  private player: any; // VideoJS Player instance
+  private playerReady: any; // Promise that resolves when player is ready
+  private playerOptions: any = {}; // Options to pass to VideoJS player
   private timeupdateRate = 30; // in milliseconds
 
   // emits player time updates (in seconds)
@@ -34,7 +34,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
     });
   }
 
-  @Input() fileMetadata;
+  @Input() fileMetadata: any;
 
   get videoSrc() {
     if (this.player) {
