@@ -1,25 +1,14 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-// import { Http, Headers } from '@angular/http';
+import { Component, OnInit, AfterViewInit} from '@angular/core';
 
 import { Store } from '@ngrx/store';
 
 import { Observable } from 'rxjs';
 
-import { masterReducer } from './reducers';
-import { State, Project, InspectorEntry, Timeline } from './shared/models';
-import { getEmptyData, getTutorialData, getMockData, getRulerData } from './shared/datasets';
+import { State, InspectorEntry, Timeline } from './shared/models';
+import { getEmptyData/*, getTutorialData, getMockData, getRulerData */} from './shared/datasets';
 
-import { TimelineService, PlayheadService, PlayerService, InspectorService } from './shared';
+import { TimelineService, PlayheadService, PlayerService } from './shared';
 import { SimpleBackendService, ProjectIOService } from './backend';
-
-import { VideoComponent } from './video';
-// import { InspectorComponent } from './inspector';
-// import { TimelineComponent } from './timeline';
-// import { HandlebarComponent } from './timeline/handlebar';
-// import { ProjectHandlerComponent } from './project-handler';
-
-// import { KeyDirective } from './shared/key.directive';
-
 
 @Component({
   selector: 'app-root',
