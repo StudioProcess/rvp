@@ -60,7 +60,7 @@ export class AnnotationComponent implements OnInit {
     this.inspectorService.scrollToAnnotation(this.data);
   }
 
-  onDblclick(e) {
+  onDblclick(e: Event) {
     this.playerService.setTime(this.data.utc_timestamp);
     e.stopPropagation(); // Prevent this dblclick event from bubbling up
   }
