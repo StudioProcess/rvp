@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, ElementRef, HostBinding } from '@angular/core';
+import { Component, OnInit, Input, HostBinding } from '@angular/core';
 import { InspectorEntry, Annotation } from '../../shared/models';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-import { TimePipe, UnixTimePipe, KeyDirective } from '../../shared';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TimePipe, UnixTimePipe } from '../../shared';
 
 import { Store } from '@ngrx/store';
 
