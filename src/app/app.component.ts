@@ -46,15 +46,17 @@ export class AppComponent implements OnInit, AfterViewInit {
     // TODO: this selector could be refactored using createSelector (to use memoization)
     // see: https://github.com/ngrx/platform/blob/master/docs/store/selectors.md
     this.inspectorEntries = store.select(state => {
-      return state.project.timeline.tracks.reduce( (acc, track) => {
-        // map annotations to [ [annotation, color], ...]
-        let color = track.color;
-        let annotationsWithColor = track.annotations.map(annotation => {
-          return {annotation, color}; });
-        acc = acc.concat(annotationsWithColor);
-        acc.sort(this.compareEntries);
-        return acc;
-      }, [] );
+      if(state.project !== null) {
+        return state.project.timeline.tracks.reduce( (acc, track) => {
+          // map annotations to [ [annotation, color], ...]
+          let color = track.color;
+          let annotationsWithColor = track.annotations.map(annotation => {
+            return {annotation, color}; });
+          acc = acc.concat(annotationsWithColor);
+          acc.sort(this.compareEntries);
+          return acc;
+        }, [] );
+      }
     });
     // this.inspectorEntries.subscribe((data) => { log.debug("inspector entries", data); })
     
@@ -159,8 +161,12 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   // compare function to sort entries by timestamp
-  private compareEntries(a:InspectorEntry, b:InspectorEntry):number {
-    return a.annotation.utc_timestamp - b.annotation.utc_timestamp;
+  private compareEntries(a:InspectorEntry, b:InspectorEntry):number|null {
+    if(a.annotation.utc_timestamp !== null && b.annotation.utc_timestamp !== null) {
+      return a.annotation.utc_timestamp - b.annotation.utc_timestamp;
+    } else {
+      return null
+    }
   }
 
   // Reset button clicked in Project modal window
@@ -177,7 +183,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   onProjectExport() {
     log.debug('app project export');
     this.store.first().subscribe(state => {
-      this.projectIO.export(state.project, this._videoFile);
+      if(state.project !== null) {
+        this.projectIO.export(state.project, this._videoFile);
+      }
     });
   }
 
@@ -206,9 +214,12 @@ export class AppComponent implements OnInit, AfterViewInit {
   // TODO: return promise, so we can react when it's loaded
   importProjectFromURL(url:string) {
     // TODO: fix pace not picking up this request properly
-    let pace = window['Pace'] as any;
-    console.log('restarting pace');
-    pace.restart();
+    let pace: any = window['Pace'];
+    if(pace !== null) {
+      console.log('restarting pace');
+      pace.restart();
+    }
+
     let xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.responseType = 'blob';
