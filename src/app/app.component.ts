@@ -124,12 +124,12 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
 
-  onVideoTimeupdate(time) {
+  onVideoTimeupdate(time: any) {
     this.playheadService.time = time;
     //log.debug('video time updated:', time);
   }
 
-  onVideoLoaded(metadata) {
+  onVideoLoaded(metadata: any) {
     log.debug('video loaded', metadata);
     if (metadata.duration) {
       this.timeService.timelineDuration = metadata.duration;
@@ -144,7 +144,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   // Global hotkeys
-  handleHotkeys(e) {
+  handleHotkeys(e: KeyboardEvent) {
     // log.debug('keydown', e.keyCode, e.key);
     if (e.keyCode == 8) { // BACKSPACE
       e.preventDefault();
