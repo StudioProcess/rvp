@@ -17,7 +17,7 @@ export class ProjectHandlerComponent implements OnInit {
 
   ngOnInit() { }
 
-  resetButtonClicked(e) {
+  resetButtonClicked(e: Event) {
     if(window.confirm("Reset the whole project? All data will be lost.")){
       this.projectReset.emit(null);
       this.closeModal();
@@ -26,7 +26,7 @@ export class ProjectHandlerComponent implements OnInit {
     // log.debug('reset button clicked');
   }
 
-  exportButtonClicked(e) {
+  exportButtonClicked(e: Event) {
     if(window.confirm("Export an archive of the project?")){
       this.projectExport.emit(null);
     }
@@ -34,7 +34,7 @@ export class ProjectHandlerComponent implements OnInit {
     // log.debug('export button clicked');
   }
 
-  importFileSelected(e) {
+  importFileSelected(e: any) {
     let fileList = e.target.files;
     if (!fileList.length) return; // no file selected
     let file = fileList[0];
