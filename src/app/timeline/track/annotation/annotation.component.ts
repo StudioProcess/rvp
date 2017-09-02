@@ -30,12 +30,17 @@ export class AnnotationComponent implements OnInit {
 
   ngOnInit() {
     this.timeService.timelineDurationStream.subscribe(timelineDuration => {
-      this.timestamp = this.data.utc_timestamp / timelineDuration * 100;
-      if (this.data.duration == 0) {
-        this.duration = 0.1;
-      } else {
-        this.duration = this.data.duration / timelineDuration * 100;
+      if(this.data.utc_timestamp !== null) {
+        this.timestamp = this.data.utc_timestamp / timelineDuration * 100;
+        if (this.data.duration == 0) {
+          this.duration = 0.1;
+        } else {
+          if(this.data.duration !== null) {
+            this.duration = this.data.duration / timelineDuration * 100;
+          }
+        }
       }
+
     });
 
     // log.debug('timeline duration', this.timeline.data.duration, 'annotation', this.timestamp, this.duration);
