@@ -6,16 +6,6 @@ import { environment } from './environments/environment';
 
 // setup logging
 log.enableAll();
-window['log'] = log;
-if (console) {
-  console.trace = log.trace;
-  console.log = log.debug;
-  console.dir = log.debug;
-  console.debug = log.debug;
-  console.info = log.info;
-  console.warn = log.warn;
-  console.error = log.error;
-}
 
 if (environment.production) {
   log.setLevel('warn');
