@@ -90,10 +90,10 @@ export class EntryComponent implements OnInit {
   }
 
   // Send updated values of this component
-  submit(e) {
+  submit() {
     if (this.form.dirty && this.form.valid) {
       // log.debug('submit', this.form.value);
-      let newAnnotation:Annotation = {
+      let newAnnotation: Annotation = {
         utc_timestamp: this.parseTime(this.form.value.timestamp),
         duration: this.parseTime(this.form.value.duration),
         fields: {
