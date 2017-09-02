@@ -13,7 +13,7 @@ export class InspectorService {
     this.scrollToAnnotationStream = this._scrollToAnnotation.asObservable();
   }
 
-  scrollToAnnotation(annotation) {
+  scrollToAnnotation(annotation: Annotation) {
     this._scrollToAnnotation.next(annotation);
   }
 }
