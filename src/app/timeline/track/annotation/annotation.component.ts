@@ -1,6 +1,5 @@
-import { Component, OnInit, Input, Inject, forwardRef, HostBinding, ViewChild } from '@angular/core';
-import { TimelineComponent } from '../..';
-import { Annotation, Timeline } from '../../../shared/models';
+import { Component, OnInit, Input, HostBinding, ViewChild } from '@angular/core';
+import { Annotation } from '../../../shared/models';
 import { HandlebarComponent } from '../../handlebar';
 import { Store } from '@ngrx/store';
 import { TimelineService, PlayerService, InspectorService } from '../../../shared';
