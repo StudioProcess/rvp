@@ -4,7 +4,7 @@ import { Observable, BehaviorSubject } from 'rxjs/Rx';
 // Initialization object needed to create a TimelineService instance
 // (Essentially constructor params)
 interface TimelineInputValues {
-  timelineDuration: number;
+  timelineDuration: number|undefined;
   viewportWidth: number;
   zoom: number;
   scroll: number;

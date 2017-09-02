@@ -38,7 +38,7 @@ export class PlayerService {
   }
 
   // Actions (App -> Player)
-  setTime(s: number) {
+  setTime(s: number|null) {
     this._action.next( {type:'setTime', time:s} );
   }
 
