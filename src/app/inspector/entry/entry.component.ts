@@ -57,14 +57,14 @@ export class EntryComponent implements OnInit {
   ngOnInit() {
   }
 
-  stopPropagation(e){
+  stopPropagation(e: Event){
     e.stopPropagation();
   }
 
   // Guard against invalid time input
-  timeInputGuard(e) {
+  timeInputGuard(e: any) {
     // for a keyCode return true if it's a printable key
-    const isPrintable = k =>
+    const isPrintable = (k: number) =>
       (k > 47 && k < 58) || // number keys
       (k == 32) || // spacebar
       // (k == 13)  || // return key // don't count as printable, therefore don't guard against it
@@ -82,7 +82,7 @@ export class EntryComponent implements OnInit {
     if ( !this.timeRegExp.test(newValue) ) e.preventDefault(); // block printable keys that make the value invalid
   }
 
-  blurOnReturnKey(e) {
+  blurOnReturnKey(e: any) {
     if (e.keyCode == 13) { // Enter/Return or Numpad Return Key
       e.stopPropagation(); // prevent bubbling to e.g. timeInputGuard
       e.target.blur(); // emits blur event which triggers submit()
