@@ -35,7 +35,7 @@ import { TimelineComponent } from './timeline';
   declarations: [
     TimePipe, UnixTimePipe,
     KeyDirective, ScrollZoom,
-    
+
     AppComponent,
     VideoComponent,
     FilepickerComponent,
@@ -51,7 +51,7 @@ import { TimelineComponent } from './timeline';
   ],
   imports: [
     BrowserModule, ReactiveFormsModule,
-    StoreModule.forRoot(reducers, {initialState: {project: getEmptyData()}} )
+    StoreModule.forRoot(reducers, {initialState: {project: getEmptyData()}})
   ],
   providers: [
     InspectorService, PlayerService, PlayheadService, TimelineService,
