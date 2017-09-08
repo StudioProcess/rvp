@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 
 import { Observable } from 'rxjs';
 
-import { State, InspectorEntry, Timeline } from './shared/models';
+import { State, InspectorEntry, Timeline, Project } from './shared/models';
 import { getEmptyData/*, getTutorialData, getMockData, getRulerData */} from './shared/datasets';
 
 import { TimelineService, PlayheadService, PlayerService } from './shared';
@@ -13,89 +13,80 @@ import { SimpleBackendService, ProjectIOService } from './backend';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss'],
-  // directives: [TimelineComponent, InspectorComponent, VideoComponent, HandlebarComponent, KeyDirective, ProjectHandlerComponent],
-  // providers: [provideStore(masterReducer, getEmptyData()), TimelineService, PlayheadService, PlayerService, SimpleBackendService, ProjectIOService, InspectorService]
+  styleUrls: ['app.component.scss']
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
-  _videoSrc: string;
-  _videoFile: Blob;
-  inspectorEntries:Observable<InspectorEntry[]>;
-  timelineData:Observable<Timeline>;
+  _videoSrc: string|null = null
+  _videoFile: Blob|null = null
+
+  // inspector data
+  // TODO: this selector could be refactored using createSelector (to use memoization)
+  // see: https://github.com/ngrx/platform/blob/master/docs/store/selectors.md
+  inspectorEntries: Observable<InspectorEntry[]> = this.store.select(state => {
+    if(state.project !== null) {
+      const init: any[] = []
+      return state.project.timeline.tracks.reduce( (acc, track) => {
+        // map annotations to [ [annotation, color], ...]
+        let color = track.color;
+        let annotationsWithColor = track.annotations.map(annotation => ({annotation, color}))
+        acc = acc.concat(annotationsWithColor);
+        acc.sort(this.compareEntries);
+        return acc;
+      }, init);
+    } else {
+      return []
+    }
+  })
+
+  timelineData: Observable<Timeline> = this.store.select('project', 'timeline')
 
   set videoFile(file: Blob) {
-    let url = URL.createObjectURL(file);
-    // log.debug(url);
-    this._videoSrc = url;
+    this._videoSrc = URL.createObjectURL(file);
     this._videoFile = file;
   }
 
   constructor(
-    private timeService:TimelineService,
-    private playheadService:PlayheadService,
-    private playerService:PlayerService,
-    private store:Store<State>,
-    private backendService:SimpleBackendService,
-    private projectIO:ProjectIOService
-    // ,private http:Http
-  ) {
-    log.debug('app component');
+    private timeService: TimelineService,
+    private playheadService: PlayheadService,
+    private playerService: PlayerService,
+    private store: Store<State>,
+    private backendService: SimpleBackendService,
+    private projectIO: ProjectIOService) {}
 
-    // inspector data
-    // TODO: this selector could be refactored using createSelector (to use memoization)
-    // see: https://github.com/ngrx/platform/blob/master/docs/store/selectors.md
-    this.inspectorEntries = store.select(state => {
-      if(state.project !== null) {
-        const init: any[] = []
-        return state.project.timeline.tracks.reduce( (acc, track) => {
-          // map annotations to [ [annotation, color], ...]
-          let color = track.color;
-          let annotationsWithColor = track.annotations.map(annotation => ({annotation, color}))
-          acc = acc.concat(annotationsWithColor);
-          acc.sort(this.compareEntries);
-          return acc;
-        }, init);
-      } else {
-        return []
-      }
-    });
-    // this.inspectorEntries.subscribe((data) => { log.debug("inspector entries", data); })
-
-    // timeline data
-    this.timelineData = store.select('project', 'timeline');
-
+  async ngOnInit() {
     // setup state persistence
     // (skip initial state and hydration)
-    store.skip(2).subscribe( state => {
+    this.store.skip(2).subscribe( state => {
       this.backendService.storeData(state.project).then((...args: any[]) => {
         log.debug("state saved", args);
       });
     });
 
-    this.backendService.hasData().then(hasData => {
-      if (hasData) {
-        // load video data
-        this.backendService.retrieveVideo().then(blob => {
-          log.debug('video retrieved', blob);
-          if (blob) { this.videoFile = blob; }
-        });
-        // load state data and hydrate state
-        // this.backendService.clearData();
-        this.backendService.retrieveData().then( data => {
-          log.debug('data retrieved', data);
-          if (data != null) store.dispatch( {type: 'HYDRATE', payload: data} );
-          this.hideLoadingOverlay();
-        });
+    try {
+      const hasData = await this.backendService.hasData()
+      if(hasData) {
+        const retrievePromises: [Promise<Blob>, Promise<Project>] =
+          [this.backendService.retrieveVideo(), this.backendService.retrieveData()]
+
+        const [videoBlob, project] = await Promise.all(retrievePromises)
+
+        if(videoBlob) {
+          this.videoFile = videoBlob
+        }
+
+        if(project) {
+          this.store.dispatch( {type: 'HYDRATE', payload: project} )
+        }
+        this.hideLoadingOverlay()
       } else {
         log.debug('no local data, importing initial project');
         this.importProjectFromURL('assets/projects/initial.rv');
       }
-    });
+    } catch(err) {
+      log.error('error while fetching local data')
+    }
 
-  }
-
-  ngOnInit() {
     log.debug('app init');
 
     let td = null;
@@ -189,7 +180,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   onProjectExport() {
     log.debug('app project export');
     this.store.first().subscribe(state => {
-      if(state.project !== null) {
+      if(state.project !== null && this._videoFile !== null) {
         this.projectIO.export(state.project, this._videoFile);
       }
     });
