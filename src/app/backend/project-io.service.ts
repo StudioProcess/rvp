@@ -11,9 +11,6 @@ import * as JSZip from 'jszip';
 
 @Injectable()
 export class ProjectIOService {
-
-  constructor() {}
-
   export(data: Project, videoBlob: Blob, filename?: string): Promise<any> {
     let zip = new JSZip();
     zip.file('project.json', JSON.stringify(data));
