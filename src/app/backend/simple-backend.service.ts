@@ -4,43 +4,29 @@ import { Project } from '../shared/models';
 
 @Injectable()
 export class SimpleBackendService {
-
-  private storage: LocalForage;
-
-  constructor() {
-    this.storage = localforage.createInstance({
+  private readonly storage: LocalForage =
+    localforage.createInstance({
       name: 'Research Video',
       storeName: 'rvp'
-    });
-  }
+    })
 
-  // check if a key is present in localforage
-  private _hasKey(key: string): Promise<any> {
-    return this.storage.keys().then(keys => {
-      return keys.includes(key);
-    });
-  }
-
-  storeVideo(blob: Blob): Promise<any> {
+  storeVideo(blob: Blob): Promise<Blob> {
     if (blob.toString() != '[object Blob]') {
       blob = blob.slice();
       // log.debug('Blob object type', blob.toString());
     }
-    return this.storage.setItem('video', blob).catch(err => {
-      log.error(err);
-      return null;
-    });
+    return this.storage.setItem('video', blob)
   }
 
   retrieveVideo(): Promise<Blob> {
     return this.storage.getItem('video');
   }
 
-  clearVideo(): Promise<any> {
+  clearVideo(): Promise<void> {
     return this.storage.removeItem('video');
   }
 
-  hasVideo(): Promise<any> {
+  hasVideo(): Promise<boolean> {
     return this._hasKey('video');
   }
 
@@ -52,12 +38,17 @@ export class SimpleBackendService {
     return this.storage.getItem('project');
   }
 
-  clearData(): Promise<any> {
+  clearData(): Promise<void> {
     return this.storage.removeItem('project');
   }
 
-  hasData(): Promise<any> {
+  hasData(): Promise<boolean> {
     return this._hasKey('project');
   }
 
+  // check if a key is present in localforage
+  private async _hasKey(key: string) {
+    const keys = await this.storage.keys()
+    return keys.includes(key)
+  }
 }
