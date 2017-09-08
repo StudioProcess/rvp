@@ -220,7 +220,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   // TODO: return promise, so we can react when it's loaded
   importProjectFromURL(url:string) {
     // TODO: fix pace not picking up this request properly
-    let pace: any = window['Pace'];
+    let pace = window['Pace'];
     if(pace !== null) {
       console.log('restarting pace');
       pace.restart();
