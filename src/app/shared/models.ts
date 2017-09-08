@@ -65,5 +65,5 @@ export interface Project {
 }
 
 export interface State {
-  project: Project|null;
+  project: Project
 }
