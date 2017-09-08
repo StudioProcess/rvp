@@ -41,28 +41,30 @@ export class AppComponent implements OnInit, AfterViewInit {
     // ,private http:Http
   ) {
     log.debug('app component');
-    
+
     // inspector data
     // TODO: this selector could be refactored using createSelector (to use memoization)
     // see: https://github.com/ngrx/platform/blob/master/docs/store/selectors.md
     this.inspectorEntries = store.select(state => {
       if(state.project !== null) {
+        const init: any[] = []
         return state.project.timeline.tracks.reduce( (acc, track) => {
           // map annotations to [ [annotation, color], ...]
           let color = track.color;
-          let annotationsWithColor = track.annotations.map(annotation => {
-            return {annotation, color}; });
+          let annotationsWithColor = track.annotations.map(annotation => ({annotation, color}))
           acc = acc.concat(annotationsWithColor);
           acc.sort(this.compareEntries);
           return acc;
-        }, [] );
+        }, init);
+      } else {
+        return []
       }
     });
     // this.inspectorEntries.subscribe((data) => { log.debug("inspector entries", data); })
-    
+
     // timeline data
     this.timelineData = store.select('project', 'timeline') as Observable<Timeline>;
-    
+
     // setup state persistence
     // (skip initial state and hydration)
     store.skip(2).subscribe( state => {
@@ -95,7 +97,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     log.debug('app init');
-    
+
     let td;
     this.timelineData.first().subscribe(t => td=t.duration);
     log.debug('timeline duration', td);
