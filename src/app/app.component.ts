@@ -161,11 +161,15 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   // compare function to sort entries by timestamp
-  private compareEntries(a:InspectorEntry, b:InspectorEntry):number|null {
+  private compareEntries(a: InspectorEntry, b: InspectorEntry): number {
     if(a.annotation.utc_timestamp !== null && b.annotation.utc_timestamp !== null) {
       return a.annotation.utc_timestamp - b.annotation.utc_timestamp;
+    } else if(a.annotation.utc_timestamp !== null) {
+      return -1
+    } else if(b.annotation.utc_timestamp !== null) {
+      return 1
     } else {
-      return null
+      return 0
     }
   }
 
