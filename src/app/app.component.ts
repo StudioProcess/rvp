@@ -98,7 +98,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     log.debug('app init');
 
-    let td;
+    let td = null;
     this.timelineData.first().subscribe(t => td=t.duration);
     log.debug('timeline duration', td);
 

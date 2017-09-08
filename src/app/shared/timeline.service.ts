@@ -4,7 +4,7 @@ import { Observable, BehaviorSubject } from 'rxjs/Rx';
 // Initialization object needed to create a TimelineService instance
 // (Essentially constructor params)
 interface TimelineInputValues {
-  timelineDuration: number|undefined;
+  timelineDuration: number|null;
   viewportWidth: number;
   zoom: number;
   scroll: number;
@@ -54,7 +54,7 @@ export class TimelineService {
   }
 
   get timelineDuration() {
-    return this._inputs.value.timelineDuration;
+    return this._inputs.value.timelineDuration || 0;
   }
 
   // Set width of visible part of timeline (viewport) [px] (> 0)
@@ -99,11 +99,19 @@ export class TimelineService {
 
   // Conversion Functions (one time)
   convertPixelsToSeconds(pixels: number): number {
-    return pixels / this._timelineWidth.value * this._inputs.value.timelineDuration;
+    if(this._inputs.value.timelineDuration !== null) {
+      return pixels / this._timelineWidth.value * this._inputs.value.timelineDuration;
+    } else {
+      return pixels / this._timelineWidth.value
+    }
   }
 
   convertPercentToSeconds(percent: number): number {
-    return percent * this._inputs.value.timelineDuration;
+    if(this._inputs.value.timelineDuration !== null) {
+      return percent * this._inputs.value.timelineDuration;
+    } else {
+      return percent
+    }
   }
 
   convertViewportPixelsToSeconds(pixels:number): number {
@@ -112,11 +120,19 @@ export class TimelineService {
   }
 
   convertSecondsToPixels(seconds:number): number {
-    return seconds / this._inputs.value.timelineDuration * this._timelineWidth.value;
+    if(this._inputs.value.timelineDuration !== null) {
+      return seconds / this._inputs.value.timelineDuration * this._timelineWidth.value;
+    } else {
+      return seconds * this._timelineWidth.value;
+    }
   }
 
   convertSecondsToPercent(seconds:number): number {
-    return seconds / this._inputs.value.timelineDuration;
+    if(this._inputs.value.timelineDuration !== null) {
+      return seconds / this._inputs.value.timelineDuration;
+    } else {
+      return seconds
+    }
   }
 
 }
