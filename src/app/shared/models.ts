@@ -45,16 +45,16 @@ export interface Track {
 // Timeline containing tracks
 export interface Timeline {
   duration: Time;
-  playhead: Time;
-  zoom: number;
-  pan: number;
+  playhead: Time|null;
+  zoom: number|null;
+  pan: number|null;
   tracks: Track[];
 }
 
 // Video resource with metadata
 export interface Video {
-  id: string;
-  url: string;
+  id: string|null;
+  url: string|null;
   meta?: Map;
 }
 
