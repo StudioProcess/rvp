@@ -1,10 +1,6 @@
 import { ActionReducerMap } from '@ngrx/store';
-import { Project, Track } from './shared/models';
+import { Project, Track, State } from './shared/models';
 import * as actions from './actions'
-
-export interface State {
-  project: Project
-}
 
 export const reducers: ActionReducerMap<State> = {
   project: masterReducer
