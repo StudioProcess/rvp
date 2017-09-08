@@ -10,6 +10,8 @@ import { getEmptyData/*, getTutorialData, getMockData, getRulerData */} from './
 import { TimelineService, PlayheadService, PlayerService } from './shared';
 import { SimpleBackendService, ProjectIOService } from './backend';
 
+import * as action from './actions'
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -74,9 +76,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         if(videoBlob) {
           this.videoFile = videoBlob
         }
-
         if(project) {
-          this.store.dispatch( {type: 'HYDRATE', payload: project} )
+          this.store.dispatch(new action.Hyrdate(project))
         }
         this.hideLoadingOverlay()
       } else {
@@ -128,14 +129,14 @@ export class AppComponent implements OnInit, AfterViewInit {
     log.debug('video loaded', metadata);
     if (metadata.duration) {
       this.timeService.timelineDuration = metadata.duration;
-      this.store.dispatch( {type:'SET_TIMELINE_DURATION', payload:metadata.duration} );
+      this.store.dispatch(new action.SetTimelineDuration(metadata.duration));
     }
   }
 
   // deselect all annotations
   deselectAnnotations(){
     // dispatch
-    this.store.dispatch({ type: 'DESELECT_ANNOTATIONS' });
+    this.store.dispatch(new action.DeleteSelectedAnnotation());
   }
 
   // Global hotkeys
@@ -143,10 +144,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     // log.debug('keydown', e.keyCode, e.key);
     if (e.keyCode == 8) { // BACKSPACE
       e.preventDefault();
-      this.store.dispatch( { type: 'DELETE_SELECTED_ANNOTATION' } );
+      this.store.dispatch(new action.DeleteSelectedAnnotation());
     } else if (e.keyCode == 187 || e.keyCode == 221) { // + or ]
       e.preventDefault();
-      this.store.dispatch( { type: 'ADD_TRACK'} );
+      this.store.dispatch(new action.AddTrack());
     } else if (e.keyCode == 32) { // SPACE
       this.playerService.toggle();
       e.preventDefault();
@@ -172,7 +173,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.playerService.reset(); // reset player
     this.backendService.clearVideo(); // clear video from storage
     this.backendService.clearData(); // clear data from storage
-    this.store.dispatch( {type: 'HYDRATE', payload: getEmptyData()} );
+    this.store.dispatch(new action.Hyrdate(getEmptyData()));
     this.importProjectFromURL('assets/projects/initial.rv');
   }
 
@@ -191,7 +192,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     log.debug('app project import', file);
     this.projectIO.import(file).then( ({data, videoBlob}) => {
       log.debug('imported', data, videoBlob);
-      if (data) { this.store.dispatch( {type:'HYDRATE', payload:data} ) };
+      if (data) { this.store.dispatch(new action.Hyrdate(data)) };
       if (videoBlob) { this.videoFile = videoBlob; }
     }).catch(err => {
       log.trace(err);
@@ -209,7 +210,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   // Load project via HTTP GET from an url
   // TODO: return promise, so we can react when it's loaded
-  importProjectFromURL(url:string) {
+  importProjectFromURL(url: string) {
     // TODO: fix pace not picking up this request properly
     let pace = window['Pace'];
     if(pace !== null) {
@@ -224,7 +225,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       let blob = xhr.response;
       // log.debug(blob);
       this.projectIO.import(blob).then( ({data, videoBlob}) => {
-        if (data) { this.store.dispatch( {type:'HYDRATE', payload:data} ) };
+        if (data) { this.store.dispatch(new action.Hyrdate(data)) };
         if (videoBlob) { this.onVideoFileOpened(videoBlob); } // set and store video
       }).catch(err => {
         log.trace(err);
