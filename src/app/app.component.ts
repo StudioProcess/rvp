@@ -68,7 +68,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     // setup state persistence
     // (skip initial state and hydration)
     store.skip(2).subscribe( state => {
-      this.backendService.storeData(state.project).then((...args) => {
+      this.backendService.storeData(state.project).then((...args: any[]) => {
         log.debug("state saved", args);
       });
     });
