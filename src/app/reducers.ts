@@ -10,7 +10,7 @@ export const reducers: ActionReducerMap<State> = {
   project: masterReducer
 }
 
-export function masterReducer(state:Project, action: actions.Actions):Project {
+export function masterReducer(state: Project, action: actions.Actions): Project {
   // log.debug("reducing", action, state);
 
   switch (action.type) {
