@@ -63,7 +63,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     // this.inspectorEntries.subscribe((data) => { log.debug("inspector entries", data); })
 
     // timeline data
-    this.timelineData = store.select('project', 'timeline') as Observable<Timeline>;
+    this.timelineData = store.select('project', 'timeline');
 
     // setup state persistence
     // (skip initial state and hydration)
