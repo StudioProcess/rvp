@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit} from '@angular/core';
+import {Http} from '@angular/http'
 
 import { Store } from '@ngrx/store';
 
@@ -54,7 +55,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     private playerService: PlayerService,
     private store: Store<State>,
     private backendService: SimpleBackendService,
-    private projectIO: ProjectIOService) {}
+    private projectIO: ProjectIOService,
+    private readonly http: Http) {}
 
   async ngOnInit() {
     // setup state persistence
@@ -77,7 +79,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           this.videoFile = videoBlob
         }
         if(project) {
-          this.store.dispatch(new action.Hyrdate(project))
+          this.store.dispatch(new action.Hydrate(project))
         }
         this.hideLoadingOverlay()
       } else {
@@ -86,6 +88,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       }
     } catch(err) {
       log.error('error while fetching local data')
+      log.trace(err)
     }
 
     log.debug('app init');
@@ -173,7 +176,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.playerService.reset(); // reset player
     this.backendService.clearVideo(); // clear video from storage
     this.backendService.clearData(); // clear data from storage
-    this.store.dispatch(new action.Hyrdate(getEmptyData()));
+    this.store.dispatch(new action.Hydrate(getEmptyData()));
     this.importProjectFromURL('assets/projects/initial.rv');
   }
 
@@ -192,7 +195,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     log.debug('app project import', file);
     this.projectIO.import(file).then( ({data, videoBlob}) => {
       log.debug('imported', data, videoBlob);
-      if (data) { this.store.dispatch(new action.Hyrdate(data)) };
+      if (data) { this.store.dispatch(new action.Hydrate(data)) };
       if (videoBlob) { this.videoFile = videoBlob; }
     }).catch(err => {
       log.trace(err);
@@ -210,7 +213,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   // Load project via HTTP GET from an url
   // TODO: return promise, so we can react when it's loaded
-  importProjectFromURL(url: string) {
+  async importProjectFromURL(url: string) {
     // TODO: fix pace not picking up this request properly
     let pace = window['Pace'];
     if(pace !== null) {
@@ -218,22 +221,46 @@ export class AppComponent implements OnInit, AfterViewInit {
       pace.restart();
     }
 
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.responseType = 'blob';
-    xhr.onload = () => {
-      let blob = xhr.response;
-      // log.debug(blob);
-      this.projectIO.import(blob).then( ({data, videoBlob}) => {
-        if (data) { this.store.dispatch(new action.Hyrdate(data)) };
-        if (videoBlob) { this.onVideoFileOpened(videoBlob); } // set and store video
-      }).catch(err => {
-        log.trace(err);
-      }).then(() => {
-        this.hideLoadingOverlay();
-      })
-    };
-    xhr.send();
+    debugger
+    try {
+      const res = await this.http.get(url).toPromise()
+      debugger
+      const file = (new Blob([res], {type : 'application/zip'})) as File
+
+      debugger
+
+      const {data, videoBlob} = await this.projectIO.import(file)
+
+      debugger
+      if (data) {
+        // this.store.dispatch(new action.Hydrate(data))
+      }
+      if (videoBlob) {
+        // this.onVideoFileOpened(videoBlob)
+      }
+
+      this.hideLoadingOverlay()
+    } catch(err) {
+      log.trace(err)
+    }
+
+
+    // let xhr = new XMLHttpRequest();
+    // xhr.open('GET', url, true);
+    // xhr.responseType = 'blob';
+    // xhr.onload = () => {
+    //   let blob = xhr.response;
+    //   // log.debug(blob);
+    //   this.projectIO.import(blob).then( ({data, videoBlob}) => {
+    //     if (data) { this.store.dispatch(new action.Hydrate(data)) };
+    //     if (videoBlob) { this.onVideoFileOpened(videoBlob); } // set and store video
+    //   }).catch(err => {
+    //     log.trace(err);
+    //   }).then(() => {
+    //     ;
+    //   })
+    // };
+    // xhr.send();
   }
 
   // TODO: possibly put loading overlay functions in a service

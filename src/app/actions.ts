@@ -14,7 +14,7 @@ export const ADD_TRACK = '[Main] ADD_TRACK'
 export const DELETE_TRACK = '[Main] DELETE_TRACK'
 export const SET_TRACK_TITLE = '[Main] SET_TRACK_TITLE'
 
-export class Hyrdate implements Action {
+export class Hydrate implements Action {
   readonly type = HYDRATE
 
   constructor(readonly payload: any) {}
@@ -28,7 +28,7 @@ export class SetTimelineDuration implements Action {
 
 export class UpdateAnnotation implements Action {
   readonly type = UPDATE_ANNOTATION
-  
+
   constructor(readonly payload: any) {}
 }
 
@@ -69,8 +69,8 @@ export class SetTrackTitle implements Action {
 }
 
 
-export type Actions = 
-  Hyrdate | 
-  SetTimelineDuration | 
+export type Actions =
+  Hydrate |
+  SetTimelineDuration |
   UpdateAnnotation | AddAnnotation | SelectAnnotation | DeselectAnnotation | DeleteSelectedAnnotation |
   AddTrack | DeleteTrack | SetTrackTitle
