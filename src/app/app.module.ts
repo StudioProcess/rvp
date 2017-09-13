@@ -5,7 +5,6 @@ import {StoreModule} from '@ngrx/store'
 import {StoreDevtoolsModule} from '@ngrx/store-devtools'
 import {EffectsModule} from '@ngrx/effects'
 
-
 // import {HttpModule} from '@angular/http'
 // import { ReactiveFormsModule } from '@angular/forms';
 // import { StoreModule } from '@ngrx/store';
