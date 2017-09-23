@@ -8,15 +8,25 @@ import * as project from '../../actions/project'
 @Component({
   selector: 'rv-app',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: 'app.html'
+  template: `
+    <div>
+      <rv-loading [isLoading]="isLoading | async"></rv-loading>
+      <!-- Other content -->
+      :) Other content
+    </div>`
 })
 export class AppComponent implements OnInit {
-  isLoading = this.store.select(fromRoot.getIsLoading)
-  project = this.store.select(fromRoot.getProject)
+  isLoading = this._store.select(fromRoot.getIsLoading)
+  video = this._store.select(fromRoot.getVideo)
 
-  constructor(readonly store: Store<fromRoot.State>) {}
+  constructor(private readonly _store: Store<fromRoot.State>) {}
 
   ngOnInit() {
-    this.store.dispatch(new project.LoadProject())
+    /*
+     * Let's say id='p0' identifies the default project.
+     * In future, if a server implementation is available,
+     * the default project id could be provided by the server.
+     */
+    this._store.dispatch(new project.ProjectFetch({id: 'p0'}))
   }
 }
