@@ -69,16 +69,19 @@ import {EffectsModule} from '@ngrx/effects'
 
 import {environment} from '../environments/environment'
 
-import {reducers} from './reducers'
 import {CoreModule} from './core/core.module'
-import {AppComponent} from './core/containers/app/app'
+import {PersistenceModule} from './persistence/persistence.module'
 
+import {reducers} from './reducers'
 import {ProjectEffects} from './core/effects/project'
+
+import {AppComponent} from './core/containers/app/app'
 
 @NgModule({
   imports: [
     BrowserModule,
     CoreModule,
+    PersistenceModule,
 
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([ProjectEffects]),
