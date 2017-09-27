@@ -4,15 +4,17 @@ import {Effect, Actions} from '@ngrx/effects'
 
 import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/observable/zip'
+import 'rxjs/add/observable/of'
 import 'rxjs/add/operator/concatMap'
+import 'rxjs/add/operator/map'
 
 import * as project from '../../core/actions/project'
 
 import {IServer} from '../server/IServer'
 import LFCache from '../cache/LFCache'
 
-import {loadProject} from '../project/project'
-import {_DEFAULTPRJPATH_} from '../../config/config'
+import {loadProject} from '../project'
+import {_DEFAULTPRJPATH_} from '../../config'
 
 @Injectable()
 export default class ServerProxy implements IServer {
