@@ -1,10 +1,10 @@
 import {NgModule} from '@angular/core'
 
 import {BinaryDataLoader} from './BinaryDataLoader'
-
-const _DECLS_ = [BinaryDataLoader]
+import {ZipHandler} from './ZipHandler'
+import {ProjectLoader} from './ProjectLoader'
 
 @NgModule({
-  exports: _DECLS_
+  providers: [BinaryDataLoader, ZipHandler, ProjectLoader]
 })
 export class UtilModule {}
