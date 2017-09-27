@@ -6,6 +6,8 @@ import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/observable/fromPromise'
 import 'rxjs/add/operator/concatMap'
 
+import {_DEFAULT_STORAGE_CONFIG_} from '../../config'
+
 import ICache from './ICache'
 
 /*
@@ -15,10 +17,7 @@ import ICache from './ICache'
 export default class LFCache implements ICache {
   // TODO: retrieve instance config from configuration
   private readonly storage: LocalForage =
-    localForage.createInstance({
-      name: 'Research Video',
-      storeName: 'rvp'
-    })
+    localForage.createInstance(_DEFAULT_STORAGE_CONFIG_)
 
   cache<T>(key: string, data: Observable<T>): Observable<T> {
     return data.concatMap(data => {
