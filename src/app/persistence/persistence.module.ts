@@ -11,7 +11,7 @@ import LFCache from './cache/LFCache'
     EffectsModule.forFeature([ServerProxy])
   ],
   providers: [
-    LFCache,
+    LFCache
     /*
      * Currently, use a Proxy class, which handles the loading of a
      * default project and also handles caching via localstorage.
