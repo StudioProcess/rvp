@@ -14,7 +14,7 @@ import {IServer} from '../server/IServer'
 import LFCache from '../cache/LFCache'
 
 import {loadProject} from '../project'
-import {_DEFAULTPRJPATH_} from '../../config'
+import {_DEFAULT_PROJECT_PATH_} from '../../config'
 
 @Injectable()
 export default class ServerProxy implements IServer {
@@ -33,6 +33,8 @@ export default class ServerProxy implements IServer {
     .concatMap(([{payload: {id}}, isCached]) => {
       return isCached ?
         this._cache.getCached(id).map(res => new project.ProjectFetched(res)) :
-        loadProject(Observable.of(_DEFAULTPRJPATH_)).map((res: any) => new project.ProjectFetched(res))
+        loadProject(Observable.of(_DEFAULT_PROJECT_PATH_)).map(res => new project.ProjectFetched(res))
     })
 }
+
+
