@@ -1,6 +1,12 @@
 declare module 'video.js' // @types/video.js: declarations out of date
 declare module 'jszip' // @types/video.js: declarations out of date
-declare module 'jszip-utils' // @types/jszip-utils: not existing
+
+// @types/jszip-utils: not existing
+declare module 'jszip-utils' {
+  function getBinaryContent(
+    path: string,
+    callback: (err: Error, data: ArrayBuffer|string) => void): void
+}
 
 /**
  * Add index signature to Window interface
