@@ -31,7 +31,6 @@ export default class ServerProxy implements IServer {
     .concatMap(([{payload: {id}}, isCached]) => {
       return isCached ?
         this._cache.getCached(id).map(res => new project.ProjectFetched(res)) :
-        loadProject(Observable.of(_DEFAULTPRJPATH_))
-          .map((res: any) => new project.ProjectFetched(res))
+        loadProject(Observable.of(_DEFAULTPRJPATH_)).map((res: any) => new project.ProjectFetched(res))
     })
 }

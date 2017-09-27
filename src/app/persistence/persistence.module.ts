@@ -3,7 +3,7 @@ import {NgModule} from '@angular/core'
 import {EffectsModule} from '@ngrx/effects'
 
 // import {SERVER} from './server/IServer'
-import ServerProxy from './proxy/ServerProxy'
+import ServerProxy from './server/ServerProxy'
 import LFCache from './cache/LFCache'
 
 @NgModule({
