@@ -6,7 +6,7 @@ import 'rxjs/add/operator/concatMap'
 
 import {_DEFZIPOTPIONS_} from '../../config'
 
-export function loadZip(data: Observable<ArrayBuffer|string>) {
+export function loadZip(data: Observable<ArrayBuffer|string>): Observable<JSZip> {
   return data.concatMap(d => Observable.fromPromise(JSZip.loadAsync(d)))
 }
 
