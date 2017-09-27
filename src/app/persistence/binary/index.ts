@@ -7,9 +7,5 @@ import 'rxjs/add/operator/concatMap'
 const _getBinaryFunc = Observable.bindNodeCallback(getBinaryContent)
 
 export default function loadBinary(path: Observable<string>) {
-  debugger
-  return path.concatMap(p => {
-    debugger
-    return _getBinaryFunc(p)
-  })
+  return path.concatMap(p => _getBinaryFunc(p))
 }
