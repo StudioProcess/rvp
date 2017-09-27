@@ -73,7 +73,6 @@ import {CoreModule} from './core/core.module'
 import {PersistenceModule} from './persistence/persistence.module'
 
 import {reducers} from './reducers'
-import {ProjectEffects} from './core/effects/project'
 
 import {AppComponent} from './core/containers/app/app'
 
@@ -84,7 +83,7 @@ import {AppComponent} from './core/containers/app/app'
     PersistenceModule,
 
     StoreModule.forRoot(reducers),
-    EffectsModule.forRoot([ProjectEffects]),
+    EffectsModule.forRoot([]),
 
     !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
