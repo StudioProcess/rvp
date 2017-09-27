@@ -1,5 +1,5 @@
 declare module 'video.js' // @types/video.js: declarations out of date
-declare module 'jszip' // @types/video.js: declarations out of date
+// declare module 'jszip' // @types/video.js: declarations out of date
 
 // @types/jszip-utils: not existing
 declare module 'jszip-utils' {
