@@ -14,11 +14,11 @@ const defaultZipOptions = {
 
 @Injectable()
 export class ZipHandler {
-  unzip(data: Observable<ArrayBuffer|string>) {
+  loadZip(data: Observable<ArrayBuffer|string>) {
     return data.concatMap(d => Observable.fromPromise(JSZip.loadAsync(d)))
   }
 
-  zip(zip: any, options:any=defaultZipOptions) {
+  genZip(zip: any, options:any=defaultZipOptions) {
     return zip.generateAsync(options)
   }
 }
