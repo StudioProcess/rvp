@@ -12,7 +12,7 @@ export class ProjectLoader {
     private readonly _zipHandler: ZipHandler) {}
 
   load(path: Observable<string>) {
-    return this._zipHandler.unzip(this._binLoader.load(path))
+    return this._zipHandler.loadZip(this._binLoader.load(path))
   }
 
   save() {
