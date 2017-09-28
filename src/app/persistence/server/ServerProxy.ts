@@ -7,6 +7,7 @@ import 'rxjs/add/observable/zip'
 import 'rxjs/add/observable/of'
 import 'rxjs/add/operator/concatMap'
 import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/catch'
 
 import * as project from '../../core/actions/project'
 
@@ -35,6 +36,7 @@ export default class ServerProxy implements IServer {
         this._cache.getCached(id).map(res => new project.ProjectFetched(res)) :
         loadProject(Observable.of(_DEFAULT_PROJECT_PATH_)).map(res => new project.ProjectFetched(res))
     })
+    .catch(err => Observable.of(new project.ProjectFetchError(err)))
 }
 
 
