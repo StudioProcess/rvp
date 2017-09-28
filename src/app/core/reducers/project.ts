@@ -28,6 +28,8 @@ export function reducer(state: State = initialState, action: any): State {
 
 export const getVideo = (state: State) => state.video
 
-export const getVideoSrc = (state: State) => URL.createObjectURL(state.video)
+export const getVideoSrc = (state: State) => {
+  return state.videoBlob !== null ? URL.createObjectURL(state.videoBlob) : null
+}
 
 export const getTimeline = (state: State) => state.timeline
