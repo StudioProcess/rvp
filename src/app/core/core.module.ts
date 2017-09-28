@@ -5,11 +5,19 @@ import {AppComponent} from './containers/app/app'
 
 import {LoadingComponent} from './components/loading.component'
 
-const _DECLS_ = [AppComponent, LoadingComponent]
+// TODO: decide where to move this
+import {VideoComponent} from '../video/video.component'
+import {
+  InspectorService, PlayerService,
+  PlayheadService, TimelineService
+} from '../shared'
+
+const _DECLS_ = [AppComponent, LoadingComponent, VideoComponent]
 
 @NgModule({
   imports: [CommonModule],
   declarations: _DECLS_,
-  exports: _DECLS_
+  exports: _DECLS_,
+  providers: [InspectorService, PlayerService, PlayheadService, TimelineService]
 })
 export class CoreModule {}
