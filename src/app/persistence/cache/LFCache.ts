@@ -20,9 +20,9 @@ export default class LFCache implements ICache {
     localForage.createInstance(_DEFAULT_STORAGE_CONFIG_)
 
   cache<T>(key: string, data: Observable<T>): Observable<T> {
-    return data.concatMap(data => {
+    return data.concatMap(d => {
       return Observable.fromPromise(
-        this.storage.setItem(key, data))
+        this.storage.setItem(key, d))
     })
   }
 
