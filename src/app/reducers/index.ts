@@ -15,6 +15,7 @@ export const reducers: ActionReducerMap<State> = {
 
 // Project selectors
 export const getProjectState = createFeatureSelector<fromProject.State>('project')
+
 export const getVideo = createSelector(
   getProjectState,
   fromProject.getVideo)
@@ -29,6 +30,7 @@ export const getTimeline = createSelector(
 
 // Loading selectors
 export const getLoadingState = createFeatureSelector<fromLoading.State>('loading')
+
 export const getIsLoading = createSelector(
   getLoadingState,
   fromLoading.getIsAppLoading)
