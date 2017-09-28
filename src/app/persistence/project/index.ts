@@ -12,7 +12,7 @@ import {loadZip} from '../zip'
 export function extractProject(zip: Observable<JSZip>): Observable<fromProject.State> {
   return zip.concatMap(z => {
     const extractPromises = _ZIP_META_.map(meta => {
-      return z.file(meta.file).async(meta.type).then((f:any) => [f, meta])
+      return z.file(meta.file).async(meta.type).then((f:any) => [meta.middleware.postLoad(f), meta])
     })
 
     return Observable.fromPromise(Promise.all(extractPromises))
