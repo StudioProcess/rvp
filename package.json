@@ -63,6 +63,7 @@
     "@types/jszip": "^3.1.0",
     "@types/loglevel": "^1.4.30",
     "@types/node": "^6.0.88",
+    "@types/video.js": "^6.2.0",
     "codelyzer": "~3.1.1",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
