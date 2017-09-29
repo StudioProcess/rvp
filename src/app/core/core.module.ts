@@ -1,23 +1,21 @@
 import {NgModule} from '@angular/core'
 import {CommonModule} from '@angular/common'
 
-import {AppComponent} from './containers/app/app'
+import {AppContainer} from './containers/app'
+import {PlayerContainer} from './containers/player'
 
 import {LoadingComponent} from './components/loading.component'
 
-// TODO: decide where to move this
-import {VideoComponent} from '../video/video.component'
-import {
-  InspectorService, PlayerService,
-  PlayheadService, TimelineService
-} from '../shared'
-
-const _DECLS_ = [AppComponent, LoadingComponent, VideoComponent]
+const _DECLS_ = [
+  // Containers
+  AppContainer, PlayerContainer,
+  // Components
+  LoadingComponent
+]
 
 @NgModule({
   imports: [CommonModule],
   declarations: _DECLS_,
   exports: _DECLS_,
-  providers: [InspectorService, PlayerService, PlayheadService, TimelineService]
 })
 export class CoreModule {}
