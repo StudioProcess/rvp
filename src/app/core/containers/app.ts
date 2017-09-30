@@ -29,9 +29,9 @@ export class AppContainer implements OnInit, OnDestroy {
   constructor(private readonly _store: Store<fromRoot.State>) {}
 
   ngOnInit() {
-    this._store.select(fromRoot.getIsLoading).subscribe(isLoading => {
+    this._subs.push(this._store.select(fromRoot.getIsLoading).subscribe(isLoading => {
       this._isLoading = isLoading
-    })
+    }))
 
     /*
      * Let's say id='p0' identifies the default project.
