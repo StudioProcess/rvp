@@ -72,7 +72,7 @@ import {environment} from '../environments/environment'
 import {CoreModule} from './core/core.module'
 import {PersistenceModule} from './persistence/persistence.module'
 
-import {reducers} from './reducers'
+import {reducers} from './core/reducers'
 
 import {AppContainer} from './core/containers/app'
 
