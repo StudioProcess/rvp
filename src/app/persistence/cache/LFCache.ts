@@ -15,7 +15,6 @@ import ICache from './ICache'
  */
 @Injectable()
 export default class LFCache implements ICache {
-  // TODO: retrieve instance config from configuration
   private readonly storage: LocalForage =
     localForage.createInstance(_DEFAULT_STORAGE_CONFIG_)
 
