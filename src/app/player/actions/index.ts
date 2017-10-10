@@ -1,8 +1,11 @@
 import {ElementRef} from '@angular/core'
 
+import {PlayerOptions} from 'video.js'
+
 import {Action} from '@ngrx/store'
 
 export const PLAYER_CREATE = '[Player] Create'
+export const PLAYER_CREATED = '[Player] Created'
 export const PLAYER_CREATE_ERROR = '[Player] Create Error'
 
 export const PLAYER_DESTROY = '[Player] Destroy'
@@ -11,12 +14,23 @@ export const PLAYER_DESTROYED = '[Player] Destroyed'
 
 interface PlayerCreatePayload {
   elemRef: ElementRef
-  objectURL: string
+  objectURL: string,
+  playerOptions: PlayerOptions
 }
 
 export class PlayerCreate implements Action {
   readonly type = PLAYER_CREATE
   constructor(readonly payload: PlayerCreatePayload) {}
+}
+
+export class PlayerCreateError implements Action {
+  readonly type = PLAYER_CREATE_ERROR
+  constructor(readonly payload: any) {}
+}
+
+export class PlayerCreated implements Action {
+  readonly type = PLAYER_CREATED
+  // constructor(readonly playload: any) {}
 }
 
 export class PlayerDestroy implements Action {
@@ -32,11 +46,6 @@ export class PlayerDestroyed implements Action {
   readonly type = PLAYER_DESTROYED
 }
 
-export class PlayerCreateError implements Action {
-  readonly type = PLAYER_CREATE_ERROR
-  constructor(readonly payload: any) {}
-}
-
 export type PlayerActions =
-  PlayerCreate|PlayerCreateError|
+  PlayerCreate|PlayerCreateError|PlayerCreated|
   PlayerDestroy|PlayerDestroyError|PlayerDestroyed
