@@ -4,12 +4,7 @@
     "outDir": "../out-tsc/app",
     "baseUrl": "./",
     "module": "es2015",
-    "types": ["loglevel"]
+    "types": ["loglevel", "videojs"]
   },
   "files": ["main.ts", "types/declarations.d.ts"]
-  // "exclude": [
-  //   "test.ts",
-  //   "**/*.spec.ts",
-  //   "app/shared/timeline.service.tapespec.ts"
-  // ]
 }
