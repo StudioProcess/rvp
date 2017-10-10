@@ -20,9 +20,9 @@ export const getVideo = createSelector(
   getProjectState,
   fromProject.getVideo)
 
-export const getVideSrc = createSelector(
+export const getVideoObjectURL = createSelector(
   getProjectState,
-  fromProject.getVideoSrc)
+  fromProject.getVideoObjectURL)
 
 export const getTimeline = createSelector(
   getProjectState,
