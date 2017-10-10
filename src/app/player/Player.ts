@@ -6,8 +6,9 @@ import * as videojs from 'video.js'
 
 import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/observable/of'
-import 'rxjs/add/operator/withLatestFrom'
+import 'rxjs/add/operator/combineLatest'
 import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/share'
 
 import * as player from './actions'
 
@@ -16,29 +17,30 @@ export default class Player {
   constructor(private readonly _actions: Actions) {}
 
   @Effect({dispatch: false})
-  player: Observable<[videojs.Player, string]> = this._actions
+  init: Observable<[videojs.Player, string]> = this._actions
     .ofType<player.PlayerCreate>(player.PLAYER_CREATE)
     .map(action => {
-      const {elemRef, objectURL} = action.payload
-      const playerInst:videojs.Player = videojs(elemRef.nativeElement)
-      playerInst.src(objectURL)
+      const {elemRef, objectURL, playerOptions} = action.payload
+      const playerInst:videojs.Player = videojs(elemRef.nativeElement, playerOptions)
+      playerInst.src({src: objectURL, type: 'video/mp4'})
+
       const ret: [videojs.Player, string] = [playerInst, objectURL]
       return ret
     })
+    .share()
 
-  // @Effect()
-  // create = this._actions
-  //   .ofType<player.PlayerCreate>(player.PLAYER_CREATE)
-  //   .map(action => {
-
-  //   })
-  //   .catch(err => Observable.of(new player.PlayerCreateError(err)))
+  @Effect()
+  create = this._actions
+    .ofType<player.PlayerCreate>(player.PLAYER_CREATE)
+    .combineLatest(this.init, () => {
+      return new player.PlayerCreated()
+    })
+    .catch(err => Observable.of(new player.PlayerCreateError(err)))
 
   @Effect()
   destroy = this._actions
     .ofType<player.PlayerDestroy>(player.PLAYER_DESTROY)
-    .withLatestFrom(this.player)
-    .map(([_, [playerInst, objectURL]]) => {
+    .combineLatest(this.init, (_, [playerInst, objectURL]) => {
       playerInst.dispose()
       URL.revokeObjectURL(objectURL)
       return new player.PlayerDestroyed()
