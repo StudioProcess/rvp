@@ -2,9 +2,11 @@ import {Component, ChangeDetectionStrategy, OnInit, OnDestroy} from '@angular/co
 
 import {Store} from '@ngrx/store'
 
+import {Observable} from 'rxjs/Observable'
 import {Subscription} from 'rxjs/Subscription'
+import 'rxjs/add/operator/filter'
 
-import * as fromRoot from '../../reducers'
+import * as fromRoot from '../reducers'
 import * as project from '../actions/project'
 
 @Component({
@@ -16,15 +18,16 @@ import * as project from '../actions/project'
       <div *ngIf="!_isLoading">
         <div class="row video-and-inspector">
           <div class="column video-component">
-            <rv-player></rv-player>
+            <rv-player [rvVideoObjectURL]="videoObjectURL"></rv-player>
           </div>
         </div>
       </div>
     </div>`
 })
 export class AppContainer implements OnInit, OnDestroy {
-  private readonly _subs: Subscription[] = [];
+  private readonly _subs: Subscription[] = []
   private _isLoading = false
+  videoObjectURL: Observable<string> = this._store.select(fromRoot.getVideoObjectURL).filter(objUrl => objUrl !== null)
 
   constructor(private readonly _store: Store<fromRoot.State>) {}
 
