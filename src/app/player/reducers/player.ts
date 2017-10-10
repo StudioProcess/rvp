@@ -1,3 +1,5 @@
+import * as player from '../actions'
+
 export interface State {
   isPaused: boolean
   currentTime: number
@@ -10,6 +12,9 @@ const initialState: State = {
 
 export function reducer(state: State=initialState, action: any): State {
   switch(action.type) {
+    case player.PLAYER_CREATED:
+    case player.PLAYER_DESTROYED:
+      return initialState
     default:
       return state
   }
