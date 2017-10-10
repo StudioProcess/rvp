@@ -1,7 +1,7 @@
 import {ActionReducerMap, createSelector, createFeatureSelector} from '@ngrx/store'
 
-import * as fromProject from '../core/reducers/project'
-import * as fromLoading from '../core/reducers/loading'
+import * as fromProject from './project'
+import * as fromLoading from './loading'
 
 export interface State {
   project: fromProject.State,
