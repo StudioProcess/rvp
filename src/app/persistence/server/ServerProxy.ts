@@ -20,11 +20,11 @@ import {_DEFAULT_PROJECT_PATH_} from '../../config'
 @Injectable()
 export default class ServerProxy implements IServer {
   constructor(
-    private readonly actions: Actions,
+    private readonly _actions: Actions,
     private readonly _cache: LFCache) {}
 
   @Effect()
-  fetch = this.actions
+  fetch = this._actions
     .ofType<project.ProjectFetch>(project.PROJECT_FETCH)
     .concatMap(action => {
       return Observable.zip(
