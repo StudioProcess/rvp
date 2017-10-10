@@ -71,6 +71,7 @@ import {environment} from '../environments/environment'
 
 import {CoreModule} from './core/core.module'
 import {PersistenceModule} from './persistence/persistence.module'
+import {PlayerModule} from './player/player.module'
 
 import {reducers} from './core/reducers'
 
@@ -81,6 +82,7 @@ import {AppContainer} from './core/containers/app'
     BrowserModule,
     CoreModule,
     PersistenceModule,
+    PlayerModule,
 
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([]),
