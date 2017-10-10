@@ -74,7 +74,7 @@ import {PersistenceModule} from './persistence/persistence.module'
 
 import {reducers} from './reducers'
 
-import {AppComponent} from './core/containers/app/app'
+import {AppContainer} from './core/containers/app'
 
 @NgModule({
   imports: [
@@ -87,6 +87,6 @@ import {AppComponent} from './core/containers/app/app'
 
     !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppContainer]
 })
 export class AppModule {}
