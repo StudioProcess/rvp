@@ -12,11 +12,11 @@ import * as project from '../actions/project'
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="container">
-      <rv-loading *ngIf="isLoading" [isLoading]="true"></rv-loading>
-      <div *ngIf="!isLoading">
+      <rv-loading *ngIf="_isLoading" [isLoading]="true"></rv-loading>
+      <div *ngIf="!_isLoading">
         <div class="row video-and-inspector">
           <div class="column video-component">
-            <rv-video></rv-video>
+            <rv-player></rv-player>
           </div>
         </div>
       </div>
