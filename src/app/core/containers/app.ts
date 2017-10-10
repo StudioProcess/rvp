@@ -36,7 +36,7 @@ export class AppContainer implements OnInit, OnDestroy {
     /*
      * Let's say id='p0' identifies the default project.
      * In future, if a server implementation is available,
-     * the default project id could be provided by the server.
+     * the 'current' project id could be provided by the server.
      */
     this._store.dispatch(new project.ProjectFetch({id: 'p0'}))
   }
