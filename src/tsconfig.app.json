@@ -4,7 +4,7 @@
     "outDir": "../out-tsc/app",
     "baseUrl": "./",
     "module": "es2015",
-    "types": ["loglevel", "videojs"]
+    "types": ["loglevel", "video.js"]
   },
   "files": ["main.ts", "types/declarations.d.ts"]
 }
