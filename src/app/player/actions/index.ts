@@ -12,6 +12,8 @@ export const PLAYER_DESTROY = '[Player] Destroy'
 export const PLAYER_DESTROY_ERROR = '[Player] Destroy Error'
 export const PLAYER_DESTROYED = '[Player] Destroyed'
 
+export const PLAYER_SET_CURRENT_TIME = '[Player] Set Current Time'
+
 interface PlayerCreatePayload {
   elemRef: ElementRef
   objectURL: string,
@@ -46,6 +48,12 @@ export class PlayerDestroyed implements Action {
   readonly type = PLAYER_DESTROYED
 }
 
+export class PlayerSetCurrentTime implements Action {
+  readonly type = PLAYER_SET_CURRENT_TIME
+  constructor(readonly payload: {currentTime:number}) {}
+}
+
 export type PlayerActions =
   PlayerCreate|PlayerCreateError|PlayerCreated|
-  PlayerDestroy|PlayerDestroyError|PlayerDestroyed
+  PlayerDestroy|PlayerDestroyError|PlayerDestroyed|
+  PlayerSetCurrentTime
