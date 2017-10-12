@@ -7,6 +7,7 @@ import * as videojs from 'video.js'
 import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/observable/of'
 import 'rxjs/add/operator/combineLatest'
+import 'rxjs/add/operator/withLatestFrom'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/share'
 
@@ -40,7 +41,7 @@ export default class Player {
   @Effect()
   destroy = this._actions
     .ofType<player.PlayerDestroy>(player.PLAYER_DESTROY)
-    .combineLatest(this.init, (_, [playerInst, objectURL]) => {
+    .withLatestFrom(this.init, (_, [playerInst, objectURL]) => {
       playerInst.dispose()
       URL.revokeObjectURL(objectURL)
       return new player.PlayerDestroyed()
