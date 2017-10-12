@@ -27,8 +27,7 @@ import * as project from '../actions/project'
 export class AppContainer implements OnInit, OnDestroy {
   private readonly _subs: Subscription[] = []
   private _isLoading = false
-  videoObjectURL: Observable<string> = this._store.select(fromRoot.getVideoObjectURL).filter(objUrl => objUrl !== null)
-
+  videoObjectURL: Observable<string> = this._store.select(fromRoot.getVideoObjectURL).filter(objUrl => objUrl !== null) as Observable<string>
   constructor(private readonly _store: Store<fromRoot.State>) {}
 
   ngOnInit() {
