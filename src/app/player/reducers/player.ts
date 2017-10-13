@@ -25,6 +25,5 @@ export function reducer(state: State=initialState, action: any): State {
 export const getIsPaused = (state: State) => state.isPaused
 
 export const getCurrentTime = (state: State) => {
-  debugger
   return state.currentTime
 }

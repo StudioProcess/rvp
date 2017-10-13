@@ -60,7 +60,6 @@ export default class Player implements OnInit, OnDestroy {
             .subscribe(() => {
               const currentTime = playerInst.currentTime()
               if(currentTime == null) {
-                debugger
               }
               console.log('CURRENT TIME' + currentTime)
               this._store.dispatch(new player.PlayerSetCurrentTime({currentTime}))

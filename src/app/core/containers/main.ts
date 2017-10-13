@@ -36,9 +36,7 @@ export class MainContainer implements OnInit, OnDestroy {
 
   constructor(
     private readonly _rootStore: Store<fromRoot.State>,
-    private readonly _projectStore: Store<fromProject.State>) {
-      debugger
-    }
+    private readonly _projectStore: Store<fromProject.State>) {}
 
   ngOnInit() {
     this._subs.push(this._rootStore.select(fromRoot.getIsLoading).subscribe(isLoading => {
