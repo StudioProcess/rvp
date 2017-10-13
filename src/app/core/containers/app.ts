@@ -14,7 +14,7 @@ import * as project from '../actions/project'
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="container">
-      <rv-loading *ngIf="_isLoading" [isLoading]="true"></rv-loading>
+      <!--<rv-loading *ngIf="_isLoading" [isLoading]="true"></rv-loading>-->
       <div *ngIf="!_isLoading">
         <div class="row video-and-inspector">
           <div class="column video-component">
