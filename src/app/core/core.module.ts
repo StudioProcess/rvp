@@ -5,12 +5,13 @@ import {AppContainer} from './containers/app'
 import {PlayerContainer} from './containers/player'
 
 import {LoadingComponent} from './components/loading.component'
+import {NotFoundComponent} from './components/notFound.component'
 
 const _DECLS_ = [
   // Containers
   AppContainer, PlayerContainer,
   // Components
-  LoadingComponent
+  LoadingComponent, NotFoundComponent
 ]
 
 @NgModule({

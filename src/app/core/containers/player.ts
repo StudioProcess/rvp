@@ -27,6 +27,8 @@ export class PlayerContainer implements AfterViewInit, OnDestroy {
 
   @Input() rvVideoObjectURL: Observable<string>
 
+  // currentTime = this._store.select(fromPlayer.getCurrentTime)
+
   constructor(private readonly _store: Store<fromPlayer.State>) {}
 
   ngAfterViewInit() {
