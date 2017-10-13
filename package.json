@@ -22,7 +22,7 @@
     "reinstall": "rm -rf node_modules dist tmp && npm install",
     "chrome": "open -a 'google chrome' http://localhost:4200",
     "tslint:app": "tslint -c tslint.json -p src/tsconfig.app.json --type-check true --format stylish",
-    "tsc:app": "tsc -w -p src/tsconfig.app.json"
+    "tsc:app": "tsc -p src/tsconfig.app.json"
   },
   "private": true,
   "dependencies": {
