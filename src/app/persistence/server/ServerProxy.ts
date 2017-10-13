@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core'
 import {Effect, Actions} from '@ngrx/effects'
 
 import {Observable} from 'rxjs/Observable'
+import 'rxjs/add/observable/merge'
 import 'rxjs/add/observable/zip'
 import 'rxjs/add/observable/of'
 import 'rxjs/add/operator/concatMap'
@@ -37,6 +38,14 @@ export default class ServerProxy implements IServer {
         loadProject(Observable.of(_DEFAULT_PROJECT_PATH_)).map(res => new project.ProjectFetched(res))
     })
     .catch(err => Observable.of(new project.ProjectFetchError(err)))
+
+  // @Effect()
+  // update = Observable.merge(
+  //   this._actions.ofType<project.ProjectFetched>(project.PROJECT_FETCHED)
+  //     .map(action => {
+
+  //     })
+  //     .catch(err => )
 }
 
 
