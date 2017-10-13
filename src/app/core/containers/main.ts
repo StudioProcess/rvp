@@ -7,7 +7,8 @@ import {Subscription} from 'rxjs/Subscription'
 import 'rxjs/add/operator/filter'
 
 import * as fromRoot from '../reducers'
-import * as project from '../actions/project'
+import * as fromProject from '../../persistence/reducers'
+import * as project from '../../persistence/actions/project'
 
 @Component({
   selector: 'rv-main',
@@ -30,13 +31,17 @@ export class MainContainer implements OnInit, OnDestroy {
   private _isLoading = false
 
   videoObjectURL: Observable<string> =
-    this._store.select(fromRoot.getVideoObjectURL)
+    this._projectStore.select(fromProject.getVideoObjectURL)
       .filter(objUrl => objUrl !== null) as Observable<string>
 
-  constructor(private readonly _store: Store<fromRoot.State>) {}
+  constructor(
+    private readonly _rootStore: Store<fromRoot.State>,
+    private readonly _projectStore: Store<fromProject.State>) {
+      debugger
+    }
 
   ngOnInit() {
-    this._subs.push(this._store.select(fromRoot.getIsLoading).subscribe(isLoading => {
+    this._subs.push(this._rootStore.select(fromRoot.getIsLoading).subscribe(isLoading => {
       this._isLoading = isLoading
     }))
 
@@ -45,7 +50,7 @@ export class MainContainer implements OnInit, OnDestroy {
      * In future, if a server implementation is available,
      * the 'current' project id could be provided by the server.
      */
-    this._store.dispatch(new project.ProjectFetch({id: 'p0'}))
+    this._rootStore.dispatch(new project.ProjectFetch({id: 'p0'}))
   }
 
   ngOnDestroy() {

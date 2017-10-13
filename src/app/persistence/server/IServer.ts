@@ -2,7 +2,7 @@ import {InjectionToken} from '@angular/core'
 
 import {Observable} from 'rxjs/Observable'
 
-import * as project from '../../core/actions/project'
+import * as project from '../actions/project'
 
 export interface IServer {
   fetch: Observable<project.ProjectFetched|project.ProjectFetchError>

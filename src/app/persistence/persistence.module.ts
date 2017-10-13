@@ -1,13 +1,17 @@
 import {NgModule} from '@angular/core'
 
+import {StoreModule} from '@ngrx/store'
 import {EffectsModule} from '@ngrx/effects'
 
 // import {SERVER} from './server/IServer'
 import ServerProxy from './server/ServerProxy'
 import LFCache from './cache/LFCache'
 
+import {reducers} from './reducers'
+
 @NgModule({
   imports: [
+    StoreModule.forFeature('persistence', reducers),
     EffectsModule.forFeature([ServerProxy])
   ],
   providers: [

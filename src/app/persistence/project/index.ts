@@ -2,7 +2,7 @@ import * as JSZip from 'jszip'
 
 import {Observable} from 'rxjs/Observable'
 
-import * as fromProject from '../../core/reducers/project'
+import * as fromProject from '../reducers/project'
 // import {_DEFAULT_FILES_IN_ZIP_} from '../../config'
 import {_ZIP_META_} from '../../config'
 

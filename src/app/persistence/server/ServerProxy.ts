@@ -10,7 +10,7 @@ import 'rxjs/add/operator/concatMap'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/catch'
 
-import * as project from '../../core/actions/project'
+import * as project from '../actions/project'
 
 import {IServer} from '../server/IServer'
 import LFCache from '../cache/LFCache'
