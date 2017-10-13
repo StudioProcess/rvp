@@ -16,7 +16,7 @@
       "main": "main.ts",
       "polyfills": "polyfills.ts",
       "tsconfig": "tsconfig.app.json",
-      "prefix": "rvp",
+      "prefix": "rv",
       "styles": [
         "../node_modules/video.js/dist/video-js.min.css"
       ],
