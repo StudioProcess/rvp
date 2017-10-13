@@ -21,7 +21,7 @@ import {appRoutes} from './routes'
 @NgModule({
   imports: [
     BrowserModule,
-    RouterModule.forRoot(appRoutes, {enableTracing: !environment.production}),
+    RouterModule.forRoot(appRoutes/*, {enableTracing: !environment.production}*/),
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
