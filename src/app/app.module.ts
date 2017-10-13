@@ -14,14 +14,14 @@ import {PlayerModule} from './player/player.module'
 
 import {reducers} from './core/reducers'
 
-import {AppContainer} from './core/containers/app'
+import {AppShellContainer} from './shell'
 
 import {appRoutes} from './routes'
 
 @NgModule({
   imports: [
     BrowserModule,
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(appRoutes, {enableTracing: !environment.production}),
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
@@ -30,6 +30,7 @@ import {appRoutes} from './routes'
     PersistenceModule,
     PlayerModule
   ],
-  bootstrap: [AppContainer]
+  declarations: [AppShellContainer],
+  bootstrap: [AppShellContainer]
 })
 export class AppModule {}

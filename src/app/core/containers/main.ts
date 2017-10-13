@@ -10,7 +10,7 @@ import * as fromRoot from '../reducers'
 import * as project from '../actions/project'
 
 @Component({
-  selector: 'rv-app',
+  selector: 'rv-main',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="container">
@@ -24,10 +24,15 @@ import * as project from '../actions/project'
       </div>
     </div>`
 })
-export class AppContainer implements OnInit, OnDestroy {
+export class MainContainer implements OnInit, OnDestroy {
   private readonly _subs: Subscription[] = []
+
   private _isLoading = false
-  videoObjectURL: Observable<string> = this._store.select(fromRoot.getVideoObjectURL).filter(objUrl => objUrl !== null) as Observable<string>
+
+  videoObjectURL: Observable<string> =
+    this._store.select(fromRoot.getVideoObjectURL)
+      .filter(objUrl => objUrl !== null) as Observable<string>
+
   constructor(private readonly _store: Store<fromRoot.State>) {}
 
   ngOnInit() {
