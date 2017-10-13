@@ -17,6 +17,9 @@
       "polyfills": "polyfills.ts",
       "tsconfig": "tsconfig.app.json",
       "prefix": "rvp",
+      "styles": [
+        "../node_modules/video.js/dist/video-js.min.css"
+      ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
