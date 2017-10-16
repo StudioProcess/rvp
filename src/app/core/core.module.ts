@@ -5,7 +5,7 @@ import {MainContainer} from './containers/main'
 import {PlayerContainer} from './containers/player'
 
 import {LoadingComponent} from './components/loading.component'
-import {NotFoundComponent} from './components/notFound.component'
+import {NotFoundComponent} from './components/not-found.component'
 
 const _DECLS_ = [
   // Containers
