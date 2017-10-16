@@ -18,8 +18,19 @@
       "tsconfig": "tsconfig.app.json",
       "prefix": "rv",
       "styles": [
-        "../node_modules/video.js/dist/video-js.min.css"
+        "../node_modules/video.js/dist/video-js.min.css",
+        "assets/fonts/ionicons/ionicons.css",
+        "styles.scss"
       ],
+      "scripts": [
+        "../node_modules/jquery/dist/jquery.js",
+        "../node_modules/foundation-sites/dist/js/foundation.js"
+      ],
+      "stylePreprocessorOptions": {
+        "includePaths": [
+          "../node_modules/foundation-sites/scss"
+        ]
+      },
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
