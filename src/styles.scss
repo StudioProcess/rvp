@@ -1,121 +1,42 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'foundation';
 
-// foundation settings (variables)
-@import 'settings';
-
-// foundation base
-@import 'node_modules/foundation-sites/scss/foundation';
-
-// include foundation features
-$xy-grid: false; // Override variable in settings TODO: Upgrade to XY-Grid of foundation 6.4
-@include foundation-everything(true); // passing true to enable flexbox
-
-// fonts & icons
-@import 'assets/fonts/roboto/Roboto.css';
-@import 'assets/fonts/space_mono/SpaceMono.css';
-@import 'assets/fonts/foundation-icons/foundation-icons.css';
-@import 'assets/fonts/ionicons/ionicons.css';
-
-
-body {
-  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  height:auto;
-}
-
-body {
-  overflow: auto;
-  .loading-overlay { display:none; }
-}
-
-body.loading {
-  overflow: hidden;
-  .loading-overlay { display:flex; }
-}
-
-.loading-overlay {
-  display: flex;
-  position:absolute;
-  top:0;
-  bottom:0;
-  left:0;
-  right:0;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  background-color:$white;
-
-  .text {
-    font-weight: lighter;
-    font-size: 17px;
-  }
-
-  .image {
-    padding-bottom: 0.5em;
-  }
-}
-
-textarea {
-  min-height: 10px !important;
-}
-
-// globally disable text selection
-// (often happens by accident while dragging things)
-body {
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-}
-
-// Loading bar
-.pace {
-  -webkit-pointer-events: none;
-  pointer-events: none;
-
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-
-  // z-index: 1000;
-  position: fixed;
-  margin: auto;
-  top: 250px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 7px;
-  width: 360px;
-  background: inherit;
-
-  overflow: hidden;
-}
-
-.pace .pace-progress {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -ms-box-sizing: border-box;
-  -o-box-sizing: border-box;
-  box-sizing: border-box;
-
-  -webkit-transform: translate3d(0, 0, 0);
-  -moz-transform: translate3d(0, 0, 0);
-  -ms-transform: translate3d(0, 0, 0);
-  -o-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
-
-  max-width: 360px;
-  position: fixed;
-  // z-index: 1000;
-  display: block;
-  position: absolute;
-  top: 0;
-  right: 100%;
-  height: 100%;
-  width: 100%;
-  background: $black;
-}
-
-// .pace.pace-inactive {
-//   display: none;
-// }
+@include foundation-global-styles;
+// @include foundation-xy-grid-classes;
+@include foundation-grid;
+//@include foundation-flex-grid;
+// @include foundation-flex-classes;
+@include foundation-typography;
+// @include foundation-forms;
+// @include foundation-button;
+// @include foundation-accordion;
+// @include foundation-accordion-menu;
+// @include foundation-badge;
+// @include foundation-breadcrumbs;
+// @include foundation-button-group;
+// @include foundation-callout;
+// @include foundation-card;
+// @include foundation-close-button;
+// @include foundation-menu;
+// @include foundation-menu-icon;
+// @include foundation-drilldown-menu;
+// @include foundation-dropdown;
+// @include foundation-dropdown-menu;
+// @include foundation-responsive-embed;
+// @include foundation-label;
+// @include foundation-media-object;
+// @include foundation-off-canvas;
+// @include foundation-orbit;
+// @include foundation-pagination;
+// @include foundation-progress-bar;
+// @include foundation-slider;
+// @include foundation-sticky;
+@include foundation-reveal;
+// @include foundation-switch;
+// @include foundation-table;
+// @include foundation-tabs;
+// @include foundation-thumbnail;
+// @include foundation-title-bar;
+// @include foundation-tooltip;
+// @include foundation-top-bar;
+// @include foundation-visibility-classes;
+// @include foundation-float-classes;
