@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy, OnInit, OnDestroy} from '@angular/core'
+import {Component, ChangeDetectionStrategy, OnInit, OnDestroy, AfterViewInit} from '@angular/core'
 
 import {Store} from '@ngrx/store'
 
@@ -7,11 +7,16 @@ import {Subscription} from 'rxjs/Subscription'
 import * as fromRoot from '../reducers'
 import * as project from '../../persistence/actions/project'
 
+declare var $: any
+
 @Component({
   selector: 'rv-main',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="container">
+    <div>
+      <rv-menu></rv-menu>
+    </div>
+    <div class="test">
       <!--<rv-loading *ngIf="_isLoading" [isLoading]="true"></rv-loading>-->
       <div *ngIf="!_isLoading">
         <div>
@@ -25,7 +30,7 @@ import * as project from '../../persistence/actions/project'
       </div>
     </div>`
 })
-export class MainContainer implements OnInit, OnDestroy {
+export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   private readonly _subs: Subscription[] = []
 
   private _isLoading = false
@@ -36,8 +41,8 @@ export class MainContainer implements OnInit, OnDestroy {
   ngOnInit() {
     this._subs.push(this._rootStore.select(fromRoot.getIsLoading)
       .subscribe(isLoading => {
-      this._isLoading = isLoading
-    }))
+        this._isLoading = isLoading
+      }))
 
     /*
      * Let's say id='p0' identifies the default project.
@@ -45,6 +50,10 @@ export class MainContainer implements OnInit, OnDestroy {
      * the 'current' project id could be provided by the server.
      */
     this._rootStore.dispatch(new project.ProjectFetch({id: 'p0'}))
+  }
+
+  ngAfterViewInit() {
+    $(document).foundation();
   }
 
   ngOnDestroy() {
