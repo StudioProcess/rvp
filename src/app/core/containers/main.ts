@@ -2,12 +2,9 @@ import {Component, ChangeDetectionStrategy, OnInit, OnDestroy} from '@angular/co
 
 import {Store} from '@ngrx/store'
 
-import {Observable} from 'rxjs/Observable'
 import {Subscription} from 'rxjs/Subscription'
-import 'rxjs/add/operator/filter'
 
 import * as fromRoot from '../reducers'
-import * as fromProject from '../../persistence/reducers'
 import * as project from '../../persistence/actions/project'
 
 @Component({
@@ -17,9 +14,12 @@ import * as project from '../../persistence/actions/project'
     <div class="container">
       <!--<rv-loading *ngIf="_isLoading" [isLoading]="true"></rv-loading>-->
       <div *ngIf="!_isLoading">
-        <div class="row video-and-inspector">
-          <div class="column video-component">
-            <rv-player [rvVideoObjectURL]="videoObjectURL"></rv-player>
+        <div>
+          <div>
+            <rv-player></rv-player>
+          </div>
+          <div>
+            <rv-inspector></rv-inspector>
           </div>
         </div>
       </div>
@@ -30,16 +30,12 @@ export class MainContainer implements OnInit, OnDestroy {
 
   private _isLoading = false
 
-  videoObjectURL: Observable<string> =
-    this._projectStore.select(fromProject.getVideoObjectURL)
-      .filter(objUrl => objUrl !== null) as Observable<string>
-
   constructor(
-    private readonly _rootStore: Store<fromRoot.State>,
-    private readonly _projectStore: Store<fromProject.State>) {}
+    private readonly _rootStore: Store<fromRoot.State>) {}
 
   ngOnInit() {
-    this._subs.push(this._rootStore.select(fromRoot.getIsLoading).subscribe(isLoading => {
+    this._subs.push(this._rootStore.select(fromRoot.getIsLoading)
+      .subscribe(isLoading => {
       this._isLoading = isLoading
     }))
 
