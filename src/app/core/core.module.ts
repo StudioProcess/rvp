@@ -8,15 +8,15 @@ import {InspectorContainer} from './containers/inspector'
 import {LoadingComponent} from './components/loading.component'
 import {NotFoundComponent} from './components/not-found.component'
 import {LogoComponent} from './components/logo.component'
-import {MenuComponent} from './components/menu.component'
 import {ProjectBtnComponent} from './components/project-btn.component'
+import {MainNavComponent} from './components/mainNav.component'
 
 const _DECLS_ = [
   // Containers
   MainContainer, PlayerContainer, InspectorContainer,
   // Components
   LoadingComponent, NotFoundComponent, LogoComponent,
-  MenuComponent, ProjectBtnComponent
+  MainNavComponent, ProjectBtnComponent
 ]
 
 @NgModule({

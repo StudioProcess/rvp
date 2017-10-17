@@ -14,7 +14,7 @@ declare var $: any
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div>
-      <rv-menu></rv-menu>
+      <rv-main-nav></rv-main-nav>
     </div>
     <div class="test">
       <!--<rv-loading *ngIf="_isLoading" [isLoading]="true"></rv-loading>-->
