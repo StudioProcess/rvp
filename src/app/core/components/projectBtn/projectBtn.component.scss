@@ -1,0 +1,9 @@
+@import "colors";
+
+.settings-icon {
+  padding-right: 0.5em;
+}
+
+:host(:hover) {
+  color: $process-gray;
+}
