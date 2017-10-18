@@ -28,7 +28,13 @@ declare var $: any
           </div>
         </div>
       </div>
-    </div>`
+    </div>`,
+  styles: [`
+    :host {
+      display: block;
+      padding: 2%;
+    }
+  `]
 })
 export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   private readonly _subs: Subscription[] = []
