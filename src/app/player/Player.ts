@@ -17,7 +17,7 @@ import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/share'
 import 'rxjs/add/operator/debounceTime'
 
-import {_TIMEUPDATE_DEBOUNCE_} from '../config'
+import {_PLAYER_TIMEUPDATE_DEBOUNCE_} from '../config'
 
 import * as fromPlayer from './reducers'
 import * as player from './actions'
@@ -56,7 +56,7 @@ export default class Player implements OnInit, OnDestroy {
         console.log('PLAYER READY')
         playerInstSubs.push(
           Observable.fromEvent(playerEventEmitter, 'timeupdate')
-            .debounceTime(_TIMEUPDATE_DEBOUNCE_, animationScheduler)
+            .debounceTime(_PLAYER_TIMEUPDATE_DEBOUNCE_, animationScheduler)
             .subscribe(() => {
               const currentTime = playerInst.currentTime()
               if(currentTime == null) {
@@ -99,4 +99,12 @@ export default class Player implements OnInit, OnDestroy {
       URL.revokeObjectURL(objectURL)
     })
     .catch(err => Observable.of(new player.PlayerDestroyError(err)))
+
+  @Effect({dispatch: false})
+  setDimensions = this._actions
+    .ofType<player.PlayerSetDimensions>(player.PLAYER_SET_DIMENSIONS)
+    .combineLatest(this.init, ({payload:{width, height}}, [playerInst, _]) => {
+      playerInst.width(width)
+      playerInst.height(height)
+    })
 }
