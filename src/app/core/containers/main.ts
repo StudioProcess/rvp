@@ -16,15 +16,18 @@ declare var $: any
     <div>
       <rv-main-nav></rv-main-nav>
     </div>
-    <div class="test">
+    <div>
       <!--<rv-loading *ngIf="_isLoading" [isLoading]="true"></rv-loading>-->
       <div *ngIf="!_isLoading">
-        <div>
-          <div>
+        <div class="row">
+          <div class="medium-8 column">
             <rv-player></rv-player>
           </div>
-          <div>
+          <div class="medium-4 column">
             <rv-inspector></rv-inspector>
+          </div>
+          <div class="column">
+            <rv-timeline></rv-timeline>
           </div>
         </div>
       </div>
