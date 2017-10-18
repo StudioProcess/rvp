@@ -6,7 +6,7 @@ import {PlayerContainer} from './containers/player'
 import {InspectorContainer} from './containers/inspector'
 
 import {LoadingComponent} from './components/loading.component'
-import {NotFoundComponent} from './components/not-found.component'
+import {NotFoundComponent} from './components/notFound.component'
 import {LogoComponent} from './components/logo.component'
 import {MainNavComponent} from './components/mainNav.component'
 import {ProjectBtnComponent} from './components/projectBtn/projectBtn.component'
