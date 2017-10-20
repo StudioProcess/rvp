@@ -34,14 +34,14 @@ export default class ServerProxy implements IServer {
     })
     .concatMap(([{payload: {id}}, isCached]) => {
       return isCached ?
-        this._cache.getCached(id).map(res => new project.ProjectFetched(res)) :
-        loadProject(Observable.of(_DEFAULT_PROJECT_PATH_)).map(res => new project.ProjectFetched(res))
+        this._cache.getCached(id).map(res => new project.ProjectFetchSuccess(res)) :
+        loadProject(Observable.of(_DEFAULT_PROJECT_PATH_)).map(res => new project.ProjectFetchSuccess(res))
     })
     .catch(err => Observable.of(new project.ProjectFetchError(err)))
 
   // @Effect()
   // update = Observable.merge(
-  //   this._actions.ofType<project.ProjectFetched>(project.PROJECT_FETCHED)
+  //   this._actions.ofType<project.ProjectFetchSuccess>(project.PROJECT_FETCH_SUCCESS)
   //     .map(action => {
 
   //     })

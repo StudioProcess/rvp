@@ -16,7 +16,7 @@ const initialState: State = {
 
 export function reducer(state: State = initialState, action: any): State {
   switch(action.type) {
-    case project.PROJECT_FETCHED:
+    case project.PROJECT_FETCH_SUCCESS:
       return {
         ...action.payload.project,
         videoBlob: action.payload.videoBlob

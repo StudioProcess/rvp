@@ -1,7 +1,7 @@
 import {Action} from '@ngrx/store'
 
 export const PROJECT_FETCH = '[Project] Fetch'
-export const PROJECT_FETCHED = '[Project] Fetched'
+export const PROJECT_FETCH_SUCCESS = '[Project] Fetched'
 export const PROJECT_FETCH_ERROR = '[Project] Fetch Error'
 
 export const PROJECT_UPDATE = '[Project] Update'
@@ -13,8 +13,8 @@ export class ProjectFetch implements Action {
   constructor(readonly payload: {id: string}) {}
 }
 
-export class ProjectFetched implements Action {
-  readonly type = PROJECT_FETCHED
+export class ProjectFetchSuccess implements Action {
+  readonly type = PROJECT_FETCH_SUCCESS
   // TODO: adapt payload type
   constructor(readonly payload: any) {}
 }
@@ -40,5 +40,5 @@ export class ProjectUpdateError implements Action {
 }
 
 export type Actions =
-  ProjectFetch|ProjectFetched|ProjectFetchError|
+  ProjectFetch|ProjectFetchSuccess|ProjectFetchError|
   ProjectUpdate|ProjectUpdated|ProjectUpdateError
