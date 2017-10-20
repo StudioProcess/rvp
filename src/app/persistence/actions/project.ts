@@ -5,7 +5,7 @@ export const PROJECT_FETCH_SUCCESS = '[Project] Fetched'
 export const PROJECT_FETCH_ERROR = '[Project] Fetch Error'
 
 export const PROJECT_UPDATE = '[Project] Update'
-export const PROJECT_UPDATED = '[Project] Updated'
+export const PROJECT_UPDATE_SUCCESS = '[Project] Updated'
 export const PROJECT_UPDATE_ERROR = '[Project] Update Error'
 
 export class ProjectFetch implements Action {
@@ -29,16 +29,16 @@ export class ProjectUpdate implements Action {
   constructor(readonly payload: {id: string}) {}
 }
 
-export class ProjectUpdated implements Action {
-  readonly type = PROJECT_UPDATED
+export class ProjectUpdateSuccess implements Action {
+  readonly type = PROJECT_UPDATE_SUCCESS
   constructor(readonly payload: {id: string}) {}
 }
 
 export class ProjectUpdateError implements Action {
-  readonly type = PROJECT_UPDATED
+  readonly type = PROJECT_UPDATE_SUCCESS
   constructor(readonly payload: any) {}
 }
 
 export type Actions =
   ProjectFetch|ProjectFetchSuccess|ProjectFetchError|
-  ProjectUpdate|ProjectUpdated|ProjectUpdateError
+  ProjectUpdate|ProjectUpdateSuccess|ProjectUpdateError
