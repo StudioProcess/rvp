@@ -69,7 +69,7 @@ export default class Player implements OnInit, OnDestroy {
           Observable.fromEvent(playerEventEmitter, 'dispose').subscribe(() => {
             // On dispose clear all subs
             playerInstSubs.forEach(sub => sub.unsubscribe())
-            this._store.dispatch(new player.PlayerDestroyed())
+            this._store.dispatch(new player.PlayerDestroySuccess())
           }, err => {
             this._store.dispatch(new player.PlayerDestroyError(err))
           }))
@@ -87,7 +87,7 @@ export default class Player implements OnInit, OnDestroy {
   create = this._actions
     .ofType<player.PlayerCreate>(player.PLAYER_CREATE)
     .combineLatest(this.init, () => {
-      return new player.PlayerCreated()
+      return new player.PlayerCreateSuccess()
     })
     .catch(err => Observable.of(new player.PlayerCreateError(err)))
 

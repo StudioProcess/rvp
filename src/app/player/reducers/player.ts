@@ -12,8 +12,8 @@ const initialState: State = {
 
 export function reducer(state: State=initialState, action: any): State {
   switch(action.type) {
-    case player.PLAYER_CREATED:
-    case player.PLAYER_DESTROYED:
+    case player.PLAYER_CREATE_SUCCESS:
+    case player.PLAYER_DESTROY_SUCCESS:
       return initialState
     case player.PLAYER_SET_CURRENT_TIME:
       return {...state, currentTime: action.payload.currentTime}

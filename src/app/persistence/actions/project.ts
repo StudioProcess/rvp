@@ -1,11 +1,11 @@
 import {Action} from '@ngrx/store'
 
 export const PROJECT_FETCH = '[Project] Fetch'
-export const PROJECT_FETCH_SUCCESS = '[Project] Fetched'
+export const PROJECT_FETCH_SUCCESS = '[Project] Fetch Success'
 export const PROJECT_FETCH_ERROR = '[Project] Fetch Error'
 
 export const PROJECT_UPDATE = '[Project] Update'
-export const PROJECT_UPDATE_SUCCESS = '[Project] Updated'
+export const PROJECT_UPDATE_SUCCESS = '[Project] Update Success'
 export const PROJECT_UPDATE_ERROR = '[Project] Update Error'
 
 export class ProjectFetch implements Action {

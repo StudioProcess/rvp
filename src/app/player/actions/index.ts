@@ -17,18 +17,18 @@ export class PlayerCreate implements Action {
   constructor(readonly payload: PlayerCreatePayload) {}
 }
 
+export const PLAYER_CREATE_SUCCESS = '[Player] Created'
+
+export class PlayerCreateSuccess implements Action {
+  readonly type = PLAYER_CREATE_SUCCESS
+  // constructor(readonly playload: any) {}
+}
+
 export const PLAYER_CREATE_ERROR = '[Player] Create Error'
 
 export class PlayerCreateError implements Action {
   readonly type = PLAYER_CREATE_ERROR
   constructor(readonly payload: any) {}
-}
-
-export const PLAYER_CREATED = '[Player] Created'
-
-export class PlayerCreated implements Action {
-  readonly type = PLAYER_CREATED
-  // constructor(readonly playload: any) {}
 }
 
 export const PLAYER_DESTROY = '[Player] Destroy'
@@ -37,17 +37,17 @@ export class PlayerDestroy implements Action {
   readonly type = PLAYER_DESTROY
 }
 
+export const PLAYER_DESTROY_SUCCESS = '[Player] Destroyed'
+
+export class PlayerDestroySuccess implements Action {
+  readonly type = PLAYER_DESTROY_SUCCESS
+}
+
 export const PLAYER_DESTROY_ERROR = '[Player] Destroy Error'
 
 export class PlayerDestroyError implements Action {
   readonly type = PLAYER_DESTROY_ERROR
   constructor(readonly playload: any) {}
-}
-
-export const PLAYER_DESTROYED = '[Player] Destroyed'
-
-export class PlayerDestroyed implements Action {
-  readonly type = PLAYER_DESTROYED
 }
 
 // Player state
@@ -73,7 +73,7 @@ export class PlayerSetDimensions implements Action {
 }
 
 export type PlayerActions =
-  PlayerCreate|PlayerCreateError|PlayerCreated|
-  PlayerDestroy|PlayerDestroyError|PlayerDestroyed|
+  PlayerCreate|PlayerCreateError|PlayerCreateSuccess|
+  PlayerDestroy|PlayerDestroyError|PlayerDestroySuccess|
   PlayerSetCurrentTime|
   PlayerSetDimensions
