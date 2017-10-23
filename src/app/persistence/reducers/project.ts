@@ -1,9 +1,10 @@
 import * as project from '../actions/project'
+import {Timeline} from '../model'
 
 export interface State {
-  id: string|null,
+  id: string|null
   video: any
-  timeline: any
+  timeline: Timeline|null
   videoBlob: Blob|null
 }
 
