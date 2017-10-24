@@ -32,9 +32,9 @@ export const getTimeline = createSelector(
 export const getFlattenedAnnotations = createSelector(getTimeline, timeline => {
   if(timeline !== null) {
     const init: AnnotationColorMap[] = []
-    const annotations = timeline.tracks.reduce((accum, track) => {
+    const annotations = timeline.tracks.reduce((accum, track, trackIndex) => {
       const {color} = track
-      return accum.concat(track.annotations.map(annotation => ({annotation, color})))
+      return accum.concat(track.annotations.map(annotation => ({trackIndex, annotation, color})))
     }, init)
 
     return annotations
