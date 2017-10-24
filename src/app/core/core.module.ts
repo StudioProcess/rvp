@@ -11,6 +11,7 @@ import {NotFoundComponent} from './components/notFound.component'
 import {LogoComponent} from './components/logo.component'
 import {MainNavComponent} from './components/mainNav.component'
 import {ProjectBtnComponent} from './components/projectBtn/projectBtn.component'
+import {InspectorEntryComponent} from './components/inspector/inspectorEntry.component'
 
 const _DECLS_ = [
   // Containers
@@ -18,7 +19,8 @@ const _DECLS_ = [
   TimelineContainer,
   // Components
   LoadingComponent, NotFoundComponent, LogoComponent,
-  MainNavComponent, ProjectBtnComponent
+  MainNavComponent, ProjectBtnComponent,
+  InspectorEntryComponent
 ]
 
 @NgModule({

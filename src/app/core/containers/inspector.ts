@@ -7,7 +7,10 @@ import * as fromProject from '../../persistence/reducers'
 @Component({
   selector: 'rv-inspector',
   template: `
-    <pre>{{annotations|async|json}}</pre>
+    <div>
+      <rv-inspector-entry *ngFor="let annotation of annotations | async" [entry]="annotation">
+      </rv-inspector-entry>
+    </div>
   `
 })
 export class InspectorContainer {
