@@ -1,5 +1,7 @@
 import {Action} from '@ngrx/store'
 
+import {Annotation} from '../model'
+
 export const PROJECT_FETCH = '[Project] Fetch'
 export const PROJECT_FETCH_SUCCESS = '[Project] Fetch Success'
 export const PROJECT_FETCH_ERROR = '[Project] Fetch Error'
@@ -7,6 +9,8 @@ export const PROJECT_FETCH_ERROR = '[Project] Fetch Error'
 export const PROJECT_UPDATE = '[Project] Update'
 export const PROJECT_UPDATE_SUCCESS = '[Project] Update Success'
 export const PROJECT_UPDATE_ERROR = '[Project] Update Error'
+
+export const PROJECT_UPDATE_ANNOTATION = '[Project] Update Annotation'
 
 export class ProjectFetch implements Action {
   readonly type = PROJECT_FETCH
@@ -39,6 +43,18 @@ export class ProjectUpdateError implements Action {
   constructor(readonly payload: any) {}
 }
 
+interface UpdateAnnotationPayload {
+  trackIndex: number
+  annotationIndex: number
+  annotation: Annotation
+}
+
+export class ProjectUpdateAnnotation implements Action {
+  readonly type = PROJECT_UPDATE_ANNOTATION
+  constructor(readonly payload: UpdateAnnotationPayload) {}
+}
+
 export type Actions =
   ProjectFetch|ProjectFetchSuccess|ProjectFetchError|
-  ProjectUpdate|ProjectUpdateSuccess|ProjectUpdateError
+  ProjectUpdate|ProjectUpdateSuccess|ProjectUpdateError|
+  ProjectUpdateAnnotation
