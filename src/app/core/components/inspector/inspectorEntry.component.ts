@@ -35,7 +35,7 @@ export class InspectorEntryComponent implements OnChanges {
   @Input() entry: AnnotationColorMap
   @Input() index: number
 
-  @Output() onUpdate = new EventEmitter<{index: number, annotation: Annotation}>()
+  @Output() onUpdate = new EventEmitter<{index: number, trackIndex: number, annotation: Annotation}>()
 
   form: FormGroup|null = null
 
@@ -70,7 +70,7 @@ export class InspectorEntryComponent implements OnChanges {
           }
         }
 
-        this.onUpdate.emit({index: this.index, annotation})
+        this.onUpdate.emit({trackIndex: this.entry.trackIndex, index: this.index, annotation})
       })
   }
 
