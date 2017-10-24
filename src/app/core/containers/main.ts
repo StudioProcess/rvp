@@ -20,13 +20,13 @@ declare var $: any
       <!--<rv-loading *ngIf="_isLoading" [isLoading]="true"></rv-loading>-->
       <div *ngIf="!_isLoading">
         <div class="row">
-          <div class="medium-8 column">
+          <div class="small-12 medium-8 column">
             <rv-player></rv-player>
           </div>
-          <div class="medium-4 column">
+          <div class="small-12 medium-4 column">
             <rv-inspector></rv-inspector>
           </div>
-          <div class="column">
+          <div class="small-12 column">
             <rv-timeline></rv-timeline>
           </div>
         </div>
