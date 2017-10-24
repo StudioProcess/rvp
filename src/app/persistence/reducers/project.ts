@@ -1,6 +1,8 @@
 import * as project from '../actions/project'
 import {Timeline} from '../model'
 
+import {getPartitionResult} from '../../lib/array'
+
 export interface State {
   id: string|null
   video: any
@@ -15,12 +17,28 @@ const initialState: State = {
   videoBlob: null
 }
 
-export function reducer(state: State = initialState, action: any): State {
+export function reducer(state: State = initialState, action: project.Actions): State {
   switch(action.type) {
     case project.PROJECT_FETCH_SUCCESS:
       return {
         ...action.payload.project,
         videoBlob: action.payload.videoBlob
+      }
+    case project.PROJECT_UPDATE_ANNOTATION:
+      const {trackIndex, annotationIndex, annotation} = action.payload
+
+      if(state.timeline !== null) {
+        const track = state.timeline.tracks[trackIndex]
+        const {annotations} = track
+
+        const {before, after} = getPartitionResult(annotations, annotationIndex)
+        const newAnnotations = before.concat(annotation).concat(after)
+
+        track.annotations = newAnnotations
+
+        return state
+      } else {
+        return state
       }
     default:
       return state
