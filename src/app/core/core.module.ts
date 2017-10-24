@@ -1,5 +1,6 @@
 import {NgModule} from '@angular/core'
 import {CommonModule} from '@angular/common'
+import {ReactiveFormsModule} from '@angular/forms'
 
 import {MainContainer} from './containers/main'
 import {PlayerContainer} from './containers/player'
@@ -24,7 +25,7 @@ const _DECLS_ = [
 ]
 
 @NgModule({
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   declarations: _DECLS_,
   exports: _DECLS_,
 })
