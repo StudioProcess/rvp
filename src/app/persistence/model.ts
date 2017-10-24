@@ -22,6 +22,7 @@ export interface Annotation {
 }
 
 export interface AnnotationColorMap {
+  trackIndex: number
   annotation: Annotation
   color: string
 }
