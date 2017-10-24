@@ -1,1 +1,1 @@
-export const _FORM_INPUT_DEBOUNCE_ = 200
+export const _FORM_INPUT_DEBOUNCE_ = 600
