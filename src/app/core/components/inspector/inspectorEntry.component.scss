@@ -1,0 +1,10 @@
+@import 'dimensions';
+
+:host {
+  display: block;
+}
+
+.annotation-color {
+  height: 100%;
+  width: $inspector-annotation-color-width;
+}
