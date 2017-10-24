@@ -7,6 +7,7 @@ import {Subscription} from 'rxjs/Subscription'
 
 import {Store} from '@ngrx/store'
 
+import * as project from '../../persistence/actions/project'
 import * as fromProject from '../../persistence/reducers'
 import {Annotation, AnnotationColorMap} from '../../persistence/model'
 
@@ -14,14 +15,20 @@ import {Annotation, AnnotationColorMap} from '../../persistence/model'
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'rv-inspector',
   template: `
-    <div *ngIf="annotations !== null">
+    <div *ngIf="annotations !== null" class="wrapper">
       <rv-inspector-entry
         *ngFor="let annotation of annotations; index as i"
         [entry]="annotation"
         [index]="i"
         (onUpdate)="updateAnnotation($event)">
       </rv-inspector-entry>
-    </div>`
+    </div>`,
+  styles: [`
+    .wrapper {
+      max-height: 200px;
+      overflow-y: scroll;
+    }
+  `]
 })
 export class InspectorContainer implements OnInit, OnDestroy {
   private readonly _subs: Subscription[] = []
@@ -40,9 +47,8 @@ export class InspectorContainer implements OnInit, OnDestroy {
         }))
   }
 
-  updateAnnotation({index, annotation}: {index: number, annotation: Annotation}) {
-    // TODO: dispatch update annotation
-    console.log(JSON.stringify(index), JSON.stringify(annotation))
+  updateAnnotation({index, trackIndex, annotation}: {index: number, trackIndex: number, annotation: Annotation}) {
+    this._store.dispatch(new project.ProjectUpdateAnnotation({annotationIndex: index, trackIndex, annotation}))
   }
 
   ngOnDestroy() {
