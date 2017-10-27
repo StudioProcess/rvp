@@ -1,6 +1,7 @@
 import {
   Component, Input, Output,
-  OnChanges, EventEmitter
+  OnInit, OnChanges, AfterViewInit,
+  EventEmitter, ViewChild, ElementRef
 } from '@angular/core'
 
 import {
@@ -8,7 +9,7 @@ import {
   Validators, ValidatorFn, ValidationErrors
 } from '@angular/forms'
 
-const VALID = 'VALID' // not exported by Angular
+const _VALID_ = 'VALID' // not exported by @angular/forms
 
 import * as moment from 'moment'
 
@@ -57,11 +58,14 @@ const durationValidator = Validators.compose([Validators.required, durationValid
   templateUrl: 'inspectorEntry.component.html',
   styleUrls: ['inspectorEntry.component.scss']
 })
-export class InspectorEntryComponent implements OnChanges {
+export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit {
   @Input() entry: AnnotationColorMap
   @Input() index: number
 
   @Output() onUpdate = new EventEmitter<{index: number, trackIndex: number, annotation: Annotation}>()
+
+  @ViewChild('start') startInput: ElementRef
+  @ViewChild('duration') durationInput: ElementRef
 
   form: FormGroup|null = null
 
@@ -87,10 +91,9 @@ export class InspectorEntryComponent implements OnChanges {
 
     this.form.valueChanges.combineLatest(this.form.statusChanges)
       .debounceTime(_FORM_INPUT_DEBOUNCE_)
-      .filter(([_, status]) => status === VALID)
+      .filter(([_, status]) => status === _VALID_)
       .map(([formData, _]) => formData)
       .subscribe(({title, description, utc_timestamp, duration}) => {
-        debugger
         const annotation = {
           utc_timestamp: parseDuration(utc_timestamp),
           duration: parseDuration(duration),
@@ -102,6 +105,10 @@ export class InspectorEntryComponent implements OnChanges {
 
         this.onUpdate.emit({trackIndex: this.entry.trackIndex, index: this.index, annotation})
       })
+  }
+
+  ngAfterViewInit() {
+    // TODO: add keydown handler
   }
 
   ngOnChanges() {
