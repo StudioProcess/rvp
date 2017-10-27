@@ -25,7 +25,6 @@ import {Annotation, AnnotationColorMap} from '../../persistence/model'
     </div>`,
   styles: [`
     .wrapper {
-      max-height: 200px;
       overflow-y: scroll;
     }
   `]

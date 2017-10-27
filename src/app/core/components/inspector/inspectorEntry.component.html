@@ -1,0 +1,30 @@
+<form [formGroup]="form" novalidate>
+  <div class="row">
+    <div class="column">
+      <pre>{{entry.annotation|json}}</pre>
+      <pre>{{form.status|json}}</pre>
+    </div>
+  </div>
+  <div class="row collapse">
+    <div class="column shrink">
+      <div class="annotation-color" [style.backgroundColor]="entry.color"></div>
+    </div>
+    <div class="column">
+      <div class="row">
+        <div class="column">
+          <i class="ion-ios-time-outline"></i>
+          <input formControlName="utc_timestamp" class="number" title="Start Time">
+        </div>
+        <div class="column">
+          <i class="ion-ios-time"></i>
+          <input formControlName="duration" class="number" title="Duration">
+        </div>
+      </div>
+      <div class="row">
+        <div class="column">
+          <input formControlName="title">
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
