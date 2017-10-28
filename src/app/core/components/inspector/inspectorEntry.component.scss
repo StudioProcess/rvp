@@ -32,6 +32,10 @@
 .entry-container {
   background-color: #f2f1f1;
 
+  .column {
+    padding: 0px;
+  }
+
   &:hover {
     background-color: $white;
   }
