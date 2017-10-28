@@ -1,14 +1,6 @@
 @import 'dimensions';
 @import 'colors';
 
-.entry-container {
-  background-color: #f2f1f1;
-}
-
-.entry-container:hover {
-  background-color: $white;
-}
-
 :host {
   display: block;
 }
@@ -33,34 +25,59 @@
   background-color: $white;
 }
 
-.annotation-color {
-  height: 100%;
-  width: $inspector-annotation-color-width;
+.entry-container {
+  background-color: #f2f1f1;
+
+  .annotation-color {
+    height: 100%;
+    width: $inspector-annotation-color-width;
+  }
+
+  .annotation-info {
+    padding: 5px;
+
+    .title {
+      width: 100%;
+      font-weight: 500;
+      border: 1px solid transparent;
+      background-color: inherit;
+      padding: 0.2em;
+    }
+    .title:focus {
+      background-color: $highlight-color;
+    }
+
+    .description {
+      font-size: 14px;
+      line-height: 15px;
+      resize: none;
+      margin: 0;
+      padding: 0.2em;
+      outline: none;
+      border-color: transparent;
+      box-shadow: 0 0 0 $white;
+      background-color: inherit;
+    }
+
+    .description:focus {
+      color: $black;
+    }
+
+    .number, .timestamp {
+      font-weight: 500;
+      // color: $dark-gray;
+      // color: #727272;
+      // color: #898989;
+      width: 88px;
+      border: 1px solid transparent;
+      background-color: inherit;
+    }
+    .number:hover {
+      color: #353535;
+    }
+  }
 }
 
-.annotation-info {
-  padding: 5px;
-}
-
-.title {
-  width: 100%;
-  font-weight: 500;
-  border: 1px solid transparent;
-  background-color: inherit;
-  padding: 0.2em;
-}
-.title:focus {
-  background-color: $highlight-color;
-}
-
-.description {
-  font-size: 14px;
-  line-height: 15px;
-  resize: none;
-  margin: 0;
-  padding: 0.2em;
-  outline: none;
-  border-color: transparent;
-  box-shadow: 0 0 0 $white;
-  background-color: inherit;
+.entry-container:hover {
+  background-color: $white;
 }
