@@ -41,3 +41,26 @@
 .annotation-info {
   padding: 5px;
 }
+
+.title {
+  width: 100%;
+  font-weight: 500;
+  border: 1px solid transparent;
+  background-color: inherit;
+  padding: 0.2em;
+}
+.title:focus {
+  background-color: $highlight-color;
+}
+
+.description {
+  font-size: 14px;
+  line-height: 15px;
+  resize: none;
+  margin: 0;
+  padding: 0.2em;
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 $white;
+  background-color: inherit;
+}
