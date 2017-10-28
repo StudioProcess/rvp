@@ -9,22 +9,22 @@
       background-color: $process-super-light-gray;
       outline-offset: (-$inspector-outline-width);
       outline: $inspector-outline-width solid $black;
-    }
 
-    .entry-container:hover {
-      background-color: $white;
-      outline-offset: (-$inspector-outline-width);
-      outline: -$inspector-outline-width solid $black;
+      &:hover {
+        background-color: $white;
+        outline-offset: (-$inspector-outline-width);
+        outline: -$inspector-outline-width solid $black;
+      }
     }
   }
 
   &:nth-child(even) {
     .entry-container {
       background-color: $process-super-light-gray;
-    }
 
-    .entry-container:hover {
-      background-color: $white;
+      &:hover {
+        background-color: $white;
+      }
     }
   }
 }
