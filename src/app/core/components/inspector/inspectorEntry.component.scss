@@ -3,30 +3,38 @@
 
 :host {
   display: block;
-}
 
-:host.selected .entry-container {
-  background-color: $process-super-light-gray;
-  outline-offset: (-$inspector-outline-width);
-  outline: $inspector-outline-width solid $black;
-}
+  &.selected {
+    .entry-container {
+      background-color: $process-super-light-gray;
+      outline-offset: (-$inspector-outline-width);
+      outline: $inspector-outline-width solid $black;
+    }
 
-:host.selected .entry-container:hover {
-  background-color: $white;
-  outline-offset: (-$inspector-outline-width);
-  outline: -$inspector-outline-width solid $black;
-}
+    .entry-container:hover {
+      background-color: $white;
+      outline-offset: (-$inspector-outline-width);
+      outline: -$inspector-outline-width solid $black;
+    }
+  }
 
-:host:nth-child(even) .entry-container {
-  background-color: $process-super-light-gray;
-}
+  &:nth-child(even) {
+    .entry-container {
+      background-color: $process-super-light-gray;
+    }
 
-:host:nth-child(even) .entry-container:hover {
-  background-color: $white;
+    .entry-container:hover {
+      background-color: $white;
+    }
+  }
 }
 
 .entry-container {
   background-color: #f2f1f1;
+
+  &:hover {
+    background-color: $white;
+  }
 
   .annotation-color {
     height: 100%;
@@ -42,9 +50,10 @@
       border: 1px solid transparent;
       background-color: inherit;
       padding: 0.2em;
-    }
-    .title:focus {
-      background-color: $highlight-color;
+
+      &:focus {
+        background-color: $highlight-color;
+      }
     }
 
     .description {
@@ -57,13 +66,13 @@
       border-color: transparent;
       box-shadow: 0 0 0 $white;
       background-color: inherit;
+
+      &:focus {
+        color: $black;
+      }
     }
 
-    .description:focus {
-      color: $black;
-    }
-
-    .number, .timestamp {
+    .number {
       font-weight: 500;
       // color: $dark-gray;
       // color: #727272;
@@ -71,13 +80,10 @@
       width: 88px;
       border: 1px solid transparent;
       background-color: inherit;
-    }
-    .number:hover {
-      color: #353535;
+
+      &:hover {
+        color: #353535;
+      }
     }
   }
-}
-
-.entry-container:hover {
-  background-color: $white;
 }
