@@ -100,11 +100,14 @@ export default class Player implements OnInit, OnDestroy {
     })
     .catch(err => Observable.of(new player.PlayerDestroyError(err)))
 
-  @Effect({dispatch: false})
+  @Effect()
   setDimensions = this._actions
     .ofType<player.PlayerSetDimensions>(player.PLAYER_SET_DIMENSIONS)
     .combineLatest(this.init, ({payload:{width, height}}, [playerInst, _]) => {
       playerInst.width(width)
       playerInst.height(height)
+
+      return new player.PlayerSetDimensionsSuccess({width, height})
     })
+    .catch(err => Observable.of(new player.PlayerSetDimensionsError(err)))
 }

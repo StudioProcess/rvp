@@ -14,10 +14,15 @@ export const reducers: ActionReducerMap<State> = {
 }
 
 // Player state selectors
-export const getPlayerState = createFeatureSelector<fromPlayer.State>('state')
+export const getPlayerState = createFeatureSelector<State>('player')
+
+const getStatusState = createSelector(getPlayerState, (state: State) => state.state)
 
 export const getIsPaused = createSelector(
-  getPlayerState, fromPlayer.getIsPaused)
+  getStatusState, fromPlayer.getIsPaused)
 
 export const getCurrentTime = createSelector(
-  getPlayerState, fromPlayer.getCurrentTime)
+  getStatusState, fromPlayer.getCurrentTime)
+
+export const getDimensions = createSelector(
+  getStatusState, fromPlayer.getDimensions)

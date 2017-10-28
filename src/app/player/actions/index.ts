@@ -22,6 +22,7 @@ export const PLAYER_SET_CURRENT_TIME = '[Player] Set Current Time'
 
 export const PLAYER_SET_DIMENSIONS = '[Player] Set Dimensions'
 export const PLAYER_SET_DIMENSIONS_SUCCESS = '[Player] Set Dimensions Success'
+export const PLAYER_SET_DIMENSIONS_ERROR = '[Player] Set Dimensions Error'
 
 export class PlayerCreate implements Action {
   readonly type = PLAYER_CREATE
@@ -38,7 +39,6 @@ export class PlayerCreateError implements Action {
   constructor(readonly payload: any) {}
 }
 
-
 export class PlayerDestroy implements Action {
   readonly type = PLAYER_DESTROY
 }
@@ -46,7 +46,6 @@ export class PlayerDestroy implements Action {
 export class PlayerDestroySuccess implements Action {
   readonly type = PLAYER_DESTROY_SUCCESS
 }
-
 
 export class PlayerDestroyError implements Action {
   readonly type = PLAYER_DESTROY_ERROR
@@ -70,8 +69,18 @@ export class PlayerSetDimensions implements Action {
   constructor(readonly payload: PlayerDimensionsPayload) {}
 }
 
+export class PlayerSetDimensionsSuccess implements Action {
+  readonly type = PLAYER_SET_DIMENSIONS_SUCCESS
+  constructor(readonly payload: PlayerDimensionsPayload) {}
+}
+
+export class PlayerSetDimensionsError implements Action {
+  readonly type = PLAYER_SET_DIMENSIONS_ERROR
+  constructor(readonly payload: any) {}
+}
+
 export type PlayerActions =
   PlayerCreate|PlayerCreateError|PlayerCreateSuccess|
   PlayerDestroy|PlayerDestroyError|PlayerDestroySuccess|
-  PlayerSetCurrentTime|
-  PlayerSetDimensions
+  PlayerSetDimensions|PlayerSetDimensionsSuccess|PlayerSetDimensionsError|
+  PlayerSetCurrentTime

@@ -9,13 +9,14 @@ import {Store} from '@ngrx/store'
 
 import * as project from '../../persistence/actions/project'
 import * as fromProject from '../../persistence/reducers'
+import * as fromPlayer from '../../player/reducers'
 import {Annotation, AnnotationColorMap} from '../../persistence/model'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'rv-inspector',
   template: `
-    <div *ngIf="annotations !== null" class="wrapper">
+    <div *ngIf="annotations !== null" class="wrapper" [style.height.px]="height|async">
       <rv-inspector-entry
         *ngFor="let annotation of annotations; index as i"
         [entry]="annotation"
@@ -32,10 +33,12 @@ import {Annotation, AnnotationColorMap} from '../../persistence/model'
 export class InspectorContainer implements OnInit, OnDestroy {
   private readonly _subs: Subscription[] = []
   annotations: AnnotationColorMap[]|null
+  height = this._playerStore.select(fromPlayer.getDimensions).map(({height}) => height)
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
-    private readonly _store: Store<fromProject.State>) {}
+    private readonly _store: Store<fromProject.State>,
+    private readonly _playerStore: Store<fromPlayer.State>) {}
 
   ngOnInit() {
     this._subs.push(
