@@ -25,6 +25,14 @@
   outline: -$inspector-outline-width solid $black;
 }
 
+:host:nth-child(even) .entry-container {
+  background-color: $process-super-light-gray;
+}
+
+:host:nth-child(even) .entry-container:hover {
+  background-color: $white;
+}
+
 .annotation-color {
   height: 100%;
   width: $inspector-annotation-color-width;
