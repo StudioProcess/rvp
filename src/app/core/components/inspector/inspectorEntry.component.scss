@@ -73,10 +73,8 @@
     }
 
     .number {
+      font-size: 14px; // TODO: 14px needed to be set explicitly
       font-weight: 500;
-      // color: $dark-gray;
-      // color: #727272;
-      // color: #898989;
       width: 88px;
       border: 1px solid transparent;
       background-color: inherit;
