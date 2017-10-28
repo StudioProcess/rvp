@@ -1,4 +1,13 @@
 @import 'dimensions';
+@import 'colors';
+
+.entry-container {
+  background-color: #f2f1f1;
+}
+
+.entry-container:hover {
+  background-color: $white;
+}
 
 :host {
   display: block;
@@ -7,4 +16,8 @@
 .annotation-color {
   height: 100%;
   width: $inspector-annotation-color-width;
+}
+
+.annotation-info {
+  padding: 5px;
 }

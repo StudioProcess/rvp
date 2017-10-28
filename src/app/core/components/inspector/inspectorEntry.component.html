@@ -1,15 +1,15 @@
-<form [formGroup]="form" novalidate>
-  <div class="row">
+<form class="entry-container" [formGroup]="form" novalidate>
+  <!-- <div class="row">
     <div class="column">
       <pre>{{entry.annotation|json}}</pre>
       <pre>{{form.status|json}}</pre>
     </div>
-  </div>
+  </div> -->
   <div class="row collapse">
     <div class="column shrink">
       <div class="annotation-color" [style.backgroundColor]="entry.color"></div>
     </div>
-    <div class="column">
+    <div class="column annotation-info">
       <div class="row">
         <div class="column">
           <i class="ion-ios-time-outline"></i>
@@ -22,7 +22,8 @@
       </div>
       <div class="row">
         <div class="column">
-          <input formControlName="title">
+          <input formControlName="title" title="Title" placeholder="Title (optional)">
+          <textarea formControlName="description" title="Description" placeholder="Description (optional)"></textarea>
         </div>
       </div>
     </div>
