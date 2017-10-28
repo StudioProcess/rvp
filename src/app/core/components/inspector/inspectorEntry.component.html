@@ -10,17 +10,17 @@
       <div class="annotation-color" [style.backgroundColor]="entry.color"></div>
     </div>
     <div class="column annotation-info">
-      <div class="row">
+      <div class="row time-row">
         <div class="column">
           <i class="ion-ios-time-outline"></i>
-          <input #start formControlName="utc_timestamp" class="number" title="Start Time">
+          <input #start formControlName="utc_timestamp" class="duration" title="Start Time">
         </div>
         <div class="column">
           <i class="ion-ios-time"></i>
-          <input #duration formControlName="duration" class="number" title="Duration">
+          <input #duration formControlName="duration" class="duration" title="Duration">
         </div>
       </div>
-      <div class="row">
+      <div class="row text-row">
         <div class="column">
           <input formControlName="title" class="title" title="Title" placeholder="Title (optional)">
           <textarea formControlName="description" class="description" title="Description" placeholder="Description (optional)"></textarea>

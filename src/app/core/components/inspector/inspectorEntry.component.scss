@@ -4,6 +4,14 @@
 :host {
   display: block;
 
+  .entry-container {
+    background-color: #f2f1f1;
+
+    &:hover {
+      background-color: $white;
+    }
+  }
+
   &.selected {
     .entry-container {
       background-color: $process-super-light-gray;
@@ -30,23 +38,29 @@
 }
 
 .entry-container {
-  background-color: #f2f1f1;
-
   .column {
     padding: 0px;
-  }
-
-  &:hover {
-    background-color: $white;
   }
 
   .annotation-color {
     height: 100%;
     width: $inspector-annotation-color-width;
+    margin-right: 30px;
   }
 
   .annotation-info {
-    padding: 5px;
+    // padding: 5px 5px 5px 10px;
+
+    .time-row {
+      padding-top: 1.0em;
+      padding-right: 1.0em;
+      padding-bottom: 0.5em;
+    }
+
+    .text-row {
+      padding-right: 1.0em;
+      padding-bottom: 1.0em;
+    }
 
     .title {
       width: 100%;
@@ -76,7 +90,7 @@
       }
     }
 
-    .number {
+    .duration {
       font-size: 14px; // TODO: 14px needed to be set explicitly
       font-weight: 500;
       width: 88px;
@@ -86,6 +100,27 @@
       &:hover {
         color: #353535;
       }
+    }
+
+    input, textarea, .duration, .description {
+      &:focus {
+        color: $white;
+        background-color: $highlight-color;
+        border-color: transparent;
+        box-shadow: 0 0 0 $white;
+      }
+    }
+
+    .ng-invalid {
+      outline-offset: (-$inspector-outline-width);
+      outline: $inspector-outline-width solid #ff6b6b;
+    }
+    input.ng-valid:focus {
+      outline: none;
+    }
+
+    textarea {
+      min-height: 5px !important;
     }
   }
 }
