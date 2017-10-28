@@ -13,6 +13,18 @@
   display: block;
 }
 
+:host.selected .entry-container {
+  background-color: $process-super-light-gray;
+  outline-offset: (-$inspector-outline-width);
+  outline: $inspector-outline-width solid $black;
+}
+
+:host.selected .entry-container:hover {
+  background-color: $white;
+  outline-offset: (-$inspector-outline-width);
+  outline: -$inspector-outline-width solid $black;
+}
+
 .annotation-color {
   height: 100%;
   width: $inspector-annotation-color-width;
