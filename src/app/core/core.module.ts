@@ -12,8 +12,13 @@ import {NotFoundComponent} from './components/notFound.component'
 import {LogoComponent} from './components/logo.component'
 import {MainNavComponent} from './components/mainNav.component'
 import {ProjectBtnComponent} from './components/projectBtn/projectBtn.component'
+
+// Inspector components
 import {InspectorEntryComponent} from './components/inspector/inspectorEntry.component'
+
+// Timeline components
 import {TrackComponent} from './components/timeline/track/track.component'
+import {HandlebarComponent} from './components/timeline/handlebar/handlebar.component'
 
 const _DECLS_ = [
   // Containers
@@ -22,7 +27,10 @@ const _DECLS_ = [
   // Components
   LoadingComponent, NotFoundComponent, LogoComponent,
   MainNavComponent, ProjectBtnComponent,
-  InspectorEntryComponent, TrackComponent
+  // Inspector
+  InspectorEntryComponent,
+  // Timeline
+  TrackComponent, HandlebarComponent
 ]
 
 @NgModule({
