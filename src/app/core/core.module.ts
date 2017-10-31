@@ -5,7 +5,7 @@ import {ReactiveFormsModule} from '@angular/forms'
 import {MainContainer} from './containers/main'
 import {PlayerContainer} from './containers/player'
 import {InspectorContainer} from './containers/inspector'
-import {TimelineContainer} from './containers/timeline'
+import {TimelineContainer} from './containers/timeline/timeline'
 
 import {LoadingComponent} from './components/loading.component'
 import {NotFoundComponent} from './components/notFound.component'

@@ -7,20 +7,24 @@ import {Store} from '@ngrx/store'
 
 import {Subscription} from 'rxjs/Subscription'
 
-import * as fromProject from '../../persistence/reducers'
+import * as fromProject from '../../../persistence/reducers'
 
-import {Timeline} from '../../persistence/model'
+import {Timeline} from '../../../persistence/model'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'rv-timeline',
   template: `
-    <div *ngIf="timeline !== null">
+    <div class="timeline-wrapper" *ngIf="timeline !== null">
       <!--<pre>{{timeline|json}}</pre>-->
-      <rv-handlebar></rv-handlebar>
-      <rv-track *ngFor="let track of timeline.tracks" [data]="track"></rv-track>
+      <div class="handlebar-wrapper">
+        <rv-handlebar></rv-handlebar>
+      </div>
+
+      <!--<rv-track *ngFor="let track of timeline.tracks" [data]="track"></rv-track>-->
     </div>
   `,
+  styleUrls: ['timeline.scss']
 })
 export class TimelineContainer implements OnInit, OnDestroy {
   private readonly _subs: Subscription[] = []

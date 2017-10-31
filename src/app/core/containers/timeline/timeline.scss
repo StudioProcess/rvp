@@ -1,0 +1,9 @@
+@import "colors";
+
+.timeline-wrapper {
+  user-select: none;
+
+  .handlebar-wrapper {
+    background-color: $process-light-gray;
+  }
+}

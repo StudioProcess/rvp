@@ -1,0 +1,47 @@
+@import "colors";
+
+$text-color: $black;
+
+@mixin handle {
+  cursor: ew-resize;
+  padding-left: 1px;
+  padding-right: 1px;
+
+  &:hover {
+    color: $text-color;
+    background-color: $text-color;
+  }
+}
+
+.handlebar-container {
+  background-color: $process-gray2;
+  color: $process-gray2;
+
+  .handlebar {
+    display: flex;
+
+    &:hover {
+      color: $text-color;
+    }
+
+    .left-handle {
+      @include handle;
+      text-align: left;
+    }
+
+    .content {
+      width: 100%;
+      text-align: center;
+      pointer-events: none;
+      overflow: hidden;
+      word-break: break-all;
+      color: $text-color;
+      font-size: 14px;
+    }
+
+    .right-handle {
+      @include handle;
+      text-align: right;
+    }
+  }
+}
