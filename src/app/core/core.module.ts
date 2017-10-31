@@ -13,6 +13,7 @@ import {LogoComponent} from './components/logo.component'
 import {MainNavComponent} from './components/mainNav.component'
 import {ProjectBtnComponent} from './components/projectBtn/projectBtn.component'
 import {InspectorEntryComponent} from './components/inspector/inspectorEntry.component'
+import {TrackComponent} from './components/timeline/track/track.component'
 
 const _DECLS_ = [
   // Containers
@@ -21,7 +22,7 @@ const _DECLS_ = [
   // Components
   LoadingComponent, NotFoundComponent, LogoComponent,
   MainNavComponent, ProjectBtnComponent,
-  InspectorEntryComponent
+  InspectorEntryComponent, TrackComponent
 ]
 
 @NgModule({
