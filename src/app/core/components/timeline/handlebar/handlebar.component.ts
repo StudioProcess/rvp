@@ -49,50 +49,52 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
     // TODO: add debounce
     const mousemove = this.fromEventPattern(this._renderer, this._document, 'mousemove')
     const mouseup = this.fromEventPattern(this._renderer, this._document, 'mouseup')
-
+    const leftMouseDown = this.fromEventPattern(this._renderer, this.leftHandle.nativeElement, 'mousedown')
+    const rightMouseDown = this.fromEventPattern(this._renderer, this.rightHandle.nativeElement, 'mousedown')
     const windowResize = this.fromEventPattern(this._renderer, window, 'resize')
 
     const hostRect = windowResize
-      .map(() => {
-        console.log('hostRect')
-        return this._host.nativeElement.getBoundingClientRect()
-      })
+      .map(() => this._host.nativeElement.getBoundingClientRect())
       .startWith(this._host.nativeElement.getBoundingClientRect())
       .publish()
 
-    const leftMouseDown = this.fromEventPattern(this._renderer, this.leftHandle.nativeElement, 'mousedown')
-
     const clientPosWhileMouseMove = () => {
       return mousemove.map((mmEvent: MouseEvent) => {
-        return {x: mmEvent.clientX, y: mmEvent.clientY}
+        const {clientX, clientY} = mmEvent
+        return {clientX, clientY}
       }).takeUntil(mouseup)
     }
 
     const leftClientPos = leftMouseDown.switchMap(clientPosWhileMouseMove)
+    const rightClientPos = rightMouseDown.switchMap(clientPosWhileMouseMove)
 
-    leftClientPos.map(({x}) => x).withLatestFrom(hostRect)
-      .subscribe(([x, hRect]) => {
-        const newLeft = Math.min(this.containerLeft+this.containerWidth-10, Math.max(0, (x-hRect.left)/hRect.width*100))
+    const coordTransform = (clientX: number, hRect: ClientRect) => (clientX-hRect.left)
+    const mapToPercentage = (x: number, hRect: ClientRect) => (x/(hRect.width)*100)
+    const transformedToPercentage = ([clientX, hRect]: [number, ClientRect]) => {
+      return mapToPercentage(coordTransform(clientX, hRect), hRect)
+    }
+
+    this._subs.push(leftClientPos.map(({clientX}) => clientX).withLatestFrom(hostRect)
+      .map(transformedToPercentage)
+      .subscribe(xPerc => {
+        const newLeft = Math.min(this.containerLeft+this.containerWidth-10, Math.max(0, xPerc))
         const dL = this.containerLeft-newLeft
         this.containerLeft = newLeft;
         this.containerWidth += dL
         this._cdr.markForCheck()
-      })
+      }))
 
-    const rightMouseDown = this.fromEventPattern(this._renderer, this.rightHandle.nativeElement, 'mousedown')
-
-    const rightClientPos = rightMouseDown.switchMap(clientPosWhileMouseMove)
-
-    rightClientPos.map(({x}) => x).withLatestFrom(hostRect)
-      .subscribe(([x, hRect]) => {
-        const w = (x-hRect.left)/(hRect.width)*100
-        this.containerWidth = Math.min(100-this.containerLeft, Math.max(10, w-this.containerLeft))
+    this._subs.push(rightClientPos.map(({clientX}) => clientX).withLatestFrom(hostRect)
+      .map(transformedToPercentage)
+      .subscribe(xPerc => {
+        this.containerWidth = Math.min(100-this.containerLeft, Math.max(10, xPerc-this.containerLeft))
         this._cdr.markForCheck()
-      })
+      }))
 
     this._subs.push(hostRect.connect())
   }
 
+  // TODO: move this to lib
   fromEventPattern(renderer: Renderer2, elem: any, event: string) {
     let dereg: (()=>void)|null = null
     const addHandler = (handler: (event: any) => boolean|void) => {
