@@ -13,9 +13,15 @@ $text-color: $black;
   }
 }
 
+:host {
+  display: block;
+  background-color: $process-light-gray;
+}
+
 .handlebar-container {
   background-color: $process-gray2;
   color: $process-gray2;
+  position: relative;
 
   .handlebar {
     display: flex;
