@@ -94,19 +94,6 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
     this._subs.push(hostRect.connect())
   }
 
-  // TODO: move this to lib
-  fromEventPattern(renderer: Renderer2, elem: any, event: string) {
-    let dereg: (()=>void)|null = null
-    const addHandler = (handler: (event: any) => boolean|void) => {
-      dereg = renderer.listen(elem, event, handler)
-    }
-
-    const noop = () => {}
-    const removeHandler = () => dereg ? dereg() : noop()
-
-    return Observable.fromEventPattern(addHandler, removeHandler)
-  }
-
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
   }
