@@ -38,7 +38,7 @@ $text-color: $black;
     .content {
       width: 100%;
       text-align: center;
-      pointer-events: none;
+      cursor: all-scroll;
       overflow: hidden;
       word-break: break-all;
       color: $text-color;
