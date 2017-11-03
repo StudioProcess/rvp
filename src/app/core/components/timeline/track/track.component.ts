@@ -1,21 +1,24 @@
-import {Component, Input, ChangeDetectionStrategy} from '@angular/core'
+import {Component, Input, ChangeDetectionStrategy, OnInit} from '@angular/core'
+
+import {FormGroup, FormBuilder, Validators} from '@angular/forms'
 
 import {Track} from '../../../../persistence/model'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'rv-track',
-  template: `
-    <div class="row">
-      <div class="column shrink">
-        <div [style.color]="data.color">
-          <i class="ion-record" title="Track Color"></i>
-          <input placeholder="Track Title" title="Track Title">
-        </div>
-      </div>
-    </div>
-  `
+  templateUrl: 'track.component.html'
 })
-export class TrackComponent {
+export class TrackComponent implements OnInit {
   @Input() data: Track
+
+  form: FormGroup|null = null
+
+  constructor(private readonly _fb: FormBuilder) {}
+
+  ngOnInit() {
+    this.form = this._fb.group({
+      title: [this.data.fields.title, Validators.required]
+    })
+  }
 }
