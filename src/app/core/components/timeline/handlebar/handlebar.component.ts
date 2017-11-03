@@ -14,6 +14,7 @@ import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/switchMap'
 import 'rxjs/add/operator/publish'
 import 'rxjs/add/operator/distinctUntilChanged'
+import 'rxjs/add/operator/distinctUntilKeyChanged'
 
 import {fromEventPattern} from '../../../../lib/observable'
 
@@ -70,10 +71,11 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
       .publish()
 
     const clientPosWhileMouseMove = (args: any) => {
-      return mousemove.map((mmEvent: MouseEvent) => {
-        const {clientX, clientY} = mmEvent
-        return {clientX, clientY, payload: args}
-      }).takeUntil(mouseup)
+      return mousemove
+        .map((mmEvent: MouseEvent) => {
+          const {clientX, clientY} = mmEvent
+          return {clientX, clientY, payload: args}
+        }).takeUntil(mouseup)
     }
 
     const leftClientPos = leftMouseDown.switchMap(clientPosWhileMouseMove)
@@ -109,9 +111,10 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
     const middle = middleClientPos.map(({clientX, payload: {distLeft, distRight, hRect}}) => {
       return {
         distLeft, distRight,
-        m: transformedToPercentage(clientX, hRect)
+        m: minMax(transformedToPercentage(clientX, hRect))
       }
     })
+    .distinctUntilKeyChanged('m')
 
     this._subs.push(left.subscribe(l => {
       const oldRight = this.containerLeft+this.containerWidth
