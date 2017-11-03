@@ -7,13 +7,17 @@ import {
 
 import {DOCUMENT} from '@angular/platform-browser'
 
-import {Observable} from 'rxjs/Observable'
 import {Subscription} from 'rxjs/Subscription'
-import 'rxjs/add/observable/fromEventPattern'
 import 'rxjs/add/operator/takeUntil'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/switchMap'
 import 'rxjs/add/operator/publish'
+import 'rxjs/add/operator/distinctUntilChanged'
+import 'rxjs/add/operator/do'
+
+import {fromEventPattern} from '../../../../lib/observable'
+
+import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,9 +25,9 @@ import 'rxjs/add/operator/publish'
   template: `
     <div class="handlebar-container" [style.left.%]="containerLeft" [style.width.%]="containerWidth">
       <div class="handlebar">
-        <div #left class="left-handle"><i class="ion-arrow-right-b"></i></div>
+        <div #leftHandle class="left-handle"><i class="ion-arrow-right-b"></i></div>
         <div class="content">{{caption}}</div>
-        <div #right class="right-handle"><i class="ion-arrow-left-b"></i></div>
+        <div #rightHandle class="right-handle"><i class="ion-arrow-left-b"></i></div>
       </div>
     </div>
   `,
@@ -34,8 +38,8 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
   containerLeft = 0
   containerWidth = 100
 
-  @ViewChild('left') leftHandle: ElementRef
-  @ViewChild('right') rightHandle: ElementRef
+  @ViewChild('leftHandle') leftHandle: ElementRef
+  @ViewChild('rightHandle') rightHandle: ElementRef
 
   private readonly _subs: Subscription[] = []
 
@@ -47,15 +51,16 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     // TODO: add debounce
-    const mousemove = this.fromEventPattern(this._renderer, this._document, 'mousemove')
-    const mouseup = this.fromEventPattern(this._renderer, this._document, 'mouseup')
-    const leftMouseDown = this.fromEventPattern(this._renderer, this.leftHandle.nativeElement, 'mousedown')
-    const rightMouseDown = this.fromEventPattern(this._renderer, this.rightHandle.nativeElement, 'mousedown')
-    const windowResize = this.fromEventPattern(this._renderer, window, 'resize')
+    const mousemove = fromEventPattern(this._renderer, this._document, 'mousemove')
+    const mouseup = fromEventPattern(this._renderer, this._document, 'mouseup')
+    const leftMouseDown = fromEventPattern(this._renderer, this.leftHandle.nativeElement, 'mousedown')
+    const rightMouseDown = fromEventPattern(this._renderer, this.rightHandle.nativeElement, 'mousedown')
+    const windowResize = fromEventPattern(this._renderer, window, 'resize')
 
     const hostRect = windowResize
       .map(() => this._host.nativeElement.getBoundingClientRect())
       .startWith(this._host.nativeElement.getBoundingClientRect())
+      .do(() => console.log('HOST-RECT'))
       .publish()
 
     const clientPosWhileMouseMove = () => {
@@ -69,27 +74,39 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
     const rightClientPos = rightMouseDown.switchMap(clientPosWhileMouseMove)
 
     const coordTransform = (clientX: number, hRect: ClientRect) => (clientX-hRect.left)
-    const mapToPercentage = (x: number, hRect: ClientRect) => (x/(hRect.width)*100)
+    const mapToPercentage = (localX: number, hRect: ClientRect) => (localX/hRect.width*100)
     const transformedToPercentage = ([clientX, hRect]: [number, ClientRect]) => {
       return mapToPercentage(coordTransform(clientX, hRect), hRect)
     }
 
-    this._subs.push(leftClientPos.map(({clientX}) => clientX).withLatestFrom(hostRect)
-      .map(transformedToPercentage)
-      .subscribe(xPerc => {
-        const newLeft = Math.min(this.containerLeft+this.containerWidth-10, Math.max(0, xPerc))
-        const dL = this.containerLeft-newLeft
-        this.containerLeft = newLeft;
-        this.containerWidth += dL
-        this._cdr.markForCheck()
-      }))
+    const minMax = (x: number) => Math.min(100, Math.max(0, x))
 
-    this._subs.push(rightClientPos.map(({clientX}) => clientX).withLatestFrom(hostRect)
-      .map(transformedToPercentage)
-      .subscribe(xPerc => {
-        this.containerWidth = Math.min(100-this.containerLeft, Math.max(10, xPerc-this.containerLeft))
-        this._cdr.markForCheck()
-      }))
+    const left = leftClientPos.map(({clientX}) => clientX).withLatestFrom(hostRect)
+      .map(transformedToPercentage).map(minMax)
+      .distinctUntilChanged()
+      .startWith(this.containerLeft)
+
+    const right = rightClientPos.map(({clientX}) => clientX).withLatestFrom(hostRect)
+      .map(transformedToPercentage).map(minMax)
+      .distinctUntilChanged()
+      .startWith(this.containerWidth)
+
+    this._subs.push(left.subscribe(l => {
+      const oldRight = this.containerLeft+this.containerWidth
+      // ensure handlebar min width
+      const newLeft = Math.min(l, oldRight-_MIN_WIDTH_)
+      const deltaLeft = newLeft-this.containerLeft
+      this.containerLeft = newLeft
+      this.containerWidth = this.containerWidth-deltaLeft
+      this._cdr.markForCheck()
+    }))
+
+    this._subs.push(right.subscribe(r => {
+      // ensure handlebar min width
+      const newRight = Math.max(this.containerLeft+_MIN_WIDTH_, r)
+      this.containerWidth = newRight-this.containerLeft
+      this._cdr.markForCheck()
+    }))
 
     this._subs.push(hostRect.connect())
   }
