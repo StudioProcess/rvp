@@ -1,11 +1,11 @@
-<div class="row">
+<div class="row title-row">
   <div class="column shrink" [formGroup]="form">
-    <div [style.color]="data.color">
+    <div class="track-color" [style.color]="data.color">
       <i class="ion-record" title="Track Color"></i>
     </div>
-    <input placeholder="Track Title" title="Track Title" formControlName="title">
+    <input class="title-input" placeholder="Track Title" title="Track Title" formControlName="title">
   </div>
   <div class="column shrink track-options">
-    <button class="ion-android-close" title="Delete Track" alt="Delete Track"></button>
+    <button class="ion-android-close track-delete-icon" title="Delete Track" alt="Delete Track"></button>
   </div>
 </div>
