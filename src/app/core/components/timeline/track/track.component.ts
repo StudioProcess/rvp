@@ -12,6 +12,7 @@ import {Track} from '../../../../persistence/model'
 })
 export class TrackComponent implements OnInit {
   @Input() data: Track
+  @Input() totalDuration: number
 
   form: FormGroup|null = null
 

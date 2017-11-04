@@ -2,7 +2,7 @@ import {
   Component, AfterViewInit, Renderer2,
   ViewChild, ElementRef, Inject,
   ChangeDetectorRef, ChangeDetectionStrategy,
-  OnDestroy
+  OnDestroy, Input
 } from '@angular/core'
 
 import {DOCUMENT} from '@angular/platform-browser'
@@ -40,9 +40,9 @@ interface Handlebar {
   styleUrls: ['handlebar.component.scss']
 })
 export class HandlebarComponent implements AfterViewInit, OnDestroy {
-  readonly caption = '|||'
-  containerLeft = 0
-  containerWidth = 100
+  @Input() caption = '|||'
+  @Input() containerLeft = 0
+  @Input() containerWidth = 100
 
   @ViewChild('leftHandle') leftHandle: ElementRef
   @ViewChild('middleHandle') middleHandle: ElementRef
