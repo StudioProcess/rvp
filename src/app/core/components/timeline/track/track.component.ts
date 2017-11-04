@@ -7,7 +7,8 @@ import {Track} from '../../../../persistence/model'
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'rv-track',
-  templateUrl: 'track.component.html'
+  templateUrl: 'track.component.html',
+  styleUrls: ['track.component.scss']
 })
 export class TrackComponent implements OnInit {
   @Input() data: Track

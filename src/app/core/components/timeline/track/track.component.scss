@@ -1,0 +1,29 @@
+@import "colors";
+
+:host {
+  display: block;
+  padding-top: 0.4em;
+  padding-bottom: 1em;
+  margin-bottom: 0;
+  background-color: #f8f8f8;
+
+  &:hover {
+    background-color: #FFF;
+  }
+}
+
+:host {
+  .track-options {
+    display: inline-block;
+    opacity: 0;
+  }
+
+  &:hover {
+    .track-options {
+      animation: fadeIn ease-in 1;
+      animation-fill-mode: forwards;
+      animation-duration: 0.2s;
+      z-index: 100;
+    }
+  }
+}
