@@ -19,6 +19,7 @@ import {InspectorEntryComponent} from './components/inspector/inspectorEntry.com
 // Timeline components
 import {TrackComponent} from './components/timeline/track/track.component'
 import {HandlebarComponent} from './components/timeline/handlebar/handlebar.component'
+import {AnnotationComponent} from './components/timeline/annotation/annotation.component'
 
 const _DECLS_ = [
   // Containers
@@ -30,7 +31,7 @@ const _DECLS_ = [
   // Inspector
   InspectorEntryComponent,
   // Timeline
-  TrackComponent, HandlebarComponent
+  TrackComponent, HandlebarComponent, AnnotationComponent
 ]
 
 @NgModule({

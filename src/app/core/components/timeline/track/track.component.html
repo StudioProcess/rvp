@@ -9,3 +9,6 @@
     <button class="ion-android-close track-delete-icon" title="Delete Track" alt="Delete Track"></button>
   </div>
 </div>
+<div>
+  <rv-annotation *ngFor="let annotation of data.annotations" [data]="annotation"></rv-annotation>
+</div>
