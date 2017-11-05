@@ -32,7 +32,7 @@ import {fromEventPattern} from '../../../lib/observable'
   `,
   styleUrls: ['timeline.scss']
 })
-export class TimelineContainer implements OnInit, OnDestroy, AfterViewInit {
+export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   private readonly _subs: Subscription[] = []
   timeline: Timeline|null = null
 
