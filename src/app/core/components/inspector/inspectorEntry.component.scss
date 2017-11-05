@@ -5,7 +5,7 @@
   display: block;
 
   .entry-container {
-    background-color: #f2f1f1;
+    background-color: $process-super-light-gray3;
 
     &:hover {
       background-color: $white;
@@ -113,7 +113,7 @@
 
     .ng-invalid {
       outline-offset: (-$inspector-outline-width);
-      outline: $inspector-outline-width solid #ff6b6b;
+      outline: $inspector-outline-width solid $process-orange;
     }
     input.ng-valid:focus {
       outline: none;
