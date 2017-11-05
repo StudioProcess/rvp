@@ -7,6 +7,7 @@ import {
 
 import {DOCUMENT} from '@angular/platform-browser'
 
+import {Observable} from 'rxjs/Observable'
 import {Subscription} from 'rxjs/Subscription'
 import {Subject} from 'rxjs/Subject'
 import 'rxjs/add/operator/takeUntil'
@@ -41,12 +42,10 @@ interface Handlebar {
 })
 export class HandlebarComponent implements AfterViewInit, OnDestroy {
   @Input() caption = '|||'
-  @Input() left = 0
-  @Input() width = 100
-  @Input() container: any = this._host.nativeElement
+  @Input() containerRect: Observable<ClientRect>
 
-  containerLeft = 0
-  containerWidth = 100
+  @Input('left') containerLeft = 0
+  @Input('width') containerWidth = 100
 
   @ViewChild('leftHandle') leftHandle: ElementRef
   @ViewChild('middleHandle') middleHandle: ElementRef
@@ -55,7 +54,6 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
   private readonly _subs: Subscription[] = []
 
   constructor(
-    private readonly _host: ElementRef,
     private readonly _cdr: ChangeDetectorRef,
     private readonly _renderer: Renderer2,
     @Inject(DOCUMENT) private readonly _document: any) {}
@@ -67,12 +65,6 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
     const leftMouseDown = fromEventPattern(this._renderer, this.leftHandle.nativeElement, 'mousedown')
     const rightMouseDown = fromEventPattern(this._renderer, this.rightHandle.nativeElement, 'mousedown')
     const middleMouseDown = fromEventPattern(this._renderer, this.middleHandle.nativeElement, 'mousedown')
-    const windowResize = fromEventPattern(this._renderer, window, 'resize')
-
-    const containerRect = windowResize
-      .map(() => this.container.getBoundingClientRect())
-      .startWith(this.container.getBoundingClientRect())
-      .publish()
 
     const clientPosWhileMouseMove = (args: any) => {
       return mousemove
@@ -85,7 +77,7 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
     const leftClientPos = leftMouseDown.switchMap(clientPosWhileMouseMove)
     const rightClientPos = rightMouseDown.switchMap(clientPosWhileMouseMove)
     const middleClientPos = middleMouseDown
-      .withLatestFrom(handlebarSubj, containerRect, (mdEvent: MouseEvent, hbar: Handlebar, hRect: ClientRect) => {
+      .withLatestFrom(handlebarSubj, this.containerRect, (mdEvent: MouseEvent, hbar: Handlebar, hRect: ClientRect) => {
         const m = transformedToPercentage(mdEvent.clientX, hRect)
         return {
           distLeft: m-hbar.left,
@@ -103,12 +95,12 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
     const minMax = (x: number) => Math.min(100, Math.max(0, x))
 
     const left = leftClientPos.map(({clientX}) => clientX)
-      .withLatestFrom(containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect)))
+      .withLatestFrom(this.containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect)))
       .distinctUntilChanged()
       .startWith(this.containerLeft)
 
     const right = rightClientPos.map(({clientX}) => clientX)
-      .withLatestFrom(containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect)))
+      .withLatestFrom(this.containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect)))
       .distinctUntilChanged()
       .startWith(this.containerWidth)
 
@@ -148,8 +140,6 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
       handlebarSubj.next({left: this.containerLeft, right: this.containerLeft+this.containerWidth})
       this._cdr.markForCheck()
     }, err => handlebarSubj.error(err), () => handlebarSubj.complete()))
-
-    this._subs.push(containerRect.connect())
   }
 
   ngOnDestroy() {
