@@ -3,7 +3,7 @@ import {Component, Input, OnInit} from '@angular/core'
 @Component({
   selector: 'rv-annotation',
   template: `
-    <rv-handlebar [containerLeft]="left" [containerWidth]="width" [caption]="data.fields.title"></rv-handlebar>
+    <rv-handlebar [left]="left" [width]="width" [caption]="data.fields.title"></rv-handlebar>
   `,
   styles: [`
     rv-handlebar {

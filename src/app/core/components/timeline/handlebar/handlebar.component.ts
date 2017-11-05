@@ -41,8 +41,12 @@ interface Handlebar {
 })
 export class HandlebarComponent implements AfterViewInit, OnDestroy {
   @Input() caption = '|||'
-  @Input() containerLeft = 0
-  @Input() containerWidth = 100
+  @Input() left = 0
+  @Input() width = 100
+  @Input() container: any = this._host.nativeElement
+
+  containerLeft = 0
+  containerWidth = 100
 
   @ViewChild('leftHandle') leftHandle: ElementRef
   @ViewChild('middleHandle') middleHandle: ElementRef
@@ -65,9 +69,9 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
     const middleMouseDown = fromEventPattern(this._renderer, this.middleHandle.nativeElement, 'mousedown')
     const windowResize = fromEventPattern(this._renderer, window, 'resize')
 
-    const hostRect = windowResize
-      .map(() => this._host.nativeElement.getBoundingClientRect())
-      .startWith(this._host.nativeElement.getBoundingClientRect())
+    const containerRect = windowResize
+      .map(() => this.container.getBoundingClientRect())
+      .startWith(this.container.getBoundingClientRect())
       .publish()
 
     const clientPosWhileMouseMove = (args: any) => {
@@ -81,7 +85,7 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
     const leftClientPos = leftMouseDown.switchMap(clientPosWhileMouseMove)
     const rightClientPos = rightMouseDown.switchMap(clientPosWhileMouseMove)
     const middleClientPos = middleMouseDown
-      .withLatestFrom(handlebarSubj, hostRect, (mdEvent: MouseEvent, hbar: Handlebar, hRect: ClientRect) => {
+      .withLatestFrom(handlebarSubj, containerRect, (mdEvent: MouseEvent, hbar: Handlebar, hRect: ClientRect) => {
         const m = transformedToPercentage(mdEvent.clientX, hRect)
         return {
           distLeft: m-hbar.left,
@@ -99,12 +103,12 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
     const minMax = (x: number) => Math.min(100, Math.max(0, x))
 
     const left = leftClientPos.map(({clientX}) => clientX)
-      .withLatestFrom(hostRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect)))
+      .withLatestFrom(containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect)))
       .distinctUntilChanged()
       .startWith(this.containerLeft)
 
     const right = rightClientPos.map(({clientX}) => clientX)
-      .withLatestFrom(hostRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect)))
+      .withLatestFrom(containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect)))
       .distinctUntilChanged()
       .startWith(this.containerWidth)
 
@@ -145,7 +149,7 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
       this._cdr.markForCheck()
     }, err => handlebarSubj.error(err), () => handlebarSubj.complete()))
 
-    this._subs.push(hostRect.connect())
+    this._subs.push(containerRect.connect())
   }
 
   ngOnDestroy() {
