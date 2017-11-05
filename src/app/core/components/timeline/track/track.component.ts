@@ -2,7 +2,7 @@ import {Component, Input, ChangeDetectionStrategy, OnInit} from '@angular/core'
 
 import {FormGroup, FormBuilder, Validators} from '@angular/forms'
 
-import {Track} from '../../../../persistence/model'
+import {Track, Annotation} from '../../../../persistence/model'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,5 +22,13 @@ export class TrackComponent implements OnInit {
     this.form = this._fb.group({
       title: [this.data.fields.title, Validators.required]
     })
+  }
+
+  getAnnotationPosition(annotation: Annotation) {
+    return annotation.utc_timestamp / this.totalDuration * 100
+  }
+
+  getAnnotationWidth(annotation: Annotation) {
+    return annotation.duration / this.totalDuration * 100
   }
 }

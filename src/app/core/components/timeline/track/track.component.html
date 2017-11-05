@@ -9,6 +9,11 @@
     <button class="ion-android-close track-delete-icon" title="Delete Track" alt="Delete Track"></button>
   </div>
 </div>
-<div class="annotations-wrapper">
-  <rv-annotation *ngFor="let annotation of data.annotations" [data]="annotation" [totalDuration]="totalDuration"></rv-annotation>
-</div>
+<!-- <div #annotations class="annotations-wrapper">
+  <rv-handlebar *ngFor="let annotation of data.annotations"
+    [container]="annotations"
+    [caption]="annotation.fields.title"
+    [left]="getAnnotationPosition(annotation)"
+    [width]="getAnnotationWidth(annotation)">
+  </rv-handlebar>
+</div> -->
