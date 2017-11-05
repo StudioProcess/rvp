@@ -35,7 +35,7 @@ declare var $: any
   styles: [`
     :host {
       display: block;
-      padding: 2%;
+      padding: 5px;
     }
   `]
 })
