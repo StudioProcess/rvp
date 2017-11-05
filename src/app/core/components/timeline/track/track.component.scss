@@ -1,36 +1,36 @@
-@import "colors";
+@import 'colors';
+@import 'dimensions';
 
 :host {
   display: block;
-  padding-top: 0.4em;
-  padding-bottom: 1em;
-  margin-bottom: 0;
-  background-color: #f8f8f8;
+  padding-top: $track-paddingtop;
+  padding-bottom: $track-paddingbottom;
+  background-color: $process-super-light-gray2;
 
   &:hover {
-    background-color: #FFF;
+    background-color: $white2;
   }
 }
 
 :host {
   .title-row {
-    padding-bottom: 0.5em;
+    padding-bottom: $track-title-paddingbottom;
     justify-content: space-between;
 
     .track-color {
-      width: 20px;
+      width: $track-color-width;
       display: inline-block;
 
       i {
-        padding-left: 5px;
-        padding-right: 1px;
+        padding-left: $track-icon-paddingleft;
+        padding-right: $track-icon-paddingright;
       }
     }
 
     .title-input {
       display: inline-block;
-      font-weight: 500;
-      border: 1px solid transparent;
+      font-weight: $track-title-fontweight;
+      border: none;
       background-color: inherit;
 
       &:hover {
@@ -41,8 +41,6 @@
         color: $white;
         background-color: $highlight-color;
         outline: none;
-        border-color: transparent;
-        box-shadow: 0 0 0 $white;
       }
     }
   }
@@ -54,7 +52,7 @@
     opacity: 0;
 
     .track-delete-icon {
-      padding-right: 5px;
+      padding-right: $track-deleteicon-paddingright;
     }
   }
 
@@ -62,7 +60,7 @@
     .track-options {
       animation: fadeIn ease-in 1;
       animation-fill-mode: forwards;
-      animation-duration: 0.2s;
+      animation-duration: $track-options-animationduration;
       z-index: 100;
     }
   }
@@ -72,7 +70,7 @@
   .annotations-wrapper {
     position: relative;
     background-color: $process-light-gray;
-    height: 20px;
+    height: $handlebar-height;
     overflow: hidden;
   }
 }

@@ -1,11 +1,12 @@
-@import "colors";
+@import 'colors';
+@import 'dimensions';
 
 $text-color: $black;
 
 @mixin handle {
   cursor: ew-resize;
-  padding-left: 1px;
-  padding-right: 1px;
+  padding-left: $handlebar-handle-padding;
+  padding-right: $handlebar-handle-padding;
 
   &:hover {
     color: $text-color;
@@ -18,11 +19,12 @@ $text-color: $black;
   background-color: $process-gray2;
   color: $process-gray2;
   position: absolute;
-  height: 20px;
-  min-width: 25px;
+  height: $handlebar-height;
+  min-width: $handlebar-minwidth;
 
   .handlebar {
     display: flex;
+    height: inherit;
 
     &:hover {
       color: $text-color;
@@ -34,13 +36,13 @@ $text-color: $black;
     }
 
     .content {
-      width: 100%;
+      width: $handlebar-content-width;
       text-align: center;
       cursor: all-scroll;
       overflow: hidden;
       word-break: break-all;
       color: $text-color;
-      font-size: 14px;
+      font-size: $handlebar-content-fontsize;
     }
 
     .right-handle {

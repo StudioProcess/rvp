@@ -16,7 +16,7 @@ import {Timeline} from '../../../persistence/model'
   selector: 'rv-timeline',
   template: `
     <div class="timeline-wrapper" *ngIf="timeline !== null">
-      <div class="handlebar-wrapper">
+      <div class="scrollbar-wrapper">
         <rv-handlebar></rv-handlebar>
       </div>
 

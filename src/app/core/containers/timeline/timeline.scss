@@ -1,14 +1,15 @@
-@import "colors";
+@import 'colors';
+@import 'dimensions';
 
 .timeline-wrapper {
   user-select: none;
 
-  .handlebar-wrapper {
+  .scrollbar-wrapper {
     display: block;
     position: relative;
-    height: 20px;
+    height: $handlebar-height;
     background-color: $process-light-gray;
-    margin-bottom: 20px;
-    margin-top: 20px;
+    margin-bottom: $scrollbar-margin;
+    margin-top: $scrollbar-margin;
   }
 }
