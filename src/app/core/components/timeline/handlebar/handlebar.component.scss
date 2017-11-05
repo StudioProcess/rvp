@@ -14,7 +14,7 @@ $text-color: $black;
   }
 }
 
-.handlebar-container {
+:host {
   display: inline-block;
   background-color: $process-gray2;
   color: $process-gray2;

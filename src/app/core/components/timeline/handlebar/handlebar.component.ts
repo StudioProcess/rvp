@@ -2,7 +2,7 @@ import {
   Component, AfterViewInit, Renderer2,
   ViewChild, ElementRef, Inject,
   ChangeDetectorRef, ChangeDetectionStrategy,
-  OnDestroy, Input
+  OnDestroy, Input, HostBinding
 } from '@angular/core'
 
 import {DOCUMENT} from '@angular/platform-browser'
@@ -30,12 +30,10 @@ interface Handlebar {
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'rv-handlebar',
   template: `
-    <div class="handlebar-container" [style.left.%]="containerLeft" [style.width.%]="containerWidth">
-      <div class="handlebar">
-        <div #leftHandle class="left-handle"><i class="ion-arrow-right-b"></i></div>
-        <div #middleHandle class="content">{{caption}}</div>
-        <div #rightHandle class="right-handle"><i class="ion-arrow-left-b"></i></div>
-      </div>
+    <div class="handlebar">
+      <div #leftHandle class="left-handle"><i class="ion-arrow-right-b"></i></div>
+      <div #middleHandle class="content">{{caption}}</div>
+      <div #rightHandle class="right-handle"><i class="ion-arrow-left-b"></i></div>
     </div>
   `,
   styleUrls: ['handlebar.component.scss']
@@ -44,8 +42,8 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
   @Input() caption = '|||'
   @Input() containerRect: Observable<ClientRect>
 
-  @Input('left') containerLeft = 0
-  @Input('width') containerWidth = 100
+  @Input('left') @HostBinding('style.left.%') containerLeft = 0
+  @Input('width') @HostBinding('style.width.%') containerWidth = 100
 
   @ViewChild('leftHandle') leftHandle: ElementRef
   @ViewChild('middleHandle') middleHandle: ElementRef
@@ -68,6 +66,7 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
 
     const clientPosWhileMouseMove = (args: any) => {
       return mousemove
+        // .debounceTime(200)
         .map((mmEvent: MouseEvent) => {
           const {clientX, clientY} = mmEvent
           return {clientX, clientY, payload: args}
