@@ -1,2 +1,2 @@
-// Min size of handlebar in %
-export const _MIN_WIDTH_ = 10
+// Min size of handlebar in px
+export const _MIN_WIDTH_ = 4
