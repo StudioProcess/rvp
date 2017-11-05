@@ -17,7 +17,7 @@ import {Timeline} from '../../../persistence/model'
   template: `
     <div class="timeline-wrapper" *ngIf="timeline !== null">
       <div class="handlebar-wrapper">
-      <rv-handlebar></rv-handlebar>
+        <rv-handlebar></rv-handlebar>
       </div>
 
       <rv-track *ngFor="let track of timeline.tracks" [data]="track" [totalDuration]="timeline.duration"></rv-track>

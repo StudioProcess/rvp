@@ -67,3 +67,12 @@
     }
   }
 }
+
+:host {
+  .annotations-wrapper {
+    position: relative;
+    background-color: $process-light-gray;
+    height: 20px;
+    overflow: hidden;
+  }
+}

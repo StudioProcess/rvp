@@ -7,7 +7,7 @@ import {Component, Input, OnInit} from '@angular/core'
   `,
   styles: [`
     rv-handlebar {
-      display: inline-block;
+      display: inline;
     }
   `]
 })
