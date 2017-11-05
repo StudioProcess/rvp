@@ -9,7 +9,7 @@ import {DOCUMENT} from '@angular/platform-browser'
 
 import {Observable} from 'rxjs/Observable'
 import {Subscription} from 'rxjs/Subscription'
-import {Subject} from 'rxjs/Subject'
+import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 import 'rxjs/add/operator/takeUntil'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/switchMap'
@@ -57,7 +57,12 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
     @Inject(DOCUMENT) private readonly _document: any) {}
 
   ngAfterViewInit() {
-    const handlebarSubj = new Subject<Handlebar>();
+    const initRect: Handlebar = {
+      left: this.containerLeft,
+      right: this.containerLeft+this.containerWidth
+    }
+
+    const handlebarSubj = new BehaviorSubject<Handlebar>(initRect);
     const mousemove = fromEventPattern(this._renderer, this._document, 'mousemove')
     const mouseup = fromEventPattern(this._renderer, this._document, 'mouseup')
     const leftMouseDown = fromEventPattern(this._renderer, this.leftHandle.nativeElement, 'mousedown')
@@ -65,12 +70,10 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
     const middleMouseDown = fromEventPattern(this._renderer, this.middleHandle.nativeElement, 'mousedown')
 
     const clientPosWhileMouseMove = (args: any) => {
-      return mousemove
-        // .debounceTime(200)
-        .map((mmEvent: MouseEvent) => {
-          const {clientX, clientY} = mmEvent
-          return {clientX, clientY, payload: args}
-        }).takeUntil(mouseup)
+      return mousemove.map((mmEvent: MouseEvent) => {
+        const {clientX, clientY} = mmEvent
+        return {clientX, clientY, payload: args}
+      }).takeUntil(mouseup)
     }
 
     const leftClientPos = leftMouseDown.switchMap(clientPosWhileMouseMove)
@@ -96,12 +99,10 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
     const left = leftClientPos.map(({clientX}) => clientX)
       .withLatestFrom(this.containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect)))
       .distinctUntilChanged()
-      .startWith(this.containerLeft)
 
     const right = rightClientPos.map(({clientX}) => clientX)
       .withLatestFrom(this.containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect)))
       .distinctUntilChanged()
-      .startWith(this.containerWidth)
 
     const middle = middleClientPos.map(({clientX, payload: {distLeft, distRight, hRect}}) => {
       return {
