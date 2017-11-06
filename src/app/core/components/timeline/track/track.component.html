@@ -12,7 +12,7 @@
 <div #annotations class="annotations-wrapper">
   <rv-handlebar *ngFor="let annotation of data.annotations"
     [containerRect]="annotationsRect"
-    [caption]="annotation.fields.title"
+    [caption]="getAnnotationTitle(annotation)"
     [left]="getAnnotationPosition(annotation)"
     [width]="getAnnotationWidth(annotation)">
   </rv-handlebar>

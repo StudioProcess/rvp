@@ -54,6 +54,10 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
       }))
   }
 
+  getAnnotationTitle(annotation: Annotation) {
+    return annotation.fields.title
+  }
+
   getAnnotationPosition(annotation: Annotation) {
     return Math.min(Math.max(0, annotation.utc_timestamp / this.totalDuration * 100), 100)
   }

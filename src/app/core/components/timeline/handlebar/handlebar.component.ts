@@ -1,8 +1,9 @@
 import {
   Component, AfterViewInit, Renderer2,
   ViewChild, ElementRef, Inject,
-  ChangeDetectorRef, ChangeDetectionStrategy,
-  OnDestroy, Input, HostBinding
+  ChangeDetectionStrategy,
+  OnDestroy, Input, HostBinding,
+  ChangeDetectorRef
 } from '@angular/core'
 
 import {DOCUMENT} from '@angular/platform-browser'
@@ -39,7 +40,7 @@ interface Handlebar {
   styleUrls: ['handlebar.component.scss']
 })
 export class HandlebarComponent implements AfterViewInit, OnDestroy {
-  @Input() caption = '|||'
+  @Input() caption: string
   @Input() containerRect: Observable<ClientRect>
 
   @Input('left') @HostBinding('style.left.%') containerLeft = 0
@@ -63,6 +64,7 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
     }
 
     const handlebarSubj = new BehaviorSubject<Handlebar>(initRect);
+
     const mousemove = fromEventPattern(this._renderer, this._document, 'mousemove')
     const mouseup = fromEventPattern(this._renderer, this._document, 'mouseup')
     const leftMouseDown = fromEventPattern(this._renderer, this.leftHandle.nativeElement, 'mousedown')
@@ -86,7 +88,8 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
           distRight: hbar.right-m,
           hRect
         }
-      }).switchMap(clientPosWhileMouseMove)
+      })
+      .switchMap(clientPosWhileMouseMove)
 
     const coordTransform = (clientX: number, hRect: ClientRect) => (clientX-hRect.left)
     const mapToPercentage = (localX: number, hRect: ClientRect) => (localX/hRect.width*100)
@@ -94,7 +97,7 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
       return mapToPercentage(coordTransform(clientX, hRect), hRect)
     }
 
-    const minMax = (x: number) => Math.min(100, Math.max(0, x))
+    const minMax = (x: number) => Math.min(Math.max(0, x), 100)
 
     const left = leftClientPos.map(({clientX}) => clientX)
       .withLatestFrom(this.containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect)))
