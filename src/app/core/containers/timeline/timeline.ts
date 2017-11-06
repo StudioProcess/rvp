@@ -15,6 +15,7 @@ import 'rxjs/add/operator/do'
 
 import * as fromProject from '../../../persistence/reducers'
 import {Timeline} from '../../../persistence/model'
+import {_SCROLLBAR_CAPTION_} from '../../../config/timeline/scrollbar'
 
 import {fromEventPattern} from '../../../lib/observable'
 
@@ -24,7 +25,7 @@ import {fromEventPattern} from '../../../lib/observable'
   template: `
     <div class="timeline-wrapper">
       <div #scrollbar class="scrollbar-wrapper">
-        <rv-handlebar [containerRect]="scrollbarRect"></rv-handlebar>
+        <rv-handlebar [containerRect]="scrollbarRect" [caption]="scrollbarCaption"></rv-handlebar>
       </div>
 
       <rv-track *ngFor="let track of timeline?.tracks" [data]="track" [totalDuration]="timeline.duration"></rv-track>
@@ -35,6 +36,8 @@ import {fromEventPattern} from '../../../lib/observable'
 export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   private readonly _subs: Subscription[] = []
   timeline: Timeline|null = null
+
+  scrollbarCaption = _SCROLLBAR_CAPTION_
 
   @ViewChild('scrollbar') scrollbar: ElementRef
 
