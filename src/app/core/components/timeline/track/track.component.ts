@@ -9,6 +9,7 @@ import {FormGroup, FormBuilder, Validators} from '@angular/forms'
 import {Observable} from 'rxjs/Observable'
 import {Subscription} from 'rxjs/Subscription'
 import {ReplaySubject} from 'rxjs/ReplaySubject'
+import 'rxjs/add/observable/combineLatest'
 
 import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 import {ScrollSettings} from '../../../containers/timeline/timeline'
@@ -53,20 +54,23 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this._subs.push(
-      fromEventPattern(this._renderer, window, 'resize')
-        .map(() => getAnnotationRect())
-        .startWith(getAnnotationRect())
-        .subscribe((rect) => {
-          this.annotationRect.next(rect)
-          this._cdr.markForCheck()
-        }))
+      Observable.merge(
+        fromEventPattern(this._renderer, window, 'resize'),
+        this.scrollSettings)
+      .startWith()
+      .subscribe(() => {
+        this.annotationRect.next(getAnnotationRect())
+      }));
 
     this._subs.push(
-      this.scrollSettings.subscribe(({zoom, scrollLeft}) => {
-        const rect = getAnnotationRect()
+      Observable.combineLatest(
+        this.annotationRect, this.scrollSettings,
+        (rect, {zoom, scrollLeft}) => {
         // console.log('RECT', rect)
-        this.zoom = zoom;
-        this.scrollLeft = (rect.width/100)*scrollLeft
+        return {zoom, left: (rect.width/100)*scrollLeft}
+      }).subscribe(({zoom, left}) => {
+        this.zoom = zoom
+        this.scrollLeft = left
         this._cdr.markForCheck()
       }))
   }
