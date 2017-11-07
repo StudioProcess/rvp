@@ -30,13 +30,16 @@ export interface ScrollSettings {
   template: `
     <div class="timeline-wrapper">
       <div #scrollbar class="scrollbar-wrapper">
-        <rv-handlebar #handlebar [containerRect]="scrollbarRect" [caption]="scrollbarCaption">
+        <rv-handlebar #handlebar
+          [containerRect]="scrollbarRect" [caption]="scrollbarCaption"
+          [left]="scrollbarLeft" [width]="scrollbarWidth">
         </rv-handlebar>
       </div>
 
       <rv-track *ngFor="let track of timeline?.tracks"
         [data]="track" [totalDuration]="timeline.duration"
-        [scrollSettings]="scrollSettings"></rv-track>
+        [scrollSettings]="scrollSettings">
+      </rv-track>
     </div>
   `,
   styleUrls: ['timeline.scss']
@@ -47,6 +50,8 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('handlebar') readonly handlebarRef: HandlebarComponent
 
   timeline: Timeline|null
+  scrollbarLeft = 0
+  scrollbarWidth = 100
   readonly scrollbarCaption = _SCROLLBAR_CAPTION_
   readonly scrollbarRect = new ReplaySubject<ClientRect>(1)
   readonly scrollSettings = new ReplaySubject<ScrollSettings>(1)
@@ -75,22 +80,37 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
 
     this._subs.push(
       fromEventPattern(this._renderer, window, 'resize')
-      .map(() => getScrollbarRect())
-      .startWith(getScrollbarRect())
-      .subscribe(clientRect => {
-        this.scrollbarRect.next(clientRect)
+        .map(() => getScrollbarRect())
+        .startWith(getScrollbarRect())
+        .subscribe(clientRect => {
+          this.scrollbarRect.next(clientRect)
+          this._cdr.markForCheck()
+        }))
+
+
+    this._subs.push(
+      this.handlebarRef.handlebar.subscribe(hb => {
+        // Set new left and width
+        const newWidth = hb.right-hb.left
+        this.scrollbarLeft = hb.left
+        this.scrollbarWidth = newWidth
         this._cdr.markForCheck()
       }))
 
-    // Transform values of type Handlebar
-    // to value of type ScrollbarSettings
     this._subs.push(
-      this.handlebarRef.handlebar.subscribe(hb => {
-          const width = (hb.right-hb.left)/100
-          const nextVal = {zoom: 1/width, scrollLeft: hb.left}
+      this.handlebarRef.handlebar.subscribe({
+        next: hb => {
+          // Transform values of type Handlebar
+          // to value of type ScrollbarSettings
+          const newWidth = hb.right-hb.left
+          const zoom = 100/newWidth
+          const nextVal = {zoom, scrollLeft: hb.left}
           this.scrollSettings.next(nextVal)
-        }, err => this.scrollSettings.error(err),
-        () => this.scrollSettings.complete()))
+          this._cdr.markForCheck()
+        },
+        error: err => this.scrollSettings.error(err),
+        complete: () => this.scrollSettings.complete()
+      }))
   }
 
   ngOnDestroy() {
