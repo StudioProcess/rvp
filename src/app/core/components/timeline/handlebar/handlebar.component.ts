@@ -3,7 +3,7 @@ import {
   ViewChild, ElementRef, Inject,
   ChangeDetectionStrategy,
   OnDestroy, Input, HostBinding,
-  ChangeDetectorRef
+  ChangeDetectorRef, Output
 } from '@angular/core'
 
 import {DOCUMENT} from '@angular/platform-browser'
@@ -22,7 +22,7 @@ import {fromEventPattern} from '../../../../lib/observable'
 
 import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 
-interface Handlebar {
+export interface Handlebar {
   left: number
   right: number
 }
@@ -40,15 +40,23 @@ interface Handlebar {
   styleUrls: ['handlebar.component.scss']
 })
 export class HandlebarComponent implements AfterViewInit, OnDestroy {
-  @Input() caption: string
-  @Input() containerRect: Observable<ClientRect>
+  @Input() readonly caption: string
+  @Input() readonly containerRect: Observable<ClientRect>
 
+  // TODO: set readonly
   @Input('left') @HostBinding('style.left.%') containerLeft = 0
   @Input('width') @HostBinding('style.width.%') containerWidth = 100
 
-  @ViewChild('leftHandle') leftHandle: ElementRef
-  @ViewChild('middleHandle') middleHandle: ElementRef
-  @ViewChild('rightHandle') rightHandle: ElementRef
+  @ViewChild('leftHandle') readonly leftHandle: ElementRef
+  @ViewChild('middleHandle') readonly middleHandle: ElementRef
+  @ViewChild('rightHandle') readonly rightHandle: ElementRef
+
+  private readonly _initRect: Handlebar = {
+    left: this.containerLeft,
+    right: this.containerLeft+this.containerWidth
+  }
+
+  @Output() readonly handlebar = new BehaviorSubject<Handlebar>(this._initRect)
 
   private readonly _subs: Subscription[] = []
 
@@ -58,13 +66,6 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
     @Inject(DOCUMENT) private readonly _document: any) {}
 
   ngAfterViewInit() {
-    const initRect: Handlebar = {
-      left: this.containerLeft,
-      right: this.containerLeft+this.containerWidth
-    }
-
-    const handlebarSubj = new BehaviorSubject<Handlebar>(initRect);
-
     const mousemove = fromEventPattern(this._renderer, this._document, 'mousemove')
     const mouseup = fromEventPattern(this._renderer, this._document, 'mouseup')
     const leftMouseDown = fromEventPattern(this._renderer, this.leftHandle.nativeElement, 'mousedown')
@@ -81,7 +82,7 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
     const leftClientPos = leftMouseDown.switchMap(clientPosWhileMouseMove)
     const rightClientPos = rightMouseDown.switchMap(clientPosWhileMouseMove)
     const middleClientPos = middleMouseDown
-      .withLatestFrom(handlebarSubj, this.containerRect, (mdEvent: MouseEvent, hbar: Handlebar, hRect: ClientRect) => {
+      .withLatestFrom(this.handlebar, this.containerRect, (mdEvent: MouseEvent, hbar: Handlebar, hRect: ClientRect) => {
         const m = transformedToPercentage(mdEvent.clientX, hRect)
         return {
           distLeft: m-hbar.left,
@@ -123,26 +124,26 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
       this.containerLeft = newLeft
       this.containerWidth = this.containerWidth-deltaLeft
 
-      handlebarSubj.next({left: this.containerLeft, right: this.containerLeft+this.containerWidth})
+      this.handlebar.next({left: this.containerLeft, right: this.containerLeft+this.containerWidth})
       this._cdr.markForCheck()
-    }, err => handlebarSubj.error(err), () => handlebarSubj.complete()))
+    }, err => this.handlebar.error(err), () => this.handlebar.complete()))
 
     this._subs.push(right.subscribe(r => {
       // ensure handlebar min width
       const newRight = Math.max(this.containerLeft+_MIN_WIDTH_, r)
       this.containerWidth = newRight-this.containerLeft
 
-      handlebarSubj.next({left: this.containerLeft, right: newRight})
+      this.handlebar.next({left: this.containerLeft, right: newRight})
       this._cdr.markForCheck()
-    }, err => handlebarSubj.error(err), () => handlebarSubj.complete()))
+    }, err => this.handlebar.error(err), () => this.handlebar.complete()))
 
     this._subs.push(middle.subscribe(({distLeft, m}) => {
       const newLeft = Math.min(Math.max(0, m-distLeft), 100-this.containerWidth)
       this.containerLeft = newLeft
 
-      handlebarSubj.next({left: this.containerLeft, right: this.containerLeft+this.containerWidth})
+      this.handlebar.next({left: this.containerLeft, right: this.containerLeft+this.containerWidth})
       this._cdr.markForCheck()
-    }, err => handlebarSubj.error(err), () => handlebarSubj.complete()))
+    }, err => this.handlebar.error(err), () => this.handlebar.complete()))
   }
 
   ngOnDestroy() {
