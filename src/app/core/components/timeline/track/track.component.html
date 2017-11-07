@@ -9,11 +9,14 @@
     <button class="ion-android-close track-delete-icon" title="Delete Track" alt="Delete Track"></button>
   </div>
 </div>
-<div #annotations class="annotations-wrapper">
-  <rv-handlebar *ngFor="let annotation of data.annotations"
-    [containerRect]="annotationsRect"
-    [caption]="getAnnotationTitle(annotation)"
-    [left]="getAnnotationPosition(annotation)"
-    [width]="getAnnotationWidth(annotation)">
-  </rv-handlebar>
+<div #annotations class="annotations-overflow" [scrollLeft]="scrollLeft">
+  <div class="annotations-zoom" [style.width.%]="zoom">
+    <rv-handlebar *ngFor="let annotation of data.annotations"
+      [containerRect]="annotationsRect"
+      [caption]="getAnnotationTitle(annotation)"
+      [left]="getAnnotationPosition(annotation)"
+      [width]="getAnnotationWidth(annotation)">
+    </rv-handlebar>
+  </div>
 </div>
+
