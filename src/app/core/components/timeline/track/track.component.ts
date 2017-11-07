@@ -13,7 +13,7 @@ import 'rxjs/add/observable/combineLatest'
 
 import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 import {ScrollSettings} from '../../../containers/timeline/timeline'
-import {HandlebarChange} from '../handlebar/handlebar.component'
+import {Handlebar} from '../handlebar/handlebar.component'
 import {Track, Annotation} from '../../../../persistence/model'
 import {fromEventPattern} from '../../../../lib/observable'
 
@@ -91,13 +91,11 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
     this._subs.forEach(sub => sub.unsubscribe())
   }
 
-  handlebarChange(ev: HandlebarChange) {
+  handlebarUpdate(ev: Handlebar) {
     const {payload: annotation} = ev
     const tPerc = this.totalDuration/100
-    const deltaStart = tPerc*ev.deltaLeft
-    const deltaDuration = tPerc*ev.deltaWidth
-    const newStart = annotation.utc_timestamp+(deltaStart/this.zoom)
-    const newDuration = annotation.duration+(deltaDuration/this.zoom)
+    const newStart = tPerc*ev.left
+    const newDuration = tPerc*(ev.right-ev.left)
 
     // TODO: dispatch update annotation action to store
     annotation.utc_timestamp = newStart
