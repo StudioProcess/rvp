@@ -15,9 +15,14 @@ import 'rxjs/add/operator/do'
 
 import * as fromProject from '../../../persistence/reducers'
 import {Timeline} from '../../../persistence/model'
+import {fromEventPattern} from '../../../lib/observable'
+import {HandlebarComponent} from '../../components/timeline/handlebar/handlebar.component'
 import {_SCROLLBAR_CAPTION_} from '../../../config/timeline/scrollbar'
 
-import {fromEventPattern} from '../../../lib/observable'
+export interface ScrollSettings {
+  zoom: number
+  scrollLeft: number
+}
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,23 +30,28 @@ import {fromEventPattern} from '../../../lib/observable'
   template: `
     <div class="timeline-wrapper">
       <div #scrollbar class="scrollbar-wrapper">
-        <rv-handlebar [containerRect]="scrollbarRect" [caption]="scrollbarCaption"></rv-handlebar>
+        <rv-handlebar #handlebar [containerRect]="scrollbarRect" [caption]="scrollbarCaption">
+        </rv-handlebar>
       </div>
 
-      <rv-track *ngFor="let track of timeline?.tracks" [data]="track" [totalDuration]="timeline.duration"></rv-track>
+      <rv-track *ngFor="let track of timeline?.tracks"
+        [data]="track" [totalDuration]="timeline.duration"
+        [scrollSettings]="scrollSettings"></rv-track>
     </div>
   `,
   styleUrls: ['timeline.scss']
 })
 export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
+
+  @ViewChild('scrollbar') readonly scrollbarRef: ElementRef
+  @ViewChild('handlebar') readonly handlebarRef: HandlebarComponent
+
+  timeline: Timeline|null
+  readonly scrollbarCaption = _SCROLLBAR_CAPTION_
+  readonly scrollbarRect = new ReplaySubject<ClientRect>(1)
+  readonly scrollSettings = new ReplaySubject<ScrollSettings>(1)
+
   private readonly _subs: Subscription[] = []
-  timeline: Timeline|null = null
-
-  scrollbarCaption = _SCROLLBAR_CAPTION_
-
-  @ViewChild('scrollbar') scrollbar: ElementRef
-
-  scrollbarRect = new ReplaySubject<ClientRect>(1)
 
   constructor(
     private readonly _renderer: Renderer2,
@@ -59,14 +69,28 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    const getScrollbarRect = () => this.scrollbar.nativeElement.getBoundingClientRect()
-    this._subs.push(fromEventPattern(this._renderer, window, 'resize')
+    const getScrollbarRect = () => {
+      return this.scrollbarRef.nativeElement.getBoundingClientRect()
+    }
+
+    this._subs.push(
+      fromEventPattern(this._renderer, window, 'resize')
       .map(() => getScrollbarRect())
       .startWith(getScrollbarRect())
       .subscribe(clientRect => {
         this.scrollbarRect.next(clientRect)
         this._cdr.markForCheck()
       }))
+
+    // Transform values of type Handlebar
+    // to value of type ScrollbarSettings
+    this._subs.push(
+      this.handlebarRef.handlebar.subscribe(hb => {
+          const width = (hb.right-hb.left)/100
+          const nextVal = {zoom: 1/width, scrollLeft: hb.left}
+          this.scrollSettings.next(nextVal)
+        }, err => this.scrollSettings.error(err),
+        () => this.scrollSettings.complete()))
   }
 
   ngOnDestroy() {
