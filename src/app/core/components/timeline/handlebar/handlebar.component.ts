@@ -1,22 +1,23 @@
 import {
   Component, AfterViewInit, Renderer2,
   ViewChild, ElementRef, Inject,
-  ChangeDetectionStrategy,
+  ChangeDetectionStrategy, OnInit,
   OnDestroy, Input, HostBinding,
-  ChangeDetectorRef, Output
+  ChangeDetectorRef, Output, EventEmitter
 } from '@angular/core'
 
 import {DOCUMENT} from '@angular/platform-browser'
 
 import {Observable} from 'rxjs/Observable'
+import {ReplaySubject} from 'rxjs/ReplaySubject'
 import {Subscription} from 'rxjs/Subscription'
-import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 import 'rxjs/add/operator/takeUntil'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/switchMap'
 import 'rxjs/add/operator/publish'
 import 'rxjs/add/operator/distinctUntilChanged'
 import 'rxjs/add/operator/distinctUntilKeyChanged'
+import 'rxjs/add/operator/pairwise'
 
 import {fromEventPattern} from '../../../../lib/observable'
 
@@ -25,6 +26,20 @@ import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 export interface Handlebar {
   left: number
   right: number
+}
+
+export const enum HandlebarChangeType {
+  LEFT,
+  RIGHT,
+  MIDDLE
+}
+
+export interface HandlebarChange {
+  type: HandlebarChangeType
+  payload: any,
+  deltaLeft: number
+  deltaRight: number
+  deltaWidth: number
 }
 
 @Component({
@@ -39,24 +54,20 @@ export interface Handlebar {
   `,
   styleUrls: ['handlebar.component.scss']
 })
-export class HandlebarComponent implements AfterViewInit, OnDestroy {
+export class HandlebarComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() readonly caption: string
   @Input() readonly containerRect: Observable<ClientRect>
 
-  // TODO: set readonly
-  @Input('left') @HostBinding('style.left.%') containerLeft = 0
-  @Input('width') @HostBinding('style.width.%') containerWidth = 100
+  @Input() readonly payload: any
+  @Input('left') @HostBinding('style.left.%') readonly containerLeft: number
+  @Input('width') @HostBinding('style.width.%') readonly containerWidth: number
 
   @ViewChild('leftHandle') readonly leftHandle: ElementRef
   @ViewChild('middleHandle') readonly middleHandle: ElementRef
   @ViewChild('rightHandle') readonly rightHandle: ElementRef
 
-  private readonly _initRect: Handlebar = {
-    left: this.containerLeft,
-    right: this.containerLeft+this.containerWidth
-  }
-
-  @Output() readonly handlebar = new BehaviorSubject<Handlebar>(this._initRect)
+  @Output() readonly handlebar = new ReplaySubject<Handlebar>(1)
+  @Output() readonly handlebarChange = new EventEmitter<HandlebarChange>()
 
   private readonly _subs: Subscription[] = []
 
@@ -64,6 +75,15 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
     private readonly _cdr: ChangeDetectorRef,
     private readonly _renderer: Renderer2,
     @Inject(DOCUMENT) private readonly _document: any) {}
+
+  ngOnInit() {
+    const _initRect: Handlebar = {
+      left: this.containerLeft,
+      right: this.containerLeft+this.containerWidth
+    }
+
+    this.handlebar.next(_initRect)
+  }
 
   ngAfterViewInit() {
     const mousemove = fromEventPattern(this._renderer, this._document, 'mousemove')
@@ -95,6 +115,7 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
     const coordTransform = (clientX: number, hRect: ClientRect) => (clientX-hRect.left)
     const mapToPercentage = (localX: number, hRect: ClientRect) => (localX/hRect.width*100)
     const transformedToPercentage = (clientX: number, hRect: ClientRect) => {
+      // console.log(hRect)
       return mapToPercentage(coordTransform(clientX, hRect), hRect)
     }
 
@@ -121,29 +142,55 @@ export class HandlebarComponent implements AfterViewInit, OnDestroy {
       // ensure handlebar min width
       const newLeft = Math.min(l, oldRight-_MIN_WIDTH_)
       const deltaLeft = newLeft-this.containerLeft
-      this.containerLeft = newLeft
-      this.containerWidth = this.containerWidth-deltaLeft
+      const newWidth = this.containerWidth-deltaLeft
 
-      this.handlebar.next({left: this.containerLeft, right: this.containerLeft+this.containerWidth})
+      this.handlebar.next({left: newLeft, right: newLeft+newWidth})
       this._cdr.markForCheck()
     }, err => this.handlebar.error(err), () => this.handlebar.complete()))
 
     this._subs.push(right.subscribe(r => {
       // ensure handlebar min width
       const newRight = Math.max(this.containerLeft+_MIN_WIDTH_, r)
-      this.containerWidth = newRight-this.containerLeft
-
       this.handlebar.next({left: this.containerLeft, right: newRight})
       this._cdr.markForCheck()
     }, err => this.handlebar.error(err), () => this.handlebar.complete()))
 
     this._subs.push(middle.subscribe(({distLeft, m}) => {
       const newLeft = Math.min(Math.max(0, m-distLeft), 100-this.containerWidth)
-      this.containerLeft = newLeft
-
-      this.handlebar.next({left: this.containerLeft, right: this.containerLeft+this.containerWidth})
+      this.handlebar.next({left: newLeft, right: newLeft+this.containerWidth})
       this._cdr.markForCheck()
     }, err => this.handlebar.error(err), () => this.handlebar.complete()))
+
+    this._subs.push(
+      this.handlebar.pairwise().subscribe(([prev, cur]) => {
+        const prevWidth = prev.right-prev.left
+        const curWidth = cur.right-cur.left
+        if(prev.left === cur.left && prev.right !== cur.right) {
+          this.handlebarChange.next({
+            payload: this.payload,
+            type: HandlebarChangeType.RIGHT,
+            deltaLeft: 0,
+            deltaRight: cur.right-prev.right,
+            deltaWidth: curWidth-prevWidth
+          })
+        } else if(prev.left !== cur.left && prev.right === cur.right) {
+          this.handlebarChange.next({
+            payload: this.payload,
+            type: HandlebarChangeType.LEFT,
+            deltaLeft: cur.left-prev.left,
+            deltaRight: 0,
+            deltaWidth: curWidth-prevWidth
+          })
+        } else {
+          this.handlebarChange.next({
+            payload: this.payload,
+            type: HandlebarChangeType.MIDDLE,
+            deltaLeft: cur.left-prev.left,
+            deltaRight: cur.right-prev.right,
+            deltaWidth: curWidth-prevWidth
+          })
+        }
+      }))
   }
 
   ngOnDestroy() {
