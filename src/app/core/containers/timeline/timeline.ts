@@ -13,6 +13,7 @@ import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/startWith'
 
 import * as fromProject from '../../../persistence/reducers'
+import * as project from '../../../persistence/actions/project'
 import {Timeline} from '../../../persistence/model'
 import {fromEventPattern} from '../../../lib/observable'
 import {HandlebarComponent} from '../../components/timeline/handlebar/handlebar.component'
@@ -35,9 +36,10 @@ export interface ScrollSettings {
         </rv-handlebar>
       </div>
 
-      <rv-track *ngFor="let track of timeline?.tracks"
-        [data]="track" [totalDuration]="timeline.duration"
-        [scrollSettings]="scrollSettings">
+      <rv-track *ngFor="let track of timeline?.tracks; index as i"
+        [data]="track" [trackIndex]="i" [totalDuration]="timeline.duration"
+        [scrollSettings]="scrollSettings"
+        (updateAnnotation)="updateAnnotation($event)">
       </rv-track>
     </div>
   `,
@@ -81,11 +83,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       fromEventPattern(this._renderer, window, 'resize')
         .map(() => getScrollbarRect())
         .startWith(getScrollbarRect())
-        .subscribe(clientRect => {
-          this.scrollbarRect.next(clientRect)
-          this._cdr.markForCheck()
-        }))
-
+        .subscribe(this.scrollbarRect))
 
     this._subs.push(
       this.handlebarRef.handlebar.subscribe(hb => {
@@ -96,8 +94,13 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
         this._cdr.markForCheck()
       }))
 
+    const initHB = {
+      left: this.scrollbarLeft,
+      right: this.scrollbarWidth
+    }
+
     this._subs.push(
-      this.handlebarRef.handlebar.subscribe({
+      this.handlebarRef.handlebar.startWith(initHB).subscribe({
         next: hb => {
           // Transform values of type Handlebar
           // to values of type ScrollbarSettings
@@ -105,11 +108,15 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
           const zoom = 100/newWidth
           const nextVal = {zoom, scrollLeft: hb.left}
           this.scrollSettings.next(nextVal)
-          this._cdr.markForCheck()
+          // this._cdr.markForCheck()
         },
         error: err => this.scrollSettings.error(err),
         complete: () => this.scrollSettings.complete()
       }))
+  }
+
+  updateAnnotation(updateAnnotation: project.UpdateAnnotationPayload) {
+    this._store.dispatch(new project.ProjectUpdateAnnotation(updateAnnotation))
   }
 
   ngOnDestroy() {
