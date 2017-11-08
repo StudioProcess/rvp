@@ -1,7 +1,7 @@
 import {
   Component, Input, ChangeDetectionStrategy,
   OnInit, AfterViewInit, ElementRef, ViewChild,
-  OnDestroy, ChangeDetectorRef, Renderer2
+  OnDestroy, ChangeDetectorRef
 } from '@angular/core'
 
 import {FormGroup, FormBuilder, Validators} from '@angular/forms'
@@ -15,7 +15,6 @@ import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 import {ScrollSettings} from '../../../containers/timeline/timeline'
 import {Handlebar} from '../handlebar/handlebar.component'
 import {Track, Annotation} from '../../../../persistence/model'
-import {fromEventPattern} from '../../../../lib/observable'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,18 +27,16 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() readonly totalDuration: number
   @Input() readonly scrollSettings: Observable<ScrollSettings>
 
-  @ViewChild('annotationContainer') readonly annotationContainer: ElementRef
-
   readonly annotationRect = new ReplaySubject<ClientRect>(1)
   form: FormGroup|null = null
   zoom: number
   scrollLeft: number
 
+  @ViewChild('annotationContainer') private readonly annotationContainer: ElementRef
   private readonly _subs: Subscription[] = []
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
-    private readonly _renderer: Renderer2,
     private readonly _fb: FormBuilder) {}
 
   ngOnInit() {
@@ -54,19 +51,14 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this._subs.push(
-      Observable.merge(
-        fromEventPattern(this._renderer, window, 'resize'),
-        this.scrollSettings)
-      .startWith()
-      .subscribe(() => {
+      this.scrollSettings.subscribe(() => {
         this.annotationRect.next(getAnnotationRect())
-      }));
+      }))
 
     this._subs.push(
       Observable.combineLatest(
         this.annotationRect, this.scrollSettings,
         (rect, {zoom, scrollLeft}) => {
-        // console.log('RECT', rect)
         return {zoom, left: (rect.width/100)*scrollLeft}
       }).subscribe(({zoom, left}) => {
         this.zoom = zoom
