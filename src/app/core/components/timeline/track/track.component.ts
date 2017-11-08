@@ -1,7 +1,8 @@
 import {
   Component, Input, ChangeDetectionStrategy,
   OnInit, AfterViewInit, ElementRef, ViewChild,
-  OnDestroy, ChangeDetectorRef
+  OnDestroy, ChangeDetectorRef, EventEmitter,
+  Output
 } from '@angular/core'
 
 import {FormGroup, FormBuilder, Validators} from '@angular/forms'
@@ -15,6 +16,7 @@ import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 import {ScrollSettings} from '../../../containers/timeline/timeline'
 import {Handlebar} from '../handlebar/handlebar.component'
 import {Track, Annotation} from '../../../../persistence/model'
+import {UpdateAnnotationPayload} from '../../../../persistence/actions/project'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,6 +26,7 @@ import {Track, Annotation} from '../../../../persistence/model'
 })
 export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() readonly data: Track
+  @Input() readonly trackIndex: number
   @Input() readonly totalDuration: number
   @Input() readonly scrollSettings: Observable<ScrollSettings>
 
@@ -31,6 +34,8 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
   form: FormGroup|null = null
   zoom: number
   scrollLeft: number
+
+  @Output() readonly updateAnnotation = new EventEmitter<UpdateAnnotationPayload>()
 
   @ViewChild('annotationContainer') private readonly annotationContainer: ElementRef
   private readonly _subs: Subscription[] = []
@@ -59,12 +64,12 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
       Observable.combineLatest(
         this.annotationRect, this.scrollSettings,
         (rect, {zoom, scrollLeft}) => {
-        return {zoom, left: (rect.width/100)*scrollLeft}
-      }).subscribe(({zoom, left}) => {
-        this.zoom = zoom
-        this.scrollLeft = left
-        this._cdr.markForCheck()
-      }))
+          return {zoom, left: (rect.width/100)*scrollLeft}
+        }).subscribe(({zoom, left}) => {
+          this.zoom = zoom
+          this.scrollLeft = left
+          this._cdr.markForCheck()
+        }))
   }
 
   getAnnotationTitle(annotation: Annotation) {
@@ -84,14 +89,21 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   handlebarUpdate(ev: Handlebar) {
-    const {payload: annotation} = ev
+    const {payload: annotationIndex} = ev
+    const oldAnnotation = this.data.annotations[annotationIndex]
+
     const tPerc = this.totalDuration/100
     const newStart = tPerc*ev.left
     const newDuration = tPerc*(ev.right-ev.left)
 
-    // TODO: dispatch update annotation action to store
-    annotation.utc_timestamp = newStart
-    annotation.duration = newDuration
-    this._cdr.markForCheck()
+    this.updateAnnotation.emit({
+      trackIndex: this.trackIndex,
+      annotationIndex,
+      annotation: {
+        ...oldAnnotation,
+        utc_timestamp: newStart,
+        duration: newDuration
+      }
+    })
   }
 }

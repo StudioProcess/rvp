@@ -11,8 +11,8 @@
 </div>
 <div class="annotations-overflow" [scrollLeft]="scrollLeft">
   <div #annotationContainer class="annotations-zoom" [style.width.%]="zoom*100">
-    <rv-handlebar *ngFor="let annotation of data.annotations"
-      [payload]="annotation"
+    <rv-handlebar *ngFor="let annotation of data.annotations; index as i"
+      [payload]="i"
       [containerRect]="annotationRect"
       [caption]="getAnnotationTitle(annotation)"
       [left]="getAnnotationPosition(annotation)"
