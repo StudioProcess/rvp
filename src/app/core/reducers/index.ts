@@ -1,4 +1,11 @@
-import {createSelector, createFeatureSelector, ActionReducerMap} from '@ngrx/store'
+import {
+  createSelector, createFeatureSelector, ActionReducerMap,
+  MetaReducer
+} from '@ngrx/store'
+
+// import {storeFreeze} from 'ngrx-store-freeze'
+
+// import {environment} from '../../../environments/environment'
 
 import * as fromLoading from './loading'
 
@@ -9,6 +16,9 @@ export interface State {
 export const reducers: ActionReducerMap<State> = {
   loading: fromLoading.reducer
 }
+
+export const metaReducers: MetaReducer<State>[] = []
+  // !environment.production ? [storeFreeze] : []
 
 // Loading selectors
 export const getLoadingState = createFeatureSelector<fromLoading.State>('loading')

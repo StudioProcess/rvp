@@ -12,7 +12,7 @@ import {CoreModule} from './core/core.module'
 import {PersistenceModule} from './persistence/persistence.module'
 import {PlayerModule} from './player/player.module'
 
-import {reducers} from './core/reducers'
+import {reducers, metaReducers} from './core/reducers'
 
 import {AppShellContainer} from './shell'
 
@@ -22,7 +22,7 @@ import {appRoutes} from './routes'
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes/*, {enableTracing: !environment.production}*/),
-    StoreModule.forRoot(reducers),
+    StoreModule.forRoot(reducers, {metaReducers}),
     EffectsModule.forRoot([]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
 
