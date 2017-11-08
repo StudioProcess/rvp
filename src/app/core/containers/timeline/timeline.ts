@@ -11,7 +11,6 @@ import {ReplaySubject} from 'rxjs/ReplaySubject'
 import {Subscription} from 'rxjs/Subscription'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/startWith'
-import 'rxjs/add/operator/do'
 
 import * as fromProject from '../../../persistence/reducers'
 import {Timeline} from '../../../persistence/model'
@@ -101,7 +100,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       this.handlebarRef.handlebar.subscribe({
         next: hb => {
           // Transform values of type Handlebar
-          // to value of type ScrollbarSettings
+          // to values of type ScrollbarSettings
           const newWidth = hb.right-hb.left
           const zoom = 100/newWidth
           const nextVal = {zoom, scrollLeft: hb.left}
