@@ -43,7 +43,7 @@ export class ProjectUpdateError implements Action {
   constructor(readonly payload: any) {}
 }
 
-interface UpdateAnnotationPayload {
+export interface UpdateAnnotationPayload {
   trackIndex: number
   annotationIndex: number
   annotation: Annotation
