@@ -16,6 +16,7 @@ import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/switchMap'
 import 'rxjs/add/operator/distinctUntilChanged'
 import 'rxjs/add/operator/distinctUntilKeyChanged'
+import 'rxjs/add/operator/skip'
 
 import {fromEventPattern} from '../../../../lib/observable'
 
@@ -50,6 +51,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('middleHandle') readonly middleHandle: ElementRef
   @ViewChild('rightHandle') readonly rightHandle: ElementRef
 
+  private readonly handlebarSubj = new ReplaySubject<Handlebar>(1)
   @Output() readonly handlebar = new ReplaySubject<Handlebar>(1)
 
   private readonly _subs: Subscription[] = []
@@ -66,7 +68,10 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnDestroy {
       right: this.containerLeft+this.containerWidth
     }
 
-    this.handlebar.next(_initRect)
+    this.handlebarSubj.next(_initRect)
+
+    this._subs.push(
+      this.handlebarSubj.skip(1).subscribe(this.handlebar))
   }
 
   ngAfterViewInit() {
@@ -86,7 +91,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnDestroy {
     const leftClientPos = leftMouseDown.switchMap(clientPosWhileMouseMove)
     const rightClientPos = rightMouseDown.switchMap(clientPosWhileMouseMove)
     const middleClientPos = middleMouseDown
-      .withLatestFrom(this.handlebar, this.containerRect, (mdEvent: MouseEvent, hbar: Handlebar, hRect: ClientRect) => {
+      .withLatestFrom(this.handlebarSubj, this.containerRect, (mdEvent: MouseEvent, hbar: Handlebar, hRect: ClientRect) => {
         const m = transformedToPercentage(mdEvent.clientX, hRect)
         return {
           distLeft: m-hbar.left,
@@ -128,44 +133,44 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnDestroy {
         const deltaLeft = newLeft-this.containerLeft
         const newWidth = this.containerWidth-deltaLeft
 
-        this.handlebar.next({
+        this.handlebarSubj.next({
           payload: this.payload,
           left: newLeft,
           right: newLeft+newWidth
         })
         this._cdr.markForCheck()
       },
-      error: err => this.handlebar.error(err),
-      complete: () => this.handlebar.complete()
+      error: err => this.handlebarSubj.error(err),
+      complete: () => this.handlebarSubj.complete()
     }))
 
     this._subs.push(right.subscribe({
       next: r => {
         // ensure handlebar min width
         const newRight = Math.max(this.containerLeft+_MIN_WIDTH_, r)
-        this.handlebar.next({
+        this.handlebarSubj.next({
           payload: this.payload,
           left: this.containerLeft,
           right: newRight
         })
         this._cdr.markForCheck()
       },
-      error: err => this.handlebar.error(err),
-      complete: () => this.handlebar.complete()
+      error: err => this.handlebarSubj.error(err),
+      complete: () => this.handlebarSubj.complete()
     }))
 
     this._subs.push(middle.subscribe({
       next: ({distLeft, m}) => {
         const newLeft = Math.min(Math.max(0, m-distLeft), 100-this.containerWidth)
-        this.handlebar.next({
+        this.handlebarSubj.next({
           payload: this.payload,
           left: newLeft,
           right: newLeft+this.containerWidth
         })
         this._cdr.markForCheck()
       },
-      error: err => this.handlebar.error(err),
-      complete: () => this.handlebar.complete()
+      error: err => this.handlebarSubj.error(err),
+      complete: () => this.handlebarSubj.complete()
     }))
   }
 
