@@ -1,24 +1,18 @@
 import {Record, List} from 'immutable'
 
 import * as project from '../actions/project'
+
 import {
-  Project, TimelineRecordFactory,
+  Project, TimelineRecordFactory, ProjectRecordFactory,
   TrackRecordFactory, TrackFieldsRecordFactory,
   AnnotationRecordFactory, AnnotationFieldsRecordFactory
 } from '../model'
-
-export const ProjectFactory = Record<Project>({
-  id: null,
-  video: null,
-  timeline: null,
-  videoBlob: null
-})
 
 // export const TimelineFactory = Record<Timeline>({
 //   duration: 0
 // })
 
-const initialState = new ProjectFactory()
+const initialState = new ProjectRecordFactory()
 
 export type State = Record<Project>
 
@@ -27,8 +21,9 @@ export function reducer(state: State = initialState, action: project.Actions): S
     case project.PROJECT_FETCH_SUCCESS:
       const {project:proj, videoBlob} = action.payload
       // Create immutable representation
-      return new ProjectFactory({
+      return new ProjectRecordFactory({
         ...proj,
+        videoBlob,
         timeline: TimelineRecordFactory({
           ...proj.timeline,
           tracks: List(proj.timeline.tracks.map((track: any) => {
@@ -45,8 +40,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
               }))
             })
           }))
-        }),
-        videoBlob
+        })
       })
     case project.PROJECT_UPDATE_ANNOTATION:
       const {trackIndex, annotationIndex, annotation} = action.payload

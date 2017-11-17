@@ -2,6 +2,13 @@ import {List, Record} from 'immutable'
 
 // Record factories
 
+export const ProjectRecordFactory = Record<Project>({
+  id: null,
+  video: null,
+  timeline: null,
+  videoBlob: null
+})
+
 export const TimelineRecordFactory = Record<Timeline>({
   duration: 0,
   playhead: 0,
