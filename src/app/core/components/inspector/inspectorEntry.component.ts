@@ -12,7 +12,6 @@ import {
 const _VALID_ = 'VALID' // not exported by @angular/forms
 
 import * as moment from 'moment'
-
 import {Record} from 'immutable'
 
 import 'rxjs/add/operator/combineLatest'
@@ -22,7 +21,12 @@ import 'rxjs/add/operator/filter'
 
 import {_FORM_INPUT_DEBOUNCE_} from '../../../config/form'
 
-import {AnnotationColorMap, Annotation, AnnotationRecordFactory, AnnotationFieldsRecordFactory} from '../../../persistence/model'
+import {
+  AnnotationColorMap, AnnotationRecordFactory,
+  AnnotationFieldsRecordFactory
+} from '../../../persistence/model'
+
+import * as project from '../../../persistence/actions/project'
 
 function formatDuration(unixTime: number): string {
   return moment.unix(unixTime).utc().format('HH:mm:ss.SSS')
@@ -64,7 +68,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   @Input() entry: Record<AnnotationColorMap>
   @Input() index: number
 
-  @Output() onUpdate = new EventEmitter<{index: number, trackIndex: number, annotation: Record<Annotation>}>()
+  @Output() onUpdate = new EventEmitter<project.UpdateAnnotationPayload>()
 
   @ViewChild('start') startInput: ElementRef
   @ViewChild('duration') durationInput: ElementRef
@@ -102,7 +106,11 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
           })
         })
 
-        this.onUpdate.emit({trackIndex: this.entry.get('trackIndex', null), index: this.index, annotation})
+        this.onUpdate.emit({
+          trackIndex: this.entry.get('trackIndex', null),
+          annotationIndex: this.index,
+          annotation
+        })
       })
   }
 

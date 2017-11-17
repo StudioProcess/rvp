@@ -12,7 +12,7 @@ import {Store} from '@ngrx/store'
 import * as project from '../../persistence/actions/project'
 import * as fromProject from '../../persistence/reducers'
 import * as fromPlayer from '../../player/reducers'
-import {Annotation, AnnotationColorMap} from '../../persistence/model'
+import {AnnotationColorMap} from '../../persistence/model'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,8 +51,8 @@ export class InspectorContainer implements OnInit, OnDestroy {
         }))
   }
 
-  updateAnnotation({index, trackIndex, annotation}: {index: number, trackIndex: number, annotation: Record<Annotation>}) {
-    this._store.dispatch(new project.ProjectUpdateAnnotation({annotationIndex: index, trackIndex, annotation}))
+  updateAnnotation(updateAnnotation: project.UpdateAnnotationPayload) {
+    this._store.dispatch(new project.ProjectUpdateAnnotation(updateAnnotation))
   }
 
   ngOnDestroy() {
