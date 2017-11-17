@@ -30,7 +30,7 @@ export class PlayerContainer implements AfterViewInit, OnDestroy {
 
   private readonly _subs: Subscription[] = []
 
-  private readonly videoObjectURL: Observable<string> =
+  private readonly videoObjectURL =
     this._projectStore.select(fromProject.getVideoObjectURL)
       .filter(objUrl => objUrl !== null) as Observable<string>
 
