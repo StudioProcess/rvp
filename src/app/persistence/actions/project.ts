@@ -1,5 +1,7 @@
 import {Action} from '@ngrx/store'
 
+import {Record} from 'immutable'
+
 import {Annotation} from '../model'
 
 export const PROJECT_FETCH = '[Project] Fetch'
@@ -46,7 +48,7 @@ export class ProjectUpdateError implements Action {
 export interface UpdateAnnotationPayload {
   trackIndex: number
   annotationIndex: number
-  annotation: Annotation
+  annotation: Record<Annotation>
 }
 
 export class ProjectUpdateAnnotation implements Action {
