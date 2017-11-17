@@ -2,7 +2,7 @@ import {
   Component, Input, Output,
   OnInit, OnChanges, AfterViewInit,
   EventEmitter, ViewChild, ElementRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy, OnDestroy
 } from '@angular/core'
 
 import {
@@ -15,10 +15,12 @@ const _VALID_ = 'VALID' // not exported by @angular/forms
 import * as moment from 'moment'
 import {Record} from 'immutable'
 
-import 'rxjs/add/operator/combineLatest'
+import {Subscription} from 'rxjs/Subscription'
+import 'rxjs/add/operator/withLatestFrom'
 import 'rxjs/add/operator/debounceTime'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/filter'
+import 'rxjs/add/operator/distinctUntilChanged'
 
 import {_FORM_INPUT_DEBOUNCE_} from '../../../config/form'
 
@@ -66,7 +68,7 @@ const durationValidator = Validators.compose([Validators.required, durationValid
   templateUrl: 'inspectorEntry.component.html',
   styleUrls: ['inspectorEntry.component.scss']
 })
-export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit {
+export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
   @Input() entry: Record<AnnotationColorMap>
   @Input() index: number
 
@@ -76,6 +78,8 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   @ViewChild('duration') durationInput: ElementRef
 
   form: FormGroup|null = null
+
+  private readonly _subs: Subscription[] = []
 
   constructor(private readonly _fb: FormBuilder) {}
 
@@ -104,25 +108,31 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
       title, description
     })
 
-    this.form.valueChanges.combineLatest(this.form.statusChanges)
-      .debounceTime(_FORM_INPUT_DEBOUNCE_)
-      .filter(([_, status]) => status === _VALID_)
-      .map(([formData, _]) => formData)
-      .subscribe(({title, description, utc_timestamp, duration}) => {
-        const annotation = new AnnotationRecordFactory({
-          utc_timestamp: parseDuration(utc_timestamp),
-          duration: parseDuration(duration),
-          fields: new AnnotationFieldsRecordFactory({
-            title, description
+    this._subs.push(
+      this.form.valueChanges.withLatestFrom(this.form.statusChanges)
+        .debounceTime(_FORM_INPUT_DEBOUNCE_)
+        .filter(([_, status]) => status === _VALID_)
+        .map(([formData, _]) => formData)
+        .distinctUntilChanged((prev, cur) => {
+          return prev.title === cur.title && prev.description === cur.description &&
+            prev.utc_timestamp === cur.utc_timestamp && prev.duration === cur.duration
+        })
+        .subscribe(({title, description, utc_timestamp, duration}) => {
+          console.log('CHANGE')
+          const annotation = new AnnotationRecordFactory({
+            utc_timestamp: parseDuration(utc_timestamp),
+            duration: parseDuration(duration),
+            fields: new AnnotationFieldsRecordFactory({
+              title, description
+            })
           })
-        })
 
-        this.onUpdate.emit({
-          trackIndex: this.entry.get('trackIndex', null),
-          annotationIndex: this.index,
-          annotation
-        })
-      })
+          this.onUpdate.emit({
+            trackIndex: this.entry.get('trackIndex', null),
+            annotationIndex: this.index,
+            annotation
+          })
+        }))
   }
 
   ngAfterViewInit() {
@@ -130,8 +140,13 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   }
 
   ngOnChanges() {
+    console.log('RESET FORM')
     if(this.form !== null) {
-      this.form.reset(this._mapModel(this.entry))
+      this.form.setValue(this._mapModel(this.entry))
     }
+  }
+
+  ngOnDestroy() {
+    this._subs.forEach(sub => sub.unsubscribe())
   }
 }
