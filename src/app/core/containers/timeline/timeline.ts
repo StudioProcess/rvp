@@ -12,6 +12,8 @@ import {Subscription} from 'rxjs/Subscription'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/startWith'
 
+import {Record} from 'immutable'
+
 import * as fromProject from '../../../persistence/reducers'
 import * as project from '../../../persistence/actions/project'
 import {Timeline} from '../../../persistence/model'
@@ -50,7 +52,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('scrollbar') readonly scrollbarRef: ElementRef
   @ViewChild('handlebar') readonly handlebarRef: HandlebarComponent
 
-  timeline: Timeline|null
+  timeline: Record<Timeline>
   scrollbarLeft = 0
   scrollbarWidth = 100
   readonly scrollbarCaption = _SCROLLBAR_CAPTION_
@@ -69,7 +71,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       this._store.select(fromProject.getTimeline)
         .filter(timeline => timeline !== null)
         .subscribe(timeline => {
-          this.timeline = timeline
+          this.timeline = timeline as Record<Timeline>
           this._cdr.markForCheck()
         }))
   }
