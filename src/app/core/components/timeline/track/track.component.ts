@@ -17,7 +17,7 @@ import 'rxjs/add/observable/combineLatest'
 import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 import {ScrollSettings} from '../../../containers/timeline/timeline'
 import {Handlebar} from '../handlebar/handlebar.component'
-import {Track, Annotation} from '../../../../persistence/model'
+import {Track, Annotation, AnnotationRecordFactory} from '../../../../persistence/model'
 import {UpdateAnnotationPayload} from '../../../../persistence/actions/project'
 
 @Component({
@@ -74,8 +74,8 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
         }))
   }
 
-  getAnnotationTitle(annotation: Annotation) {
-    return annotation.fields.title
+  getAnnotationTitle(annotation: Record<Annotation>) {
+    return annotation.getIn(['fields', 'title'])
   }
 
   getAnnotationPosition(annotation: Annotation) {
@@ -92,7 +92,7 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
 
   handlebarUpdate(ev: Handlebar) {
     const {payload: annotationIndex} = ev
-    const oldAnnotation = this.data.annotations[annotationIndex]
+    const oldAnnotation = this.data.getIn(['annotations', annotationIndex])
 
     const tPerc = this.totalDuration/100
     const newStart = tPerc*ev.left
@@ -101,11 +101,11 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
     this.updateAnnotation.emit({
       trackIndex: this.trackIndex,
       annotationIndex,
-      annotation: {
+      annotation: AnnotationRecordFactory({
         ...oldAnnotation,
         utc_timestamp: newStart,
         duration: newDuration
-      }
+      })
     })
   }
 }
