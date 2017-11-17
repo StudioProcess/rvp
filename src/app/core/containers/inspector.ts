@@ -34,7 +34,7 @@ import {AnnotationColorMap} from '../../persistence/model'
 })
 export class InspectorContainer implements OnInit, OnDestroy {
   private readonly _subs: Subscription[] = []
-  annotations: List<Record<AnnotationColorMap>>|null
+  annotations: List<Record<AnnotationColorMap>>
   height = this._playerStore.select(fromPlayer.getDimensions).map(({height}) => height)
 
   constructor(
