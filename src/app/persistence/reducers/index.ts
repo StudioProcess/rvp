@@ -1,10 +1,10 @@
-import {List, Record} from 'immutable'
+import {List} from 'immutable'
 
 import {ActionReducerMap, createSelector, createFeatureSelector} from '@ngrx/store'
 
 import * as fromProject from './project'
 
-import {AnnotationColorMap, AnnotationColorMapRecordFactory} from '../model'
+import {AnnotationColorMapRecordFactory} from '../model'
 
 export interface State {
   project: fromProject.State,
@@ -32,20 +32,14 @@ export const getTimeline = createSelector(
 // TODO: use Seq to create flattened?
 export const getFlattenedAnnotations = createSelector(getTimeline, timeline => {
   if(timeline !== null) {
-    const init: List<Record<AnnotationColorMap>> = List([])
-    const tracks = timeline.get('tracks', null)
-
-    const flattened = tracks.reduce((accum, track, trackIndex) => {
+    return timeline.get('tracks', null).flatMap((track, trackIndex) => {
       const color = track.get('color', null)
-      const annotations = track.get('annotations', null)
-      return accum.concat(annotations.map(annotation => {
+      return track.get('annotations', null).map(annotation => {
         return new AnnotationColorMapRecordFactory({
           trackIndex, color, annotation
         })
-      }))
-    }, init)
-
-    return flattened
+      })
+    })
   } else {
     return List([])
   }
