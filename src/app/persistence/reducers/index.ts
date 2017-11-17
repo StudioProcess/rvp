@@ -29,7 +29,6 @@ export const getTimeline = createSelector(
   getProjectState,
   fromProject.getTimeline)
 
-// TODO: use Seq to create flattened?
 export const getFlattenedAnnotations = createSelector(getTimeline, timeline => {
   if(timeline !== null) {
     return timeline.get('tracks', null).flatMap((track, trackIndex) => {
