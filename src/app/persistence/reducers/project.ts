@@ -1,54 +1,71 @@
+import {Record, List} from 'immutable'
+
 import * as project from '../actions/project'
-import {Timeline} from '../model'
+import {
+  Project, TimelineRecordFactory,
+  TrackRecordFactory, TrackFieldsRecordFactory,
+  AnnotationRecordFactory, AnnotationFieldsRecordFactory
+} from '../model'
 
-import {getPartitionResult} from '../../lib/array'
-
-export interface State {
-  id: string|null
-  video: any
-  timeline: Timeline|null
-  videoBlob: Blob|null
-}
-
-const initialState: State = {
+export const ProjectFactory = Record<Project>({
   id: null,
   video: null,
   timeline: null,
   videoBlob: null
-}
+})
+
+// export const TimelineFactory = Record<Timeline>({
+//   duration: 0
+// })
+
+const initialState = new ProjectFactory()
+
+export type State = Record<Project>
 
 export function reducer(state: State = initialState, action: project.Actions): State {
   switch(action.type) {
     case project.PROJECT_FETCH_SUCCESS:
-      return {
-        ...action.payload.project,
-        videoBlob: action.payload.videoBlob
-      }
+      const {project:proj, videoBlob} = action.payload
+      // Create immutable representation
+      return new ProjectFactory({
+        ...proj,
+        timeline: TimelineRecordFactory({
+          ...proj.timeline,
+          tracks: List(proj.timeline.tracks.map((track: any) => {
+            const {title} = track.fields
+            return new TrackRecordFactory({
+              ...track,
+              fields: TrackFieldsRecordFactory({title}),
+              annotations: List(track.annotations.map((annotation: any) => {
+                const {title, description} = annotation
+                return new AnnotationRecordFactory({
+                  ...annotation,
+                  fields: new AnnotationFieldsRecordFactory({title, description}),
+                })
+              }))
+            })
+          }))
+        }),
+        videoBlob
+      })
     case project.PROJECT_UPDATE_ANNOTATION:
       const {trackIndex, annotationIndex, annotation} = action.payload
-
-      if(state.timeline !== null) {
-        const track = state.timeline.tracks[trackIndex]
-        const {annotations} = track
-
-        const {before, after} = getPartitionResult(annotations, annotationIndex)
-        const newAnnotations = before.concat(annotation).concat(after)
-
-        track.annotations = newAnnotations
-
-        return state
-      } else {
-        return state
-      }
+      return state.setIn([
+        'timeline', 'tracks', trackIndex,
+        'annotations', annotationIndex
+      ], annotation)
     default:
       return state
   }
 }
 
-export const getVideo = (state: State) => state.video
+export const getVideo = (state: State) => state.get('video', null)
 
 export const getVideoObjectURL = (state: State) => {
-  return state.videoBlob !== null ? URL.createObjectURL(state.videoBlob) : null
+  const vb = state.get('videoBlob', null)
+  return vb !== null ? URL.createObjectURL(vb) : null
 }
 
-export const getTimeline = (state: State) => state.timeline
+export const getTimeline = (state: State) => {
+  return state.get('timeline', null)
+}
