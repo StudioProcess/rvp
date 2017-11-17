@@ -13,6 +13,8 @@ const _VALID_ = 'VALID' // not exported by @angular/forms
 
 import * as moment from 'moment'
 
+import {Record} from 'immutable'
+
 import 'rxjs/add/operator/combineLatest'
 import 'rxjs/add/operator/debounceTime'
 import 'rxjs/add/operator/map'
@@ -20,7 +22,7 @@ import 'rxjs/add/operator/filter'
 
 import {_FORM_INPUT_DEBOUNCE_} from '../../../config/form'
 
-import {AnnotationColorMap, Annotation} from '../../../persistence/model'
+import {AnnotationColorMap, Annotation, AnnotationRecordFactory, AnnotationFieldsRecordFactory} from '../../../persistence/model'
 
 function formatDuration(unixTime: number): string {
   return moment.unix(unixTime).utc().format('HH:mm:ss.SSS')
@@ -59,10 +61,10 @@ const durationValidator = Validators.compose([Validators.required, durationValid
   styleUrls: ['inspectorEntry.component.scss']
 })
 export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit {
-  @Input() entry: AnnotationColorMap
+  @Input() entry: Record<AnnotationColorMap>
   @Input() index: number
 
-  @Output() onUpdate = new EventEmitter<{index: number, trackIndex: number, annotation: Annotation}>()
+  @Output() onUpdate = new EventEmitter<{index: number, trackIndex: number, annotation: Record<Annotation>}>()
 
   @ViewChild('start') startInput: ElementRef
   @ViewChild('duration') durationInput: ElementRef
@@ -71,13 +73,11 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   constructor(private readonly _fb: FormBuilder) {}
 
-  private _mapModel(entry: AnnotationColorMap) {
-    const {
-      annotation: {
-        utc_timestamp, duration,
-        fields: {title, description}
-      }
-    } = entry
+  private _mapModel(entry: Record<AnnotationColorMap>) {
+    const utc_timestamp = entry.getIn(['annotation', 'utc_timestamp'])
+    const duration = entry.getIn(['annotation', 'duration'])
+    const title = entry.getIn(['annotation', 'fields', 'title'])
+    const description = entry.getIn(['annotation', 'fields', 'description'])
 
     return {
       utc_timestamp: [formatDuration(utc_timestamp), durationValidator],
@@ -94,16 +94,15 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
       .filter(([_, status]) => status === _VALID_)
       .map(([formData, _]) => formData)
       .subscribe(({title, description, utc_timestamp, duration}) => {
-        const annotation = {
+        const annotation = new AnnotationRecordFactory({
           utc_timestamp: parseDuration(utc_timestamp),
           duration: parseDuration(duration),
-          fields: {
-            title,
-            description
-          }
-        }
+          fields: new AnnotationFieldsRecordFactory({
+            title, description
+          })
+        })
 
-        this.onUpdate.emit({trackIndex: this.entry.trackIndex, index: this.index, annotation})
+        this.onUpdate.emit({trackIndex: this.entry.get('trackIndex', null), index: this.index, annotation})
       })
   }
 
@@ -114,11 +113,11 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   ngOnChanges() {
     if(this.form !== null) {
       this.form.reset({
-        'color': this.entry.color,
-        'start': this.entry.annotation.utc_timestamp,
-        'duration': this.entry.annotation.duration,
-        'title': this.entry.annotation.fields.title,
-        'description': this.entry.annotation.fields.description
+        'color': this.entry.get('color', null),
+        'start': this.entry.getIn(['annotation', 'utc_timestamp']),
+        'duration': this.entry.getIn(['annotation', 'duration']),
+        'title': this.entry.getIn(['annotation', 'duration', 'fields', 'title']),
+        'description': this.entry.getIn(['annotation', 'duration', 'fields', 'description'])
       })
     }
   }
