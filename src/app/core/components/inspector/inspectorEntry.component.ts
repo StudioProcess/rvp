@@ -1,7 +1,8 @@
 import {
   Component, Input, Output,
   OnInit, OnChanges, AfterViewInit,
-  EventEmitter, ViewChild, ElementRef
+  EventEmitter, ViewChild, ElementRef,
+  ChangeDetectionStrategy
 } from '@angular/core'
 
 import {
@@ -60,6 +61,7 @@ function durationValidatorFactory(): ValidatorFn {
 const durationValidator = Validators.compose([Validators.required, durationValidatorFactory()])
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'rv-inspector-entry',
   templateUrl: 'inspectorEntry.component.html',
   styleUrls: ['inspectorEntry.component.scss']
