@@ -20,7 +20,7 @@ import {AnnotationColorMap} from '../../persistence/model'
   template: `
     <div *ngIf="annotations !== null" class="wrapper" [style.height.px]="height|async">
       <rv-inspector-entry
-        *ngFor="let annotation of annotations; index as i"
+        *ngFor="let annotation of annotations; index as i; trackBy: trackByFunc;"
         [entry]="annotation"
         [index]="i"
         (onUpdate)="updateAnnotation($event)">
@@ -41,6 +41,10 @@ export class InspectorContainer implements OnInit, OnDestroy {
     private readonly _cdr: ChangeDetectorRef,
     private readonly _store: Store<fromProject.State>,
     private readonly _playerStore: Store<fromPlayer.State>) {}
+
+  trackByFunc(index: number) {
+    return index
+  }
 
   ngOnInit() {
     this._subs.push(
