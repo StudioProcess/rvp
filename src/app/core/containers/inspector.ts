@@ -49,6 +49,7 @@ export class InspectorContainer implements OnInit, OnDestroy {
   ngOnInit() {
     this._subs.push(
       this._store.select(fromProject.getSortedFlattenedAnnotations)
+        .filter(annotations => annotations.size > 0)
         .subscribe(annotations => {
           this.annotations = annotations
           this._cdr.markForCheck()
