@@ -3,6 +3,8 @@ import {
   ChangeDetectionStrategy, ChangeDetectorRef
 } from '@angular/core'
 
+import {List, Record} from 'immutable'
+
 import {Subscription} from 'rxjs/Subscription'
 
 import {Store} from '@ngrx/store'
@@ -32,7 +34,7 @@ import {Annotation, AnnotationColorMap} from '../../persistence/model'
 })
 export class InspectorContainer implements OnInit, OnDestroy {
   private readonly _subs: Subscription[] = []
-  annotations: AnnotationColorMap[]|null
+  annotations: List<Record<AnnotationColorMap>>|null
   height = this._playerStore.select(fromPlayer.getDimensions).map(({height}) => height)
 
   constructor(
@@ -49,7 +51,7 @@ export class InspectorContainer implements OnInit, OnDestroy {
         }))
   }
 
-  updateAnnotation({index, trackIndex, annotation}: {index: number, trackIndex: number, annotation: Annotation}) {
+  updateAnnotation({index, trackIndex, annotation}: {index: number, trackIndex: number, annotation: Record<Annotation>}) {
     this._store.dispatch(new project.ProjectUpdateAnnotation({annotationIndex: index, trackIndex, annotation}))
   }
 
