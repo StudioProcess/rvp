@@ -30,25 +30,34 @@ export class PlayerContainer implements AfterViewInit, OnDestroy {
 
   private readonly _subs: Subscription[] = []
 
-  private readonly videoObjectURL =
-    this._projectStore.select(fromProject.getVideoObjectURL)
-      .filter(objUrl => objUrl !== null) as Observable<string>
-
   constructor(
     private readonly _hostElem: ElementRef,
     private readonly _projectStore: Store<fromProject.State>,
     private readonly _store: Store<fromPlayer.State>) {}
 
   ngAfterViewInit() {
-    this._subs.push(this.videoObjectURL.subscribe(videoObjURL => {
-      const playerPayload = {
-        elemRef: this._videoElem,
-        objectURL: videoObjURL,
-        playerOptions: _DEFAULT_PLAYER_OPTIONS_
-      }
+    const videoObjectURL =
+      this._projectStore.select(fromProject.getVideoObjectURL)
+        .filter(objUrl => objUrl !== null) as Observable<string>
 
-      this._store.dispatch(new player.PlayerCreate(playerPayload))
-    }))
+    const projectId =
+      this._projectStore.select(fromProject.getProjectId)
+        .filter(projectId => projectId !== null)
+        .distinctUntilChanged() as Observable<string>
+
+    const currentVideoObjectURL =
+      projectId.withLatestFrom(videoObjectURL, (_, videoObjectUrl) => videoObjectUrl)
+
+    this._subs.push(
+      currentVideoObjectURL.subscribe(videoObjURL => {
+        const playerPayload = {
+          elemRef: this._videoElem,
+          objectURL: videoObjURL,
+          playerOptions: _DEFAULT_PLAYER_OPTIONS_
+        }
+
+        this._store.dispatch(new player.PlayerCreate(playerPayload))
+      }))
 
     const getClientRect = () => this._hostElem.nativeElement.getBoundingClientRect()
 
