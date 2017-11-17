@@ -7,6 +7,8 @@ import {
 
 import {FormGroup, FormBuilder, Validators} from '@angular/forms'
 
+import {Record} from 'immutable'
+
 import {Observable} from 'rxjs/Observable'
 import {Subscription} from 'rxjs/Subscription'
 import {ReplaySubject} from 'rxjs/ReplaySubject'
@@ -25,7 +27,7 @@ import {UpdateAnnotationPayload} from '../../../../persistence/actions/project'
   styleUrls: ['track.component.scss']
 })
 export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() readonly data: Track
+  @Input() readonly data: Record<Track>
   @Input() readonly trackIndex: number
   @Input() readonly totalDuration: number
   @Input() readonly scrollSettings: Observable<ScrollSettings>
@@ -46,7 +48,7 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.form = this._fb.group({
-      title: [this.data.fields.title, Validators.required]
+      title: [this.data.getIn(['fields', 'title']), Validators.required]
     })
   }
 
