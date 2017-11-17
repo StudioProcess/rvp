@@ -60,6 +60,4 @@ export const getVideoObjectURL = (state: State) => {
   return vb !== null ? URL.createObjectURL(vb) : null
 }
 
-export const getTimeline = (state: State) => {
-  return state.get('timeline', null)
-}
+export const getTimeline = (state: State) => state.get('timeline', null)
