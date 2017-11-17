@@ -15,9 +15,11 @@ export const reducers: ActionReducerMap<State> = {
 }
 
 // Project selectors
-export const getPersistenceState = createFeatureSelector<State>('persistence')
+const getPersistenceState = createFeatureSelector<State>('persistence')
 
-export const getProjectState = createSelector(getPersistenceState, (state: State) => state.project)
+const getProjectState = createSelector(getPersistenceState, (state: State) => state.project)
+
+export const getProjectId = createSelector(getProjectState, fromProject.getProjectId)
 
 export const getVideoObjectURL = createSelector(
   getProjectState,
