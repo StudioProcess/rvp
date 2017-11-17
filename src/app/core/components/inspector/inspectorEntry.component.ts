@@ -84,14 +84,23 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     const description = entry.getIn(['annotation', 'fields', 'description'])
 
     return {
-      utc_timestamp: [formatDuration(utc_timestamp), durationValidator],
-      duration: [formatDuration(duration), durationValidator],
+      utc_timestamp: formatDuration(utc_timestamp),
+      duration: formatDuration(duration),
       title, description
     }
   }
 
   ngOnInit() {
-    this.form = this._fb.group(this._mapModel(this.entry))
+    const {
+      utc_timestamp, duration,
+      title, description
+    } = this._mapModel(this.entry)
+
+    this.form = this._fb.group({
+      utc_timestamp: [utc_timestamp, durationValidator],
+      duration: [duration, durationValidator],
+      title, description
+    })
 
     this.form.valueChanges.combineLatest(this.form.statusChanges)
       .debounceTime(_FORM_INPUT_DEBOUNCE_)
@@ -120,13 +129,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   ngOnChanges() {
     if(this.form !== null) {
-      this.form.reset({
-        'color': this.entry.get('color', null),
-        'start': this.entry.getIn(['annotation', 'utc_timestamp']),
-        'duration': this.entry.getIn(['annotation', 'duration']),
-        'title': this.entry.getIn(['annotation', 'duration', 'fields', 'title']),
-        'description': this.entry.getIn(['annotation', 'duration', 'fields', 'description'])
-      })
+      this.form.reset(this._mapModel(this.entry))
     }
   }
 }
