@@ -19,10 +19,6 @@ export const getPersistenceState = createFeatureSelector<State>('persistence')
 
 export const getProjectState = createSelector(getPersistenceState, (state: State) => state.project)
 
-export const getVideo = createSelector(
-  getProjectState,
-  fromProject.getVideo)
-
 export const getVideoObjectURL = createSelector(
   getProjectState,
   fromProject.getVideoObjectURL)

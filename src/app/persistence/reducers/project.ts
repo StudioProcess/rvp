@@ -53,8 +53,6 @@ export function reducer(state: State = initialState, action: project.Actions): S
   }
 }
 
-export const getVideo = (state: State) => state.get('video', null)
-
 export const getVideoObjectURL = (state: State) => {
   const vb = state.get('videoBlob', null)
   return vb !== null ? URL.createObjectURL(vb) : null
