@@ -52,6 +52,7 @@
     opacity: 0;
 
     .track-delete-icon {
+      cursor: pointer;
       padding-right: $track-deleteicon-paddingright;
     }
   }
