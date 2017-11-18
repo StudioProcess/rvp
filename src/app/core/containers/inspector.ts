@@ -42,8 +42,8 @@ export class InspectorContainer implements OnInit, OnDestroy {
     private readonly _store: Store<fromProject.State>,
     private readonly _playerStore: Store<fromPlayer.State>) {}
 
-  trackByFunc(index: number) {
-    return index
+  trackByFunc(_: number, annotation: Record<AnnotationColorMap>) {
+    return annotation.getIn(['annotation', 'id'])
   }
 
   ngOnInit() {

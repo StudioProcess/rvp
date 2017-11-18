@@ -16,7 +16,7 @@ import {Record} from 'immutable'
 
 import * as fromProject from '../../../persistence/reducers'
 import * as project from '../../../persistence/actions/project'
-import {Timeline} from '../../../persistence/model'
+import {Timeline, Track} from '../../../persistence/model'
 import {fromEventPattern} from '../../../lib/observable'
 import {HandlebarComponent} from '../../components/timeline/handlebar/handlebar.component'
 import {_SCROLLBAR_CAPTION_} from '../../../config/timeline/scrollbar'
@@ -121,8 +121,8 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       }))
   }
 
-  trackByFunc(index: number) {
-    return index
+  trackByFunc(_: number, track: Record<Track>) {
+    return track.get('id', null)
   }
 
   updateAnnotation(updateAnnotation: project.UpdateAnnotationPayload) {

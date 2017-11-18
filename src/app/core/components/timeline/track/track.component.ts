@@ -91,8 +91,8 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
     this._subs.forEach(sub => sub.unsubscribe())
   }
 
-  trackByFunc(index: number) {
-    return index
+  trackByFunc(_: number, track: Record<Track>) {
+    return track.get('id', null)
   }
 
   deleteTrackHandler() {
