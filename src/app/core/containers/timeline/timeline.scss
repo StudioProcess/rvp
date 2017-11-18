@@ -36,4 +36,19 @@
       }
     }
   }
+
+  .add-track {
+    cursor: pointer;
+    float: right;
+    font-size: $scrollbar-addtrack-fontsize;
+    font-weight: $scrollbar-addtrack-fontweight;
+    padding-right: $scrollbar-addtrack-paddingright;
+
+    &:focus {
+      outline: none;
+    }
+    &:hover {
+      color: $process-gray;
+    }
+  }
 }

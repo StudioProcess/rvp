@@ -45,7 +45,7 @@ export interface ScrollSettings {
       (updateAnnotation)="updateAnnotation($event)">
     </rv-track>
 
-    <button class="ion-plus track-add-icon" title="Add new Track" alt="Add new Track" (click)="addTrack()"> Add Track</button>
+    <button class="ion-plus add-track" title="Add new Track" alt="Add new Track" (click)="addTrack()"> Add Track</button>
   `,
   styleUrls: ['timeline.scss']
 })
