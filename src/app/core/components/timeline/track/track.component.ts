@@ -90,6 +90,10 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
     this._subs.forEach(sub => sub.unsubscribe())
   }
 
+  trackByFunc(index: number) {
+    return index
+  }
+
   handlebarUpdate(ev: Handlebar) {
     const {payload: annotationIndex} = ev
     const oldAnnotation = this.data.getIn(['annotations', annotationIndex])
