@@ -13,8 +13,16 @@ declare var $: any
   selector: 'rv-main',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div>
-      <rv-main-nav></rv-main-nav>
+    <div class="nav-wrapper">
+      <div class="row">
+        <div class="small-6 column">
+          <rv-logo></rv-logo>
+        </div>
+        <div class="small-6 column text-right">
+          <rv-projectbtn data-open="settings-reveal"></rv-projectbtn>
+          <rv-projectmodal class="reveal" id="settings-reveal" data-reveal></rv-projectmodal>
+        </div>
+      </div>
     </div>
     <div>
       <!--<rv-loading *ngIf="_isLoading" [isLoading]="true"></rv-loading>-->
@@ -39,6 +47,11 @@ declare var $: any
     :host {
       display: block;
       padding: 5px;
+    }
+
+    .nav-wrapper {
+      margin-top: 1.4em;
+      margin-bottom: 0.5em;
     }
   `]
 })

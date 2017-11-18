@@ -10,8 +10,8 @@ import {TimelineContainer} from './containers/timeline/timeline'
 import {LoadingComponent} from './components/loading.component'
 import {NotFoundComponent} from './components/notFound.component'
 import {LogoComponent} from './components/logo.component'
-import {MainNavComponent} from './components/mainNav.component'
 import {ProjectBtnComponent} from './components/projectBtn/projectBtn.component'
+import {ProjectModalComponent} from './components/projectModal/projectModal.component'
 import {FooterComponent} from './components/footer/footer.component'
 
 // Inspector components
@@ -27,7 +27,7 @@ const _DECLS_ = [
   TimelineContainer,
   // Components
   LoadingComponent, NotFoundComponent, LogoComponent,
-  MainNavComponent, ProjectBtnComponent, FooterComponent,
+  ProjectBtnComponent, ProjectModalComponent, FooterComponent,
   // Inspector
   InspectorEntryComponent,
   // Timeline
