@@ -9,6 +9,7 @@ export const ProjectRecordFactory = Record<Project>({
 })
 
 export const TimelineRecordFactory = Record<Timeline>({
+  id: null,
   duration: 0,
   playhead: 0,
   zoom: 1,
@@ -21,6 +22,7 @@ export const TrackFieldsRecordFactory = Record<TrackFields>({
 })
 
 export const TrackRecordFactory = Record<Track>({
+  id: null,
   color: '#000',
   fields: new TrackFieldsRecordFactory(),
   annotations: List([])
@@ -32,6 +34,7 @@ export const AnnotationFieldsRecordFactory = Record<AnnotationFields>({
 })
 
 export const AnnotationRecordFactory = Record<Annotation>({
+  id: null,
   utc_timestamp: 0,
   duration: 0,
   fields: new AnnotationFieldsRecordFactory()
@@ -46,12 +49,13 @@ export const AnnotationColorMapRecordFactory = Record<AnnotationColorMap>({
 // Model
 
 export interface Project {
-  id: string|null
+  id: number|null
   timeline: Record<Timeline>|null
   videoBlob: Blob|null
 }
 
 export interface Timeline {
+  id: number|null
   duration: number
   playhead: number
   zoom: number
@@ -60,6 +64,7 @@ export interface Timeline {
 }
 
 export interface Track {
+  id: number|null
   color: string
   fields: Record<TrackFields>
   annotations: List<Record<Annotation>>
@@ -70,6 +75,7 @@ export interface TrackFields {
 }
 
 export interface Annotation {
+  id: number|null
   utc_timestamp: number
   duration: number
   fields: Record<AnnotationFields>
