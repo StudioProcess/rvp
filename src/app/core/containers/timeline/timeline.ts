@@ -20,6 +20,7 @@ import {Timeline} from '../../../persistence/model'
 import {fromEventPattern} from '../../../lib/observable'
 import {HandlebarComponent} from '../../components/timeline/handlebar/handlebar.component'
 import {_SCROLLBAR_CAPTION_} from '../../../config/timeline/scrollbar'
+import {rndColor} from '../../../lib/color'
 
 export interface ScrollSettings {
   zoom: number
@@ -43,6 +44,8 @@ export interface ScrollSettings {
       (deleteTrack)="deleteTrack($event)"
       (updateAnnotation)="updateAnnotation($event)">
     </rv-track>
+
+    <button class="ion-plus track-add-icon" title="Add new Track" alt="Add new Track" (click)="addTrack()"> Add Track</button>
   `,
   styleUrls: ['timeline.scss']
 })
@@ -121,6 +124,10 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
 
   updateAnnotation(updateAnnotation: project.UpdateAnnotationPayload) {
     this._store.dispatch(new project.ProjectUpdateAnnotation(updateAnnotation))
+  }
+
+  addTrack() {
+    this._store.dispatch(new project.ProjectAddTrack({color: rndColor()}))
   }
 
   deleteTrack(deleteTrack: project.DeleteTrackPlayload) {
