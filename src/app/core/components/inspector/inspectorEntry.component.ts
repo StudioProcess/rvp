@@ -2,7 +2,8 @@ import {
   Component, Input, Output,
   OnInit, OnChanges, AfterViewInit,
   EventEmitter, ViewChild, ElementRef,
-  ChangeDetectionStrategy, OnDestroy
+  ChangeDetectionStrategy, OnDestroy,
+  SimpleChanges
 } from '@angular/core'
 
 import {
@@ -118,7 +119,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
             prev.utc_timestamp === cur.utc_timestamp && prev.duration === cur.duration
         })
         .subscribe(({title, description, utc_timestamp, duration}) => {
-          console.log('CHANGE')
           const annotation = new AnnotationRecordFactory({
             utc_timestamp: parseDuration(utc_timestamp),
             duration: parseDuration(duration),
@@ -139,14 +139,21 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     // TODO: add keydown handler
   }
 
-  ngOnChanges() {
-    console.log('RESET FORM')
-    if(this.form !== null) {
-      this.form.setValue(this._mapModel(this.entry))
+  ngOnChanges(changes: SimpleChanges) {
+    if(this.form !== null && changes.entry !== undefined && !changes.entry.firstChange) {
+      const {previousValue, currentValue} = changes.entry
+      if(previousValue === undefined || !previousValue.equals(currentValue)) {
+        this.form.setValue(this._mapModel(currentValue))
+      }
     }
+    // if(this.form !== null) {
+    //   const {currentValue} = changes.entry
+    //   this.form.setValue(this._mapModel(currentValue))
+    // }
   }
 
   ngOnDestroy() {
+    console.log('OnDestroy')
     this._subs.forEach(sub => sub.unsubscribe())
   }
 }
