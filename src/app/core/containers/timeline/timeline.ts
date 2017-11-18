@@ -38,12 +38,15 @@ export interface ScrollSettings {
       </rv-handlebar>
     </div>
 
-    <rv-track *ngFor="let track of timeline?.tracks; index as i; trackBy: trackByFunc;"
-      [data]="track" [trackIndex]="i" [totalDuration]="timeline.duration"
-      [scrollSettings]="scrollSettings"
-      (deleteTrack)="deleteTrack($event)"
-      (updateAnnotation)="updateAnnotation($event)">
-    </rv-track>
+    <div>
+      <rv-playhead></rv-playhead>
+      <rv-track *ngFor="let track of timeline?.tracks; index as i; trackBy: trackByFunc;"
+        [data]="track" [trackIndex]="i" [totalDuration]="timeline.duration"
+        [scrollSettings]="scrollSettings"
+        (deleteTrack)="deleteTrack($event)"
+        (updateAnnotation)="updateAnnotation($event)">
+      </rv-track>
+    </div>
 
     <button class="ion-plus add-track" title="Add new Track" alt="Add new Track" (click)="addTrack()"> Add Track</button>
   `,
