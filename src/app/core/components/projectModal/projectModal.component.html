@@ -6,10 +6,13 @@
 </div>
 <div class="row">
   <div class="column">
-
+    <h3 class="title-settings">Open Project</h3>
+    <input type="file" name="projectFile" id="projectFile" class="inputfile" accept=".rv" (change)="importFileSelected($event)">
+    <label for="projectFile">Open...</label>
   </div>
   <div class="column">
-
+    <h3 class="title-settings">Export Project</h3>
+    <a class="button-export" href="#" (click)="exportButtonClicked($event)">Export</a>
   </div>
 </div>
 <div class="row">
