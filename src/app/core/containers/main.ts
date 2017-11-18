@@ -20,7 +20,12 @@ declare var $: any
         </div>
         <div class="small-6 column text-right">
           <rv-projectbtn data-open="settings-reveal"></rv-projectbtn>
-          <rv-projectmodal class="reveal" id="settings-reveal" data-reveal></rv-projectmodal>
+          <rv-projectmodal class="reveal" id="settings-reveal" data-reveal
+            (openProject)="openProject($event)"
+            (exportProject)="exportProject($event)"
+            (resetProject)="resetProject($event)"
+            (changeVideo)="changeVideo($event)">
+          </rv-projectmodal>
         </div>
       </div>
     </div>
@@ -75,6 +80,22 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
      * the 'current' project id could be provided by the server.
      */
     this._rootStore.dispatch(new project.ProjectFetch({id: 'p0'}))
+  }
+
+  openProject() {
+    console.log('TODO: open project')
+  }
+
+  exportProject() {
+    console.log('TODO: export project')
+  }
+
+  resetProject() {
+    console.log('TODO: reset project')
+  }
+
+  changeVideo() {
+    console.log('TODO: change video')
   }
 
   ngAfterViewInit() {
