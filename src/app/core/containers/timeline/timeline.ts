@@ -30,7 +30,6 @@ export interface ScrollSettings {
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'rv-timeline',
   template: `
-    <div class="timeline-wrapper">
       <div #scrollbar class="scrollbar-wrapper">
         <rv-handlebar #handlebar
           [containerRect]="scrollbarRect" [caption]="scrollbarCaption"
@@ -38,12 +37,11 @@ export interface ScrollSettings {
         </rv-handlebar>
       </div>
 
-      <rv-track *ngFor="let track of timeline?.tracks; index as i"
+    <rv-track *ngFor="let track of timeline?.tracks; index as i; trackBy: trackByFunc;"
         [data]="track" [trackIndex]="i" [totalDuration]="timeline.duration"
         [scrollSettings]="scrollSettings"
         (updateAnnotation)="updateAnnotation($event)">
       </rv-track>
-    </div>
   `,
   styleUrls: ['timeline.scss']
 })
@@ -115,6 +113,10 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
         error: err => this.scrollSettings.error(err),
         complete: () => this.scrollSettings.complete()
       }))
+  }
+
+  trackByFunc(index: number) {
+    return index
   }
 
   updateAnnotation(updateAnnotation: project.UpdateAnnotationPayload) {

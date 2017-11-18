@@ -1,7 +1,7 @@
 @import 'colors';
 @import 'dimensions';
 
-.timeline-wrapper {
+:host {
   user-select: none;
 
   .scrollbar-wrapper {
