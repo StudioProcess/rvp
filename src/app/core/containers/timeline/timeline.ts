@@ -30,23 +30,22 @@ export interface ScrollSettings {
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'rv-timeline',
   template: `
-      <div #scrollbar class="scrollbar-wrapper">
-        <rv-handlebar #handlebar
-          [containerRect]="scrollbarRect" [caption]="scrollbarCaption"
-          [left]="scrollbarLeft" [width]="scrollbarWidth">
-        </rv-handlebar>
-      </div>
+    <div #scrollbar class="scrollbar-wrapper">
+      <rv-handlebar #handlebar
+        [containerRect]="scrollbarRect" [caption]="scrollbarCaption"
+        [left]="scrollbarLeft" [width]="scrollbarWidth">
+      </rv-handlebar>
+    </div>
 
     <rv-track *ngFor="let track of timeline?.tracks; index as i; trackBy: trackByFunc;"
-        [data]="track" [trackIndex]="i" [totalDuration]="timeline.duration"
-        [scrollSettings]="scrollSettings"
-        (updateAnnotation)="updateAnnotation($event)">
-      </rv-track>
+      [data]="track" [trackIndex]="i" [totalDuration]="timeline.duration"
+      [scrollSettings]="scrollSettings"
+      (updateAnnotation)="updateAnnotation($event)">
+    </rv-track>
   `,
   styleUrls: ['timeline.scss']
 })
 export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
-
   @ViewChild('scrollbar') readonly scrollbarRef: ElementRef
   @ViewChild('handlebar') readonly handlebarRef: HandlebarComponent
 
@@ -69,7 +68,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       this._store.select(fromProject.getTimeline)
         .filter(timeline => timeline !== null)
         .subscribe(timeline => {
-          this.timeline = timeline as Record<Timeline>
+          this.timeline = timeline as Record<Timeline> // use identifer! syntax?
           this._cdr.markForCheck()
         }))
   }
