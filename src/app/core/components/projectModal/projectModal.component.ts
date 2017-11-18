@@ -4,9 +4,12 @@ import {Component} from '@angular/core'
   selector: 'rv-projectmodal',
   template: `
     <div>
-      Test
+      <h2><i class="ion-ios-folder icon-title" title="Project Settings"></i>Project</h2>
+      <button class="close-button" data-close aria-label="Close modal" type="button">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
   `,
-  styles: [`:host {display: block}`]
+  styleUrls: ['projectModal.component.scss']
 })
 export class ProjectModalComponent {}

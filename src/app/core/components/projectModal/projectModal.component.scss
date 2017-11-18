@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+
+:host {
+  h2 {
+    font-size: 23px;
+    font-weight: 500;
+    margin-bottom: 1em;
+
+    .icon-title {
+      padding-right: 0.5em;
+    }
+  }
+}
