@@ -18,7 +18,7 @@ export type State = Record<Project>
 
 export function reducer(state: State = initialState, action: project.Actions): State {
   switch(action.type) {
-    case project.PROJECT_FETCH_SUCCESS:
+    case project.PROJECT_FETCH_SUCCESS: {
       const {project:proj, videoBlob} = action.payload
       // Create immutable representation
       return new ProjectRecordFactory({
@@ -42,12 +42,18 @@ export function reducer(state: State = initialState, action: project.Actions): S
           }))
         })
       })
-    case project.PROJECT_UPDATE_ANNOTATION:
+    }
+    case project.PROJECT_UPDATE_ANNOTATION: {
       const {trackIndex, annotationIndex, annotation} = action.payload
       return state.setIn([
         'timeline', 'tracks', trackIndex,
         'annotations', annotationIndex
       ], annotation)
+    }
+    case project.PROJECT_DELETE_TRACK: {
+      const {trackIndex} = action.payload
+      return state.deleteIn(['timeline', 'tracks', trackIndex])
+    }
     default:
       return state
   }

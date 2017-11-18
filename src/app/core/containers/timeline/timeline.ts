@@ -40,6 +40,7 @@ export interface ScrollSettings {
     <rv-track *ngFor="let track of timeline?.tracks; index as i; trackBy: trackByFunc;"
       [data]="track" [trackIndex]="i" [totalDuration]="timeline.duration"
       [scrollSettings]="scrollSettings"
+      (deleteTrack)="deleteTrack($event)"
       (updateAnnotation)="updateAnnotation($event)">
     </rv-track>
   `,
@@ -120,6 +121,10 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
 
   updateAnnotation(updateAnnotation: project.UpdateAnnotationPayload) {
     this._store.dispatch(new project.ProjectUpdateAnnotation(updateAnnotation))
+  }
+
+  deleteTrack(deleteTrack: project.DeleteTrackPlayload) {
+    this._store.dispatch(new project.ProjectDeleteTrack(deleteTrack))
   }
 
   ngOnDestroy() {

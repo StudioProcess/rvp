@@ -18,7 +18,7 @@ import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 import {ScrollSettings} from '../../../containers/timeline/timeline'
 import {Handlebar} from '../handlebar/handlebar.component'
 import {Track, Annotation, AnnotationRecordFactory} from '../../../../persistence/model'
-import {UpdateAnnotationPayload} from '../../../../persistence/actions/project'
+import * as project from '../../../../persistence/actions/project'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,7 +37,8 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
   zoom: number
   scrollLeft: number
 
-  @Output() readonly updateAnnotation = new EventEmitter<UpdateAnnotationPayload>()
+  @Output() readonly updateAnnotation = new EventEmitter<project.UpdateAnnotationPayload>()
+  @Output() readonly deleteTrack = new EventEmitter<project.DeleteTrackPlayload>()
 
   @ViewChild('annotationContainer') private readonly annotationContainer: ElementRef
   private readonly _subs: Subscription[] = []
@@ -92,6 +93,12 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
 
   trackByFunc(index: number) {
     return index
+  }
+
+  deleteTrackHandler() {
+    if(window.confirm("Really delete track? All annotations will be deleted too.")){
+      this.deleteTrack.emit({trackIndex: this.trackIndex})
+    }
   }
 
   handlebarUpdate(ev: Handlebar) {
