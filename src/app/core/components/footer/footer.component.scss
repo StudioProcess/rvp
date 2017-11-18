@@ -1,0 +1,17 @@
+@import 'colors';
+@import 'dimensions';
+
+:host {
+  font-family: 'Space Mono', monospace;
+  font-size: $footer-fontsize;
+  display: flex;
+  justify-content: center;
+  margin-top: $footer-margintop;
+  margin-bottom: $footer-marginbottom;
+  color: $process-dark-gray;
+  a {
+    color: $process-dark-gray;
+    text-decoration: none;
+    border-bottom: $footer-linkborderwidth solid;
+  }
+}

@@ -29,6 +29,9 @@ declare var $: any
           <div class="small-12 column">
             <rv-timeline></rv-timeline>
           </div>
+          <div class="small-12 column">
+            <rv-footer></rv-footer>
+          </div>
         </div>
       </div>
     </div>`,
