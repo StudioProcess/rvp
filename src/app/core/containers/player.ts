@@ -43,7 +43,7 @@ export class PlayerContainer implements AfterViewInit, OnDestroy {
     const projectId =
       this._projectStore.select(fromProject.getProjectId)
         .filter(projectId => projectId !== null)
-        .distinctUntilChanged() as Observable<string>
+        .distinctUntilChanged() as Observable<number>
 
     const currentVideoObjectURL =
       projectId.withLatestFrom(videoObjectURL, (_, videoObjectUrl) => videoObjectUrl)
