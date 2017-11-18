@@ -1,5 +1,9 @@
 :host {
   display: block;
+
+  a {
+    font-weight: 500;
+  }
 }
 
 :host {
@@ -11,5 +15,13 @@
     .icon-title {
       padding-right: 0.5em;
     }
+  }
+}
+
+:host {
+  .title-information {
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 3em;
   }
 }
