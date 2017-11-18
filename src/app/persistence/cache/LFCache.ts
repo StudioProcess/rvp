@@ -25,14 +25,14 @@ export default class LFCache implements ICache {
     })
   }
 
-  isCached(keys: Observable<string>): Observable<boolean> {
-    return keys.concatMap((key: string) => {
+  isCached(keys: Observable<number|string>): Observable<boolean> {
+    return keys.concatMap((key: number|string) => {
       return Observable.fromPromise(
-        this.storage.keys().then(res => res.includes(key)))
+        this.storage.keys().then(res => res.includes(key as string)))
     })
   }
 
-  getCached<T>(key: string): Observable<T> {
-    return Observable.fromPromise(this.storage.getItem(key))
+  getCached<T>(key: number|string): Observable<T> {
+    return Observable.fromPromise(this.storage.getItem(key as string))
   }
 }
