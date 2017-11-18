@@ -2,7 +2,7 @@ import {Action} from '@ngrx/store'
 
 import {Record} from 'immutable'
 
-import {Annotation} from '../model'
+import {Annotation, Track} from '../model'
 
 export const PROJECT_FETCH = '[Project] Fetch'
 export const PROJECT_FETCH_SUCCESS = '[Project] Fetch Success'
@@ -14,6 +14,7 @@ export const PROJECT_UPDATE_ERROR = '[Project] Update Error'
 
 export const PROJECT_UPDATE_ANNOTATION = '[Project] Update Annotation'
 
+export const PROJECT_ADD_TRACK = '[Project] Add Track'
 export const PROJECT_DELETE_TRACK = '[Project] Delete Track'
 
 export class ProjectFetch implements Action {
@@ -58,6 +59,14 @@ export class ProjectUpdateAnnotation implements Action {
   constructor(readonly payload: UpdateAnnotationPayload) {}
 }
 
+
+type AddTrackPayload = Partial<Track>
+
+export class ProjectAddTrack implements Action {
+  readonly type = PROJECT_ADD_TRACK
+  constructor(readonly payload: AddTrackPayload) {}
+}
+
 export interface DeleteTrackPlayload {
   trackIndex: number
 }
@@ -71,4 +80,4 @@ export type Actions =
   ProjectFetch|ProjectFetchSuccess|ProjectFetchError|
   ProjectUpdate|ProjectUpdateSuccess|ProjectUpdateError|
   ProjectUpdateAnnotation|
-  ProjectDeleteTrack
+  ProjectAddTrack|ProjectDeleteTrack
