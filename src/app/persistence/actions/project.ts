@@ -19,7 +19,7 @@ export const PROJECT_DELETE_TRACK = '[Project] Delete Track'
 
 export class ProjectFetch implements Action {
   readonly type = PROJECT_FETCH
-  constructor(readonly payload: {id: string}) {}
+  constructor(readonly payload: {id: number}) {}
 }
 
 export class ProjectFetchSuccess implements Action {
