@@ -1,8 +1,6 @@
 import {
   Component, Input, ChangeDetectionStrategy,
-  OnInit, /*AfterViewInit, ElementRef, ViewChild,*/
-  OnDestroy, /*ChangeDetectorRef,*/ EventEmitter,
-  Output
+  OnInit, OnDestroy, EventEmitter, Output
 } from '@angular/core'
 
 import {FormGroup, FormBuilder, Validators} from '@angular/forms'
@@ -28,11 +26,10 @@ import * as fromSelection from '../../../reducers/selection'
   templateUrl: 'track.component.html',
   styleUrls: ['track.component.scss']
 })
-export class TrackComponent implements OnInit/*, AfterViewInit*/, OnDestroy {
+export class TrackComponent implements OnInit, OnDestroy {
   @Input() readonly data: Record<Track>
   @Input() readonly trackIndex: number
   @Input() readonly totalDuration: number
-  // @Input() readonly scrollSettings: Observable<ScrollSettings>
   @Input() readonly selectedAnnotationId: number
 
   readonly annotationRect = new ReplaySubject<ClientRect>(1)
@@ -44,40 +41,15 @@ export class TrackComponent implements OnInit/*, AfterViewInit*/, OnDestroy {
   @Output() readonly deleteTrack = new EventEmitter<project.DeleteTrackPlayload>()
   @Output() readonly onSelectAnnotation = new EventEmitter<selection.SelectionAnnotationPayload>()
 
-  // @ViewChild('annotationContainer') private readonly annotationContainer: ElementRef
   private readonly _subs: Subscription[] = []
 
-  constructor(
-    // private readonly _cdr: ChangeDetectorRef,
-    private readonly _fb: FormBuilder) {}
+  constructor(private readonly _fb: FormBuilder) {}
 
   ngOnInit() {
     this.form = this._fb.group({
       title: [this.data.getIn(['fields', 'title']), Validators.required]
     })
   }
-
-  // ngAfterViewInit() {
-  //   const getAnnotationRect = () => {
-  //     return this.annotationContainer.nativeElement.getBoundingClientRect()
-  //   }
-
-  //   this._subs.push(
-  //     this.scrollSettings.subscribe(() => {
-  //       this.annotationRect.next(getAnnotationRect())
-  //     }))
-
-  //   this._subs.push(
-  //     Observable.combineLatest(
-  //       this.annotationRect, this.scrollSettings,
-  //       (rect, {zoom, scrollLeft}) => {
-  //         return {zoom, left: (rect.width/100)*scrollLeft}
-  //       }).subscribe(({zoom, left}) => {
-  //         this.zoom = zoom
-  //         this.scrollLeft = left
-  //         this._cdr.markForCheck()
-  //       }))
-  // }
 
   getAnnotationTitle(annotation: Record<Annotation>) {
     return annotation.getIn(['fields', 'title'])
