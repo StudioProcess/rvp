@@ -33,14 +33,35 @@ export type State = Record<Selection>
 export function reducer(state: State=initialState, action: selection.Actions): State {
   switch(action.type) {
     case selection.SELECTION_SELECT_ANNOTATION: {
-      return state.update('annotations', annotations => {
-        return annotations.add(action.payload.annotation)
+      const currentSelections = state.get('annotations', null)
+
+      const {selection} = action.payload
+      const newId = selection.get('annotation', null).get('id', null)
+
+      const existing = currentSelections.find(annotationSelection => {
+        const a = annotationSelection.get('annotation', null)
+        return a.get('id', null) === newId
       })
+
+      if(existing) {
+        if(existing.get('source', null) !== selection.get('source', null)) {
+          const updatedSelections = currentSelections.withMutations(annotations => {
+            annotations.delete(existing).add(selection)
+          })
+
+          return state.set('annotations', updatedSelections)
+        } else {
+          return state
+        }
+      } else {
+        return state.update('annotations', annotations => annotations.add(selection))
+      }
     }
     case selection.SELECTION_DESELECT_ANNOTATION: {
-      return state.update('annotations', annotations => {
-        return annotations.delete(action.payload.annotation)
-      })
+      // return state.update('annotations', annotations => {
+      //   return annotations.delete(action.payload.annotation)
+      // })
+      return state
     }
     case selection.SELECTION_RESET_ANNOTATION: {
       return state.set('annotations', Set())
