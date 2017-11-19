@@ -23,16 +23,16 @@ import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/filter'
 import 'rxjs/add/operator/distinctUntilChanged'
 
-import {_FORM_INPUT_DEBOUNCE_} from '../../../config/form'
+import {_FORM_INPUT_DEBOUNCE_} from '../../../../config/form'
 
 import {
   AnnotationColorMap, AnnotationRecordFactory,
   AnnotationFieldsRecordFactory
-} from '../../../persistence/model'
+} from '../../../../persistence/model'
 
-import * as fromSelection from '../../reducers/selection'
-import * as selection from '../../actions/selection'
-import * as project from '../../../persistence/actions/project'
+import * as fromSelection from '../../../reducers/selection'
+import * as selection from '../../../actions/selection'
+import * as project from '../../../../persistence/actions/project'
 
 function formatDuration(unixTime: number): string {
   return moment.unix(unixTime).utc().format('HH:mm:ss.SSS')

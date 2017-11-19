@@ -12,14 +12,14 @@ import 'rxjs/add/operator/withLatestFrom'
 
 import {Store} from '@ngrx/store'
 
-import * as selection from '../actions/selection'
-import * as project from '../../persistence/actions/project'
-import * as fromRoot from '../reducers'
-import * as fromProject from '../../persistence/reducers'
-import * as fromPlayer from '../../player/reducers'
-import * as fromSelection from '../reducers/selection'
-import {AnnotationColorMap} from '../../persistence/model'
-import {InspectorEntryComponent} from '../components/inspector/inspectorEntry.component'
+import * as selection from '../../actions/selection'
+import * as project from '../../../persistence/actions/project'
+import * as fromRoot from '../../reducers'
+import * as fromProject from '../../../persistence/reducers'
+import * as fromPlayer from '../../../player/reducers'
+import * as fromSelection from '../../reducers/selection'
+import {AnnotationColorMap} from '../../../persistence/model'
+import {InspectorEntryComponent} from './inspectorEntry/inspectorEntry.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

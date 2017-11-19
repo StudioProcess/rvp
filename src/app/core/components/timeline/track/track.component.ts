@@ -15,7 +15,7 @@ import {ReplaySubject} from 'rxjs/ReplaySubject'
 import 'rxjs/add/observable/combineLatest'
 
 import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
-import {ScrollSettings} from '../../../containers/timeline/timeline'
+import {ScrollSettings} from '../timeline'
 import {Handlebar} from '../handlebar/handlebar.component'
 import {Track, Annotation, AnnotationRecordFactory} from '../../../../persistence/model'
 import * as project from '../../../../persistence/actions/project'

@@ -11,15 +11,15 @@ import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFram
 import 'rxjs/add/operator/filter'
 import 'rxjs/add/operator/startWith'
 
-import * as fromProject from '../../persistence/reducers'
-import * as fromPlayer from '../../player/reducers'
-import * as player from '../../player/actions'
+import * as fromProject from '../../../persistence/reducers'
+import * as fromPlayer from '../../../player/reducers'
+import * as player from '../../../player/actions'
 
 import {
   _DEFAULT_PLAYER_OPTIONS_,
   _PLAYER_ASPECT_RATIO_,
   _PLAYER_RESIZE_DEBOUNCE_
-} from '../../config'
+} from '../../../config'
 
 @Component({
   selector: 'rv-player',
