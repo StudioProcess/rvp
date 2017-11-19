@@ -31,6 +31,7 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() readonly trackIndex: number
   @Input() readonly totalDuration: number
   @Input() readonly scrollSettings: Observable<ScrollSettings>
+  @Input() readonly selectedAnnotationId: number
 
   readonly annotationRect = new ReplaySubject<ClientRect>(1)
   form: FormGroup|null = null

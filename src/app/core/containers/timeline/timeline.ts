@@ -14,6 +14,7 @@ import 'rxjs/add/operator/startWith'
 
 import {Record} from 'immutable'
 
+import * as fromSelection from '../../reducers'
 import * as fromProject from '../../../persistence/reducers'
 import * as project from '../../../persistence/actions/project'
 import {Timeline, Track} from '../../../persistence/model'
@@ -42,6 +43,7 @@ export interface ScrollSettings {
       <rv-track *ngFor="let track of timeline?.tracks; index as i; trackBy: trackByFunc;"
         [data]="track" [trackIndex]="i" [totalDuration]="timeline.duration"
         [scrollSettings]="scrollSettings"
+        [selectedAnnotationId]="selectedAnnotationId"
         (deleteTrack)="deleteTrack($event)"
         (updateAnnotation)="updateAnnotation($event)">
       </rv-track>
@@ -62,6 +64,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   readonly scrollbarCaption = _SCROLLBAR_CAPTION_
   readonly scrollbarRect = new ReplaySubject<ClientRect>(1)
   readonly scrollSettings = new ReplaySubject<ScrollSettings>(1)
+  selectedAnnotationId: number|null
 
   private readonly _subs: Subscription[] = []
 
@@ -76,6 +79,13 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
         .filter(timeline => timeline !== null)
         .subscribe(timeline => {
           this.timeline = timeline as Record<Timeline> // use identifer! syntax?
+          this._cdr.markForCheck()
+        }))
+
+    this._subs.push(
+      this._store.select(fromSelection.getSelectedAnnotationId)
+        .subscribe(id => {
+          this.selectedAnnotationId = id
           this._cdr.markForCheck()
         }))
   }
