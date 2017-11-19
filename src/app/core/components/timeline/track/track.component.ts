@@ -7,10 +7,8 @@ import {FormGroup, FormBuilder, Validators} from '@angular/forms'
 
 import {Record} from 'immutable'
 
-// import {Observable} from 'rxjs/Observable'
+import {Observable} from 'rxjs/Observable'
 import {Subscription} from 'rxjs/Subscription'
-import {ReplaySubject} from 'rxjs/ReplaySubject'
-import 'rxjs/add/observable/combineLatest'
 
 import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 // import {ScrollSettings} from '../timeline'
@@ -31,8 +29,8 @@ export class TrackComponent implements OnInit, OnDestroy {
   @Input() readonly trackIndex: number
   @Input() readonly totalDuration: number
   @Input() readonly selectedAnnotationId: number
+  @Input() readonly containerRect: Observable<ClientRect>
 
-  readonly annotationRect = new ReplaySubject<ClientRect>(1)
   form: FormGroup|null = null
   zoom: number
   scrollLeft: number

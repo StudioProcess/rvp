@@ -14,7 +14,7 @@
     <div class="annotations-wrapper">
       <rv-handlebar *ngFor="let annotation of data.annotations; index as i; trackBy: trackByFunc;"
         [payload]="i"
-        [containerRect]="annotationRect"
+        [containerRect]="containerRect"
         [caption]="getAnnotationTitle(annotation)"
         [left]="getAnnotationPosition(annotation)"
         [width]="getAnnotationWidth(annotation)"
