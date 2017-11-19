@@ -7,8 +7,10 @@ import {
 
 import {Store} from '@ngrx/store'
 
+import {Observable} from 'rxjs/Observable'
 import {ReplaySubject} from 'rxjs/ReplaySubject'
 import {Subscription} from 'rxjs/Subscription'
+import 'rxjs/add/observable/combineLatest'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/startWith'
 
@@ -45,10 +47,11 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   readonly scrollbarCaption = _SCROLLBAR_CAPTION_
   readonly scrollbarRect = new ReplaySubject<ClientRect>(1)
   readonly scrollSettings = new ReplaySubject<ScrollSettings>(1)
+  readonly zoomContainerRect = new ReplaySubject<ClientRect>(1)
 
   @ViewChild('scrollbar') private readonly scrollbarRef: ElementRef
   @ViewChild('handlebar') private readonly handlebarRef: HandlebarComponent
-  // @ViewChild('zoomContainer') private readonly zoomContainerRef: ElementRef
+  @ViewChild('zoomContainer') private readonly zoomContainerRef: ElementRef
   private readonly _subs: Subscription[] = []
 
   constructor(
@@ -82,6 +85,10 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       return this.scrollbarRef.nativeElement.getBoundingClientRect()
     }
 
+    const getZoomContainerRect = () => {
+      return this.zoomContainerRef.nativeElement.getBoundingClientRect()
+    }
+
     this._subs.push(
       fromEventPattern(this._renderer, window, 'resize')
         .map(() => getScrollbarRect())
@@ -102,14 +109,32 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       right: this.scrollbarWidth
     }
 
-    this._subs.push(
-      this.handlebarRef.handlebar.startWith(initHB)
-        .subscribe(hb => {
-          const newWidth = hb.right-hb.left
-          const zoom = 100/newWidth
+    const scrollSetting = this.handlebarRef.handlebar.startWith(initHB)
+      .map(hb => {
+        const newWidth = hb.right-hb.left
+        const zoom = 100/newWidth
 
+        return {zoom, scrollLeft: hb.left}
+      })
+
+    this._subs.push(
+      scrollSetting.subscribe({
+        next: () => {
+          this.zoomContainerRect.next(getZoomContainerRect())
+        },
+        error: err => this.zoomContainerRect.error(err),
+        complete: () => this.zoomContainerRect.complete()
+      }))
+
+    this._subs.push(
+      Observable.combineLatest(
+        this.zoomContainerRect, scrollSetting,
+        (rect, {zoom, scrollLeft}) => {
+          return {zoom, left: (rect.width/100)*scrollLeft}
+        }).subscribe(({zoom, left}) => {
           this.zoom = zoom
-          this.scrollLeft = hb.left
+          this.scrollLeft = left
+          this._cdr.markForCheck()
         }))
   }
 
