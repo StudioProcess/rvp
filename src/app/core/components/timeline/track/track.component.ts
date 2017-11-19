@@ -9,13 +9,13 @@ import {FormGroup, FormBuilder, Validators} from '@angular/forms'
 
 import {Record} from 'immutable'
 
-import {Observable} from 'rxjs/Observable'
+// import {Observable} from 'rxjs/Observable'
 import {Subscription} from 'rxjs/Subscription'
 import {ReplaySubject} from 'rxjs/ReplaySubject'
 import 'rxjs/add/observable/combineLatest'
 
 import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
-import {ScrollSettings} from '../timeline'
+// import {ScrollSettings} from '../timeline'
 import {Handlebar} from '../handlebar/handlebar.component'
 import {Track, Annotation, AnnotationRecordFactory} from '../../../../persistence/model'
 import * as project from '../../../../persistence/actions/project'
@@ -32,7 +32,7 @@ export class TrackComponent implements OnInit/*, AfterViewInit*/, OnDestroy {
   @Input() readonly data: Record<Track>
   @Input() readonly trackIndex: number
   @Input() readonly totalDuration: number
-  @Input() readonly scrollSettings: Observable<ScrollSettings>
+  // @Input() readonly scrollSettings: Observable<ScrollSettings>
   @Input() readonly selectedAnnotationId: number
 
   readonly annotationRect = new ReplaySubject<ClientRect>(1)
