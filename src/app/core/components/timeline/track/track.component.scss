@@ -68,14 +68,9 @@
 }
 
 :host {
-  .annotations-overflow {
+  .annotations-wrapper {
     background-color: $process-light-gray;
     height: $handlebar-height;
-    overflow: hidden;
     margin-bottom: $track-annotationwrapper-marginbottom;
-  }
-
-  .annotations-zoom {
-    position: relative;
   }
 }

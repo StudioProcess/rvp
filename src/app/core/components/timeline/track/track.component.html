@@ -9,18 +9,20 @@
     <button class="ion-android-close track-delete-icon" title="Delete Track" alt="Delete Track" (click)="deleteTrackHandler()"></button>
   </div>
 </div>
-<div class="annotations-overflow" [scrollLeft]="scrollLeft">
-  <div #annotationContainer class="annotations-zoom" [style.width.%]="zoom*100">
-    <rv-handlebar *ngFor="let annotation of data.annotations; index as i; trackBy: trackByFunc;"
-      [payload]="i"
-      [containerRect]="annotationRect"
-      [caption]="getAnnotationTitle(annotation)"
-      [left]="getAnnotationPosition(annotation)"
-      [width]="getAnnotationWidth(annotation)"
-      [isSelected]="annotation.id === selectedAnnotationId"
-      (handlebar)="handlebarUpdate($event)"
-      (mousedown)="selectAnnotation(annotation)">
-    </rv-handlebar>
-  </div>
-</div>
+<!--<div class="annotations-overflow" [scrollLeft]="scrollLeft">
+  <div #annotationContainer class="annotations-zoom" [style.width.%]="zoom*100">-->
+    <div class="annotations-wrapper">
+      <rv-handlebar *ngFor="let annotation of data.annotations; index as i; trackBy: trackByFunc;"
+        [payload]="i"
+        [containerRect]="annotationRect"
+        [caption]="getAnnotationTitle(annotation)"
+        [left]="getAnnotationPosition(annotation)"
+        [width]="getAnnotationWidth(annotation)"
+        [isSelected]="annotation.id === selectedAnnotationId"
+        (handlebar)="handlebarUpdate($event)"
+        (mousedown)="selectAnnotation(annotation)">
+      </rv-handlebar>
+    </div>
+  <!--</div>
+</div>-->
 
