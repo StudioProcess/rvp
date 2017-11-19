@@ -33,7 +33,6 @@ export const getIsLoading = createSelector(
 
 export const getSelectedAnnotations = createSelector(getSelectionState, fromSelection.getSelectedAnnotations)
 
-export const getSelectedAnnotationId = createSelector(getSelectedAnnotations, annotations => {
-  const selectedAnnotation = annotations.first()
-  return selectedAnnotation !== undefined ? selectedAnnotation.get('id', null) : null
+export const getAnnotationSelection = createSelector(getSelectedAnnotations, annotations => {
+  return annotations.first()
 })
