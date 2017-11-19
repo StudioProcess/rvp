@@ -18,7 +18,7 @@ export class SelectionSelectAnnotation implements Action {
 
 export class SelectionDeselectAnnotation implements Action {
   readonly type = SELECTION_DESELECT_ANNOTATION
-  constructor(readonly  payload: SelectAnnotationPayload) {}
+  constructor(readonly payload: SelectAnnotationPayload) {}
 }
 
 export type Actions =

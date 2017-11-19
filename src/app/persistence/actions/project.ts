@@ -49,9 +49,9 @@ export class ProjectUpdateError implements Action {
 }
 
 export interface UpdateAnnotationPayload {
-  trackIndex: number
-  annotationIndex: number
-  annotation: Record<Annotation>
+  readonly trackIndex: number
+  readonly annotationIndex: number
+  readonly annotation: Record<Annotation>
 }
 
 export class ProjectUpdateAnnotation implements Action {
@@ -68,7 +68,7 @@ export class ProjectAddTrack implements Action {
 }
 
 export interface DeleteTrackPlayload {
-  trackIndex: number
+  readonly trackIndex: number
 }
 
 export class ProjectDeleteTrack implements Action {
