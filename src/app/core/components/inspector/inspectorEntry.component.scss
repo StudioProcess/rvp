@@ -15,13 +15,11 @@
   &.selected {
     .entry-container {
       background-color: $process-super-light-gray;
-      outline-offset: (-$inspector-outline-width);
-      outline: $inspector-outline-width solid $black;
+      outline-offset: (-$selection-outlinewidth);
+      outline: $selection-outlinewidth solid $black;
 
       &:hover {
         background-color: $white;
-        outline-offset: (-$inspector-outline-width);
-        outline: -$inspector-outline-width solid $black;
       }
     }
   }
@@ -112,8 +110,8 @@
     }
 
     .ng-invalid {
-      outline-offset: (-$inspector-outline-width);
-      outline: $inspector-outline-width solid $process-orange;
+      outline-offset: (-$selection-outlinewidth);
+      outline: $selection-outlinewidth solid $process-orange;
     }
     input.ng-valid:focus {
       outline: none;
