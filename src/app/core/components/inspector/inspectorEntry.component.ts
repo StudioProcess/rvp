@@ -70,9 +70,9 @@ const durationValidator = Validators.compose([Validators.required, durationValid
   styleUrls: ['inspectorEntry.component.scss']
 })
 export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
-  @Input() entry: Record<AnnotationColorMap>
-  @Input() index: number
-  @Input() @HostBinding('class.selected') isSelected = false
+  @Input() readonly entry: Record<AnnotationColorMap>
+  @Input() readonly index: number
+  @Input() @HostBinding('class.selected') readonly isSelected = false
 
   @Output() onUpdate = new EventEmitter<project.UpdateAnnotationPayload>()
 

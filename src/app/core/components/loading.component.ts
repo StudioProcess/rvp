@@ -8,5 +8,5 @@ import {Component, Input, ChangeDetectionStrategy} from '@angular/core'
     <span *ngIf="!isLoading">We're done</span>`
 })
 export class LoadingComponent {
-  @Input() isLoading: boolean = false
+  @Input() readonly isLoading = false
 }
