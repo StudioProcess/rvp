@@ -3,7 +3,7 @@ import {
   OnInit, OnChanges, AfterViewInit,
   EventEmitter, ViewChild, ElementRef,
   ChangeDetectionStrategy, OnDestroy,
-  SimpleChanges
+  SimpleChanges, HostBinding
 } from '@angular/core'
 
 import {
@@ -72,6 +72,7 @@ const durationValidator = Validators.compose([Validators.required, durationValid
 export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
   @Input() entry: Record<AnnotationColorMap>
   @Input() index: number
+  @Input() @HostBinding('class.selected') isSelected = false
 
   @Output() onUpdate = new EventEmitter<project.UpdateAnnotationPayload>()
 
