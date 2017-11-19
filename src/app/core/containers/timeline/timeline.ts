@@ -17,6 +17,7 @@ import {Record} from 'immutable'
 import * as fromSelection from '../../reducers'
 import * as fromProject from '../../../persistence/reducers'
 import * as project from '../../../persistence/actions/project'
+import * as selection from '../../actions/selection'
 import {Timeline, Track} from '../../../persistence/model'
 import {fromEventPattern} from '../../../lib/observable'
 import {HandlebarComponent} from '../../components/timeline/handlebar/handlebar.component'
@@ -45,7 +46,8 @@ export interface ScrollSettings {
         [scrollSettings]="scrollSettings"
         [selectedAnnotationId]="selectedAnnotationId"
         (deleteTrack)="deleteTrack($event)"
-        (updateAnnotation)="updateAnnotation($event)">
+        (updateAnnotation)="updateAnnotation($event)"
+        (onSelectAnnotation)="selectAnnotation($event)">
       </rv-track>
       <rv-playhead></rv-playhead>
     </div>
@@ -137,6 +139,11 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
 
   updateAnnotation(updateAnnotation: project.UpdateAnnotationPayload) {
     this._store.dispatch(new project.ProjectUpdateAnnotation(updateAnnotation))
+  }
+
+  selectAnnotation(annotation: selection.SelectAnnotationPayload) {
+    this._store.dispatch(new selection.SelectionResetAnnotation())
+    this._store.dispatch(new selection.SelectionSelectAnnotation(annotation))
   }
 
   addTrack() {

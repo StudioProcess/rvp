@@ -19,6 +19,7 @@ import {ScrollSettings} from '../../../containers/timeline/timeline'
 import {Handlebar} from '../handlebar/handlebar.component'
 import {Track, Annotation, AnnotationRecordFactory} from '../../../../persistence/model'
 import * as project from '../../../../persistence/actions/project'
+import * as selection from '../../../actions/selection'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,6 +41,7 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Output() readonly updateAnnotation = new EventEmitter<project.UpdateAnnotationPayload>()
   @Output() readonly deleteTrack = new EventEmitter<project.DeleteTrackPlayload>()
+  @Output() readonly onSelectAnnotation = new EventEmitter<selection.SelectAnnotationPayload>()
 
   @ViewChild('annotationContainer') private readonly annotationContainer: ElementRef
   private readonly _subs: Subscription[] = []
@@ -100,6 +102,10 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
     if(window.confirm("Really delete track? All annotations will be deleted too.")){
       this.deleteTrack.emit({trackIndex: this.trackIndex})
     }
+  }
+
+  selectAnnotation(annotation: Record<Annotation>) {
+    this.onSelectAnnotation.emit({annotation})
   }
 
   handlebarUpdate(ev: Handlebar) {

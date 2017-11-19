@@ -18,7 +18,8 @@
       [left]="getAnnotationPosition(annotation)"
       [width]="getAnnotationWidth(annotation)"
       [isSelected]="annotation.id === selectedAnnotationId"
-      (handlebar)="handlebarUpdate($event)">
+      (handlebar)="handlebarUpdate($event)"
+      (mousedown)="selectAnnotation(annotation)">
     </rv-handlebar>
   </div>
 </div>
