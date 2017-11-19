@@ -8,13 +8,16 @@ import {
 // import {environment} from '../../../environments/environment'
 
 import * as fromLoading from './loading'
+import * as fromSelection from './selection'
 
 export interface State {
   loading: fromLoading.State,
+  selection: fromSelection.State
 }
 
 export const reducers: ActionReducerMap<State> = {
-  loading: fromLoading.reducer
+  loading: fromLoading.reducer,
+  selection: fromSelection.reducer
 }
 
 export const metaReducers: MetaReducer<State>[] = []
