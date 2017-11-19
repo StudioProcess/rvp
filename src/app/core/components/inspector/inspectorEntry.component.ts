@@ -86,7 +86,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   private readonly _subs: Subscription[] = []
 
-  constructor(private readonly _fb: FormBuilder) {}
+  constructor(readonly elem: ElementRef, private readonly _fb: FormBuilder) {}
 
   private _mapModel(entry: Record<AnnotationColorMap>) {
     const utc_timestamp = entry.getIn(['annotation', 'utc_timestamp'])
