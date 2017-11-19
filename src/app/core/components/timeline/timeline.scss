@@ -37,8 +37,13 @@
     }
   }
 
-  .timeline-wrapper {
+  .timeline-overflow {
     position: relative;
+    overflow: hidden;
+
+    .timeline-zoom {
+      position: relative;
+    }
   }
 
   .add-track {

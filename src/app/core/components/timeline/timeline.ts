@@ -32,42 +32,23 @@ export interface ScrollSettings {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'rv-timeline',
-  template: `
-    <div #scrollbar class="scrollbar-wrapper">
-      <rv-handlebar #handlebar
-        [containerRect]="scrollbarRect" [caption]="scrollbarCaption"
-        [left]="scrollbarLeft" [width]="scrollbarWidth">
-      </rv-handlebar>
-    </div>
-
-    <div class="timeline-wrapper">
-      <rv-track *ngFor="let track of timeline?.tracks; index as i; trackBy: trackByFunc;"
-        [data]="track" [trackIndex]="i" [totalDuration]="timeline.duration"
-        [scrollSettings]="scrollSettings"
-        [selectedAnnotationId]="selectedAnnotationId"
-        (deleteTrack)="deleteTrack($event)"
-        (updateAnnotation)="updateAnnotation($event)"
-        (onSelectAnnotation)="selectAnnotation($event)">
-      </rv-track>
-      <rv-playhead></rv-playhead>
-    </div>
-
-    <button class="ion-plus add-track" title="Add new Track" alt="Add new Track" (click)="addTrack()"> Add Track</button>
-  `,
+  templateUrl: 'timeline.html',
   styleUrls: ['timeline.scss']
 })
 export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('scrollbar') readonly scrollbarRef: ElementRef
-  @ViewChild('handlebar') readonly handlebarRef: HandlebarComponent
-
   timeline: Record<Timeline>
+  selectedAnnotationId: number|null
+  scrollLeft = 0
+  zoom = 1
   scrollbarLeft = 0
   scrollbarWidth = 100
   readonly scrollbarCaption = _SCROLLBAR_CAPTION_
   readonly scrollbarRect = new ReplaySubject<ClientRect>(1)
   readonly scrollSettings = new ReplaySubject<ScrollSettings>(1)
-  selectedAnnotationId: number|null
 
+  @ViewChild('scrollbar') private readonly scrollbarRef: ElementRef
+  @ViewChild('handlebar') private readonly handlebarRef: HandlebarComponent
+  // @ViewChild('zoomContainer') private readonly zoomContainerRef: ElementRef
   private readonly _subs: Subscription[] = []
 
   constructor(
@@ -122,19 +103,14 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this._subs.push(
-      this.handlebarRef.handlebar.startWith(initHB).subscribe({
-        next: hb => {
-          // Transform values of type Handlebar
-          // to values of type ScrollbarSettings
+      this.handlebarRef.handlebar.startWith(initHB)
+        .subscribe(hb => {
           const newWidth = hb.right-hb.left
           const zoom = 100/newWidth
-          const nextVal = {zoom, scrollLeft: hb.left}
-          this.scrollSettings.next(nextVal)
-          // this._cdr.markForCheck()
-        },
-        error: err => this.scrollSettings.error(err),
-        complete: () => this.scrollSettings.complete()
-      }))
+
+          this.zoom = zoom
+          this.scrollLeft = hb.left
+        }))
   }
 
   trackByFunc(_: number, track: Record<Track>) {
