@@ -44,6 +44,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() readonly caption: string
   @Input() readonly containerRect: Observable<ClientRect>
   @Input() readonly payload: any // Optional: attach some kind of payload
+  @Input() @HostBinding('class.selected') readonly isSelected = false
   @Input('left') @HostBinding('style.left.%') readonly containerLeft: number
   @Input('width') @HostBinding('style.width.%') readonly containerWidth: number
 

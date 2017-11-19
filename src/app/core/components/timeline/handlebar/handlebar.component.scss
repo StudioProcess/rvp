@@ -22,6 +22,11 @@ $text-color: $black;
   height: $handlebar-height;
   min-width: $handlebar-minwidth;
 
+  &.selected {
+    outline-offset: (-$selection-outlinewidth);
+    outline: $selection-outlinewidth solid $black;
+  }
+
   .handlebar {
     display: flex;
     height: inherit;
