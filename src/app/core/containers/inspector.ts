@@ -1,11 +1,14 @@
 import {
-  Component, OnInit, OnDestroy,
-  ChangeDetectionStrategy, ChangeDetectorRef
+  Component, OnInit, OnDestroy, ViewChild,
+  ChangeDetectionStrategy, ChangeDetectorRef,
+  ElementRef, AfterViewInit, ViewChildren,
+  QueryList
 } from '@angular/core'
 
 import {List, Record} from 'immutable'
 
 import {Subscription} from 'rxjs/Subscription'
+import 'rxjs/add/operator/withLatestFrom'
 
 import {Store} from '@ngrx/store'
 
@@ -16,12 +19,13 @@ import * as fromProject from '../../persistence/reducers'
 import * as fromPlayer from '../../player/reducers'
 import * as fromSelection from '../reducers/selection'
 import {AnnotationColorMap} from '../../persistence/model'
+import {InspectorEntryComponent} from '../components/inspector/inspectorEntry.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'rv-inspector',
   template: `
-    <div *ngIf="annotations !== null" class="wrapper" [style.height.px]="height|async">
+    <div #wrapper *ngIf="annotations !== null" class="wrapper" [style.height.px]="height|async">
       <rv-inspector-entry
         *ngFor="let annotation of annotations; index as i; trackBy: trackByFunc;"
         [entry]="annotation"
@@ -33,11 +37,14 @@ import {AnnotationColorMap} from '../../persistence/model'
     </div>`,
   styles: [`
     .wrapper {
+      position: relative;
       overflow-y: scroll;
     }
   `]
 })
-export class InspectorContainer implements OnInit, OnDestroy {
+export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('wrapper') private readonly scrollWrapper: ElementRef
+  @ViewChildren(InspectorEntryComponent) private readonly entries: QueryList<InspectorEntryComponent>
   private readonly _subs: Subscription[] = []
   annotations: List<Record<AnnotationColorMap>>
   height = this._playerStore.select(fromPlayer.getDimensions).map(({height}) => height)
@@ -71,7 +78,9 @@ export class InspectorContainer implements OnInit, OnDestroy {
           }
           this._cdr.markForCheck()
         }))
+  }
 
+  ngAfterViewInit() {
     this._subs.push(
       this._store.select(fromRoot.getAnnotationSelection)
         .filter(annotationSelection => {
@@ -82,10 +91,22 @@ export class InspectorContainer implements OnInit, OnDestroy {
             return false
           }
         })
-        .subscribe(() => {
-          console.log('SCROLL TO')
-        })
-    )
+        .withLatestFrom(this.entries.changes)
+        .subscribe(([annotationSelection, currentEntries]: [Record<fromSelection.AnnotationSelection>, QueryList<InspectorEntryComponent>]) => {
+          const selectedId = annotationSelection.getIn(['annotation', 'id'])
+
+          const entry = currentEntries.find(item => {
+            return item.entry.getIn(['annotation', 'id']) === selectedId
+          })
+
+          if(entry) {
+            const wrapper = this.scrollWrapper.nativeElement
+            const e = entry.elem.nativeElement
+
+            // Position centered
+            wrapper.scrollTop = e.offsetTop - ((wrapper.offsetHeight - e.offsetHeight)/2)
+          }
+        }))
   }
 
   updateAnnotation(updateAnnotation: project.UpdateAnnotationPayload) {
