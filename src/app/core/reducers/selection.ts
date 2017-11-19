@@ -1,11 +1,27 @@
 import {Set, Record} from 'immutable'
 
-import {Annotation} from '../../persistence/model'
+import {Annotation, AnnotationRecordFactory} from '../../persistence/model'
 
 import * as selection from '../actions/selection'
 
+export const enum SelectionSource {
+  None,
+  Timeline,
+  Inspector
+}
+
+export interface AnnotationSelection {
+  readonly annotation: Record<Annotation>
+  readonly source: SelectionSource
+}
+
+export const AnnotationSelectionFactory = Record<AnnotationSelection>({
+  annotation: new AnnotationRecordFactory(),
+  source: SelectionSource.None
+})
+
 interface Selection {
-  readonly annotations: Set<Record<Annotation>>
+  readonly annotations: Set<Record<AnnotationSelection>>
 }
 
 const SelectionRecordFactory = Record<Selection>({annotations: Set()})
