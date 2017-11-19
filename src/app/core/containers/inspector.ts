@@ -11,9 +11,10 @@ import {Store} from '@ngrx/store'
 
 import * as selection from '../actions/selection'
 import * as project from '../../persistence/actions/project'
-import * as fromSelection from '../reducers'
+import * as fromRoot from '../reducers'
 import * as fromProject from '../../persistence/reducers'
 import * as fromPlayer from '../../player/reducers'
+import * as fromSelection from '../reducers/selection'
 import {AnnotationColorMap} from '../../persistence/model'
 
 @Component({
@@ -61,7 +62,7 @@ export class InspectorContainer implements OnInit, OnDestroy {
         }))
 
     this._subs.push(
-      this._store.select(fromSelection.getAnnotationSelection)
+      this._store.select(fromRoot.getAnnotationSelection)
         .subscribe(annotationSelection => {
           if(annotationSelection !== undefined) {
             this.selectedAnnotationId = annotationSelection.getIn(['annotation', 'id'])
@@ -70,6 +71,21 @@ export class InspectorContainer implements OnInit, OnDestroy {
           }
           this._cdr.markForCheck()
         }))
+
+    this._subs.push(
+      this._store.select(fromRoot.getAnnotationSelection)
+        .filter(annotationSelection => {
+          if(annotationSelection !== undefined) {
+            return annotationSelection.getIn(['annotation', 'id']) !== null &&
+              annotationSelection.get('source', null) === fromSelection.SelectionSource.Timeline
+          } else {
+            return false
+          }
+        })
+        .subscribe(() => {
+          console.log('SCROLL TO')
+        })
+    )
   }
 
   updateAnnotation(updateAnnotation: project.UpdateAnnotationPayload) {
