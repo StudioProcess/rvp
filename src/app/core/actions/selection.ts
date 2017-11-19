@@ -6,6 +6,7 @@ import {Annotation} from '../../persistence/model'
 
 export const SELECTION_SELECT_ANNOTATION = '[Selection] Select Annotation'
 export const SELECTION_DESELECT_ANNOTATION = '[Selection] Deselect Annotation'
+export const SELECTION_RESET_ANNOTATION = '[Selection] Reset Annotation'
 
 export class SelectAnnotationPayload {
   readonly annotation: Record<Annotation>
@@ -21,5 +22,9 @@ export class SelectionDeselectAnnotation implements Action {
   constructor(readonly payload: SelectAnnotationPayload) {}
 }
 
+export class SelectionResetAnnotation implements Action {
+  readonly type = SELECTION_RESET_ANNOTATION
+}
+
 export type Actions =
-  SelectionSelectAnnotation|SelectionDeselectAnnotation
+  SelectionSelectAnnotation|SelectionDeselectAnnotation|SelectionResetAnnotation
