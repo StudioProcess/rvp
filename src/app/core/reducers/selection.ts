@@ -26,6 +26,9 @@ export function reducer(state: State=initialState, action: selection.Actions): S
         return annotations.delete(action.payload.annotation)
       })
     }
+    case selection.SELECTION_RESET_ANNOTATION: {
+      return state.set('annotations', Set())
+    }
     default: {
       return state
     }

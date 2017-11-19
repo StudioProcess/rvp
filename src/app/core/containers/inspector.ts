@@ -9,6 +9,7 @@ import {Subscription} from 'rxjs/Subscription'
 
 import {Store} from '@ngrx/store'
 
+import * as selection from '../actions/selection'
 import * as project from '../../persistence/actions/project'
 import * as fromProject from '../../persistence/reducers'
 import * as fromPlayer from '../../player/reducers'
@@ -23,7 +24,8 @@ import {AnnotationColorMap} from '../../persistence/model'
         *ngFor="let annotation of annotations; index as i; trackBy: trackByFunc;"
         [entry]="annotation"
         [index]="i"
-        (onUpdate)="updateAnnotation($event)">
+        (onUpdate)="updateAnnotation($event)"
+        (onSelectAnnotation)="selectAnnotation($event)">
       </rv-inspector-entry>
     </div>`,
   styles: [`
@@ -58,6 +60,11 @@ export class InspectorContainer implements OnInit, OnDestroy {
 
   updateAnnotation(updateAnnotation: project.UpdateAnnotationPayload) {
     this._store.dispatch(new project.ProjectUpdateAnnotation(updateAnnotation))
+  }
+
+  selectAnnotation(selectAnnotation: selection.SelectAnnotationPayload) {
+    this._store.dispatch(new selection.SelectionResetAnnotation())
+    this._store.dispatch(new selection.SelectionSelectAnnotation(selectAnnotation))
   }
 
   ngOnDestroy() {
