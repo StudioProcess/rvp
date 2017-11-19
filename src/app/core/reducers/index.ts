@@ -25,7 +25,15 @@ export const metaReducers: MetaReducer<State>[] = []
 
 // Loading selectors
 export const getLoadingState = createFeatureSelector<fromLoading.State>('loading')
+export const getSelectionState = createFeatureSelector<fromSelection.State>('selection')
 
 export const getIsLoading = createSelector(
   getLoadingState,
   fromLoading.getIsAppLoading)
+
+export const getSelectedAnnotations = createSelector(getSelectionState, fromSelection.getSelectedAnnotations)
+
+export const getSelectedAnnotationId = createSelector(getSelectedAnnotations, annotations => {
+  const selectedAnnotation = annotations.first()
+  return selectedAnnotation !== undefined ? selectedAnnotation.get('id', null) : null
+})

@@ -34,3 +34,5 @@ export function reducer(state: State=initialState, action: selection.Actions): S
     }
   }
 }
+
+export const getSelectedAnnotations = (state: State) => state.get('annotations', null)
