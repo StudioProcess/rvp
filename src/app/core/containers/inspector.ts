@@ -61,9 +61,13 @@ export class InspectorContainer implements OnInit, OnDestroy {
         }))
 
     this._subs.push(
-      this._store.select(fromSelection.getSelectedAnnotationId)
-        .subscribe(id => {
-          this.selectedAnnotationId = id
+      this._store.select(fromSelection.getAnnotationSelection)
+        .subscribe(annotationSelection => {
+          if(annotationSelection !== undefined) {
+            this.selectedAnnotationId = annotationSelection.getIn(['annotation', 'id'])
+          } else {
+            this.selectedAnnotationId = null
+          }
           this._cdr.markForCheck()
         }))
   }
@@ -72,7 +76,7 @@ export class InspectorContainer implements OnInit, OnDestroy {
     this._store.dispatch(new project.ProjectUpdateAnnotation(updateAnnotation))
   }
 
-  selectAnnotation(selectAnnotation: selection.SelectAnnotationPayload) {
+  selectAnnotation(selectAnnotation: selection.SelectionAnnotationPayload) {
     this._store.dispatch(new selection.SelectionResetAnnotation())
     this._store.dispatch(new selection.SelectionSelectAnnotation(selectAnnotation))
   }
