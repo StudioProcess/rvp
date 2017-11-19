@@ -9,8 +9,7 @@
     position: relative;
     height: $handlebar-height;
     background-color: $process-light-gray;
-    margin-bottom: $scrollbar-margin;
-    margin-top: $scrollbar-margin;
+    margin-top: $scrollbar-margintop;
 
     rv-handlebar {
       background-color: $process-gray3;
@@ -40,6 +39,7 @@
   .timeline-overflow {
     position: relative;
     overflow: hidden;
+    padding-top: $playhead-height;
 
     .timeline-zoom {
       position: relative;
