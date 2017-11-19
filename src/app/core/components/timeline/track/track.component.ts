@@ -20,6 +20,7 @@ import {Handlebar} from '../handlebar/handlebar.component'
 import {Track, Annotation, AnnotationRecordFactory} from '../../../../persistence/model'
 import * as project from '../../../../persistence/actions/project'
 import * as selection from '../../../actions/selection'
+import * as fromSelection from '../../../reducers/selection'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,7 +42,7 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Output() readonly updateAnnotation = new EventEmitter<project.UpdateAnnotationPayload>()
   @Output() readonly deleteTrack = new EventEmitter<project.DeleteTrackPlayload>()
-  @Output() readonly onSelectAnnotation = new EventEmitter<selection.SelectAnnotationPayload>()
+  @Output() readonly onSelectAnnotation = new EventEmitter<selection.SelectionAnnotationPayload>()
 
   @ViewChild('annotationContainer') private readonly annotationContainer: ElementRef
   private readonly _subs: Subscription[] = []
@@ -105,7 +106,12 @@ export class TrackComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   selectAnnotation(annotation: Record<Annotation>) {
-    this.onSelectAnnotation.emit({annotation})
+    this.onSelectAnnotation.emit({
+      selection: new fromSelection.AnnotationSelectionFactory({
+        annotation,
+        source: fromSelection.SelectionSource.Timeline
+      })
+    })
   }
 
   handlebarUpdate(ev: Handlebar) {

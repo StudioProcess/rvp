@@ -30,6 +30,7 @@ import {
   AnnotationFieldsRecordFactory
 } from '../../../persistence/model'
 
+import * as fromSelection from '../../reducers/selection'
 import * as selection from '../../actions/selection'
 import * as project from '../../../persistence/actions/project'
 
@@ -76,7 +77,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   @Input() @HostBinding('class.selected') readonly isSelected = false
 
   @Output() readonly onUpdate = new EventEmitter<project.UpdateAnnotationPayload>()
-  @Output() readonly onSelectAnnotation = new EventEmitter<selection.SelectAnnotationPayload>()
+  @Output() readonly onSelectAnnotation = new EventEmitter<selection.SelectionAnnotationPayload>()
 
   @ViewChild('start') readonly startInput: ElementRef
   @ViewChild('duration') readonly durationInput: ElementRef
@@ -162,6 +163,11 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   selectAnnotationHandler() {
     const annotation = this.entry.get('annotation', null)
-    this.onSelectAnnotation.emit({annotation})
+    this.onSelectAnnotation.emit({
+      selection: new fromSelection.AnnotationSelectionFactory({
+        annotation,
+        source: fromSelection.SelectionSource.Inspector
+      })
+    })
   }
 }
