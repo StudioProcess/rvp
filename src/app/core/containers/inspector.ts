@@ -11,6 +11,7 @@ import {Store} from '@ngrx/store'
 
 import * as selection from '../actions/selection'
 import * as project from '../../persistence/actions/project'
+import * as fromSelection from '../reducers'
 import * as fromProject from '../../persistence/reducers'
 import * as fromPlayer from '../../player/reducers'
 import {AnnotationColorMap} from '../../persistence/model'
@@ -24,6 +25,7 @@ import {AnnotationColorMap} from '../../persistence/model'
         *ngFor="let annotation of annotations; index as i; trackBy: trackByFunc;"
         [entry]="annotation"
         [index]="i"
+        [isSelected]="annotation.annotation.id === selectedAnnotationId"
         (onUpdate)="updateAnnotation($event)"
         (onSelectAnnotation)="selectAnnotation($event)">
       </rv-inspector-entry>
@@ -38,6 +40,7 @@ export class InspectorContainer implements OnInit, OnDestroy {
   private readonly _subs: Subscription[] = []
   annotations: List<Record<AnnotationColorMap>>
   height = this._playerStore.select(fromPlayer.getDimensions).map(({height}) => height)
+  selectedAnnotationId: number | null
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
@@ -54,6 +57,13 @@ export class InspectorContainer implements OnInit, OnDestroy {
         .filter(annotations => annotations.size > 0)
         .subscribe(annotations => {
           this.annotations = annotations
+          this._cdr.markForCheck()
+        }))
+
+    this._subs.push(
+      this._store.select(fromSelection.getSelectedAnnotationId)
+        .subscribe(id => {
+          this.selectedAnnotationId = id
           this._cdr.markForCheck()
         }))
   }
