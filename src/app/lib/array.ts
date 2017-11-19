@@ -1,7 +1,7 @@
 export interface ArrayPartitionResult<T> {
-  before: T[]
-  elem: T|null
-  after: T[]
+  readonly before: T[]
+  readonly elem: T|null
+  readonly after: T[]
 }
 
 export function getPartitionResult<T>(arr: T[], sliceIndex: number): ArrayPartitionResult<T> {

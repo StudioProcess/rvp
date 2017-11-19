@@ -59,7 +59,6 @@ export class ProjectUpdateAnnotation implements Action {
   constructor(readonly payload: UpdateAnnotationPayload) {}
 }
 
-
 type AddTrackPayload = Partial<Track>
 
 export class ProjectAddTrack implements Action {

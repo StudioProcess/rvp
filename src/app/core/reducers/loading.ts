@@ -1,7 +1,7 @@
 import * as loading from '../actions/loading'
 
 export interface State {
-  loading: boolean
+  readonly loading: boolean
 }
 
 const initialState: State = {

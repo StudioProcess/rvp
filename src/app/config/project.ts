@@ -10,10 +10,10 @@ export interface FileMiddleware {
 const defaultFileMW = {postLoad: id}
 
 export interface ZipFileMeta {
-  file: string
-  type: OutputType
-  map: string,
-  middleware: FileMiddleware
+  readonly file: string
+  readonly type: OutputType
+  readonly map: string,
+  readonly middleware: FileMiddleware
 }
 
 export const _ZIP_META_: ZipFileMeta[] = [

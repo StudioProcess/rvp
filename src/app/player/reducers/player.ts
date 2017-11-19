@@ -1,11 +1,11 @@
 import * as player from '../actions'
 
 export interface State {
-  isPaused: boolean
-  currentTime: number
-  dimensions: {
-    width: number
-    height: number
+  readonly isPaused: boolean
+  readonly currentTime: number
+  readonly dimensions: {
+    readonly width: number
+    readonly height: number
   }
 }
 

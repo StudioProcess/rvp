@@ -11,8 +11,8 @@ import * as fromLoading from './loading'
 import * as fromSelection from './selection'
 
 export interface State {
-  loading: fromLoading.State,
-  selection: fromSelection.State
+  readonly loading: fromLoading.State,
+  readonly selection: fromSelection.State
 }
 
 export const reducers: ActionReducerMap<State> = {

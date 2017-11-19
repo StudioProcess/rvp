@@ -49,45 +49,45 @@ export const AnnotationColorMapRecordFactory = Record<AnnotationColorMap>({
 // Model
 
 export interface Project {
-  id: number|null
-  timeline: Record<Timeline>|null
-  videoBlob: Blob|null
+  readonly id: number|null
+  readonly timeline: Record<Timeline>|null
+  readonly videoBlob: Blob|null
 }
 
 export interface Timeline {
-  id: number|null
-  duration: number
-  playhead: number
-  zoom: number
-  pan: number
-  tracks: List<Record<Track>>
+  readonly id: number|null
+  readonly duration: number
+  readonly playhead: number
+  readonly zoom: number
+  readonly pan: number
+  readonly tracks: List<Record<Track>>
 }
 
 export interface Track {
-  id: number|null
-  color: string
-  fields: Record<TrackFields>
-  annotations: List<Record<Annotation>>
+  readonly id: number|null
+  readonly color: string
+  readonly fields: Record<TrackFields>
+  readonly annotations: List<Record<Annotation>>
 }
 
 export interface TrackFields {
-  title: string
+  readonly title: string
 }
 
 export interface Annotation {
-  id: number|null
-  utc_timestamp: number
-  duration: number
-  fields: Record<AnnotationFields>
+  readonly id: number|null
+  readonly utc_timestamp: number
+  readonly duration: number
+  readonly fields: Record<AnnotationFields>
 }
 
 export interface AnnotationFields {
-  title: string
-  description: string
+  readonly title: string
+  readonly description: string
 }
 
 export interface AnnotationColorMap {
-  trackIndex: number
-  annotation: Record<Annotation>
-  color: string
+  readonly trackIndex: number
+  readonly annotation: Record<Annotation>
+  readonly color: string
 }

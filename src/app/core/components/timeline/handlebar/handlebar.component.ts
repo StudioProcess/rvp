@@ -23,9 +23,9 @@ import {fromEventPattern} from '../../../../lib/observable'
 import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 
 export interface Handlebar {
-  payload: any
-  left: number
-  right: number
+  readonly payload: any
+  readonly left: number
+  readonly right: number
 }
 
 @Component({

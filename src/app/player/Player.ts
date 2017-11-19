@@ -32,7 +32,7 @@ export default class Player implements OnInit, OnDestroy {
     private readonly _store: Store<fromPlayer.State>) {}
 
   @Effect({dispatch: false})
-  init: Observable<[videojs.Player, string]> = this._actions
+  readonly init: Observable<[videojs.Player, string]> = this._actions
     .ofType<player.PlayerCreate>(player.PLAYER_CREATE)
     .map(action => {
       const {elemRef, objectURL, playerOptions} = action.payload
@@ -84,7 +84,7 @@ export default class Player implements OnInit, OnDestroy {
   }
 
   @Effect()
-  create = this._actions
+  readonly create = this._actions
     .ofType<player.PlayerCreate>(player.PLAYER_CREATE)
     .combineLatest(this.init, () => {
       return new player.PlayerCreateSuccess()
@@ -92,7 +92,7 @@ export default class Player implements OnInit, OnDestroy {
     .catch(err => Observable.of(new player.PlayerCreateError(err)))
 
   @Effect({dispatch: false})
-  destroy = this._actions
+  readonly destroy = this._actions
     .ofType<player.PlayerDestroy>(player.PLAYER_DESTROY)
     .withLatestFrom(this.init, (_, [playerInst, objectURL]) => {
       playerInst.dispose()
@@ -101,7 +101,7 @@ export default class Player implements OnInit, OnDestroy {
     .catch(err => Observable.of(new player.PlayerDestroyError(err)))
 
   @Effect()
-  setDimensions = this._actions
+  readonly setDimensions = this._actions
     .ofType<player.PlayerSetDimensions>(player.PLAYER_SET_DIMENSIONS)
     .combineLatest(this.init, ({payload:{width, height}}, [playerInst, _]) => {
       playerInst.width(width)

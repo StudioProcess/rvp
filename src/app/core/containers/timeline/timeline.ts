@@ -23,8 +23,8 @@ import {_SCROLLBAR_CAPTION_} from '../../../config/timeline/scrollbar'
 import {rndColor} from '../../../lib/color'
 
 export interface ScrollSettings {
-  zoom: number
-  scrollLeft: number
+  readonly zoom: number
+  readonly scrollLeft: number
 }
 
 @Component({

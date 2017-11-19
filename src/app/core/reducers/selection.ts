@@ -5,7 +5,7 @@ import {Annotation} from '../../persistence/model'
 import * as selection from '../actions/selection'
 
 interface Selection {
-  annotations: Set<Record<Annotation>>
+  readonly annotations: Set<Record<Annotation>>
 }
 
 const SelectionRecordFactory = Record<Selection>({annotations: Set()})

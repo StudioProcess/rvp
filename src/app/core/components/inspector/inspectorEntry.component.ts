@@ -74,10 +74,10 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   @Input() readonly index: number
   @Input() @HostBinding('class.selected') readonly isSelected = false
 
-  @Output() onUpdate = new EventEmitter<project.UpdateAnnotationPayload>()
+  @Output() readonly onUpdate = new EventEmitter<project.UpdateAnnotationPayload>()
 
-  @ViewChild('start') startInput: ElementRef
-  @ViewChild('duration') durationInput: ElementRef
+  @ViewChild('start') readonly startInput: ElementRef
+  @ViewChild('duration') readonly durationInput: ElementRef
 
   form: FormGroup|null = null
 

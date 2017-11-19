@@ -25,7 +25,7 @@ export default class ServerProxy implements IServer {
     private readonly _cache: LFCache) {}
 
   @Effect()
-  fetch = this._actions
+  readonly fetch = this._actions
     .ofType<project.ProjectFetch>(project.PROJECT_FETCH)
     .concatMap(action => {
       return Observable.zip(

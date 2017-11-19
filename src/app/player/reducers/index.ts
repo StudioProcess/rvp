@@ -4,8 +4,8 @@ import * as fromPlayer from './player'
 import * as fromOptions from './options'
 
 export interface State {
-  state: fromPlayer.State,
-  options: fromOptions.State
+  readonly state: fromPlayer.State,
+  readonly options: fromOptions.State
 }
 
 export const reducers: ActionReducerMap<State> = {

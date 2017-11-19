@@ -5,9 +5,9 @@ import {PlayerOptions} from 'video.js'
 import {Action} from '@ngrx/store'
 
 interface PlayerCreatePayload {
-  elemRef: ElementRef
-  objectURL: string,
-  playerOptions: PlayerOptions
+  readonly elemRef: ElementRef
+  readonly objectURL: string,
+  readonly playerOptions: PlayerOptions
 }
 
 export const PLAYER_CREATE = '[Player] Create'
@@ -60,8 +60,8 @@ export class PlayerSetCurrentTime implements Action {
 
 // Player dimensions
 interface PlayerDimensionsPayload {
-  width: number
-  height:number
+  readonly width: number
+  readonly height:number
 }
 
 export class PlayerSetDimensions implements Action {

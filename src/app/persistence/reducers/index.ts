@@ -7,7 +7,7 @@ import * as fromProject from './project'
 import {AnnotationColorMapRecordFactory} from '../model'
 
 export interface State {
-  project: fromProject.State,
+  readonly project: fromProject.State,
 }
 
 export const reducers: ActionReducerMap<State> = {
