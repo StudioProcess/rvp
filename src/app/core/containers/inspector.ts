@@ -81,6 +81,8 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    type annotationSelectionWithEntries = [Record<fromSelection.AnnotationSelection>, QueryList<InspectorEntryComponent>]
+
     this._subs.push(
       this._store.select(fromRoot.getAnnotationSelection)
         .filter(annotationSelection => {
@@ -92,7 +94,7 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
           }
         })
         .withLatestFrom(this.entries.changes)
-        .subscribe(([annotationSelection, currentEntries]: [Record<fromSelection.AnnotationSelection>, QueryList<InspectorEntryComponent>]) => {
+        .subscribe(([annotationSelection, currentEntries]: annotationSelectionWithEntries) => {
           const selectedId = annotationSelection.getIn(['annotation', 'id'])
 
           const entry = currentEntries.find(item => {
