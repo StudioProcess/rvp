@@ -2,8 +2,10 @@ import {
   Component, OnInit, OnDestroy,
   ChangeDetectionStrategy, ChangeDetectorRef,
   Renderer2, ViewChild, ElementRef,
-  AfterViewInit
+  AfterViewInit, Inject
 } from '@angular/core'
+
+import {DOCUMENT} from '@angular/platform-browser'
 
 import {Store} from '@ngrx/store'
 
@@ -12,6 +14,7 @@ import {ReplaySubject} from 'rxjs/ReplaySubject'
 import {Subscription} from 'rxjs/Subscription'
 import 'rxjs/add/observable/combineLatest'
 import 'rxjs/add/observable/merge'
+import 'rxjs/add/observable/concat'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/startWith'
 
@@ -64,7 +67,8 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private readonly _renderer: Renderer2,
     private readonly _cdr: ChangeDetectorRef,
-    private readonly _store: Store<fromProject.State>) {}
+    private readonly _store: Store<fromProject.State>,
+    @Inject(DOCUMENT) private readonly _document: any) {}
 
   ngOnInit() {
     const timeline = this._store.select(fromProject.getTimeline)
@@ -163,10 +167,23 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
           this._cdr.markForCheck()
         }))
 
-    const placePlayhead = fromEventPattern(this._renderer, this.timelineOverflowRef.nativeElement, 'mousedown')
+    const mousemove: Observable<MouseEvent> = fromEventPattern(this._renderer, this._document, 'mousemove')
+    const mouseup: Observable<MouseEvent> = fromEventPattern(this._renderer, this._document, 'mouseup')
+    const placeHeadMd: Observable<MouseEvent> = fromEventPattern(this._renderer, this.timelineOverflowRef.nativeElement, 'mousedown')
+
+    const placePlayHead = placeHeadMd.switchMap((md) => {
+      const init = {clientX: md.clientX}
+
+      return Observable.concat(
+        Observable.of(init),
+        mousemove.map(mmEvent => {
+          const {clientX} = mmEvent
+          return {clientX}
+        }).takeUntil(mouseup))
+    })
 
     this._subs.push(
-      placePlayhead
+      placePlayHead
         .withLatestFrom(this.zoomContainerRect, (ev: MouseEvent, rect) => {
           const localX = coordTransform(ev.clientX, rect)
           return {t: localX / rect.width}
