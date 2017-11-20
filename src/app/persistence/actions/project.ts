@@ -4,9 +4,9 @@ import {Record} from 'immutable'
 
 import {Annotation, Track} from '../model'
 
-export const PROJECT_FETCH = '[Project] Fetch'
-export const PROJECT_FETCH_SUCCESS = '[Project] Fetch Success'
-export const PROJECT_FETCH_ERROR = '[Project] Fetch Error'
+export const PROJECT_LOAD = '[Project] Load'
+export const PROJECT_LOAD_SUCCESS = '[Project] Load Success'
+export const PROJECT_LOAD_ERROR = '[Project] Load Error'
 
 export const PROJECT_UPDATE = '[Project] Update'
 export const PROJECT_UPDATE_SUCCESS = '[Project] Update Success'
@@ -19,19 +19,18 @@ export const PROJECT_DELETE_ANNOTATION = '[Project] Delete Annotation'
 export const PROJECT_ADD_TRACK = '[Project] Add Track'
 export const PROJECT_DELETE_TRACK = '[Project] Delete Track'
 
-export class ProjectFetch implements Action {
-  readonly type = PROJECT_FETCH
-  constructor(readonly payload: {id: number}) {}
+export class ProjectLoad implements Action {
+  readonly type = PROJECT_LOAD
 }
 
-export class ProjectFetchSuccess implements Action {
-  readonly type = PROJECT_FETCH_SUCCESS
+export class ProjectLoadSuccess implements Action {
+  readonly type = PROJECT_LOAD_SUCCESS
   // TODO: adapt payload type
   constructor(readonly payload: any) {}
 }
 
-export class ProjectFetchError implements Action {
-  readonly type = PROJECT_FETCH_ERROR
+export class ProjectLoadError implements Action {
+  readonly type = PROJECT_LOAD_ERROR
   constructor(readonly payload: any) {}
 }
 
@@ -99,7 +98,7 @@ export class ProjectDeleteTrack implements Action {
 }
 
 export type Actions =
-  ProjectFetch|ProjectFetchSuccess|ProjectFetchError|
+  ProjectLoad|ProjectLoadSuccess|ProjectLoadError|
   ProjectUpdate|ProjectUpdateSuccess|ProjectUpdateError|
   ProjectAddTrack|ProjectDeleteTrack|
   ProjectAddAnnotation|ProjectUpdateAnnotation|ProjectDeleteAnnotation
