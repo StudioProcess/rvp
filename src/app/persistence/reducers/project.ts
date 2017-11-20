@@ -47,7 +47,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const {trackIndex, annotation} = action.payload
       const a = annotation.set('id', Math.floor(Math.random() * Number.MAX_SAFE_INTEGER))
       return state.updateIn(['timeline', 'tracks', trackIndex, 'annotations'], annotations => {
-        return annotations.add(a)
+        return annotations.push(a)
       })
     }
     case project.PROJECT_UPDATE_ANNOTATION: {
