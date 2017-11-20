@@ -142,6 +142,10 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     return track.get('id', null)
   }
 
+  addAnnotation(addAnnotation: project.AddAnnotationPayload) {
+    this._store.dispatch(new project.ProjectAddAnnotation(addAnnotation))
+  }
+
   updateAnnotation(updateAnnotation: project.UpdateAnnotationPayload) {
     this._store.dispatch(new project.ProjectUpdateAnnotation(updateAnnotation))
   }
