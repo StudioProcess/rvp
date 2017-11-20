@@ -40,9 +40,10 @@ export default class ServerProxy {
           try {
             const isCached = await this._cache.isCached('project')
             if(isCached) {
-
+              // TODO
             } else {
               const project = await loadProject(_DEFAULT_PROJECT_PATH_)
+              this._store.dispatch(new project.ProjectLoadSuccess(project))
             }
           } catch(err) {
             this._store.dispatch(new project.ProjectLoadError(err))
