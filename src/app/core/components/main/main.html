@@ -1,0 +1,35 @@
+<div class="nav-wrapper">
+  <div class="row">
+    <div class="small-6 column">
+      <rv-logo></rv-logo>
+    </div>
+    <div class="small-6 column text-right">
+      <rv-projectbtn data-open="settings-reveal"></rv-projectbtn>
+      <rv-projectmodal class="reveal" id="settings-reveal" data-reveal
+        (openProject)="openProject($event)"
+        (exportProject)="exportProject($event)"
+        (resetProject)="resetProject($event)"
+        (changeVideo)="changeVideo($event)">
+      </rv-projectmodal>
+    </div>
+  </div>
+</div>
+<div>
+  <!--<rv-loading *ngIf="_isLoading" [isLoading]="true"></rv-loading>-->
+  <div *ngIf="!_isLoading">
+    <div class="row">
+      <div class="small-12 medium-6 large-8 column">
+        <rv-player></rv-player>
+      </div>
+      <div class="small-12 medium-6 large-4 column">
+        <rv-inspector></rv-inspector>
+      </div>
+      <div class="small-12 column">
+        <rv-timeline></rv-timeline>
+      </div>
+      <div class="small-12 column">
+        <rv-footer></rv-footer>
+      </div>
+    </div>
+  </div>
+</div>

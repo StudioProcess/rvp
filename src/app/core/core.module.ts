@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core'
 import {CommonModule} from '@angular/common'
 import {ReactiveFormsModule} from '@angular/forms'
 
-import {MainContainer} from './components/main'
+import {MainContainer} from './components/main/main'
 import {PlayerContainer} from './components/player/player'
 import {InspectorContainer} from './components/inspector/inspector'
 import {TimelineContainer} from './components/timeline/timeline'
