@@ -19,11 +19,11 @@ export type State = Record<Project>
 export function reducer(state: State = initialState, action: project.Actions): State {
   switch(action.type) {
     case project.PROJECT_FETCH_SUCCESS: {
-      const {project:proj, videoBlob} = action.payload
+      const {project:proj, videoBlob:video} = action.payload
       // Create immutable representation
       return new ProjectRecordFactory({
         ...proj,
-        videoBlob,
+        video,
         timeline: TimelineRecordFactory({
           ...proj.timeline,
           tracks: List(proj.timeline.tracks.map((track: any) => {
@@ -80,7 +80,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
 export const getProjectId = (state: State) => state.get('id', null)
 
 export const getVideoObjectURL = (state: State) => {
-  const vb = state.get('videoBlob', null)
+  const vb = state.get('video', null)
   return vb !== null ? URL.createObjectURL(vb) : null
 }
 

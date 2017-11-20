@@ -5,7 +5,7 @@ import {List, Record} from 'immutable'
 export const ProjectRecordFactory = Record<Project>({
   id: null,
   timeline: null,
-  videoBlob: null
+  video: null
 })
 
 export const TimelineRecordFactory = Record<Timeline>({
@@ -52,7 +52,7 @@ export const AnnotationColorMapRecordFactory = Record<AnnotationColorMap>({
 export interface Project {
   readonly id: number|null
   readonly timeline: Record<Timeline>|null
-  readonly videoBlob: Blob|null
+  readonly video: Blob|null
 }
 
 export interface Timeline {
