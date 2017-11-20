@@ -7,7 +7,7 @@
       <rv-projectbtn data-open="settings-reveal"></rv-projectbtn>
       <rv-projectmodal class="reveal" id="settings-reveal" data-reveal
         (openProject)="openProject($event)"
-        (exportProject)="exportProject($event)"
+        (onExportProject)="exportProject()"
         (resetProject)="resetProject($event)"
         (changeVideo)="changeVideo($event)">
       </rv-projectmodal>
