@@ -12,6 +12,7 @@ export const PROJECT_UPDATE = '[Project] Update'
 export const PROJECT_UPDATE_SUCCESS = '[Project] Update Success'
 export const PROJECT_UPDATE_ERROR = '[Project] Update Error'
 
+export const PROJECT_ADD_ANNOTATION = '[Project] Add Annotation'
 export const PROJECT_UPDATE_ANNOTATION = '[Project] Update Annotation'
 
 export const PROJECT_ADD_TRACK = '[Project] Add Track'
@@ -48,6 +49,16 @@ export class ProjectUpdateError implements Action {
   constructor(readonly payload: any) {}
 }
 
+export interface AddAnnotationPayload {
+  readonly trackIndex: number
+  readonly annotation: Record<Annotation>
+}
+
+export class ProjectAddAnnotation implements Action {
+  readonly type = PROJECT_ADD_ANNOTATION
+  constructor(readonly payload: AddAnnotationPayload) {}
+}
+
 export interface UpdateAnnotationPayload {
   readonly trackIndex: number
   readonly annotationIndex: number
@@ -78,5 +89,5 @@ export class ProjectDeleteTrack implements Action {
 export type Actions =
   ProjectFetch|ProjectFetchSuccess|ProjectFetchError|
   ProjectUpdate|ProjectUpdateSuccess|ProjectUpdateError|
-  ProjectUpdateAnnotation|
-  ProjectAddTrack|ProjectDeleteTrack
+  ProjectAddTrack|ProjectDeleteTrack|
+  ProjectAddAnnotation|ProjectUpdateAnnotation
