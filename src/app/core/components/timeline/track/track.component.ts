@@ -8,10 +8,11 @@ import {FormGroup, FormBuilder, Validators} from '@angular/forms'
 import {Record} from 'immutable'
 
 import {Observable} from 'rxjs/Observable'
+import {Subject} from 'rxjs/Subject'
 import {Subscription} from 'rxjs/Subscription'
 
 import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
-// import {ScrollSettings} from '../timeline'
+import {coordTransform} from '../../../../lib/coords'
 import {Handlebar} from '../handlebar/handlebar.component'
 import {Track, Annotation, AnnotationRecordFactory} from '../../../../persistence/model'
 import * as project from '../../../../persistence/actions/project'
@@ -38,8 +39,10 @@ export class TrackComponent implements OnInit, OnDestroy {
   @Output() readonly updateAnnotation = new EventEmitter<project.UpdateAnnotationPayload>()
   @Output() readonly deleteTrack = new EventEmitter<project.DeleteTrackPlayload>()
   @Output() readonly onSelectAnnotation = new EventEmitter<selection.SelectionAnnotationPayload>()
+  @Output() readonly onAddAnnotation = new EventEmitter<project.AddAnnotationPayload>()
 
   private readonly _subs: Subscription[] = []
+  private readonly addAnnotationClick = new Subject<MouseEvent>()
 
   constructor(private readonly _fb: FormBuilder) {}
 
@@ -47,6 +50,20 @@ export class TrackComponent implements OnInit, OnDestroy {
     this.form = this._fb.group({
       title: [this.data.getIn(['fields', 'title']), Validators.required]
     })
+
+    this._subs.push(
+      this.addAnnotationClick.withLatestFrom(this.containerRect, (ev, rect) => {
+        const localX = coordTransform(ev.clientX, rect)
+        const perc = localX/rect.width*100
+        const tPerc = this.totalDuration/100
+        return {
+          trackIndex: this.trackIndex,
+          annotation: new AnnotationRecordFactory({
+            utc_timestamp: perc*tPerc,
+            duration: 5
+          })
+        }
+      }).subscribe(this.onAddAnnotation))
   }
 
   getAnnotationTitle(annotation: Record<Annotation>) {
@@ -59,10 +76,6 @@ export class TrackComponent implements OnInit, OnDestroy {
 
   getAnnotationWidth(annotation: Annotation) {
     return Math.min(Math.max(_MIN_WIDTH_, annotation.duration / this.totalDuration * 100), 100)
-  }
-
-  ngOnDestroy() {
-    this._subs.forEach(sub => sub.unsubscribe())
   }
 
   trackByFunc(_: number, track: Record<Track>) {
@@ -84,6 +97,10 @@ export class TrackComponent implements OnInit, OnDestroy {
     })
   }
 
+  addAnnotation(ev: any) {
+    this.addAnnotationClick.next(ev)
+  }
+
   handlebarUpdate(ev: Handlebar) {
     const {payload: annotationIndex} = ev
     const oldAnnotation = this.data.getIn(['annotations', annotationIndex])
@@ -101,5 +118,11 @@ export class TrackComponent implements OnInit, OnDestroy {
         duration: newDuration
       })
     })
+  }
+
+  ngOnDestroy() {
+    this.addAnnotationClick.complete()
+
+    this._subs.forEach(sub => sub.unsubscribe())
   }
 }
