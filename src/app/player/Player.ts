@@ -59,6 +59,12 @@ export default class Player implements OnDestroy {
       }, _ => {
         this._store.dispatch(new player.PlayerDestroy())
       }))
+
+      this._subs.push(
+        this.requestCurrentTime.withLatestFrom(this.init)
+        .subscribe(([{payload:{currentTime}}, [playerInst]]) => {
+          playerInst.currentTime(currentTime)
+        }))
     }
 
   @Effect({dispatch: false})
@@ -106,4 +112,8 @@ export default class Player implements OnDestroy {
       return new player.PlayerSetDimensionsSuccess({width, height})
     })
     .catch(err => Observable.of(new player.PlayerSetDimensionsError(err)))
+
+  @Effect({dispatch: false})
+  readonly requestCurrentTime = this._actions
+    .ofType<player.PlayerRequestCurrentTime>(player.PLAYER_REQUEST_CURRENT_TIME)
 }

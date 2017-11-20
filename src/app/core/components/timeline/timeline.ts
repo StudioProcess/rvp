@@ -22,11 +22,13 @@ import * as fromProject from '../../../persistence/reducers'
 import * as fromPlayer from '../../../player/reducers'
 import * as project from '../../../persistence/actions/project'
 import * as selection from '../../actions/selection'
+import * as player from '../../../player/actions'
 import {Timeline, Track} from '../../../persistence/model'
 import {fromEventPattern} from '../../../lib/observable'
 import {HandlebarComponent} from '../../components/timeline/handlebar/handlebar.component'
 import {_SCROLLBAR_CAPTION_} from '../../../config/timeline/scrollbar'
 import {rndColor} from '../../../lib/color'
+import {coordTransform} from '../../../lib/coords'
 
 export interface ScrollSettings {
   readonly zoom: number
@@ -56,6 +58,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('scrollbar') private readonly scrollbarRef: ElementRef
   @ViewChild('handlebar') private readonly handlebarRef: HandlebarComponent
   @ViewChild('zoomContainer') private readonly zoomContainerRef: ElementRef
+  @ViewChild('timelineOverflow') private readonly timelineOverflowRef: ElementRef
   private readonly _subs: Subscription[] = []
 
   constructor(
@@ -158,6 +161,18 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
           this.zoom = zoom
           this.scrollLeft = left
           this._cdr.markForCheck()
+        }))
+
+    const placePlayhead = fromEventPattern(this._renderer, this.timelineOverflowRef.nativeElement, 'mousedown')
+
+    this._subs.push(
+      placePlayhead
+        .withLatestFrom(this.zoomContainerRect, (ev: MouseEvent, rect) => {
+          const localX = coordTransform(ev.clientX, rect)
+          return {t: localX / rect.width}
+        })
+        .subscribe(({t}) => {
+          this._store.dispatch(new player.PlayerRequestCurrentTime({currentTime: t*this.timeline.get('duration', null)}))
         }))
   }
 
