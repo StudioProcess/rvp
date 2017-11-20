@@ -58,10 +58,9 @@ export function reducer(state: State=initialState, action: selection.Actions): S
       }
     }
     case selection.SELECTION_DESELECT_ANNOTATION: {
-      // return state.update('annotations', annotations => {
-      //   return annotations.delete(action.payload.annotation)
-      // })
-      return state
+      return state.update('annotations', annotations => {
+        return annotations.delete(action.payload.selection)
+      })
     }
     case selection.SELECTION_RESET_ANNOTATION: {
       return state.set('annotations', Set())
