@@ -36,43 +36,32 @@ export default class ServerProxy {
     private readonly _cache: LFCache,
     private readonly _store: Store<fromProject.State>) {
       this._subs.push(
-        this.loadProject.subscribe(async () => {
-          try {
-            const isCached = await this._cache.isCached('project')
-            if(isCached) {
-              // TODO
-            } else {
-              const project = await loadProject(_DEFAULT_PROJECT_PATH_)
-              this._store.dispatch(new project.ProjectLoadSuccess(project))
+        this.loadProject.subscribe({
+          next: async () => {
+            try {
+              const isCached = await this._cache.isCached('project')
+              if(isCached) {
+                // TODO
+              } else {
+                const projectData = await loadProject(_DEFAULT_PROJECT_PATH_)
+                this._store.dispatch(new project.ProjectLoadSuccess(projectData))
+              }
+            } catch(err) {
+              this._store.dispatch(new project.ProjectLoadError(err))
             }
-          } catch(err) {
+          },
+          error: err => {
             this._store.dispatch(new project.ProjectLoadError(err))
           }
         }))
       }
 
-  @Effect()
-  readonly loadProject = this._actions
-    .ofType<project.ProjectLoad>(project.PROJECT_LOAD)
-    // .concatMap(action => {
-    //   return Observable.zip(
-    //     Observable.of(action),
-    //     this._cache.isCached(Observable.of(action.payload.id)))
-    // })
-    // .concatMap(([{payload: {id}}, isCached]) => {
-    //   return isCached ?
-    //     this._cache.getCached(id).map(res => new project.ProjectLoadSuccess(res)) :
-    //     loadProject(Observable.of(_DEFAULT_PROJECT_PATH_)).map(res => new project.ProjectLoadSuccess(res))
-    // })
-    // .catch(err => Observable.of(new project.ProjectLoadError(err)))
+  @Effect({dispatch: false})
+  readonly loadProject = this._actions.ofType<project.ProjectLoad>(project.PROJECT_LOAD)
 
-  // @Effect()
-  // update = Observable.merge(
-  //   this._actions.ofType<project.ProjectLoadSuccess>(project.PROJECT_LOAD_SUCCESS)
-  //     .map(action => {
-
-  //     })
-  //     .catch(err => )
+  ngOnDestroy() {
+    this._subs.forEach(sub => sub.unsubscribe())
+  }
 }
 
 
