@@ -11,6 +11,7 @@ import {Observable} from 'rxjs/Observable'
 import {ReplaySubject} from 'rxjs/ReplaySubject'
 import {Subscription} from 'rxjs/Subscription'
 import 'rxjs/add/observable/combineLatest'
+import 'rxjs/add/observable/merge'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/startWith'
 
@@ -89,8 +90,10 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       return this.zoomContainerRef.nativeElement.getBoundingClientRect()
     }
 
+    const winResize = fromEventPattern(this._renderer, window, 'resize')
+
     this._subs.push(
-      fromEventPattern(this._renderer, window, 'resize')
+      winResize
         .map(() => getScrollbarRect())
         .startWith(getScrollbarRect())
         .subscribe(this.scrollbarRect))
@@ -118,7 +121,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       })
 
     this._subs.push(
-      scrollSetting.subscribe({
+      Observable.merge(winResize, scrollSetting).subscribe({
         next: () => {
           this.zoomContainerRect.next(getZoomContainerRect())
         },
