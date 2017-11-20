@@ -57,6 +57,12 @@ export function reducer(state: State = initialState, action: project.Actions): S
         'annotations', annotationIndex
       ], annotation)
     }
+    case project.PROJECT_DELETE_ANNOTATION: {
+      const {trackIndex, annotationIndex} = action.payload
+      return state.updateIn(['timeline', 'tracks', trackIndex, 'annotations'], annotations => {
+        return annotations.delete(annotationIndex)
+      })
+    }
     case project.PROJECT_ADD_TRACK: {
       return state.updateIn(['timeline', 'tracks'], tracks => {
         return tracks.push(new TrackRecordFactory(action.payload))

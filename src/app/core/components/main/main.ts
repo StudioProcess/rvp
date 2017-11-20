@@ -46,8 +46,15 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     this._subs.push(
       deselectAnnotation
         .subscribe(([_, sel]) => {
-          const payload = {selection: sel!}
-          this._rootStore.dispatch(new selection.SelectionDeselectAnnotation(payload))
+          const deselectPayload = {selection: sel!}
+          this._rootStore.dispatch(new selection.SelectionDeselectAnnotation(deselectPayload))
+
+          const deletePayload = {
+            trackIndex: sel!.get('trackIndex', null),
+            annotationIndex: sel!.get('annotationIndex', null),
+            annotation: sel!.get('annotation', null)
+          }
+          this._rootStore.dispatch(new project.ProjectDeleteAnnotation(deletePayload))
           this._cdr.markForCheck()
         }))
 
