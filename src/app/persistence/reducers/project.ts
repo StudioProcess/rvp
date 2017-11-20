@@ -32,7 +32,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
               ...track,
               fields: TrackFieldsRecordFactory({title}),
               annotations: List(track.annotations.map((annotation: any) => {
-                const {title, description} = annotation
+                const {title, description} = annotation.fields
                 return new AnnotationRecordFactory({
                   ...annotation,
                   fields: new AnnotationFieldsRecordFactory({title, description}),
