@@ -59,12 +59,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
           this._cdr.markForCheck()
         }))
 
-    /*
-     * Let's say id=0 identifies the default project.
-     * In future, if a server implementation is available,
-     * the 'current' project id could be provided by the server.
-     */
-    this._rootStore.dispatch(new project.ProjectFetch({id: 0}))
+    this._rootStore.dispatch(new project.ProjectLoad())
   }
 
   openProject() {
