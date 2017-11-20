@@ -11,6 +11,7 @@ import {Subscription} from 'rxjs/Subscription'
 import * as fromRoot from '../../reducers'
 import * as project from '../../../persistence/actions/project'
 import * as selection from '../../actions/selection'
+import * as io from '../../../io/actions/io'
 import {fromEventPattern} from '../../../lib/observable'
 
 declare var $: any
@@ -71,7 +72,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   exportProject() {
-    console.log('TODO: export project')
+    this._rootStore.dispatch(new io.IOExportProject())
   }
 
   resetProject() {

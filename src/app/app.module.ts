@@ -11,6 +11,7 @@ import {environment} from '../environments/environment'
 import {CoreModule} from './core/core.module'
 import {PersistenceModule} from './persistence/persistence.module'
 import {PlayerModule} from './player/player.module'
+import {IOModule} from './io/io.module'
 
 import {reducers, metaReducers} from './core/reducers'
 
@@ -28,6 +29,7 @@ import {appRoutes} from './routes'
 
     CoreModule,
     PersistenceModule,
+    IOModule,
     PlayerModule
   ],
   declarations: [AppShellContainer],
