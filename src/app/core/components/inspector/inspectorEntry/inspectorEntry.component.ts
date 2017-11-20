@@ -73,7 +73,6 @@ const durationValidator = Validators.compose([Validators.required, durationValid
 })
 export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
   @Input() readonly entry: Record<AnnotationColorMap>
-  @Input() readonly index: number
   @Input() @HostBinding('class.selected') readonly isSelected = false
 
   @Output() readonly onUpdate = new EventEmitter<project.UpdateAnnotationPayload>()
@@ -133,7 +132,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
           this.onUpdate.emit({
             trackIndex: this.entry.get('trackIndex', null),
-            annotationIndex: this.index,
+            annotationIndex: this.entry.get('annotationIndex', null),
             annotation
           })
         }))

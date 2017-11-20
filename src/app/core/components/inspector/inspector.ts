@@ -27,9 +27,8 @@ import {InspectorEntryComponent} from './inspectorEntry/inspectorEntry.component
   template: `
     <div #wrapper *ngIf="annotations !== null" class="wrapper" [style.height.px]="height|async">
       <rv-inspector-entry
-        *ngFor="let annotation of annotations; index as i; trackBy: trackByFunc;"
+        *ngFor="let annotation of annotations; trackBy: trackByFunc;"
         [entry]="annotation"
-        [index]="i"
         [isSelected]="annotation.annotation.id === selectedAnnotationId"
         (onUpdate)="updateAnnotation($event)"
         (onSelectAnnotation)="selectAnnotation($event)">
