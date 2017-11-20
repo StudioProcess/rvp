@@ -11,11 +11,15 @@ export const enum SelectionSource {
 }
 
 export interface AnnotationSelection {
+  readonly trackIndex: number
+  readonly annotationIndex: number
   readonly annotation: Record<Annotation>
   readonly source: SelectionSource
 }
 
 export const AnnotationSelectionFactory = Record<AnnotationSelection>({
+  trackIndex: -1,
+  annotationIndex: -1,
   annotation: new AnnotationRecordFactory(),
   source: SelectionSource.None
 })
