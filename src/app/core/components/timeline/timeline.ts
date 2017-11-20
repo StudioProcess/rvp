@@ -45,6 +45,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   scrollLeft = 0
   zoom = 1
   playerPos = 0
+  playerCurrentTime = 0
   scrollbarLeft = 0
   scrollbarWidth = 100
   readonly scrollbarCaption = _SCROLLBAR_CAPTION_
@@ -87,9 +88,15 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
 
     this._subs.push(
       this._store.select(fromPlayer.getCurrentTime).withLatestFrom(timeline, (currentTime, timeline) => {
-        return currentTime/timeline!.get('duration', null)
-      }).subscribe(playerPos => {
-        this.playerPos = playerPos*100
+        const totalTime = timeline!.get('duration', null)
+        return {
+          currentTime,
+          totalTime,
+          progress: currentTime/totalTime
+        }
+      }).subscribe(({progress, currentTime}) => {
+        this.playerPos = progress*100
+        this.playerCurrentTime = currentTime
         this._cdr.markForCheck()
       }))
   }

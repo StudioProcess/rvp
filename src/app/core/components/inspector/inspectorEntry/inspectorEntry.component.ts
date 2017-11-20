@@ -13,7 +13,6 @@ import {
 
 const _VALID_ = 'VALID' // not exported by @angular/forms
 
-import * as moment from 'moment'
 import {Record} from 'immutable'
 
 import {Subscription} from 'rxjs/Subscription'
@@ -24,6 +23,7 @@ import 'rxjs/add/operator/filter'
 import 'rxjs/add/operator/distinctUntilChanged'
 
 import {_FORM_INPUT_DEBOUNCE_} from '../../../../config/form'
+import {formatDuration} from '../../../../lib/time'
 
 import {
   AnnotationColorMap, AnnotationRecordFactory,
@@ -33,10 +33,6 @@ import {
 import * as fromSelection from '../../../reducers/selection'
 import * as selection from '../../../actions/selection'
 import * as project from '../../../../persistence/actions/project'
-
-function formatDuration(unixTime: number): string {
-  return moment.unix(unixTime).utc().format('HH:mm:ss.SSS')
-}
 
 const parseDurationRegex = /^(?:(?:([0-9]*):)|(?:([0-9]*):([0-9]*):))?([0-9]*)(?:\.([0-9]*))?$/
 
