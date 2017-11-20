@@ -1,4 +1,4 @@
-import {Injectable, OnInit, OnDestroy} from '@angular/core'
+import {Injectable, OnDestroy} from '@angular/core'
 
 import {Store} from '@ngrx/store'
 import {Effect, Actions} from '@ngrx/effects'
@@ -24,12 +24,42 @@ import * as player from './actions'
 
 // https://github.com/videojs/video.js/blob/master/src/js/player.js
 @Injectable()
-export default class Player implements OnInit, OnDestroy {
+export default class Player implements OnDestroy {
   private readonly _subs: Subscription[] = [];
 
   constructor(
     private readonly _actions: Actions,
-    private readonly _store: Store<fromPlayer.State>) {}
+    private readonly _store: Store<fromPlayer.State>) {
+      this._subs.push(this.init.subscribe(([playerInst, _]) => {
+        // Player is an instance of a video.js Component class, with methods from
+        // mixin class EventTarget.
+        // https://github.com/videojs/video.js/blob/master/src/js/component.js#L88
+        const playerEventEmitter = playerInst as JQueryStyleEventEmitter
+        const playerInstSubs: Subscription[] = []
+        playerInstSubs.push(Observable.fromEvent(playerEventEmitter, 'ready').subscribe(() => {
+          playerInstSubs.push(
+            Observable.fromEvent(playerEventEmitter, 'timeupdate')
+              .debounceTime(_PLAYER_TIMEUPDATE_DEBOUNCE_, animationScheduler)
+              .subscribe(() => {
+                const currentTime = playerInst.currentTime()
+                if(currentTime == null) {
+                }
+                this._store.dispatch(new player.PlayerSetCurrentTime({currentTime}))
+              }))
+
+          playerInstSubs.push(
+            Observable.fromEvent(playerEventEmitter, 'dispose').subscribe(() => {
+              // On dispose clear all subs
+              playerInstSubs.forEach(sub => sub.unsubscribe())
+              this._store.dispatch(new player.PlayerDestroySuccess())
+            }, err => {
+              this._store.dispatch(new player.PlayerDestroyError(err))
+            }))
+          }))
+      }, _ => {
+        this._store.dispatch(new player.PlayerDestroy())
+      }))
+    }
 
   @Effect({dispatch: false})
   readonly init: Observable<[videojs.Player, string]> = this._actions
@@ -44,42 +74,8 @@ export default class Player implements OnInit, OnDestroy {
     })
     .share()
 
-  ngOnInit() {
-    this._subs.push(this.init.subscribe(([playerInst, _]) => {
-      // Player is an instance of a video.js Component class, with methods from
-      // mixin class EventTarget.
-      // https://github.com/videojs/video.js/blob/master/src/js/component.js#L88
-      const playerEventEmitter = playerInst as JQueryStyleEventEmitter
-      const playerInstSubs: Subscription[] = []
-
-      playerInstSubs.push(Observable.fromEvent(playerEventEmitter, 'ready').subscribe(() => {
-        console.log('PLAYER READY')
-        playerInstSubs.push(
-          Observable.fromEvent(playerEventEmitter, 'timeupdate')
-            .debounceTime(_PLAYER_TIMEUPDATE_DEBOUNCE_, animationScheduler)
-            .subscribe(() => {
-              const currentTime = playerInst.currentTime()
-              if(currentTime == null) {
-              }
-              console.log('CURRENT TIME' + currentTime)
-              this._store.dispatch(new player.PlayerSetCurrentTime({currentTime}))
-            }))
-
-        playerInstSubs.push(
-          Observable.fromEvent(playerEventEmitter, 'dispose').subscribe(() => {
-            // On dispose clear all subs
-            playerInstSubs.forEach(sub => sub.unsubscribe())
-            this._store.dispatch(new player.PlayerDestroySuccess())
-          }, err => {
-            this._store.dispatch(new player.PlayerDestroyError(err))
-          }))
-        }))
-    }, _ => {
-      this._store.dispatch(new player.PlayerDestroy())
-    }))
-  }
-
   ngOnDestroy() {
+    console.log('DESTROY PLAYER')
     this._subs.forEach(s => s.unsubscribe())
   }
 

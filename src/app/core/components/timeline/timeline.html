@@ -16,7 +16,7 @@
       (onSelectAnnotation)="selectAnnotation($event)"
       (onAddAnnotation)="addAnnotation($event)">
     </rv-track>
-    <rv-playhead></rv-playhead>
+    <rv-playhead [style.left.%]="playerPos"></rv-playhead>
   </div>
 </div>
 

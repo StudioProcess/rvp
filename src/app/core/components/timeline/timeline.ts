@@ -19,6 +19,7 @@ import {Record} from 'immutable'
 
 import * as fromSelection from '../../reducers'
 import * as fromProject from '../../../persistence/reducers'
+import * as fromPlayer from '../../../player/reducers'
 import * as project from '../../../persistence/actions/project'
 import * as selection from '../../actions/selection'
 import {Timeline, Track} from '../../../persistence/model'
@@ -43,6 +44,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   selectedAnnotationId: number|null
   scrollLeft = 0
   zoom = 1
+  playerPos = 0
   scrollbarLeft = 0
   scrollbarWidth = 100
   readonly scrollbarCaption = _SCROLLBAR_CAPTION_
@@ -61,9 +63,12 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     private readonly _store: Store<fromProject.State>) {}
 
   ngOnInit() {
+    const timeline = this._store.select(fromProject.getTimeline)
+      .filter(timeline => timeline !== null)
+      .share()
+
     this._subs.push(
-      this._store.select(fromProject.getTimeline)
-        .filter(timeline => timeline !== null)
+      timeline
         .subscribe(timeline => {
           this.timeline = timeline as Record<Timeline> // use identifer! syntax?
           this._cdr.markForCheck()
@@ -79,6 +84,14 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
           }
           this._cdr.markForCheck()
         }))
+
+    this._subs.push(
+      this._store.select(fromPlayer.getCurrentTime).withLatestFrom(timeline, (currentTime, timeline) => {
+        return currentTime/timeline!.get('duration', null)
+      }).subscribe(playerPos => {
+        this.playerPos = playerPos*100
+        this._cdr.markForCheck()
+      }))
   }
 
   ngAfterViewInit() {
