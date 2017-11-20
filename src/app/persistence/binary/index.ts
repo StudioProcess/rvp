@@ -1,11 +1,13 @@
 import {getBinaryContent} from 'jszip-utils'
 
-import {Observable} from 'rxjs/Observable'
-import 'rxjs/add/observable/bindNodeCallback'
-import 'rxjs/add/operator/concatMap'
-
-const _getBinaryFunc = Observable.bindNodeCallback(getBinaryContent)
-
-export default function loadBinary(path: Observable<string>) {
-  return path.concatMap(p => _getBinaryFunc(p))
+export default function loadBinary(path: string): Promise<string|ArrayBuffer> {
+  return new Promise((resolve, reject) => {
+    getBinaryContent(path, (err, data) => {
+      if(err) {
+        reject(err)
+      } else {
+        resolve(data)
+      }
+    })
+  })
 }
