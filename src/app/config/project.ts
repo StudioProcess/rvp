@@ -28,7 +28,7 @@ export const _ZIP_META_: ZipFileMeta[] = [
   {
     file: 'initial/video.m4v',
     type: 'blob',
-    map: 'videoBlob',
+    map: 'video',
     middleware: defaultFileMW
   }
 ]
