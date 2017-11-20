@@ -12,43 +12,47 @@ import 'rxjs/add/operator/concatMap'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/catch'
 
-import * as io from '../../io/actions/io'
+// import * as io from '../../io/actions/io'
 import * as project from '../actions/project'
 import * as fromProject from '../reducers'
 
-// import {_DEFAULT_PROJECT_PATH_} from '../../config'
+import {_DEFAULT_PROJECT_PATH_} from '../../config'
 import LFCache from '../cache/LFCache'
-// import {loadProject} from '../project'
+import {loadProject} from '../project'
 
 @Injectable()
 export default class ServerProxy {
   private readonly _subs: Subscription[] = []
+
+  // TODO: loadProject: cached: write to store; !cached: load default project, unzip, cache video, cache project, write to store
+  // TODO: exportProject: zip all, saveAs
+  // TODO: resetProject: reset cache, load default project, unzip, cache video, cache project, write to store
+  // TODO: openProject: unzip, cache video, cache project, write to store
+  // TODO: openVideo: cache video, write to store
+  // TODO: autoSave: cache project
 
   constructor(
     private readonly _actions: Actions,
     private readonly _cache: LFCache,
     private readonly _store: Store<fromProject.State>) {
       this._subs.push(
-        this.fetch.subscribe(async ({payload: {id:projectId}}) => {
+        this.loadProject.subscribe(async () => {
           try {
-            const isCached = await this._cache.isCached(projectId)
+            const isCached = await this._cache.isCached('project')
             if(isCached) {
 
             } else {
-              this._store.dispatch(new io.IOImportProject())
+              const project = await loadProject(_DEFAULT_PROJECT_PATH_)
             }
           } catch(err) {
-            this._store.dispatch(new project.ProjectFetchError(err))
+            this._store.dispatch(new project.ProjectLoadError(err))
           }
         }))
-
-      // TODO:
-      // Sub to IO import success (comes either from default import or manual import)
-    }
+      }
 
   @Effect()
-  readonly fetch = this._actions
-    .ofType<project.ProjectFetch>(project.PROJECT_FETCH)
+  readonly loadProject = this._actions
+    .ofType<project.ProjectLoad>(project.PROJECT_LOAD)
     // .concatMap(action => {
     //   return Observable.zip(
     //     Observable.of(action),
@@ -56,14 +60,14 @@ export default class ServerProxy {
     // })
     // .concatMap(([{payload: {id}}, isCached]) => {
     //   return isCached ?
-    //     this._cache.getCached(id).map(res => new project.ProjectFetchSuccess(res)) :
-    //     loadProject(Observable.of(_DEFAULT_PROJECT_PATH_)).map(res => new project.ProjectFetchSuccess(res))
+    //     this._cache.getCached(id).map(res => new project.ProjectLoadSuccess(res)) :
+    //     loadProject(Observable.of(_DEFAULT_PROJECT_PATH_)).map(res => new project.ProjectLoadSuccess(res))
     // })
-    // .catch(err => Observable.of(new project.ProjectFetchError(err)))
+    // .catch(err => Observable.of(new project.ProjectLoadError(err)))
 
   // @Effect()
   // update = Observable.merge(
-  //   this._actions.ofType<project.ProjectFetchSuccess>(project.PROJECT_FETCH_SUCCESS)
+  //   this._actions.ofType<project.ProjectLoadSuccess>(project.PROJECT_LOAD_SUCCESS)
   //     .map(action => {
 
   //     })
