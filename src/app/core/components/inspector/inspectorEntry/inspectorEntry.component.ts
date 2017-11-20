@@ -161,10 +161,11 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   }
 
   selectAnnotationHandler() {
-    const annotation = this.entry.get('annotation', null)
     this.onSelectAnnotation.emit({
       selection: new fromSelection.AnnotationSelectionFactory({
-        annotation,
+        trackIndex: this.entry.get('trackIndex', null),
+        annotationIndex: this.entry.get('annotationIndex', null),
+        annotation: this.entry.get('annotation', null),
         source: fromSelection.SelectionSource.Inspector
       })
     })
