@@ -1,6 +1,8 @@
-export const _DEFZIPOTPIONS_ = {
+import * as JSZip from 'jszip'
+
+export const _DEFZIPOTPIONS_: JSZip.JSZipGeneratorOptions = {
   type: 'blob',
-  compression: "DEFLATE",
+  compression: 'DEFLATE',
   compressionOptions: {
     level: 9
   }
