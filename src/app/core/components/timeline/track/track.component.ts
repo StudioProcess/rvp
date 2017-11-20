@@ -88,9 +88,11 @@ export class TrackComponent implements OnInit, OnDestroy {
     }
   }
 
-  selectAnnotation(annotation: Record<Annotation>) {
+  selectAnnotation(annotation: Record<Annotation>, annotationIndex: number) {
     this.onSelectAnnotation.emit({
       selection: new fromSelection.AnnotationSelectionFactory({
+        annotationIndex,
+        trackIndex: this.trackIndex,
         annotation,
         source: fromSelection.SelectionSource.Timeline
       })
