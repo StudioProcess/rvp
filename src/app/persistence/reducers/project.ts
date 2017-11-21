@@ -46,6 +46,9 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const video = action.payload
       return state.set('video', video)
     }
+    case project.PROJECT_SET_TIMELINE_DURATION: {
+      return state.setIn(['meta', 'timeline', 'duration'], action.payload.duration)
+    }
     case project.PROJECT_ADD_ANNOTATION: {
       const {trackIndex, annotation} = action.payload
       const a = annotation.set('id', Math.floor(Math.random() * Number.MAX_SAFE_INTEGER))
