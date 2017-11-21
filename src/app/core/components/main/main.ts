@@ -6,10 +6,13 @@ import {
 
 import {Store} from '@ngrx/store'
 
+import {Subject} from 'rxjs/Subject'
 import {Subscription} from 'rxjs/Subscription'
+import 'rxjs/add/operator/withLatestFrom'
 
 import * as fromRoot from '../../reducers'
 import * as project from '../../../persistence/actions/project'
+import * as fromProject from '../../../persistence/reducers'
 import * as selection from '../../actions/selection'
 import {fromEventPattern} from '../../../lib/observable'
 
@@ -25,6 +28,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   private readonly _subs: Subscription[] = []
 
   private _isLoading = false
+  private readonly onExportProject = new Subject()
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
@@ -32,6 +36,8 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     private readonly _renderer: Renderer2) {}
 
   ngOnInit() {
+    this._rootStore.dispatch(new project.ProjectLoad())
+
     this._subs.push(this._rootStore.select(fromRoot.getIsLoading)
       .subscribe(isLoading => {
         this._isLoading = isLoading
@@ -58,7 +64,16 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
           this._cdr.markForCheck()
         }))
 
-    this._rootStore.dispatch(new project.ProjectLoad())
+    this._subs.push(
+      this.onExportProject.withLatestFrom(this._rootStore.select(fromProject.getProjectState), (_, projectState) => {
+        return {
+          meta: projectState.get('meta', null)!.toJS(),
+          video: projectState.get('video', null)
+        }
+      }).subscribe(projectData => {
+        this._rootStore.dispatch(new project.ProjectExport(projectData))
+      })
+    )
   }
 
   openProject() {
@@ -67,7 +82,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
   exportProject() {
     if(window.confirm('Export an archive of the project?')){
-      // this._rootStore.dispatch(new io.IOExportProject())
+      this.onExportProject.next()
     }
   }
 
