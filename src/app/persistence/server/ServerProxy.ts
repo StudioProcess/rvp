@@ -24,7 +24,7 @@ import {loadProject} from '../project'
 export default class ServerProxy {
   private readonly _subs: Subscription[] = []
 
-  // TODO: loadProject: cached: write to store; !cached: load default project, unzip, cache video, cache project, write to store
+  // DONE: loadProject: cached: write to store; !cached: load default project, unzip, cache video, cache project, write to store
   // TODO: exportProject: zip all, saveAs
   // TODO: resetProject: reset cache, load default project, unzip, cache video, cache project, write to store
   // TODO: openProject: unzip, cache video, cache project, write to store
@@ -69,10 +69,24 @@ export default class ServerProxy {
             this._store.dispatch(new project.ProjectLoadError(err))
           }
         }))
-      }
+
+      this._subs.push(
+        this.exportProject.subscribe({
+          next: () => {
+
+          },
+          error: err => {
+            console.log(err)
+          }
+        })
+      )
+    }
 
   @Effect({dispatch: false})
   readonly loadProject = this._actions.ofType<project.ProjectLoad>(project.PROJECT_LOAD)
+
+  @Effect({dispatch: false})
+  readonly exportProject = this._actions.ofType<project.ProjectExport>(project.PROJECT_EXPORT)
 
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
