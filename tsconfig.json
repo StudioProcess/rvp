@@ -9,7 +9,7 @@
     "experimentalDecorators": true,
     "strict": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedParameters": false,
     "pretty": true,
     "target": "es5",
     "lib": [
