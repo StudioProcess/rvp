@@ -71,8 +71,6 @@ export default class Player implements OnDestroy {
                 .debounceTime(_PLAYER_TIMEUPDATE_DEBOUNCE_, animationScheduler)
                 .subscribe(() => {
                   const currentTime = playerInst.currentTime()
-                  if(currentTime == null) {
-                  }
                   this._store.dispatch(new player.PlayerSetCurrentTime({currentTime}))
                 }))
 
@@ -93,10 +91,33 @@ export default class Player implements OnDestroy {
         }))
 
       this._subs.push(
+        this.setDimensions
+          .combineLatest(playerSubj)
+          .subscribe({
+            next: ([{payload:{width, height}}, {playerInst}]) => {
+              playerInst.width(width)
+              playerInst.height(height)
+
+              this._store.dispatch(new player.PlayerSetDimensionsSuccess({width, height}))
+            },
+            error: err => {
+              this._store.dispatch(new player.PlayerSetDimensionsError(err))
+            }
+          }))
+
+      this._subs.push(
+        this.requestCurrentTime
+          .withLatestFrom(playerSubj)
+          .subscribe(([{payload:{currentTime}}, {playerInst}]) => {
+            playerInst.currentTime(currentTime)
+          }))
+
+      this._subs.push(
         this.destroyPlayer.withLatestFrom(playerSubj).subscribe({
           next: ([, {playerInst, videoObjURL}]) => {
             playerInst.dispose()
             URL.revokeObjectURL(videoObjURL)
+            this._store.dispatch(new player.PlayerDestroySuccess())
           },
           error: err => {
             this._store.dispatch(new player.PlayerDestroyError(err))
@@ -109,6 +130,12 @@ export default class Player implements OnDestroy {
 
   @Effect({dispatch: false})
   readonly destroyPlayer = this._actions.ofType<player.PlayerDestroy>(player.PLAYER_DESTROY)
+
+  @Effect({dispatch: false})
+  readonly setDimensions = this._actions.ofType<player.PlayerSetDimensions>(player.PLAYER_SET_DIMENSIONS)
+
+  @Effect({dispatch: false})
+  readonly requestCurrentTime = this._actions.ofType<player.PlayerRequestCurrentTime>(player.PLAYER_REQUEST_CURRENT_TIME)
 
   ngOnDestroy() {
     console.log('DESTROY PLAYER')
