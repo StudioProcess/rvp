@@ -23,8 +23,8 @@
         "styles.scss"
       ],
       "scripts": [
-        "../node_modules/jquery/dist/jquery.js",
-        "../node_modules/foundation-sites/dist/js/foundation.js"
+        "../node_modules/jquery/dist/jquery.slim.min.js",
+        "../node_modules/foundation-sites/dist/js/foundation.min.js"
       ],
       "stylePreprocessorOptions": {
         "includePaths": [
