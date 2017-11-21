@@ -9,6 +9,8 @@ import {DOCUMENT} from '@angular/platform-browser'
 
 import {Store} from '@ngrx/store'
 
+import {Record} from 'immutable'
+
 import {Observable} from 'rxjs/Observable'
 import {ReplaySubject} from 'rxjs/ReplaySubject'
 import {Subscription} from 'rxjs/Subscription'
@@ -18,8 +20,6 @@ import 'rxjs/add/observable/concat'
 import 'rxjs/add/observable/of'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/startWith'
-
-import {Record} from 'immutable'
 
 import * as fromSelection from '../../reducers'
 import * as fromProject from '../../../persistence/reducers'
