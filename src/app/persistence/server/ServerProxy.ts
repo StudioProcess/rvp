@@ -21,7 +21,7 @@ export default class ServerProxy {
   private readonly _subs: Subscription[] = []
 
   // DONE: loadProject: cached: write to store; !cached: load default project, unzip, cache video, cache project, write to store
-  // TODO: exportProject: zip all, saveAs
+  // DONE: exportProject: zip all, saveAs
   // TODO: resetProject: reset cache, load default project, unzip, cache video, cache project, write to store
   // TODO: openProject: unzip, cache video, cache project, write to store
   // TODO: openVideo: cache video, write to store
@@ -87,11 +87,12 @@ export default class ServerProxy {
 
       this._subs.push(
         this.resetProject.subscribe({
-          next: () => {
-
+          next: async () => {
+            await this._cache.clearAll()
+            this._store.dispatch(new project.ProjectLoad())
           },
           error: err => {
-            console.log(err)
+            this._store.dispatch(new project.ProjectResetError(err))
           }
         }))
     }

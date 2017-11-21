@@ -12,6 +12,7 @@ export const PROJECT_EXPORT = '[Project] Export'
 export const PROJECT_EXPORT_ERROR = '[Project] Export Error'
 
 export const PROJECT_RESET = '[Project] Reset'
+export const PROJECT_RESET_ERROR = '[Project] Reset Error'
 
 export const PROJECT_ADD_ANNOTATION = '[Project] Add Annotation'
 export const PROJECT_UPDATE_ANNOTATION = '[Project] Update Annotation'
@@ -52,6 +53,11 @@ export class ProjectExportError implements Action {
 
 export class ProjectReset implements Action {
   readonly type = PROJECT_RESET
+}
+
+export class ProjectResetError implements Action {
+  readonly type = PROJECT_RESET_ERROR
+  constructor(readonly payload: any) {}
 }
 
 export interface AddAnnotationPayload {
