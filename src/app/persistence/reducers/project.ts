@@ -45,31 +45,31 @@ export function reducer(state: State = initialState, action: project.Actions): S
     case project.PROJECT_ADD_ANNOTATION: {
       const {trackIndex, annotation} = action.payload
       const a = annotation.set('id', Math.floor(Math.random() * Number.MAX_SAFE_INTEGER))
-      return state.updateIn(['timeline', 'tracks', trackIndex, 'annotations'], annotations => {
+      return state.updateIn(['meta', 'timeline', 'tracks', trackIndex, 'annotations'], annotations => {
         return annotations.push(a)
       })
     }
     case project.PROJECT_UPDATE_ANNOTATION: {
       const {trackIndex, annotationIndex, annotation} = action.payload
       return state.setIn([
-        'timeline', 'tracks', trackIndex,
+        'meta', 'timeline', 'tracks', trackIndex,
         'annotations', annotationIndex
       ], annotation)
     }
     case project.PROJECT_DELETE_ANNOTATION: {
       const {trackIndex, annotationIndex} = action.payload
-      return state.updateIn(['timeline', 'tracks', trackIndex, 'annotations'], annotations => {
+      return state.updateIn(['meta', 'timeline', 'tracks', trackIndex, 'annotations'], annotations => {
         return annotations.delete(annotationIndex)
       })
     }
     case project.PROJECT_ADD_TRACK: {
-      return state.updateIn(['timeline', 'tracks'], tracks => {
+      return state.updateIn(['meta', 'timeline', 'tracks'], tracks => {
         return tracks.push(new TrackRecordFactory(action.payload))
       })
     }
     case project.PROJECT_DELETE_TRACK: {
       const {trackIndex} = action.payload
-      return state.deleteIn(['timeline', 'tracks', trackIndex])
+      return state.deleteIn(['meta', 'timeline', 'tracks', trackIndex])
     }
     default:
       return state
