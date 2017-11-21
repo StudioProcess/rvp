@@ -10,14 +10,10 @@ import {ReplaySubject} from 'rxjs/ReplaySubject'
 import {Subscription} from 'rxjs/Subscription'
 import {JQueryStyleEventEmitter} from 'rxjs/observable/FromEventObservable'
 import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame';
-import 'rxjs/add/observable/of'
 import 'rxjs/add/observable/fromEvent'
 import 'rxjs/add/operator/combineLatest'
 import 'rxjs/add/operator/withLatestFrom'
-import 'rxjs/add/operator/map'
-import 'rxjs/add/operator/share'
 import 'rxjs/add/operator/debounceTime'
-import 'rxjs/add/operator/catch'
 
 import {_PLAYER_TIMEUPDATE_DEBOUNCE_} from '../config/player'
 
