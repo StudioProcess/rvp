@@ -15,6 +15,7 @@ import {Subscription} from 'rxjs/Subscription'
 import 'rxjs/add/observable/combineLatest'
 import 'rxjs/add/observable/merge'
 import 'rxjs/add/observable/concat'
+import 'rxjs/add/observable/of'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/startWith'
 
