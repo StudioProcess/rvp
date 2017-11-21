@@ -91,7 +91,7 @@ export default class ServerProxy {
                 zip.file(`project/${_VIDEODATA_PATH_}`, video!)
 
                 const zipBlob = await zip.generateAsync(_DEFZIPOTPIONS_) as Blob
-                saveAs(zipBlob, 'project.zip')
+                saveAs(zipBlob, 'project.rv')
               } catch(err) {
                 this._store.dispatch(new project.ProjectExportError(err))
               }
