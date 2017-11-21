@@ -1,7 +1,7 @@
 <form class="entry-container" [formGroup]="form" novalidate (mousedown)="selectAnnotationHandler()">
   <div class="row collapse">
     <div class="column shrink">
-      <div class="annotation-color" [style.backgroundColor]="entry.color"></div>
+      <div class="annotation-color" [style.backgroundColor]="entry.get('color', null)"></div>
     </div>
     <div class="column annotation-info">
       <div class="row time-row">

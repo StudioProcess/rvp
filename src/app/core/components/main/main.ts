@@ -25,7 +25,7 @@ declare var $: any
 export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   private readonly _subs: Subscription[] = []
 
-  private _isLoading = false
+  _isLoading = false
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,

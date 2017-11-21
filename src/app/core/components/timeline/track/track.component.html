@@ -1,6 +1,6 @@
 <div class="row title-row">
   <div class="column shrink" [formGroup]="form">
-    <div class="track-color" [style.color]="data.color">
+    <div class="track-color" [style.color]="data.get('color', null)">
       <i class="ion-record" title="Track Color"></i>
     </div>
     <input class="title-input" placeholder="Track Title" title="Track Title" formControlName="title">
@@ -10,7 +10,7 @@
   </div>
 </div>
 <div class="annotations-wrapper" (dblclick)="addAnnotation($event)">
-  <rv-handlebar *ngFor="let annotation of data.annotations; index as i; trackBy: trackByFunc;"
+  <rv-handlebar *ngFor="let annotation of data.get('annotations', []); index as i; trackBy: trackByFunc;"
     [payload]="i"
     [containerRect]="containerRect"
     [caption]="getAnnotationTitle(annotation)"
