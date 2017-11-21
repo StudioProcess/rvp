@@ -22,6 +22,7 @@ import {
 import {_DEFZIPOTPIONS_} from '../../config/zip'
 import LFCache from '../cache/LFCache'
 import {loadProject, extractProject} from '../project'
+import {ensureValidProjectData} from '../project/validate'
 import {loadZip} from '../zip'
 
 @Injectable()
@@ -88,6 +89,9 @@ export default class ServerProxy {
               const zip = await loadZip(payload)
               const projectData = await extractProject(zip)
 
+              // mutates project data
+              ensureValidProjectData(projectData)
+
               await this._cache.clearAll()
 
               const cachePromises = [
@@ -114,8 +118,8 @@ export default class ServerProxy {
             next: async ({meta, video}) => {
               try {
                 const zip = new JSZip()
-                zip.file(`project/${_METADATA_PATH_}`, JSON.stringify(meta))
-                zip.file(`project/${_VIDEODATA_PATH_}`, video!)
+                zip.file(`${_METADATA_PATH_}`, JSON.stringify(meta))
+                zip.file(`${_VIDEODATA_PATH_}`, video!)
 
                 const zipBlob = await zip.generateAsync(_DEFZIPOTPIONS_) as Blob
                 saveAs(zipBlob, 'project.rv')
