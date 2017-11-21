@@ -22,6 +22,10 @@ export default class LFCache implements ICache {
     return this.storage.clear()
   }
 
+  clear(key: string): Promise<void> {
+    return this.storage.removeItem(key)
+  }
+
   async isCached(keys: string[]): Promise<boolean> {
     const cachedKeys = await this.storage.keys()
 

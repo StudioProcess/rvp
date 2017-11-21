@@ -113,8 +113,16 @@ export default class ServerProxy {
 
       this._subs.push(
         this.importVideo.subscribe({
-          next: (payload) => {
+          next: async ({payload}) => {
             console.log(payload)
+            try {
+              await this._cache.clear('video')
+              await this._cache.cache('video', payload)
+
+              this._store.dispatch(new project.ProjectImportVideoSuccess(payload))
+            } catch(err) {
+              this._store.dispatch(new project.ProjectImportVideoError(err))
+            }
           },
           error: err => {
             this._store.dispatch(new project.ProjectImportVideoError(err))

@@ -42,6 +42,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
         })
       })
     }
+    case project.PROJECT_IMPORT_VIDEO_SUCCESS: {
+      const video = action.payload
+      return state.set('video', video)
+    }
     case project.PROJECT_ADD_ANNOTATION: {
       const {trackIndex, annotation} = action.payload
       const a = annotation.set('id', Math.floor(Math.random() * Number.MAX_SAFE_INTEGER))

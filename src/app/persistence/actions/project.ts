@@ -15,6 +15,7 @@ export const PROJECT_EXPORT = '[Project] Export'
 export const PROJECT_EXPORT_ERROR = '[Project] Export Error'
 
 export const PROJECT_IMPORT_VIDEO = '[Project] Import Video'
+export const PROJECT_IMPORT_VIDEO_SUCCESS = '[Project] Import Video Success'
 export const PROJECT_IMPORT_VIDEO_ERROR = '[Project] Import Video'
 
 export const PROJECT_RESET = '[Project] Reset'
@@ -63,6 +64,11 @@ export class ProjectExportError implements Action {
 
 export class ProjectImportVideo implements Action {
   readonly type = PROJECT_IMPORT_VIDEO
+  constructor(readonly payload: File) {}
+}
+
+export class ProjectImportVideoSuccess implements Action {
+  readonly type = PROJECT_IMPORT_VIDEO_SUCCESS
   constructor(readonly payload: File) {}
 }
 
@@ -131,6 +137,7 @@ export class ProjectDeleteTrack implements Action {
 export type Actions =
   ProjectLoad|ProjectLoadSuccess|ProjectLoadError|
   ProjectImport|
+  ProjectImportVideo|ProjectImportVideoSuccess|ProjectImportVideoError|
   ProjectExport|ProjectExportError|
   ProjectReset|
   ProjectAddTrack|ProjectDeleteTrack|
