@@ -40,6 +40,7 @@ export class ProjectLoadError implements Action {
 
 export class ProjectImport implements Action {
   readonly type = PROJECT_IMPORT
+  constructor(readonly payload: File) {}
 }
 
 export class ProjectExport implements Action {
