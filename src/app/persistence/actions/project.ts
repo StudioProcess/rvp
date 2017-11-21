@@ -36,14 +36,8 @@ export class ProjectLoadError implements Action {
   constructor(readonly payload: any) {}
 }
 
-interface ExportProjectPayload {
-  readonly meta: any
-  readonly video: any
-}
-
 export class ProjectExport implements Action {
   readonly type = PROJECT_EXPORT
-  constructor(readonly payload: ExportProjectPayload){}
 }
 
 export class ProjectExportError implements Action {
