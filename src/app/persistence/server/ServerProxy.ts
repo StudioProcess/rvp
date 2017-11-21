@@ -114,7 +114,6 @@ export default class ServerProxy {
       this._subs.push(
         this.importVideo.subscribe({
           next: async ({payload}) => {
-            console.log(payload)
             try {
               await this._cache.clear('video')
               await this._cache.cache('video', payload)
@@ -164,7 +163,6 @@ export default class ServerProxy {
 
   @Effect({dispatch: false})
   readonly loadProject = this._actions.ofType<project.ProjectLoad>(project.PROJECT_LOAD)
-
 
   @Effect({dispatch:false})
   readonly importProject = this._actions.ofType<project.ProjectImport>(project.PROJECT_IMPORT)
