@@ -21,7 +21,8 @@ import {
 
 import {_DEFZIPOTPIONS_} from '../../config/zip'
 import LFCache from '../cache/LFCache'
-import {loadProject} from '../project'
+import {loadProject, extractProject} from '../project'
+import {loadZip} from '../zip'
 
 @Injectable()
 export default class ServerProxy {
@@ -81,6 +82,32 @@ export default class ServerProxy {
         }))
 
       this._subs.push(
+        this.importProject.subscribe({
+          next: async ({payload}) => {
+            try {
+              const zip = await loadZip(payload)
+              const projectData = await extractProject(zip)
+
+              await this._cache.clearAll()
+
+              const cachePromises = [
+                this._cache.cache('meta', projectData.meta),
+                this._cache.cache('video', projectData.video)
+              ]
+
+              await Promise.all(cachePromises)
+
+              this._store.dispatch(new project.ProjectLoadSuccess(projectData))
+            } catch(err) {
+              this._store.dispatch(new project.ProjectImportError(err))
+            }
+          },
+          error: err => {
+            this._store.dispatch(new project.ProjectImportError(err))
+          }
+        }))
+
+      this._subs.push(
         this.exportProject
           .withLatestFrom(projectState, (_, proj) => proj)
           .subscribe({
@@ -115,6 +142,10 @@ export default class ServerProxy {
 
   @Effect({dispatch: false})
   readonly loadProject = this._actions.ofType<project.ProjectLoad>(project.PROJECT_LOAD)
+
+
+  @Effect({dispatch:false})
+  readonly importProject = this._actions.ofType<project.ProjectImport>(project.PROJECT_IMPORT)
 
   @Effect({dispatch: false})
   readonly exportProject = this._actions.ofType<project.ProjectExport>(project.PROJECT_EXPORT)
