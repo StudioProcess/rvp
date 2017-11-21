@@ -15,9 +15,9 @@ export const ProjectMetaRecordFactory = Record<ProjectMeta>({
 export const TimelineRecordFactory = Record<Timeline>({
   id: null,
   duration: -1,
-  playhead: -1,
-  zoom: -1,
-  pan: -1,
+  // playhead: -1,
+  // zoom: -1,
+  // pan: -1,
   tracks: List([])
 })
 
@@ -66,9 +66,9 @@ export interface ProjectMeta {
 export interface Timeline {
   readonly id: number|null
   readonly duration: number
-  readonly playhead: number
-  readonly zoom: number
-  readonly pan: number
+  // readonly playhead: number
+  // readonly zoom: number
+  // readonly pan: number
   readonly tracks: List<Record<Track>>
 }
 
