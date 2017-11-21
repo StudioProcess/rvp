@@ -6,7 +6,6 @@ import {Action} from '@ngrx/store'
 
 interface PlayerCreatePayload {
   readonly elemRef: ElementRef
-  readonly objectURL: string,
   readonly playerOptions: PlayerOptions
 }
 
@@ -17,6 +16,8 @@ export const PLAYER_CREATE_ERROR = '[Player] Create Error'
 export const PLAYER_DESTROY = '[Player] Destroy'
 export const PLAYER_DESTROY_SUCCESS = '[Player] Destroy Success'
 export const PLAYER_DESTROY_ERROR = '[Player] Destroy Error'
+
+export const PLAYER_SET_SOURCE = '[Player] Set Source'
 
 export const PLAYER_SET_CURRENT_TIME = '[Player] Set Current Time'
 export const PLAYER_REQUEST_CURRENT_TIME = '[Player] Request Current Time'
@@ -51,6 +52,11 @@ export class PlayerDestroySuccess implements Action {
 export class PlayerDestroyError implements Action {
   readonly type = PLAYER_DESTROY_ERROR
   constructor(readonly playload: any) {}
+}
+
+export class PlayerSetSource implements Action {
+  readonly type = PLAYER_SET_SOURCE
+  constructor(readonly payload: File|Blob) {}
 }
 
 // Player state
@@ -89,4 +95,5 @@ export type PlayerActions =
   PlayerCreate|PlayerCreateError|PlayerCreateSuccess|
   PlayerDestroy|PlayerDestroyError|PlayerDestroySuccess|
   PlayerSetDimensions|PlayerSetDimensionsSuccess|PlayerSetDimensionsError|
+  PlayerSetSource|
   PlayerSetCurrentTime
