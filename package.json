@@ -54,7 +54,7 @@
     "@angular/cli": "^1.5.3",
     "@angular/compiler-cli": "^4.4.6",
     "@angular/language-service": "^4.4.6",
-    "@types/file-saver": "0.0.1",
+    "@types/file-saver": "^1.0.0",
     "@types/jszip": "^3.1.2",
     "@types/node": "^6.0.92",
     "@types/video.js": "^6.2.2",
