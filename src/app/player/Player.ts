@@ -6,6 +6,7 @@ import {Effect, Actions} from '@ngrx/effects'
 import * as videojs from 'video.js'
 
 import {Observable} from 'rxjs/Observable'
+import {ReplaySubject} from 'rxjs/ReplaySubject'
 import {Subscription} from 'rxjs/Subscription'
 import {JQueryStyleEventEmitter} from 'rxjs/observable/FromEventObservable'
 import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame';
@@ -23,6 +24,11 @@ import {_PLAYER_TIMEUPDATE_DEBOUNCE_} from '../config'
 import * as fromPlayer from './reducers'
 import * as player from './actions'
 
+interface PlayerInst {
+  playerInst: videojs.Player
+  videoObjURL: string
+}
+
 // https://github.com/videojs/video.js/blob/master/src/js/player.js
 @Injectable()
 export default class Player implements OnDestroy {
@@ -31,87 +37,113 @@ export default class Player implements OnDestroy {
   constructor(
     private readonly _actions: Actions,
     private readonly _store: Store<fromPlayer.State>) {
-      this._subs.push(this.init.subscribe(([playerInst, _]) => {
-        // Player is an instance of a video.js Component class, with methods from
-        // mixin class EventTarget.
-        // https://github.com/videojs/video.js/blob/master/src/js/component.js#L88
-        const playerEventEmitter = playerInst as JQueryStyleEventEmitter
-        const playerInstSubs: Subscription[] = []
-        playerInstSubs.push(Observable.fromEvent(playerEventEmitter, 'ready').subscribe(() => {
-          playerInstSubs.push(
-            Observable.fromEvent(playerEventEmitter, 'timeupdate')
-              .debounceTime(_PLAYER_TIMEUPDATE_DEBOUNCE_, animationScheduler)
-              .subscribe(() => {
-                const currentTime = playerInst.currentTime()
-                if(currentTime == null) {
-                }
-                this._store.dispatch(new player.PlayerSetCurrentTime({currentTime}))
-              }))
-
-          playerInstSubs.push(
-            Observable.fromEvent(playerEventEmitter, 'dispose').subscribe(() => {
-              // On dispose clear all subs
-              playerInstSubs.forEach(sub => sub.unsubscribe())
-              this._store.dispatch(new player.PlayerDestroySuccess())
-            }, err => {
-              this._store.dispatch(new player.PlayerDestroyError(err))
-            }))
-          }))
-      }, _ => {
-        this._store.dispatch(new player.PlayerDestroy())
-      }))
+      const playerSubj = new ReplaySubject<PlayerInst>(1)
 
       this._subs.push(
-        this.requestCurrentTime.withLatestFrom(this.init)
-        .subscribe(([{payload:{currentTime}}, [playerInst]]) => {
-          playerInst.currentTime(currentTime)
+        this.createPlayer.subscribe({
+          next: ({payload}) => {
+            const {elemRef, objectURL, playerOptions} = payload
+            const playerInst: videojs.Player = videojs(elemRef.nativeElement, playerOptions)
+            playerInst.src({src: objectURL, type: 'video/mp4'})
+
+            playerSubj.next({
+              playerInst,
+              videoObjURL: objectURL
+            })
+          },
+          error: err =>{
+            this._store.dispatch(new player.PlayerCreateError(err))
+          }
         }))
+
+      this._subs.push(
+        this.destroyPlayer.withLatestFrom(playerSubj).subscribe({
+          next: ([, {playerInst, videoObjURL}]) => {
+            playerInst.dispose()
+            URL.revokeObjectURL(videoObjURL)
+          },
+          error: err => {
+            this._store.dispatch(new player.PlayerDestroyError(err))
+          }
+        }))
+
+
+
+
+      // this._subs.push(this.init.subscribe(([playerInst, _]) => {
+      //   // Player is an instance of a video.js Component class, with methods from
+      //   // mixin class EventTarget.
+      //   // https://github.com/videojs/video.js/blob/master/src/js/component.js#L88
+      //   const playerEventEmitter = playerInst as JQueryStyleEventEmitter
+      //   const playerInstSubs: Subscription[] = []
+      //   playerInstSubs.push(Observable.fromEvent(playerEventEmitter, 'ready').subscribe(() => {
+      //     playerInstSubs.push(
+      //       Observable.fromEvent(playerEventEmitter, 'timeupdate')
+      //         .debounceTime(_PLAYER_TIMEUPDATE_DEBOUNCE_, animationScheduler)
+      //         .subscribe(() => {
+      //           const currentTime = playerInst.currentTime()
+      //           if(currentTime == null) {
+      //           }
+      //           this._store.dispatch(new player.PlayerSetCurrentTime({currentTime}))
+      //         }))
+
+      //     playerInstSubs.push(
+      //       Observable.fromEvent(playerEventEmitter, 'dispose').subscribe(() => {
+      //         // On dispose clear all subs
+      //         playerInstSubs.forEach(sub => sub.unsubscribe())
+      //         this._store.dispatch(new player.PlayerDestroySuccess())
+      //       }, err => {
+      //         this._store.dispatch(new player.PlayerDestroyError(err))
+      //       }))
+      //     }))
+      // }, _ => {
+      //   this._store.dispatch(new player.PlayerDestroy())
+      // }))
+
+      // this._subs.push(
+      //   this.requestCurrentTime.withLatestFrom(this.init)
+      //   .subscribe(([{payload:{currentTime}}, [playerInst]]) => {
+      //     playerInst.currentTime(currentTime)
+      //   }))
     }
 
-  @Effect({dispatch: false})
-  readonly init: Observable<[videojs.Player, string]> = this._actions
-    .ofType<player.PlayerCreate>(player.PLAYER_CREATE)
-    .map(action => {
-      const {elemRef, objectURL, playerOptions} = action.payload
-      const playerInst:videojs.Player = videojs(elemRef.nativeElement, playerOptions)
-      playerInst.src({src: objectURL, type: 'video/mp4'})
+  // @Effect({dispatch: false})
+  // readonly init: Observable<[videojs.Player, string]> = this._actions
+  //   .ofType<player.PlayerCreate>(player.PLAYER_CREATE)
+  //   .map(action => {
+  //     const {elemRef, objectURL, playerOptions} = action.payload
+  //     const playerInst:videojs.Player = videojs(elemRef.nativeElement, playerOptions)
+  //     playerInst.src({src: objectURL, type: 'video/mp4'})
 
-      const ret: [videojs.Player, string] = [playerInst, objectURL]
-      return ret
-    })
-    .share()
-
-  @Effect()
-  readonly create = this._actions
-    .ofType<player.PlayerCreate>(player.PLAYER_CREATE)
-    .combineLatest(this.init, () => {
-      return new player.PlayerCreateSuccess()
-    })
-    .catch(err => Observable.of(new player.PlayerCreateError(err)))
-
-  @Effect({dispatch: false})
-  readonly destroy = this._actions
-    .ofType<player.PlayerDestroy>(player.PLAYER_DESTROY)
-    .withLatestFrom(this.init, (_, [playerInst, objectURL]) => {
-      playerInst.dispose()
-      URL.revokeObjectURL(objectURL)
-    })
-    .catch(err => Observable.of(new player.PlayerDestroyError(err)))
+  //     const ret: [videojs.Player, string] = [playerInst, objectURL]
+  //     return ret
+  //   })
+  //   .share()
 
   @Effect()
-  readonly setDimensions = this._actions
-    .ofType<player.PlayerSetDimensions>(player.PLAYER_SET_DIMENSIONS)
-    .combineLatest(this.init, ({payload:{width, height}}, [playerInst, _]) => {
-      playerInst.width(width)
-      playerInst.height(height)
-
-      return new player.PlayerSetDimensionsSuccess({width, height})
-    })
-    .catch(err => Observable.of(new player.PlayerSetDimensionsError(err)))
+  readonly createPlayer = this._actions.ofType<player.PlayerCreate>(player.PLAYER_CREATE)
+    // .combineLatest(this.init, () => {
+    //   return new player.PlayerCreateSuccess()
+    // })
+    // .catch(err => Observable.of(new player.PlayerCreateError(err)))
 
   @Effect({dispatch: false})
-  readonly requestCurrentTime = this._actions
-    .ofType<player.PlayerRequestCurrentTime>(player.PLAYER_REQUEST_CURRENT_TIME)
+  readonly destroyPlayer = this._actions.ofType<player.PlayerDestroy>(player.PLAYER_DESTROY)
+
+  // @Effect()
+  // readonly setDimensions = this._actions
+  //   .ofType<player.PlayerSetDimensions>(player.PLAYER_SET_DIMENSIONS)
+  //   .combineLatest(this.init, ({payload:{width, height}}, [playerInst, _]) => {
+  //     playerInst.width(width)
+  //     playerInst.height(height)
+
+  //     return new player.PlayerSetDimensionsSuccess({width, height})
+  //   })
+  //   .catch(err => Observable.of(new player.PlayerSetDimensionsError(err)))
+
+  // @Effect({dispatch: false})
+  // readonly requestCurrentTime = this._actions
+  //   .ofType<player.PlayerRequestCurrentTime>(player.PLAYER_REQUEST_CURRENT_TIME)
 
   ngOnDestroy() {
     console.log('DESTROY PLAYER')
