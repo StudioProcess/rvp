@@ -24,6 +24,6 @@ export default class LFCache implements ICache {
   }
 
   getCached<T>(key: number|string): Promise<T> {
-    return this.storage.getItem(key as string)
+    return this.storage.getItem<T>(key as string)
   }
 }
