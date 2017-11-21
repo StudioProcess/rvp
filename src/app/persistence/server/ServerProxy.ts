@@ -16,7 +16,7 @@ import * as fromProject from '../reducers'
 
 import {
   _DEFAULT_PROJECT_PATH_, _METADATA_PATH_,
-  _VIDEODATA_PATH_
+  _VIDEODATA_PATH_, _EXPORT_PROJECT_NAME_
 } from '../../config/project'
 
 import {_DEFZIPOTPIONS_} from '../../config/zip'
@@ -132,7 +132,7 @@ export default class ServerProxy {
                 zip.file(`${_VIDEODATA_PATH_}`, video!)
 
                 const zipBlob = await zip.generateAsync(_DEFZIPOTPIONS_) as Blob
-                saveAs(zipBlob, 'project.rv')
+                saveAs(zipBlob, _EXPORT_PROJECT_NAME_)
               } catch(err) {
                 this._store.dispatch(new project.ProjectExportError(err))
               }

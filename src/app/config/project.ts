@@ -5,6 +5,7 @@ export const _DEFAULT_PROJECT_PATH_ = 'assets/projects/default.rv'
 
 export const _METADATA_PATH_ = 'project.json'
 export const _VIDEODATA_PATH_ = 'video.m4v'
+export const _EXPORT_PROJECT_NAME_ = 'project.rv'
 
 export interface FileMiddleware {
   postLoad(res: any): any
