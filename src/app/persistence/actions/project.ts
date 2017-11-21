@@ -98,6 +98,6 @@ export class ProjectDeleteTrack implements Action {
 
 export type Actions =
   ProjectLoad|ProjectLoadSuccess|ProjectLoadError|
-  ProjectExport|
+  ProjectExport|ProjectExportError|
   ProjectAddTrack|ProjectDeleteTrack|
   ProjectAddAnnotation|ProjectUpdateAnnotation|ProjectDeleteAnnotation
