@@ -19,17 +19,19 @@ const getPersistenceState = createFeatureSelector<State>('persistence')
 
 export const getProjectState = createSelector(getPersistenceState, (state: State) => state.project)
 
-export const getProjectId = createSelector(getProjectState, fromProject.getProjectId)
+// Project meta
 
-export const getVideoObjectURL = createSelector(
-  getProjectState,
-  fromProject.getVideoObjectURL)
+export const getProjectMeta = createSelector(getProjectState, fromProject.getProjectMeta)
 
-export const getTimeline = createSelector(
-  getProjectState,
-  fromProject.getTimeline)
+export const getProjectId = createSelector(getProjectMeta, meta => {
+  return meta ? meta.get('id', null): null
+})
 
-export const getFlattenedAnnotations = createSelector(getTimeline, timeline => {
+export const getProjectTimeline = createSelector(getProjectMeta, meta => {
+  return meta ? meta.get('timeline', null): null
+})
+
+export const getFlattenedAnnotations = createSelector(getProjectTimeline, timeline => {
   if(timeline !== null) {
     return timeline.get('tracks', null).flatMap((track, trackIndex) => {
       const color = track.get('color', null)
@@ -58,3 +60,13 @@ export const getSortedFlattenedAnnotations = createSelector(getFlattenedAnnotati
     }
   })
 })
+
+// Project video
+
+export const getProjectVideo = createSelector(getProjectState, fromProject.getProjectVideo)
+
+export const getVideoObjectURL = createSelector(getProjectVideo, video => {
+  return video !== null ? URL.createObjectURL(video) : null
+})
+
+

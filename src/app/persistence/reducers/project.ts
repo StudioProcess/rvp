@@ -5,12 +5,9 @@ import * as project from '../actions/project'
 import {
   Project, TimelineRecordFactory, ProjectRecordFactory,
   TrackRecordFactory, TrackFieldsRecordFactory,
-  AnnotationRecordFactory, AnnotationFieldsRecordFactory
+  AnnotationRecordFactory, AnnotationFieldsRecordFactory,
+  ProjectMetaRecordFactory
 } from '../model'
-
-// export const TimelineFactory = Record<Timeline>({
-//   duration: 0
-// })
 
 const initialState = new ProjectRecordFactory()
 
@@ -19,27 +16,29 @@ export type State = Record<Project>
 export function reducer(state: State = initialState, action: project.Actions): State {
   switch(action.type) {
     case project.PROJECT_LOAD_SUCCESS: {
-      const {project: {id, timeline}, video} = action.payload
+      const {meta: {id, timeline}, video} = action.payload
       // Create immutable representation
       return new ProjectRecordFactory({
-        id,
         video,
-        timeline: TimelineRecordFactory({
-          ...timeline,
-          tracks: List(timeline.tracks.map((track: any) => {
-            const {title} = track.fields
-            return new TrackRecordFactory({
-              ...track,
-              fields: TrackFieldsRecordFactory({title}),
-              annotations: List(track.annotations.map((annotation: any) => {
-                const {title, description} = annotation.fields
-                return new AnnotationRecordFactory({
-                  ...annotation,
-                  fields: new AnnotationFieldsRecordFactory({title, description}),
-                })
-              }))
-            })
-          }))
+        meta: ProjectMetaRecordFactory({
+          id,
+          timeline: TimelineRecordFactory({
+            ...timeline,
+            tracks: List(timeline.tracks.map((track: any) => {
+              const {title} = track.fields
+              return new TrackRecordFactory({
+                ...track,
+                fields: TrackFieldsRecordFactory({title}),
+                annotations: List(track.annotations.map((annotation: any) => {
+                  const {title, description} = annotation.fields
+                  return new AnnotationRecordFactory({
+                    ...annotation,
+                    fields: new AnnotationFieldsRecordFactory({title, description}),
+                  })
+                }))
+              })
+            }))
+          })
         })
       })
     }
@@ -77,11 +76,6 @@ export function reducer(state: State = initialState, action: project.Actions): S
   }
 }
 
-export const getProjectId = (state: State) => state.get('id', null)
+export const getProjectMeta = (state: State) => state.get('meta', null)
 
-export const getVideoObjectURL = (state: State) => {
-  const vb = state.get('video', null)
-  return vb !== null ? URL.createObjectURL(vb) : null
-}
-
-export const getTimeline = (state: State) => state.get('timeline', null)
+export const getProjectVideo = (state: State) => state.get('video', null)
