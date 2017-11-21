@@ -81,11 +81,6 @@ export default class Player implements OnDestroy {
     })
     .share()
 
-  ngOnDestroy() {
-    console.log('DESTROY PLAYER')
-    this._subs.forEach(s => s.unsubscribe())
-  }
-
   @Effect()
   readonly create = this._actions
     .ofType<player.PlayerCreate>(player.PLAYER_CREATE)
@@ -117,4 +112,9 @@ export default class Player implements OnDestroy {
   @Effect({dispatch: false})
   readonly requestCurrentTime = this._actions
     .ofType<player.PlayerRequestCurrentTime>(player.PLAYER_REQUEST_CURRENT_TIME)
+
+  ngOnDestroy() {
+    console.log('DESTROY PLAYER')
+    this._subs.forEach(s => s.unsubscribe())
+  }
 }
