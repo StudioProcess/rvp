@@ -23,7 +23,7 @@ import * as project from '../persistence/actions/project'
 
 // https://github.com/videojs/video.js/blob/master/src/js/player.js
 @Injectable()
-export default class Player implements OnDestroy {
+export class Player implements OnDestroy {
   private readonly _subs: Subscription[] = [];
 
   constructor(

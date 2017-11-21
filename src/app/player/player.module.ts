@@ -4,7 +4,7 @@ import {StoreModule} from '@ngrx/store'
 import {EffectsModule} from '@ngrx/effects'
 
 import {reducers} from './reducers'
-import Player from './Player'
+import {Player} from './Player'
 
 @NgModule({
   imports: [

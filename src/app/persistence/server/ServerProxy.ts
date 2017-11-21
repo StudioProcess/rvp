@@ -20,13 +20,13 @@ import {
 } from '../../config/project'
 
 import {_DEFZIPOTPIONS_} from '../../config/zip'
-import LFCache from '../cache/LFCache'
+import {LFCache} from '../cache/LFCache'
 import {loadProject, extractProject} from '../project'
 import {ensureValidProjectData} from '../project/validate'
 import {loadZip} from '../zip'
 
 @Injectable()
-export default class ServerProxy {
+export class ServerProxy {
   private readonly _subs: Subscription[] = []
 
   // TODO: openProject: unzip, cache video, cache project, project load success

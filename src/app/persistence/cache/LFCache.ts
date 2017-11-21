@@ -10,7 +10,7 @@ import ICache from './ICache'
  * Cache implementation using LocalForage
  */
 @Injectable()
-export default class LFCache implements ICache {
+export class LFCache implements ICache {
   private readonly storage: LocalForage =
     localForage.createInstance(_DEFAULT_STORAGE_CONFIG_)
 
