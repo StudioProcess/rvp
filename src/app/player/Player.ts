@@ -21,11 +21,6 @@ import * as fromPlayer from './reducers'
 import * as player from './actions'
 import * as project from '../persistence/actions/project'
 
-interface PlayerInst {
-  playerInst: videojs.Player
-  videoObjURL: string
-}
-
 // https://github.com/videojs/video.js/blob/master/src/js/player.js
 @Injectable()
 export default class Player implements OnDestroy {
@@ -34,20 +29,16 @@ export default class Player implements OnDestroy {
   constructor(
     private readonly _actions: Actions,
     private readonly _store: Store<fromPlayer.State>) {
-      const playerSubj = new ReplaySubject<PlayerInst>(1)
+      const playerSubj = new ReplaySubject<videojs.Player>(1)
 
       this._subs.push(
         this.createPlayer.subscribe({
           next: ({payload}) => {
-            const {elemRef, objectURL, playerOptions} = payload
+            const {elemRef, playerOptions} = payload
             const playerInst: videojs.Player = videojs(elemRef.nativeElement, playerOptions)
-            playerInst.src({src: objectURL, type: 'video/mp4'})
 
             playerInst.on('ready', () => {
-              playerSubj.next({
-                playerInst,
-                videoObjURL: objectURL
-              })
+              playerSubj.next(playerInst)
             })
           },
           error: err =>{
@@ -57,7 +48,7 @@ export default class Player implements OnDestroy {
 
       this._subs.push(
         playerSubj.subscribe({
-          next: ({playerInst}) => {
+          next: (playerInst) => {
             // Player is an instance of a video.js Component class, with methods from
             // mixin class EventTarget.
             // https://github.com/videojs/video.js/blob/master/src/js/component.js#L88
@@ -94,10 +85,18 @@ export default class Player implements OnDestroy {
         }))
 
       this._subs.push(
+        this.setSource
+          .withLatestFrom(playerSubj)
+          .subscribe(([{payload}, playerInst]) => {
+            const objectURL = URL.createObjectURL(payload)
+            playerInst.src({src: objectURL, type: 'video/mp4'})
+          }))
+
+      this._subs.push(
         this.setDimensions
           .combineLatest(playerSubj)
           .subscribe({
-            next: ([{payload:{width, height}}, {playerInst}]) => {
+            next: ([{payload:{width, height}}, playerInst]) => {
               playerInst.width(width)
               playerInst.height(height)
 
@@ -111,15 +110,14 @@ export default class Player implements OnDestroy {
       this._subs.push(
         this.requestCurrentTime
           .withLatestFrom(playerSubj)
-          .subscribe(([{payload:{currentTime}}, {playerInst}]) => {
+          .subscribe(([{payload:{currentTime}}, playerInst]) => {
             playerInst.currentTime(currentTime)
           }))
 
       this._subs.push(
         this.destroyPlayer.withLatestFrom(playerSubj).subscribe({
-          next: ([, {playerInst, videoObjURL}]) => {
+          next: ([, playerInst]) => {
             playerInst.dispose()
-            URL.revokeObjectURL(videoObjURL)
             this._store.dispatch(new player.PlayerDestroySuccess())
           },
           error: err => {
@@ -133,6 +131,9 @@ export default class Player implements OnDestroy {
 
   @Effect({dispatch: false})
   readonly destroyPlayer = this._actions.ofType<player.PlayerDestroy>(player.PLAYER_DESTROY)
+
+  @Effect({dispatch: false})
+  readonly setSource = this._actions.ofType<player.PlayerSetSource>(player.PLAYER_SET_SOURCE)
 
   @Effect({dispatch: false})
   readonly setDimensions = this._actions.ofType<player.PlayerSetDimensions>(player.PLAYER_SET_DIMENSIONS)
