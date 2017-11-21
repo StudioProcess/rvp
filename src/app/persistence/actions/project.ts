@@ -11,6 +11,8 @@ export const PROJECT_LOAD_ERROR = '[Project] Load Error'
 export const PROJECT_EXPORT = '[Project] Export'
 export const PROJECT_EXPORT_ERROR = '[Project] Export Error'
 
+export const PROJECT_RESET = '[Project] Reset'
+
 export const PROJECT_ADD_ANNOTATION = '[Project] Add Annotation'
 export const PROJECT_UPDATE_ANNOTATION = '[Project] Update Annotation'
 export const PROJECT_DELETE_ANNOTATION = '[Project] Delete Annotation'
@@ -46,6 +48,10 @@ export class ProjectExport implements Action {
 export class ProjectExportError implements Action {
   readonly type = PROJECT_EXPORT_ERROR
   constructor(readonly payload: any){}
+}
+
+export class ProjectReset implements Action {
+  readonly type = PROJECT_RESET
 }
 
 export interface AddAnnotationPayload {
@@ -99,5 +105,6 @@ export class ProjectDeleteTrack implements Action {
 export type Actions =
   ProjectLoad|ProjectLoadSuccess|ProjectLoadError|
   ProjectExport|ProjectExportError|
+  ProjectReset|
   ProjectAddTrack|ProjectDeleteTrack|
   ProjectAddAnnotation|ProjectUpdateAnnotation|ProjectDeleteAnnotation
