@@ -14,7 +14,11 @@ import 'rxjs/add/operator/share'
 import * as project from '../actions/project'
 import * as fromProject from '../reducers'
 
-import {_DEFAULT_PROJECT_PATH_} from '../../config'
+import {
+  _DEFAULT_PROJECT_PATH_, _METADATA_PATH_,
+  _VIDEODATA_PATH_
+} from '../../config/project'
+
 import {_DEFZIPOTPIONS_} from '../../config/zip'
 import LFCache from '../cache/LFCache'
 import {loadProject} from '../project'
@@ -59,8 +63,8 @@ export default class ServerProxy {
                 const projectData = await loadProject(_DEFAULT_PROJECT_PATH_)
 
                 const cachePromises = [
-                  this._cache.cache('meta', projectData.meta),
-                  this._cache.cache('video', projectData.video)
+                  this._cache.cache('meta', projectData[_METADATA_PATH_]),
+                  this._cache.cache('video', projectData[_VIDEODATA_PATH_])
                 ]
 
                 await Promise.all(cachePromises)
@@ -83,8 +87,8 @@ export default class ServerProxy {
             next: async ({meta, video}) => {
               try {
                 const zip = new JSZip()
-                zip.file('project/meta.json', JSON.stringify(meta))
-                zip.file('project/video.m4v', video!)
+                zip.file(`project/${_METADATA_PATH_}`, JSON.stringify(meta))
+                zip.file(`project/${_VIDEODATA_PATH_}`, video!)
 
                 const zipBlob = await zip.generateAsync(_DEFZIPOTPIONS_) as Blob
                 saveAs(zipBlob, 'project.zip')
