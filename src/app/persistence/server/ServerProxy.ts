@@ -46,9 +46,9 @@ export default class ServerProxy {
                   this._cache.getCached('video')
                 ]
 
-                const [proj, video] = await Promise.all(getPromises)
+                const [meta, video] = await Promise.all(getPromises)
 
-                this._store.dispatch(new project.ProjectLoadSuccess({project: proj, video}))
+                this._store.dispatch(new project.ProjectLoadSuccess({meta, video}))
               } else {
                 const projectData = await loadProject(_DEFAULT_PROJECT_PATH_)
 
