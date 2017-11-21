@@ -58,7 +58,7 @@
     "@types/file-saver": "0.0.1",
     "@types/jszip": "^3.1.0",
     "@types/node": "^6.0.88",
-    "@types/video.js": "^6.2.0",
+    "@types/video.js": "^6.2.2",
     "codelyzer": "~3.1.1",
     "tslint": ">=5.3.2 <6",
     "typescript": "~2.3.3"
