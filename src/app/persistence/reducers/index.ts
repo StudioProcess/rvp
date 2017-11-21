@@ -65,8 +65,5 @@ export const getSortedFlattenedAnnotations = createSelector(getFlattenedAnnotati
 
 export const getProjectVideo = createSelector(getProjectState, fromProject.getProjectVideo)
 
-export const getVideoObjectURL = createSelector(getProjectVideo, video => {
-  return video !== null ? URL.createObjectURL(video) : null
-})
 
 
