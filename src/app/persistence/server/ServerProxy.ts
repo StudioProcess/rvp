@@ -83,8 +83,17 @@ export default class ServerProxy {
           error: err => {
             this._store.dispatch(new project.ProjectExportError(err))
           }
-        })
-      )
+        }))
+
+      this._subs.push(
+        this.resetProject.subscribe({
+          next: () => {
+
+          },
+          error: err => {
+            console.log(err)
+          }
+        }))
     }
 
   @Effect({dispatch: false})
@@ -92,6 +101,9 @@ export default class ServerProxy {
 
   @Effect({dispatch: false})
   readonly exportProject = this._actions.ofType<project.ProjectExport>(project.PROJECT_EXPORT)
+
+  @Effect({dispatch: false})
+  readonly resetProject = this._actions.ofType<project.ProjectReset>(project.PROJECT_RESET)
 
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
