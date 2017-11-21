@@ -19,6 +19,7 @@ import {_PLAYER_TIMEUPDATE_DEBOUNCE_} from '../config/player'
 
 import * as fromPlayer from './reducers'
 import * as player from './actions'
+import * as project from '../persistence/actions/project'
 
 interface PlayerInst {
   playerInst: videojs.Player
@@ -69,6 +70,12 @@ export default class Player implements OnDestroy {
                   const currentTime = playerInst.currentTime()
                   this._store.dispatch(new player.PlayerSetCurrentTime({currentTime}))
                 }))
+
+            playerInstSubs.push(
+              Observable.fromEvent(playerEventEmitter, 'durationchange').subscribe(() => {
+                const duration = playerInst.duration()
+                this._store.dispatch(new project.ProjectSetTimelineDuration({duration}))
+              }))
 
             playerInstSubs.push(
               Observable.fromEvent(playerEventEmitter, 'dispose').subscribe(() => {
