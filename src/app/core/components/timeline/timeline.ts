@@ -71,7 +71,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     @Inject(DOCUMENT) private readonly _document: any) {}
 
   ngOnInit() {
-    const timeline = this._store.select(fromProject.getTimeline)
+    const timeline = this._store.select(fromProject.getProjectTimeline)
       .filter(timeline => timeline !== null)
       .share()
 
