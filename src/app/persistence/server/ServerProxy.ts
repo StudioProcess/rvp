@@ -63,8 +63,8 @@ export default class ServerProxy {
                 const projectData = await loadProject(_DEFAULT_PROJECT_PATH_)
 
                 const cachePromises = [
-                  this._cache.cache('meta', projectData[_METADATA_PATH_]),
-                  this._cache.cache('video', projectData[_VIDEODATA_PATH_])
+                  this._cache.cache('meta', projectData.meta),
+                  this._cache.cache('video', projectData.video)
                 ]
 
                 await Promise.all(cachePromises)
