@@ -1,7 +1,6 @@
 import * as player from '../actions'
 
 export interface State {
-  readonly isPaused: boolean
   readonly currentTime: number
   readonly dimensions: {
     readonly width: number
@@ -10,7 +9,6 @@ export interface State {
 }
 
 const initialState: State = {
-  isPaused: true,
   currentTime: 0,
   dimensions: {
     width: 0,
@@ -32,12 +30,6 @@ export function reducer(state: State=initialState, action: player.PlayerActions)
   }
 }
 
-export const getIsPaused = (state: State) => state.isPaused
+export const getCurrentTime = (state: State) => state.currentTime
 
-export const getCurrentTime = (state: State) => {
-  return state.currentTime
-}
-
-export const getDimensions = (state: State) => {
-  return state.dimensions
-}
+export const getDimensions = (state: State) => state.dimensions
