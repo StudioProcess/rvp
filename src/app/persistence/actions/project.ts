@@ -28,6 +28,8 @@ export const PROJECT_DELETE_ANNOTATION = '[Project] Delete Annotation'
 export const PROJECT_ADD_TRACK = '[Project] Add Track'
 export const PROJECT_DELETE_TRACK = '[Project] Delete Track'
 
+export const PROJECT_SET_TIMELINE_DURATION = '[Project] Set Timeline Duration'
+
 export class ProjectLoad implements Action {
   readonly type = PROJECT_LOAD
 }
@@ -134,6 +136,11 @@ export class ProjectDeleteTrack implements Action {
   constructor(readonly payload: DeleteTrackPlayload){}
 }
 
+export class ProjectSetTimelineDuration implements Action {
+  readonly type = PROJECT_SET_TIMELINE_DURATION
+  constructor(readonly payload: {duration: number}) {}
+}
+
 export type Actions =
   ProjectLoad|ProjectLoadSuccess|ProjectLoadError|
   ProjectImport|
@@ -141,4 +148,5 @@ export type Actions =
   ProjectExport|ProjectExportError|
   ProjectReset|
   ProjectAddTrack|ProjectDeleteTrack|
-  ProjectAddAnnotation|ProjectUpdateAnnotation|ProjectDeleteAnnotation
+  ProjectAddAnnotation|ProjectUpdateAnnotation|ProjectDeleteAnnotation|
+  ProjectSetTimelineDuration
