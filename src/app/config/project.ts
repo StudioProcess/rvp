@@ -1,7 +1,7 @@
 import {OutputType} from 'jszip'
 import {id} from '../lib/fp'
 
-export const _DEFAULT_PROJECT_PATH_ = 'assets/projects/initial.rv'
+export const _DEFAULT_PROJECT_PATH_ = 'assets/projects/default.rv'
 
 export const _METADATA_PATH_ = 'project.json'
 export const _VIDEODATA_PATH_ = 'video.m4v'
@@ -21,7 +21,7 @@ export interface ZipFileMeta {
 
 export const _ZIP_META_: ZipFileMeta[] = [
   {
-    file: `initial/${_METADATA_PATH_}`,
+    file: `project/${_METADATA_PATH_}`,
     type: 'text',
     map: 'meta',
     middleware: {
@@ -29,7 +29,7 @@ export const _ZIP_META_: ZipFileMeta[] = [
     }
   },
   {
-    file: `initial/${_VIDEODATA_PATH_}`,
+    file: `project/${_VIDEODATA_PATH_}`,
     type: 'blob',
     map: 'video',
     middleware: defaultFileMW
