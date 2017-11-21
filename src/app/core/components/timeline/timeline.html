@@ -11,8 +11,8 @@
       [data]="track" [trackIndex]="i" [totalDuration]="timeline.duration"
       [containerRect]="zoomContainerRect"
       [selectedAnnotationId]="selectedAnnotationId"
-      (deleteTrack)="deleteTrack($event)"
-      (updateAnnotation)="updateAnnotation($event)"
+      (onDeleteTrack)="deleteTrack($event)"
+      (onUpdateAnnotation)="updateAnnotation($event)"
       (onSelectAnnotation)="selectAnnotation($event)"
       (onAddAnnotation)="addAnnotation($event)">
     </rv-track>

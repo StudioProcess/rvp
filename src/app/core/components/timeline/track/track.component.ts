@@ -36,8 +36,8 @@ export class TrackComponent implements OnInit, OnDestroy {
   zoom: number
   scrollLeft: number
 
-  @Output() readonly updateAnnotation = new EventEmitter<project.UpdateAnnotationPayload>()
-  @Output() readonly deleteTrack = new EventEmitter<project.DeleteTrackPlayload>()
+  @Output() readonly onUpdateAnnotation = new EventEmitter<project.UpdateAnnotationPayload>()
+  @Output() readonly onDeleteTrack = new EventEmitter<project.DeleteTrackPlayload>()
   @Output() readonly onSelectAnnotation = new EventEmitter<selection.SelectionAnnotationPayload>()
   @Output() readonly onAddAnnotation = new EventEmitter<project.AddAnnotationPayload>()
 
@@ -84,7 +84,7 @@ export class TrackComponent implements OnInit, OnDestroy {
 
   deleteTrackHandler() {
     if(window.confirm("Really delete track? All annotations will be deleted too.")){
-      this.deleteTrack.emit({trackIndex: this.trackIndex})
+      this.onDeleteTrack.emit({trackIndex: this.trackIndex})
     }
   }
 
@@ -111,7 +111,7 @@ export class TrackComponent implements OnInit, OnDestroy {
     const newStart = tPerc*ev.left
     const newDuration = tPerc*(ev.right-ev.left)
 
-    this.updateAnnotation.emit({
+    this.onUpdateAnnotation.emit({
       trackIndex: this.trackIndex,
       annotationIndex,
       annotation: AnnotationRecordFactory({
