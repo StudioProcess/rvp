@@ -18,9 +18,9 @@ export interface ZipFileMeta {
 
 export const _ZIP_META_: ZipFileMeta[] = [
   {
-    file: 'initial/project.json',
+    file: 'initial/meta.json',
     type: 'text',
-    map: 'project',
+    map: 'meta',
     middleware: {
       postLoad: res => JSON.parse(res)
     }
