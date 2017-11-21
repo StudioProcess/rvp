@@ -3,20 +3,16 @@ import {Injectable} from '@angular/core'
 import {Store} from '@ngrx/store'
 import {Effect, Actions} from '@ngrx/effects'
 
-// import {Observable} from 'rxjs/Observable'
-import {Subscription} from 'rxjs/Subscription'
-import 'rxjs/add/observable/merge'
-import 'rxjs/add/observable/zip'
-import 'rxjs/add/observable/of'
-import 'rxjs/add/operator/concatMap'
-import 'rxjs/add/operator/map'
-import 'rxjs/add/operator/catch'
+import * as JSZip from 'jszip'
+import {saveAs} from 'file-saver'
 
-// import * as io from '../../io/actions/io'
+import {Subscription} from 'rxjs/Subscription'
+
 import * as project from '../actions/project'
 import * as fromProject from '../reducers'
 
 import {_DEFAULT_PROJECT_PATH_} from '../../config'
+import {_DEFZIPOTPIONS_} from '../../config/zip'
 import LFCache from '../cache/LFCache'
 import {loadProject} from '../project'
 
@@ -72,11 +68,20 @@ export default class ServerProxy {
 
       this._subs.push(
         this.exportProject.subscribe({
-          next: () => {
+          next: async ({payload}) => {
+            try {
+              const zip = new JSZip()
+              zip.file('project/meta.json', JSON.stringify(payload.meta))
+              zip.file('project/video.m4v', payload.video)
 
+              const zipBlob = await zip.generateAsync(_DEFZIPOTPIONS_) as Blob
+              saveAs(zipBlob, 'project.zip')
+            } catch(err) {
+              this._store.dispatch(new project.ProjectExportError(err))
+            }
           },
           error: err => {
-            console.log(err)
+            this._store.dispatch(new project.ProjectExportError(err))
           }
         })
       )
