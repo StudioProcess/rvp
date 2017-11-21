@@ -36,30 +36,19 @@ export class PlayerContainer implements AfterViewInit, OnDestroy {
     private readonly _store: Store<fromPlayer.State>) {}
 
   ngAfterViewInit() {
-    const videoObjectURL =
-      this._projectStore.select(fromProject.getVideoObjectURL)
-        .filter(objUrl => objUrl !== null) as Observable<string>
+    const getClientRect = () => this._hostElem.nativeElement.getBoundingClientRect()
 
-    const projectId =
-      this._projectStore.select(fromProject.getProjectId)
-        .filter(projectId => projectId !== null)
-        .distinctUntilChanged() as Observable<number>
-
-    const currentVideoObjectURL =
-      projectId.withLatestFrom(videoObjectURL, (_, videoObjectUrl) => videoObjectUrl)
+    this._store.dispatch(new player.PlayerCreate({
+      elemRef: this._videoElem,
+      playerOptions: _DEFAULT_PLAYER_OPTIONS_
+    }))
 
     this._subs.push(
-      currentVideoObjectURL.subscribe(videoObjURL => {
-        const playerPayload = {
-          elemRef: this._videoElem,
-          objectURL: videoObjURL,
-          playerOptions: _DEFAULT_PLAYER_OPTIONS_
-        }
-
-        this._store.dispatch(new player.PlayerCreate(playerPayload))
-      }))
-
-    const getClientRect = () => this._hostElem.nativeElement.getBoundingClientRect()
+      this._projectStore.select(fromProject.getProjectVideo)
+        .filter(video => video !== null)
+        .subscribe((video: File|Blob) => {
+          this._store.dispatch(new player.PlayerSetSource(video))
+        }))
 
     this._subs.push(
       Observable.fromEvent(window, 'resize')
@@ -74,6 +63,8 @@ export class PlayerContainer implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this._store.dispatch(new player.PlayerDestroy())
+
     this._subs.forEach(s => s.unsubscribe())
 
     this._store.dispatch(new player.PlayerDestroy())
