@@ -9,6 +9,7 @@ export const PROJECT_LOAD_SUCCESS = '[Project] Load Success'
 export const PROJECT_LOAD_ERROR = '[Project] Load Error'
 
 export const PROJECT_IMPORT = '[Project] Import'
+export const PROJECT_IMPORT_ERROR = '[Project] Import Error'
 
 export const PROJECT_EXPORT = '[Project] Export'
 export const PROJECT_EXPORT_ERROR = '[Project] Export Error'
@@ -41,6 +42,11 @@ export class ProjectLoadError implements Action {
 export class ProjectImport implements Action {
   readonly type = PROJECT_IMPORT
   constructor(readonly payload: File) {}
+}
+
+export class ProjectImportError implements Action {
+  readonly type = PROJECT_IMPORT_ERROR
+  constructor(readonly payload: any) {}
 }
 
 export class ProjectExport implements Action {
