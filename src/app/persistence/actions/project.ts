@@ -8,10 +8,6 @@ export const PROJECT_LOAD = '[Project] Load'
 export const PROJECT_LOAD_SUCCESS = '[Project] Load Success'
 export const PROJECT_LOAD_ERROR = '[Project] Load Error'
 
-export const PROJECT_UPDATE = '[Project] Update'
-export const PROJECT_UPDATE_SUCCESS = '[Project] Update Success'
-export const PROJECT_UPDATE_ERROR = '[Project] Update Error'
-
 export const PROJECT_ADD_ANNOTATION = '[Project] Add Annotation'
 export const PROJECT_UPDATE_ANNOTATION = '[Project] Update Annotation'
 export const PROJECT_DELETE_ANNOTATION = '[Project] Delete Annotation'
@@ -31,21 +27,6 @@ export class ProjectLoadSuccess implements Action {
 
 export class ProjectLoadError implements Action {
   readonly type = PROJECT_LOAD_ERROR
-  constructor(readonly payload: any) {}
-}
-
-export class ProjectUpdate implements Action {
-  readonly type = PROJECT_UPDATE
-  constructor(readonly payload: {id: string}) {}
-}
-
-export class ProjectUpdateSuccess implements Action {
-  readonly type = PROJECT_UPDATE_SUCCESS
-  constructor(readonly payload: {id: string}) {}
-}
-
-export class ProjectUpdateError implements Action {
-  readonly type = PROJECT_UPDATE_SUCCESS
   constructor(readonly payload: any) {}
 }
 
@@ -99,6 +80,5 @@ export class ProjectDeleteTrack implements Action {
 
 export type Actions =
   ProjectLoad|ProjectLoadSuccess|ProjectLoadError|
-  ProjectUpdate|ProjectUpdateSuccess|ProjectUpdateError|
   ProjectAddTrack|ProjectDeleteTrack|
   ProjectAddAnnotation|ProjectUpdateAnnotation|ProjectDeleteAnnotation
