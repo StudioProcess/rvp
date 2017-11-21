@@ -62,16 +62,14 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
         }))
   }
 
-  openProject() {
-    console.log('TODO: open project')
-  }
-
   importProject(projectFile: File) {
     this._rootStore.dispatch(new project.ProjectImport(projectFile))
+    this.closeProjectModal()
   }
 
   importVideo(video: File) {
     this._rootStore.dispatch(new project.ProjectImportVideo(video))
+    this.closeProjectModal()
   }
 
   exportProject() {
@@ -83,7 +81,13 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   resetProject() {
     if(window.confirm('Reset the whole project? All data will be lost.')) {
       this._rootStore.dispatch(new project.ProjectReset())
+      this.closeProjectModal()
     }
+  }
+
+  closeProjectModal() {
+    const modal = $('#settings-reveal') as any;
+    modal.foundation('close');
   }
 
   changeVideo() {
