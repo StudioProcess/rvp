@@ -3,17 +3,21 @@ import {List, Record} from 'immutable'
 // Record factories
 
 export const ProjectRecordFactory = Record<Project>({
+  meta: null,
+  video: null
+})
+
+export const ProjectMetaRecordFactory = Record<ProjectMeta>({
   id: null,
   timeline: null,
-  video: null
 })
 
 export const TimelineRecordFactory = Record<Timeline>({
   id: null,
-  duration: 0,
-  playhead: 0,
-  zoom: 1,
-  pan: 0,
+  duration: -1,
+  playhead: -1,
+  zoom: -1,
+  pan: -1,
   tracks: List([])
 })
 
@@ -35,8 +39,8 @@ export const AnnotationFieldsRecordFactory = Record<AnnotationFields>({
 
 export const AnnotationRecordFactory = Record<Annotation>({
   id: null,
-  utc_timestamp: 0,
-  duration: 0,
+  utc_timestamp: -1,
+  duration: -1,
   fields: new AnnotationFieldsRecordFactory()
 })
 
@@ -50,9 +54,13 @@ export const AnnotationColorMapRecordFactory = Record<AnnotationColorMap>({
 // Model
 
 export interface Project {
+  readonly meta: Record<ProjectMeta>|null
+  readonly video: Blob|null
+}
+
+export interface ProjectMeta {
   readonly id: number|null
   readonly timeline: Record<Timeline>|null
-  readonly video: Blob|null
 }
 
 export interface Timeline {
