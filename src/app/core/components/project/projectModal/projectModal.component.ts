@@ -27,6 +27,7 @@ export class ProjectModalComponent implements OnDestroy {
     const file = extractFile(e)
     if(file !== null) {
       this.onImportProject.emit(file)
+      e.target.value = null
     }
   }
 
@@ -34,6 +35,7 @@ export class ProjectModalComponent implements OnDestroy {
     const file = extractFile(e)
     if(file !== null) {
       this.onImportVideo.emit(file)
+      e.target.value = null
     }
   }
 
