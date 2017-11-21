@@ -9,6 +9,7 @@ export const PROJECT_LOAD_SUCCESS = '[Project] Load Success'
 export const PROJECT_LOAD_ERROR = '[Project] Load Error'
 
 export const PROJECT_EXPORT = '[Project] Export'
+export const PROJECT_EXPORT_ERROR = '[Project] Export Error'
 
 export const PROJECT_ADD_ANNOTATION = '[Project] Add Annotation'
 export const PROJECT_UPDATE_ANNOTATION = '[Project] Update Annotation'
@@ -32,8 +33,19 @@ export class ProjectLoadError implements Action {
   constructor(readonly payload: any) {}
 }
 
+interface ExportProjectPayload {
+  readonly meta: any
+  readonly video: any
+}
+
 export class ProjectExport implements Action {
   readonly type = PROJECT_EXPORT
+  constructor(readonly payload: ExportProjectPayload){}
+}
+
+export class ProjectExportError implements Action {
+  readonly type = PROJECT_EXPORT_ERROR
+  constructor(readonly payload: any){}
 }
 
 export interface AddAnnotationPayload {
