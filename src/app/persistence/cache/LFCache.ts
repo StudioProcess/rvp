@@ -2,10 +2,6 @@ import {Injectable} from '@angular/core'
 
 import * as localForage from 'localforage'
 
-import {Observable} from 'rxjs/Observable'
-import 'rxjs/add/observable/fromPromise'
-import 'rxjs/add/operator/concatMap'
-
 import {_DEFAULT_STORAGE_CONFIG_} from '../../config'
 
 import ICache from './ICache'
@@ -18,11 +14,8 @@ export default class LFCache implements ICache {
   private readonly storage: LocalForage =
     localForage.createInstance(_DEFAULT_STORAGE_CONFIG_)
 
-  cache<T>(key: string, data: Observable<T>): Observable<T> {
-    return data.concatMap(d => {
-      return Observable.fromPromise(
-        this.storage.setItem(key, d))
-    })
+  cache<T>(key: string, data: T): Promise<T> {
+    return this.storage.setItem(key, data)
   }
 
   async isCached(key: number|string): Promise<boolean> {
@@ -30,7 +23,7 @@ export default class LFCache implements ICache {
     return keys.includes(key as string)
   }
 
-  getCached<T>(key: number|string): Observable<T> {
-    return Observable.fromPromise(this.storage.getItem(key as string))
+  getCached<T>(key: number|string): Promise<T> {
+    return this.storage.getItem(key as string)
   }
 }
