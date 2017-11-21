@@ -21,7 +21,7 @@ export interface ZipFileMeta {
 
 export const _ZIP_META_: ZipFileMeta[] = [
   {
-    file: `project/${_METADATA_PATH_}`,
+    file: _METADATA_PATH_,
     type: 'text',
     map: 'meta',
     middleware: {
@@ -29,7 +29,7 @@ export const _ZIP_META_: ZipFileMeta[] = [
     }
   },
   {
-    file: `project/${_VIDEODATA_PATH_}`,
+    file: _VIDEODATA_PATH_,
     type: 'blob',
     map: 'video',
     middleware: defaultFileMW
