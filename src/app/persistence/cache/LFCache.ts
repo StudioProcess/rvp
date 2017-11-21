@@ -18,12 +18,17 @@ export default class LFCache implements ICache {
     return this.storage.setItem(key, data)
   }
 
-  async isCached(key: number|string): Promise<boolean> {
-    const keys = await this.storage.keys()
-    return keys.includes(key as string)
+  async isCached(keys: string[]): Promise<boolean> {
+    const cachedKeys = await this.storage.keys()
+
+    const missingKey = keys.find(k => {
+      return !cachedKeys.includes(k)
+    })
+
+    return missingKey === undefined
   }
 
-  getCached<T>(key: number|string): Promise<T> {
-    return this.storage.getItem<T>(key as string)
+  getCached<T>(key: string): Promise<T> {
+    return this.storage.getItem<T>(key)
   }
 }
