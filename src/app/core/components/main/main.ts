@@ -66,6 +66,10 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     console.log('TODO: open project')
   }
 
+  importProject(projectFile: File) {
+    this._rootStore.dispatch(new project.ProjectImport(projectFile))
+  }
+
   exportProject() {
     if(window.confirm('Export an archive of the project?')) {
       this._rootStore.dispatch(new project.ProjectExport())
