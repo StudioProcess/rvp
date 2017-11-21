@@ -39,11 +39,26 @@ export default class ServerProxy {
         this.loadProject.subscribe({
           next: async () => {
             try {
-              const isCached = await this._cache.isCached('project')
+              const isCached = await this._cache.isCached(['meta', 'video'])
               if(isCached) {
-                // TODO
+                const getPromises = [
+                  this._cache.getCached('meta'),
+                  this._cache.getCached('video')
+                ]
+
+                const [proj, video] = await Promise.all(getPromises)
+
+                this._store.dispatch(new project.ProjectLoadSuccess({project: proj, video}))
               } else {
                 const projectData = await loadProject(_DEFAULT_PROJECT_PATH_)
+
+                const cachePromises = [
+                  this._cache.cache('meta', projectData.project),
+                  this._cache.cache('video', projectData.video)
+                ]
+
+                await Promise.all(cachePromises)
+
                 this._store.dispatch(new project.ProjectLoadSuccess(projectData))
               }
             } catch(err) {
