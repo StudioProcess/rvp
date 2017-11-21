@@ -3,6 +3,14 @@ import {
   Output, OnDestroy
 } from '@angular/core'
 
+function extractFile(e: any): File|null {
+  if(e && e.target && e.target.files && e.target.files.length) {
+    return e.target.files[0]
+  } else {
+    return null
+  }
+}
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'rv-projectmodal',
@@ -11,12 +19,21 @@ import {
 })
 export class ProjectModalComponent implements OnDestroy {
   @Output() readonly onImportProject = new EventEmitter()
+  @Output() readonly onImportVideo = new EventEmitter()
   @Output() readonly onExportProject = new EventEmitter()
   @Output() readonly onResetProject = new EventEmitter()
 
   importProject(e: any) {
-    if(e && e.target && e.target.files && e.target.files.length > 0) {
-      this.onImportProject.emit(e.target.files[0])
+    const file = extractFile(e)
+    if(file !== null) {
+      this.onImportProject.emit(file)
+    }
+  }
+
+  importVideo(e: any) {
+    const file = extractFile(e)
+    if(file !== null) {
+      this.onImportVideo.emit(file)
     }
   }
 

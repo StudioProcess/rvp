@@ -112,6 +112,16 @@ export default class ServerProxy {
         }))
 
       this._subs.push(
+        this.importVideo.subscribe({
+          next: (payload) => {
+            console.log(payload)
+          },
+          error: err => {
+            this._store.dispatch(new project.ProjectImportVideoError(err))
+          }
+        }))
+
+      this._subs.push(
         this.exportProject
           .withLatestFrom(projectState, (_, proj) => proj)
           .subscribe({
@@ -150,6 +160,9 @@ export default class ServerProxy {
 
   @Effect({dispatch:false})
   readonly importProject = this._actions.ofType<project.ProjectImport>(project.PROJECT_IMPORT)
+
+  @Effect({dispatch: false})
+  readonly importVideo = this._actions.ofType<project.ProjectImportVideo>(project.PROJECT_IMPORT_VIDEO)
 
   @Effect({dispatch: false})
   readonly exportProject = this._actions.ofType<project.ProjectExport>(project.PROJECT_EXPORT)

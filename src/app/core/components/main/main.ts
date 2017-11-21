@@ -70,6 +70,10 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     this._rootStore.dispatch(new project.ProjectImport(projectFile))
   }
 
+  importVideo(video: File) {
+    this._rootStore.dispatch(new project.ProjectImportVideo(video))
+  }
+
   exportProject() {
     if(window.confirm('Export an archive of the project?')) {
       this._rootStore.dispatch(new project.ProjectExport())
