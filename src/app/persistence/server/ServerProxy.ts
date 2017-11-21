@@ -7,6 +7,9 @@ import * as JSZip from 'jszip'
 import {saveAs} from 'file-saver'
 
 import {Subscription} from 'rxjs/Subscription'
+import 'rxjs/add/operator/withLatestFrom'
+import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/share'
 
 import * as project from '../actions/project'
 import * as fromProject from '../reducers'
@@ -20,17 +23,24 @@ import {loadProject} from '../project'
 export default class ServerProxy {
   private readonly _subs: Subscription[] = []
 
-  // DONE: loadProject: cached: write to store; !cached: load default project, unzip, cache video, cache project, write to store
-  // DONE: exportProject: zip all, saveAs
-  // TODO: resetProject: reset cache, load default project, unzip, cache video, cache project, write to store
-  // TODO: openProject: unzip, cache video, cache project, write to store
-  // TODO: openVideo: cache video, write to store
+  // TODO: openProject: unzip, cache video, cache project, project load success
+  // TODO: openVideo: cache video, project load success
   // TODO: autoSave: cache project
 
   constructor(
     private readonly _actions: Actions,
     private readonly _cache: LFCache,
     private readonly _store: Store<fromProject.State>) {
+      const projectState = this._store.select(fromProject.getProjectState)
+        .filter(proj => proj.get('meta', null) !== null && proj.get('video', null) !== null)
+        .map(proj => {
+          return {
+            meta: proj.get('meta', null)!.toJS(),
+            video: proj.get('video', null)
+          }
+        })
+        .share()
+
       this._subs.push(
         this.loadProject.subscribe({
           next: async () => {
@@ -67,23 +77,25 @@ export default class ServerProxy {
         }))
 
       this._subs.push(
-        this.exportProject.subscribe({
-          next: async ({payload}) => {
-            try {
-              const zip = new JSZip()
-              zip.file('project/meta.json', JSON.stringify(payload.meta))
-              zip.file('project/video.m4v', payload.video)
+        this.exportProject
+          .withLatestFrom(projectState, (_, proj) => proj)
+          .subscribe({
+            next: async ({meta, video}) => {
+              try {
+                const zip = new JSZip()
+                zip.file('project/meta.json', JSON.stringify(meta))
+                zip.file('project/video.m4v', video!)
 
-              const zipBlob = await zip.generateAsync(_DEFZIPOTPIONS_) as Blob
-              saveAs(zipBlob, 'project.zip')
-            } catch(err) {
+                const zipBlob = await zip.generateAsync(_DEFZIPOTPIONS_) as Blob
+                saveAs(zipBlob, 'project.zip')
+              } catch(err) {
+                this._store.dispatch(new project.ProjectExportError(err))
+              }
+            },
+            error: err => {
               this._store.dispatch(new project.ProjectExportError(err))
             }
-          },
-          error: err => {
-            this._store.dispatch(new project.ProjectExportError(err))
-          }
-        }))
+          }))
 
       this._subs.push(
         this.resetProject.subscribe({
