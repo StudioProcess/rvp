@@ -81,13 +81,15 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   exportProject() {
-    if(window.confirm('Export an archive of the project?')){
+    if(window.confirm('Export an archive of the project?')) {
       this.onExportProject.next()
     }
   }
 
   resetProject() {
-    console.log('TODO: reset project')
+    if(window.confirm('Reset the whole project? All data will be lost.')) {
+      this._rootStore.dispatch(new project.ProjectReset())
+    }
   }
 
   changeVideo() {
