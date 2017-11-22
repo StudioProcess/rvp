@@ -13,9 +13,22 @@ const initialState = new ProjectRecordFactory()
 
 export type State = Record<Project>
 
+function nextTrackId(timeline: Record<Timeline>): number {
+  let maxId = -1
+  const tracks = timeline.get('tracks', [])
+  tracks.forEach(track => {
+    const curId = track.get('id', -1) as number
+    if(curId > maxId) {
+      maxId = curId
+    }
+  })
+
+  return maxId+1
+}
+
 function nextAnnotationId(timeline: Record<Timeline>): number {
   let maxId = -1
-  const tracks = timeline.get('tracks', null)
+  const tracks = timeline.get('tracks', [])
   tracks.forEach(track => {
     const annotations = track.get('annotations', null)
     annotations.forEach(annotation => {
@@ -87,8 +100,15 @@ export function reducer(state: State = initialState, action: project.Actions): S
       })
     }
     case project.PROJECT_ADD_TRACK: {
+      const trackPartial = action.payload
+      const nextId = nextTrackId(state.getIn(['meta', 'timeline']))
       return state.updateIn(['meta', 'timeline', 'tracks'], tracks => {
-        return tracks.push(new TrackRecordFactory(action.payload))
+        return tracks.push(new TrackRecordFactory({
+          id: nextId,
+          color: trackPartial.color,
+          fields: trackPartial.fields,
+          annotations: trackPartial.annotations
+        }))
       })
     }
     case project.PROJECT_DELETE_TRACK: {
