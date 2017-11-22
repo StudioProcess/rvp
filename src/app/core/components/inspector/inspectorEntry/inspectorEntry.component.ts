@@ -119,6 +119,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
         })
         .subscribe(({title, description, utc_timestamp, duration}) => {
           const annotation = new AnnotationRecordFactory({
+            id: this.entry.getIn(['annotation', 'id']),
             utc_timestamp: parseDuration(utc_timestamp),
             duration: parseDuration(duration),
             fields: new AnnotationFieldsRecordFactory({
