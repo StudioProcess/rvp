@@ -35,16 +35,28 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     this._rootStore.dispatch(new project.ProjectLoad())
 
+    const windowMousedown = fromEventPattern(this._renderer, window, 'mousedown')
+    const windowKeydown = fromEventPattern(this._renderer, window, 'keydown')
+
+    const backspace = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 8)
+
+    const annotationSelection = this._rootStore.select(fromRoot.getAnnotationSelection).share()
+
+    const deselectAnnotation = backspace
+      .withLatestFrom(annotationSelection)
+      .filter(([_, selection]) => selection !== undefined)
+
     this._subs.push(this._rootStore.select(fromRoot.getIsLoading)
       .subscribe(isLoading => {
         this._isLoading = isLoading
       }))
 
-    const backspace = fromEventPattern(this._renderer, window, 'keydown').filter((e: KeyboardEvent) => e.keyCode === 8)
-
-    const deselectAnnotation = backspace
-      .withLatestFrom(this._rootStore.select(fromRoot.getAnnotationSelection))
-      .filter(([_, selection]) => selection !== undefined)
+    this._subs.push(
+      windowMousedown.withLatestFrom(annotationSelection.filter(selection => selection !== undefined))
+        .subscribe(([, sel]) => {
+          const deselectPayload = {selection: sel!}
+          this._rootStore.dispatch(new selection.SelectionDeselectAnnotation(deselectPayload))
+        }))
 
     this._subs.push(
       deselectAnnotation
