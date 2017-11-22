@@ -179,7 +179,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
       const newWidth = changes.inWidth.currentValue
       this.syncVarsSubj.next({left: newLeft, width: newWidth})
     } else if(changes.inLeft && !changes.inLeft.firstChange) {
-      const newLeft = changes.inleft.currentValue
+      const newLeft = changes.inLeft.currentValue
       this.syncVarsSubj.next({left: newLeft, width: this.internWidth})
     } else if(changes.inWidth && !changes.inWidth.firstChange) {
       const newWidth = changes.inWidth.currentValue
