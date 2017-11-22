@@ -142,7 +142,6 @@ export class Player implements OnDestroy {
   readonly requestCurrentTime = this._actions.ofType<player.PlayerRequestCurrentTime>(player.PLAYER_REQUEST_CURRENT_TIME)
 
   ngOnDestroy() {
-    console.log('DESTROY PLAYER')
     this._subs.forEach(s => s.unsubscribe())
   }
 }
