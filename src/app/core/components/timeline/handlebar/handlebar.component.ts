@@ -11,8 +11,8 @@ import {DOCUMENT} from '@angular/platform-browser'
 
 import {Observable} from 'rxjs/Observable'
 import {ReplaySubject} from 'rxjs/ReplaySubject'
-import {Subscription} from 'rxjs/Subscription'
 import {Subject} from 'rxjs/Subject'
+import {Subscription} from 'rxjs/Subscription'
 import 'rxjs/add/observable/merge'
 import 'rxjs/add/operator/takeUntil'
 import 'rxjs/add/operator/map'
@@ -59,11 +59,13 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   @ViewChild('middleHandle') private readonly middleHandle: ElementRef
   @ViewChild('rightHandle') private readonly rightHandle: ElementRef
 
-  private readonly syncVarsSubj = new Subject<Handlebar>()
+  private readonly syncValueSubj = new Subject<Handlebar>()
   private readonly handlebarSubj = new ReplaySubject<Handlebar>(1)
   @Output() readonly onHandlebarUpdate = new ReplaySubject<Handlebar>(1)
 
   private readonly _subs: Subscription[] = []
+
+  private isDragging = false
 
   constructor(
     private readonly _renderer: Renderer2,
@@ -76,7 +78,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
       width: this.inWidth
     }
 
-    // Sync
+    // Init sync
     this.internLeft = this.inLeft
     this.internWidth = this.inWidth
     // Used intern
@@ -161,7 +163,17 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
       })
 
     this._subs.push(
-      Observable.merge(left, middle, right, this.syncVarsSubj)
+      Observable.merge(leftMouseDown, rightMouseDown, middleMouseDown)
+        .subscribe(() => {
+          this.isDragging = true
+        }))
+
+    this._subs.push(mouseup.subscribe(() => {
+      this.isDragging = false
+    }))
+
+    this._subs.push(
+      Observable.merge(left, middle, right, this.syncValueSubj)
         .subscribe(({left, width}) => {
           this.internLeft = left
           this.internWidth = width
@@ -171,19 +183,21 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    const hasLeftChanges = changes.inLeft && !changes.inLeft.firstChange
-    const hasWidthChanges = changes.inWidth && !changes.inWidth.firstChange
+    if(!this.isDragging) {
+      const hasLeftChanges = changes.inLeft
+      const hasWidthChanges = changes.inWidth
 
-    if(hasLeftChanges && hasWidthChanges) {
-      const newLeft = changes.inLeft.currentValue
-      const newWidth = changes.inWidth.currentValue
-      this.syncVarsSubj.next({left: newLeft, width: newWidth})
-    } else if(changes.inLeft && !changes.inLeft.firstChange) {
-      const newLeft = changes.inLeft.currentValue
-      this.syncVarsSubj.next({left: newLeft, width: this.internWidth})
-    } else if(changes.inWidth && !changes.inWidth.firstChange) {
-      const newWidth = changes.inWidth.currentValue
-      this.syncVarsSubj.next({left: this.internLeft, width: newWidth})
+      if(hasLeftChanges && hasWidthChanges) {
+        const newLeft = changes.inLeft.currentValue
+        const newWidth = changes.inWidth.currentValue
+        this.syncValueSubj.next({left: newLeft, width: newWidth})
+      } else if(hasLeftChanges) {
+        const newLeft = changes.inLeft.currentValue
+        this.syncValueSubj.next({left: newLeft, width: this.internWidth})
+      } else if(hasWidthChanges) {
+        const newWidth = changes.inWidth.currentValue
+        this.syncValueSubj.next({left: this.internLeft, width: newWidth})
+      }
     }
   }
 
