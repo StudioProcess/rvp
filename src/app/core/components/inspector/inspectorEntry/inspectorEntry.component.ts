@@ -146,14 +146,9 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
         this.form.setValue(this._mapModel(currentValue))
       }
     }
-    // if(this.form !== null) {
-    //   const {currentValue} = changes.entry
-    //   this.form.setValue(this._mapModel(currentValue))
-    // }
   }
 
   ngOnDestroy() {
-    console.log('OnDestroy')
     this._subs.forEach(sub => sub.unsubscribe())
   }
 
