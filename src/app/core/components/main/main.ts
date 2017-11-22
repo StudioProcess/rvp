@@ -90,10 +90,6 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     modal.foundation('close');
   }
 
-  changeVideo() {
-    console.log('TODO: change video')
-  }
-
   ngAfterViewInit() {
     $(document).foundation();
   }
