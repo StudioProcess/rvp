@@ -88,7 +88,8 @@ export class TrackComponent implements OnInit, OnDestroy {
     }
   }
 
-  selectAnnotation(annotation: Record<Annotation>, annotationIndex: number) {
+  selectAnnotation(ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number) {
+    ev.stopPropagation()
     this.onSelectAnnotation.emit({
       selection: new fromSelection.AnnotationSelectionFactory({
         annotationIndex,
