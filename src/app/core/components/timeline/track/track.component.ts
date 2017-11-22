@@ -49,6 +49,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
 
   private readonly _subs: Subscription[] = []
   private readonly addAnnotationClick = new Subject<MouseEvent>()
+  private readonly updateAnnotationSubj = new Subject<{hb: Handlebar, annotationIndex: number}>()
 
   constructor(private readonly _fb: FormBuilder) {}
 
@@ -93,6 +94,28 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
           }
         })
         .subscribe(this.onAddAnnotation))
+
+    this._subs.push(
+      this.updateAnnotationSubj
+        .debounceTime(_FORM_INPUT_DEBOUNCE_)
+        .subscribe(({hb, annotationIndex}) => {
+          const oldAnnotation = this.data.getIn(['annotations', annotationIndex])
+
+          const tPerc = this.totalDuration/100
+          const newStart = tPerc*hb.left
+          const newDuration = tPerc*hb.width
+
+          this.onUpdateAnnotation.emit({
+            trackIndex: this.trackIndex,
+            annotationIndex,
+            annotation: AnnotationRecordFactory({
+              id: oldAnnotation.get('id', null),
+              fields: oldAnnotation.get('fields', null),
+              utc_timestamp: newStart,
+              duration: newDuration
+            })
+          })
+        }))
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -144,24 +167,8 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
     this.addAnnotationClick.next(ev)
   }
 
-  handlebarUpdate(ev: Handlebar) {
-    const {payload: annotationIndex} = ev
-    const oldAnnotation = this.data.getIn(['annotations', annotationIndex])
-
-    const tPerc = this.totalDuration/100
-    const newStart = tPerc*ev.left
-    const newDuration = tPerc*(ev.right-ev.left)
-
-    this.onUpdateAnnotation.emit({
-      trackIndex: this.trackIndex,
-      annotationIndex,
-      annotation: AnnotationRecordFactory({
-        id: oldAnnotation.get('id', null),
-        fields: oldAnnotation.get('fields', null),
-        utc_timestamp: newStart,
-        duration: newDuration
-      })
-    })
+  updateHandlebar(hb: Handlebar, annotationIndex: number) {
+    this.updateAnnotationSubj.next({hb, annotationIndex})
   }
 
   ngOnDestroy() {

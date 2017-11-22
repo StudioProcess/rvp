@@ -127,23 +127,21 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
         .subscribe(this.scrollbarRect))
 
     this._subs.push(
-      this.handlebarRef.handlebar.subscribe(hb => {
+      this.handlebarRef.onHandlebarUpdate.subscribe(hb => {
         // Set new left and width
-        const newWidth = hb.right-hb.left
         this.scrollbarLeft = hb.left
-        this.scrollbarWidth = newWidth
+        this.scrollbarWidth = hb.width
         this._cdr.markForCheck()
       }))
 
     const initHB = {
       left: this.scrollbarLeft,
-      right: this.scrollbarWidth
+      width: this.scrollbarWidth
     }
 
-    const scrollSetting = this.handlebarRef.handlebar.startWith(initHB)
+    const scrollSetting = this.handlebarRef.onHandlebarUpdate.startWith(initHB)
       .map(hb => {
-        const newWidth = hb.right-hb.left
-        const zoom = 100/newWidth
+        const zoom = 100/hb.width
 
         return {zoom, scrollLeft: hb.left}
       })

@@ -11,13 +11,12 @@
 </div>
 <div class="annotations-wrapper" (dblclick)="addAnnotation($event)">
   <rv-handlebar *ngFor="let annotation of data.get('annotations', []); index as i; trackBy: trackByFunc;"
-    [payload]="i"
     [containerRect]="containerRect"
     [caption]="getAnnotationTitle(annotation)"
     [left]="getAnnotationPosition(annotation)"
     [width]="getAnnotationWidth(annotation)"
     [isSelected]="annotation.get('id', null) === selectedAnnotationId"
-    (handlebar)="handlebarUpdate($event)"
+    (onHandlebarUpdate)="updateHandlebar($event, i)"
     (mousedown)="selectAnnotation($event, annotation, i)">
   </rv-handlebar>
 </div>
