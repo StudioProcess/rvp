@@ -39,8 +39,8 @@ export function reducer(state: State=initialState, action: selection.Actions): S
     case selection.SELECTION_SELECT_ANNOTATION: {
       const currentSelections = state.get('annotations', null)
 
-      const {selection} = action.payload
-      const newId = selection.get('annotation', null).get('id', null)
+      const {selection: sel} = action.payload
+      const newId = sel.getIn(['annotation', 'id'])
 
       const existing = currentSelections.find(annotationSelection => {
         const a = annotationSelection.get('annotation', null)
@@ -48,9 +48,9 @@ export function reducer(state: State=initialState, action: selection.Actions): S
       })
 
       if(existing) {
-        if(existing.get('source', null) !== selection.get('source', null)) {
+        if(existing.get('source', null) !== sel.get('source', null)) {
           const updatedSelections = currentSelections.withMutations(annotations => {
-            annotations.delete(existing).add(selection)
+            annotations.delete(existing).add(sel)
           })
 
           return state.set('annotations', updatedSelections)
@@ -58,7 +58,7 @@ export function reducer(state: State=initialState, action: selection.Actions): S
           return state
         }
       } else {
-        return state.update('annotations', annotations => annotations.add(selection))
+        return state.update('annotations', annotations => annotations.add(sel))
       }
     }
     case selection.SELECTION_DESELECT_ANNOTATION: {
