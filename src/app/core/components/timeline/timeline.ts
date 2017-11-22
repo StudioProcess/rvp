@@ -14,6 +14,7 @@ import {Record} from 'immutable'
 import {Observable} from 'rxjs/Observable'
 import {ReplaySubject} from 'rxjs/ReplaySubject'
 import {Subscription} from 'rxjs/Subscription'
+import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame';
 import 'rxjs/add/observable/combineLatest'
 import 'rxjs/add/observable/merge'
 import 'rxjs/add/observable/concat'
@@ -22,7 +23,7 @@ import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/startWith'
 
 import * as fromSelection from '../../reducers'
-// import {AnnotationSelectionFactory, SelectionSource} from '../../reducers/selection'
+import {AnnotationSelectionFactory, SelectionSource} from '../../reducers/selection'
 import * as fromProject from '../../../persistence/reducers'
 import * as fromPlayer from '../../../player/reducers'
 import * as project from '../../../persistence/actions/project'
@@ -204,15 +205,18 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   updateAnnotation(updateAnnotation: project.UpdateAnnotationPayload) {
     this._store.dispatch(new project.ProjectUpdateAnnotation(updateAnnotation))
 
-    // TODO: Keep annotation focused in inspector
-    // this.selectAnnotation({
-    //   selection: new AnnotationSelectionFactory({
-    //     trackIndex: updateAnnotation.trackIndex,
-    //     annotationIndex: updateAnnotation.annotationIndex,
-    //     annotation: updateAnnotation.annotation,
-    //     source: SelectionSource.Timeline
-    //   })
-    // })
+    const sub = Observable.of(null, animationScheduler).subscribe(() => {
+      // Keep annotation focused in inspector
+      this.selectAnnotation({
+        selection: new AnnotationSelectionFactory({
+          trackIndex: updateAnnotation.trackIndex,
+          annotationIndex: updateAnnotation.annotationIndex,
+          annotation: updateAnnotation.annotation,
+          source: SelectionSource.Timeline
+        })
+      })
+      sub.unsubscribe()
+    })
   }
 
   selectAnnotation(annotation: selection.SelectionAnnotationPayload) {
