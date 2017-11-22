@@ -26,6 +26,7 @@ export const PROJECT_UPDATE_ANNOTATION = '[Project] Update Annotation'
 export const PROJECT_DELETE_ANNOTATION = '[Project] Delete Annotation'
 
 export const PROJECT_ADD_TRACK = '[Project] Add Track'
+export const PROJECT_UPDATE_TRACK = '[Project] Update Track'
 export const PROJECT_DELETE_TRACK = '[Project] Delete Track'
 
 export const PROJECT_SET_TIMELINE_DURATION = '[Project] Set Timeline Duration'
@@ -127,6 +128,16 @@ export class ProjectAddTrack implements Action {
   constructor(readonly payload: AddTrackPayload) {}
 }
 
+export interface UpdateTrackPayload {
+  readonly trackIndex: number
+  readonly track: Record<Track>
+}
+
+export class ProjectUpdateTrack implements Action {
+  readonly type = PROJECT_UPDATE_TRACK
+  constructor(readonly payload: UpdateTrackPayload) {}
+}
+
 export interface DeleteTrackPlayload {
   readonly trackIndex: number
 }
@@ -147,6 +158,6 @@ export type Actions =
   ProjectImportVideo|ProjectImportVideoSuccess|ProjectImportVideoError|
   ProjectExport|ProjectExportError|
   ProjectReset|
-  ProjectAddTrack|ProjectDeleteTrack|
+  ProjectAddTrack|ProjectUpdateTrack|ProjectDeleteTrack|
   ProjectAddAnnotation|ProjectUpdateAnnotation|ProjectDeleteAnnotation|
   ProjectSetTimelineDuration
