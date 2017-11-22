@@ -111,6 +111,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
         }))
       })
     }
+    case project.PROJECT_UPDATE_TRACK: {
+      const {trackIndex, track} = action.payload
+      return state.setIn(['meta', 'timeline', 'tracks', trackIndex], track)
+    }
     case project.PROJECT_DELETE_TRACK: {
       const {trackIndex} = action.payload
       return state.deleteIn(['meta', 'timeline', 'tracks', trackIndex])
