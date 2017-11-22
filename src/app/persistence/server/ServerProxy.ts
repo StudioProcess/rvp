@@ -59,10 +59,17 @@ export class ServerProxy {
                 ]
 
                 const [meta, video] = await Promise.all(getPromises)
+                const projectData = {meta, video}
+
+                // mutates project data
+                ensureValidProjectData(projectData)
 
                 this._store.dispatch(new project.ProjectLoadSuccess({meta, video}))
               } else {
                 const projectData = await loadProject(_DEFAULT_PROJECT_PATH_)
+
+                // mutates project data
+                ensureValidProjectData(projectData)
 
                 const cachePromises = [
                   this._cache.cache('meta', projectData.meta),
