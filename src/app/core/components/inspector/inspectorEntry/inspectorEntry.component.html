@@ -1,4 +1,4 @@
-<form class="entry-container" [formGroup]="form" novalidate (mousedown)="selectAnnotationHandler()">
+<form class="entry-container" [formGroup]="form" novalidate (mousedown)="selectAnnotationHandler($event)">
   <div class="row collapse">
     <div class="column shrink">
       <div class="annotation-color" [style.backgroundColor]="entry.get('color', null)"></div>

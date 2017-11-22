@@ -153,7 +153,8 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     this._subs.forEach(sub => sub.unsubscribe())
   }
 
-  selectAnnotationHandler() {
+  selectAnnotationHandler(ev: MouseEvent) {
+    ev.stopPropagation()
     this.onSelectAnnotation.emit({
       selection: new fromSelection.AnnotationSelectionFactory({
         trackIndex: this.entry.get('trackIndex', null),

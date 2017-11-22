@@ -47,7 +47,7 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
   private readonly _subs: Subscription[] = []
   annotations: List<Record<AnnotationColorMap>>
   height = this._playerStore.select(fromPlayer.getDimensions).map(({height}) => height)
-  selectedAnnotationId: number | null
+  selectedAnnotationId: number|null
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
