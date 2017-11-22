@@ -2,7 +2,14 @@ function isNil<T>(data: T) {
   return data === null || data === undefined
 }
 
-function hasEntityIdsMissing(projectData: any) {
+interface IdKeyMap {
+  [key: number]: number
+}
+
+function hasFishyEntityIds(projectData: any) {
+  const tracksIdMap: IdKeyMap = {}
+  const annotationsIdMap: IdKeyMap = {}
+
   const meta = projectData.meta
   const timeline = meta.timeline
   const tracks = meta.timeline.tracks
@@ -14,13 +21,17 @@ function hasEntityIdsMissing(projectData: any) {
     return true
   }
 
-  const missingTrackOrAnnotationId = tracks.find((track: any) => {
-    return isNil(track.id) || track.annotations.find((annotation: any) => {
-      return isNil(annotation.id)
+  const fishyTrackOrAnnotationId = tracks.find((track: any) => {
+    const isDupTrack = tracksIdMap[track.id] !== undefined // is unique?
+    tracksIdMap[track.id] = track.id // add to map
+    return isDupTrack || isNil(track.id) || track.annotations.find((annotation: any) => {
+      const isDupAnnotation = annotationsIdMap[annotation.id] !== undefined // is unique?
+      annotationsIdMap[annotation.id] = annotation.id // add to map
+      return isDupAnnotation || isNil(annotation.id)
     }) !== undefined
   })
 
-  if(missingTrackOrAnnotationId !== undefined) {
+  if(fishyTrackOrAnnotationId !== undefined) {
     return true
   }
 
@@ -50,8 +61,8 @@ function ensureEntityIds(projectData: any) {
 }
 
 export function ensureValidProjectData(projectData: any) {
-  if(hasEntityIdsMissing(projectData)) {
-    // Seems like some entity id is missing - just overwrite for now
+  if(hasFishyEntityIds(projectData)) {
+    // Seems like some entity id is fishy - just overwrite for now
     ensureEntityIds(projectData)
   }
 }
