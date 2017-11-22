@@ -48,7 +48,7 @@ export class Player implements OnDestroy {
 
       this._subs.push(
         playerSubj.subscribe({
-          next: (playerInst) => {
+          next: playerInst => {
             // Player is an instance of a video.js Component class, with methods from
             // mixin class EventTarget.
             // https://github.com/videojs/video.js/blob/master/src/js/component.js#L88

@@ -13,8 +13,9 @@ import {Record} from 'immutable'
 
 import {Observable} from 'rxjs/Observable'
 import {ReplaySubject} from 'rxjs/ReplaySubject'
+import {Subject} from 'rxjs/Subject'
 import {Subscription} from 'rxjs/Subscription'
-import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame';
+import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame'
 import 'rxjs/add/observable/combineLatest'
 import 'rxjs/add/observable/merge'
 import 'rxjs/add/observable/concat'
@@ -23,11 +24,12 @@ import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/startWith'
 
 import * as fromSelection from '../../reducers'
-import {AnnotationSelectionFactory, SelectionSource} from '../../reducers/selection'
 import * as fromProject from '../../../persistence/reducers'
 import * as fromPlayer from '../../../player/reducers'
 import * as project from '../../../persistence/actions/project'
 import * as selection from '../../actions/selection'
+import {AnnotationSelectionFactory, SelectionSource} from '../../reducers/selection'
+import {_PLAYER_TIMEUPDATE_DEBOUNCE_} from '../../../config/player'
 import * as player from '../../../player/actions'
 import {Timeline, Track} from '../../../persistence/model'
 import {fromEventPattern} from '../../../lib/observable'
@@ -66,6 +68,11 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('zoomContainer') private readonly zoomContainerRef: ElementRef
   @ViewChild('timelineOverflow') private readonly timelineOverflowRef: ElementRef
   private readonly _subs: Subscription[] = []
+  private readonly timelineSubj = this._store.select(fromProject.getProjectTimeline)
+    .filter(timeline => timeline !== null)
+    .share()
+
+  private isDragging = false
 
   constructor(
     private readonly _renderer: Renderer2,
@@ -74,16 +81,11 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     @Inject(DOCUMENT) private readonly _document: any) {}
 
   ngOnInit() {
-    const timeline = this._store.select(fromProject.getProjectTimeline)
-      .filter(timeline => timeline !== null)
-      .share()
-
     this._subs.push(
-      timeline
-        .subscribe(timeline => {
-          this.timeline = timeline as Record<Timeline> // use identifer! syntax?
-          this._cdr.markForCheck()
-        }))
+      this.timelineSubj.subscribe(timeline => {
+        this.timeline = timeline as Record<Timeline> // use identifer! syntax?
+        this._cdr.markForCheck()
+      }))
 
     this._subs.push(
       this._store.select(fromSelection.getAnnotationSelection)
@@ -97,18 +99,20 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
         }))
 
     this._subs.push(
-      this._store.select(fromPlayer.getCurrentTime).withLatestFrom(timeline, (currentTime, timeline) => {
-        const totalTime = timeline!.get('duration', null)
-        return {
-          currentTime,
-          totalTime,
-          progress: currentTime/totalTime
-        }
-      }).subscribe(({progress, currentTime}) => {
-        this.playerPos = progress*100
-        this.playerCurrentTime = currentTime
-        this._cdr.markForCheck()
-      }))
+      this._store.select(fromPlayer.getCurrentTime)
+        .withLatestFrom(this.timelineSubj, (currentTime, timeline) => {
+          return {
+            currentTime,
+            progress: currentTime / timeline!.get('duration', null)
+          }
+        })
+        .subscribe(({currentTime, progress}) => {
+          if(!this.isDragging) {
+            this.playerPos = progress
+            this.playerCurrentTime = currentTime
+            this._cdr.markForCheck()
+          }
+        }))
   }
 
   ngAfterViewInit() {
@@ -172,25 +176,54 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     const mouseup: Observable<MouseEvent> = fromEventPattern(this._renderer, this._document, 'mouseup')
     const placeHeadMd: Observable<MouseEvent> = fromEventPattern(this._renderer, this.timelineOverflowRef.nativeElement, 'mousedown')
 
-    const placePlayHead = placeHeadMd.switchMap((md) => {
-      const init = {clientX: md.clientX}
+    this._subs.push(placeHeadMd.subscribe(() => {
+      this.isDragging = true
+    }))
 
-      return Observable.concat(
-        Observable.of(init),
-        mousemove.map(mmEvent => {
-          const {clientX} = mmEvent
-          return {clientX}
-        }).takeUntil(mouseup))
-    })
+    this._subs.push(mouseup.subscribe(() => {
+      this.isDragging = false
+    }))
+
+    const reqCurrentTimeSubj = new Subject<number>()
+
+    this._subs.push(placeHeadMd
+      .switchMap(md => {
+        const init = {clientX: md.clientX}
+        return Observable.concat(
+          Observable.of(init),
+          mousemove.map(mmEvent => {
+            const {clientX} = mmEvent
+            return {clientX}
+          }).takeUntil(mouseup))
+      })
+      .withLatestFrom(this.zoomContainerRect, (ev: MouseEvent, rect) => {
+        const localX = coordTransform(ev.clientX, rect)
+        return localX / rect.width
+      })
+      .map(progress => {
+        return Math.max(0, Math.min(progress, 1))
+      })
+      .distinctUntilChanged()
+      .withLatestFrom(this.timelineSubj, (progress, tl) => {
+        const totalTime = tl!.get('duration', null)
+        return {
+          progress,
+          currentTime: progress*totalTime
+        }
+      })
+      .subscribe(({progress, currentTime}) => {
+        this.playerPos = progress
+        this.playerCurrentTime = currentTime
+        this._cdr.markForCheck()
+        reqCurrentTimeSubj.next(currentTime)
+      }))
+
 
     this._subs.push(
-      placePlayHead
-        .withLatestFrom(this.zoomContainerRect, (ev: MouseEvent, rect) => {
-          const localX = coordTransform(ev.clientX, rect)
-          return {t: localX / rect.width}
-        })
-        .subscribe(({t}) => {
-          this._store.dispatch(new player.PlayerRequestCurrentTime({currentTime: t*this.timeline.get('duration', null)}))
+      reqCurrentTimeSubj
+        .debounceTime(_PLAYER_TIMEUPDATE_DEBOUNCE_, animationScheduler)
+        .subscribe(currentTime => {
+          this._store.dispatch(new player.PlayerRequestCurrentTime({currentTime}))
         }))
   }
 
