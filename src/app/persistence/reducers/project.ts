@@ -6,12 +6,28 @@ import {
   Project, TimelineRecordFactory, ProjectRecordFactory,
   TrackRecordFactory, TrackFieldsRecordFactory,
   AnnotationRecordFactory, AnnotationFieldsRecordFactory,
-  ProjectMetaRecordFactory
+  ProjectMetaRecordFactory, Timeline
 } from '../model'
 
 const initialState = new ProjectRecordFactory()
 
 export type State = Record<Project>
+
+function nextAnnotationId(timeline: Record<Timeline>): number {
+  let maxId = -1
+  const tracks = timeline.get('tracks', null)
+  tracks.forEach(track => {
+    const annotations = track.get('annotations', null)
+    annotations.forEach(annotation => {
+      const curId = annotation.get('id', -1) as number
+      if(curId > maxId) {
+        maxId = curId
+      }
+    })
+  })
+
+  return maxId+1
+}
 
 export function reducer(state: State = initialState, action: project.Actions): State {
   switch(action.type) {
@@ -51,7 +67,8 @@ export function reducer(state: State = initialState, action: project.Actions): S
     }
     case project.PROJECT_ADD_ANNOTATION: {
       const {trackIndex, annotation} = action.payload
-      const a = annotation.set('id', Math.floor(Math.random() * Number.MAX_SAFE_INTEGER))
+      const newId = nextAnnotationId(state.getIn(['meta', 'timeline']))
+      const a = annotation.set('id', newId)
       return state.updateIn(['meta', 'timeline', 'tracks', trackIndex, 'annotations'], annotations => {
         return annotations.push(a)
       })
