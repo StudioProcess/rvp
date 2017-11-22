@@ -116,7 +116,8 @@ export class TrackComponent implements OnInit, OnDestroy {
       trackIndex: this.trackIndex,
       annotationIndex,
       annotation: AnnotationRecordFactory({
-        ...oldAnnotation,
+        id: oldAnnotation.get('id', null),
+        fields: oldAnnotation.get('fields', null),
         utc_timestamp: newStart,
         duration: newDuration
       })
