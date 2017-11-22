@@ -1,6 +1,7 @@
 import {
   Component, Input, ChangeDetectionStrategy,
-  OnInit, OnDestroy, EventEmitter, Output
+  OnInit, OnDestroy, EventEmitter, Output,
+  OnChanges, SimpleChanges
 } from '@angular/core'
 
 import {FormGroup, FormBuilder, Validators} from '@angular/forms'
@@ -11,10 +12,14 @@ import {Observable} from 'rxjs/Observable'
 import {Subject} from 'rxjs/Subject'
 import {Subscription} from 'rxjs/Subscription'
 
+import {
+  Track, Annotation, AnnotationRecordFactory,
+  TrackRecordFactory, TrackFieldsRecordFactory
+} from '../../../../persistence/model'
+import {_FORM_INPUT_DEBOUNCE_} from '../../../../config/form'
 import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 import {coordTransform} from '../../../../lib/coords'
 import {Handlebar} from '../handlebar/handlebar.component'
-import {Track, Annotation, AnnotationRecordFactory} from '../../../../persistence/model'
 import * as project from '../../../../persistence/actions/project'
 import * as selection from '../../../actions/selection'
 import * as fromSelection from '../../../reducers/selection'
@@ -25,7 +30,7 @@ import * as fromSelection from '../../../reducers/selection'
   templateUrl: 'track.component.html',
   styleUrls: ['track.component.scss']
 })
-export class TrackComponent implements OnInit, OnDestroy {
+export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   @Input() readonly data: Record<Track>
   @Input() readonly trackIndex: number
   @Input() readonly totalDuration: number
@@ -36,6 +41,7 @@ export class TrackComponent implements OnInit, OnDestroy {
   zoom: number
   scrollLeft: number
 
+  @Output() readonly onUpdateTrack = new EventEmitter<project.UpdateTrackPayload>()
   @Output() readonly onUpdateAnnotation = new EventEmitter<project.UpdateAnnotationPayload>()
   @Output() readonly onDeleteTrack = new EventEmitter<project.DeleteTrackPlayload>()
   @Output() readonly onSelectAnnotation = new EventEmitter<selection.SelectionAnnotationPayload>()
@@ -52,18 +58,52 @@ export class TrackComponent implements OnInit, OnDestroy {
     })
 
     this._subs.push(
-      this.addAnnotationClick.withLatestFrom(this.containerRect, (ev, rect) => {
-        const localX = coordTransform(ev.clientX, rect)
-        const perc = localX/rect.width*100
-        const tPerc = this.totalDuration/100
-        return {
-          trackIndex: this.trackIndex,
-          annotation: new AnnotationRecordFactory({
-            utc_timestamp: perc*tPerc,
-            duration: 5
-          })
-        }
-      }).subscribe(this.onAddAnnotation))
+      this.form.valueChanges.withLatestFrom(this.form.statusChanges)
+        .debounceTime(_FORM_INPUT_DEBOUNCE_)
+        .map(([formData, _]) => formData)
+        .distinctUntilChanged((prev, cur) => {
+          return prev.title === cur.title
+        })
+        .subscribe(({title}) => {
+          const updateTrackPayload = {
+            trackIndex: this.trackIndex,
+            track: new TrackRecordFactory({
+              id: this.data.get('id', null),
+              color: this.data.get('color', null),
+              fields: new TrackFieldsRecordFactory({title}),
+              annotations: this.data.get('annotations', null)
+            })
+          }
+
+          this.onUpdateTrack.emit(updateTrackPayload)
+        }))
+
+    this._subs.push(
+      this.addAnnotationClick
+        .withLatestFrom(this.containerRect, (ev, rect) => {
+          const localX = coordTransform(ev.clientX, rect)
+          const perc = localX/rect.width*100
+          const tPerc = this.totalDuration/100
+          return {
+            trackIndex: this.trackIndex,
+            annotation: new AnnotationRecordFactory({
+              utc_timestamp: perc*tPerc,
+              duration: 5
+            })
+          }
+        })
+        .subscribe(this.onAddAnnotation))
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(this.form !== null && changes.data !== undefined && !changes.data.firstChange) {
+      const {previousValue, currentValue} = changes.data
+      if(previousValue === undefined || !previousValue.equals(currentValue)) {
+        this.form.setValue({
+          title: currentValue.getIn(['fields', 'title'])
+        })
+      }
+    }
   }
 
   getAnnotationTitle(annotation: Record<Annotation>) {
