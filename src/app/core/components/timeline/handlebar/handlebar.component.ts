@@ -3,7 +3,7 @@ import {
   ViewChild, ElementRef, Inject,
   ChangeDetectionStrategy, OnInit,
   OnDestroy, Input, HostBinding,
-  ChangeDetectorRef, Output
+  Output
 } from '@angular/core'
 
 import {DOCUMENT} from '@angular/platform-browser'
@@ -58,7 +58,6 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly _subs: Subscription[] = []
 
   constructor(
-    private readonly _cdr: ChangeDetectorRef,
     private readonly _renderer: Renderer2,
     @Inject(DOCUMENT) private readonly _document: any) {}
 
@@ -139,7 +138,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnDestroy {
           left: newLeft,
           right: newLeft+newWidth
         })
-        this._cdr.markForCheck()
+        // this._cdr.markForCheck()
       },
       error: err => this.handlebarSubj.error(err),
       complete: () => this.handlebarSubj.complete()
@@ -154,7 +153,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnDestroy {
           left: this.containerLeft,
           right: newRight
         })
-        this._cdr.markForCheck()
+        // this._cdr.markForCheck()
       },
       error: err => this.handlebarSubj.error(err),
       complete: () => this.handlebarSubj.complete()
@@ -168,7 +167,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnDestroy {
           left: newLeft,
           right: newLeft+this.containerWidth
         })
-        this._cdr.markForCheck()
+        // this._cdr.markForCheck()
       },
       error: err => this.handlebarSubj.error(err),
       complete: () => this.handlebarSubj.complete()
