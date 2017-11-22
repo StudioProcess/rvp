@@ -215,6 +215,10 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     this._store.dispatch(new project.ProjectAddTrack({color: rndColor()}))
   }
 
+  updateTrack(payload: project.UpdateTrackPayload) {
+    this._store.dispatch(new project.ProjectUpdateTrack(payload))
+  }
+
   deleteTrack(deleteTrack: project.DeleteTrackPlayload) {
     this._store.dispatch(new project.ProjectDeleteTrack(deleteTrack))
   }

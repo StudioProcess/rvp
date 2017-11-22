@@ -11,6 +11,7 @@
       [data]="track" [trackIndex]="i" [totalDuration]="timeline.duration"
       [containerRect]="zoomContainerRect"
       [selectedAnnotationId]="selectedAnnotationId"
+      (onUpdateTrack)="updateTrack($event)"
       (onDeleteTrack)="deleteTrack($event)"
       (onUpdateAnnotation)="updateAnnotation($event)"
       (onSelectAnnotation)="selectAnnotation($event)"
@@ -21,6 +22,5 @@
 </div>
 
 <button class="ion-plus add-track" title="Add new Track" alt="Add new Track" (click)="addTrack()"> Add Track</button>
-<!-- {{selectedAnnotationId}}
-
-<pre>{{timeline|json}}</pre> -->
+<!-- {{selectedAnnotationId}}-->
+<!-- <pre>{{timeline|json}}</pre> -->
