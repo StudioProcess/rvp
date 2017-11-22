@@ -11,6 +11,7 @@ import {Record} from 'immutable'
 import {Observable} from 'rxjs/Observable'
 import {Subject} from 'rxjs/Subject'
 import {Subscription} from 'rxjs/Subscription'
+import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame'
 
 import {
   Track, Annotation, AnnotationRecordFactory,
@@ -60,7 +61,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
 
     this._subs.push(
       this.form.valueChanges.withLatestFrom(this.form.statusChanges)
-        .debounceTime(_FORM_INPUT_DEBOUNCE_)
+        .debounceTime(_FORM_INPUT_DEBOUNCE_, animationScheduler)
         .map(([formData, _]) => formData)
         .distinctUntilChanged((prev, cur) => {
           return prev.title === cur.title
@@ -97,7 +98,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
 
     this._subs.push(
       this.updateAnnotationSubj
-        .debounceTime(_FORM_INPUT_DEBOUNCE_)
+        .debounceTime(_FORM_INPUT_DEBOUNCE_, animationScheduler)
         .subscribe(({hb, annotationIndex}) => {
           const oldAnnotation = this.data.getIn(['annotations', annotationIndex])
 

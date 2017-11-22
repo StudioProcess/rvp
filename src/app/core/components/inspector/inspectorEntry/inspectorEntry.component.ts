@@ -16,6 +16,7 @@ const _VALID_ = 'VALID' // not exported by @angular/forms
 import {Record} from 'immutable'
 
 import {Subscription} from 'rxjs/Subscription'
+import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame'
 import 'rxjs/add/operator/withLatestFrom'
 import 'rxjs/add/operator/debounceTime'
 import 'rxjs/add/operator/map'
@@ -110,7 +111,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
     this._subs.push(
       this.form.valueChanges.withLatestFrom(this.form.statusChanges)
-        .debounceTime(_FORM_INPUT_DEBOUNCE_)
+        .debounceTime(_FORM_INPUT_DEBOUNCE_, animationScheduler)
         .filter(([_, status]) => status === _VALID_)
         .map(([formData, _]) => formData)
         .distinctUntilChanged((prev, cur) => {
