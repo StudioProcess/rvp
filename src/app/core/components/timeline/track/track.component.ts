@@ -100,7 +100,7 @@ export class TrackComponent implements OnInit, OnDestroy {
     })
   }
 
-  addAnnotation(ev: any) {
+  addAnnotation(ev: MouseEvent) {
     this.addAnnotationClick.next(ev)
   }
 
