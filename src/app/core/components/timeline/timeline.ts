@@ -50,7 +50,7 @@ export interface ScrollSettings {
 export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   timeline: Record<Timeline>
   selectedAnnotationId: number|null
-  scrollLeft = 0
+  // scrollLeft = 0
   zoom = 1
   playerPos = 0
   playerCurrentTime = 0
@@ -160,12 +160,21 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       Observable.combineLatest(
         this.overflowContainerRect, scrollSetting,
         (rect, {zoom, scrollLeft}) => {
-          const zoomContaierWidth = zoom * rect.width
-          return {zoom, left: zoomContaierWidth*scrollLeft/100}
+          const zoomContainerWidth = zoom * rect.width
+          const maxLeft = zoomContainerWidth-rect.width
+          return {zoom, left: Math.min(zoomContainerWidth*scrollLeft/100, maxLeft)}
+        }).distinctUntilChanged((prev, cur) => {
+          return prev.left === cur.left && prev.zoom === cur.zoom
         }).subscribe(({zoom, left}) => {
           this.zoom = zoom
-          this.scrollLeft = left
+          this.timelineOverflowRef.nativeElement.scrollLeft = left
           this._cdr.markForCheck()
+
+          setTimeout(() => {
+            this.timelineOverflowRef.nativeElement.scrollLeft = left
+            this._cdr.markForCheck()
+          })
+
           setTimeout(() => {
             // Emit zoom container rect
             this.zoomContainerRect.next(getZoomContainerRect())
