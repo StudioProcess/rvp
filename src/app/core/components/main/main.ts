@@ -40,25 +40,20 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     const windowMousedown = fromEventPattern(this._renderer, window, 'mousedown')
     const windowKeydown = fromEventPattern(this._renderer, window, 'keydown')
 
-    const backspace = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 8)
-    const space = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 32)
-    const addTrackHotkey = windowKeydown.filter((e: KeyboardEvent) => {
-      return e.keyCode === 187 || e.keyCode === 221
-    })
+    const removeAnnotationHotkey = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 8)
+    const togglePlayingHotkey = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 32)
+    const addTrackHotkey = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 187 || e.keyCode === 221)
 
     const annotationSelection = this._rootStore.select(fromRoot.getAnnotationSelection).share()
 
-    const deselectAnnotation = backspace
-      .withLatestFrom(annotationSelection)
-      .filter(([_, selection]) => selection !== undefined)
-
-    this._subs.push(this._rootStore.select(fromRoot.getIsLoading)
-      .subscribe(isLoading => {
-        this._isLoading = isLoading
-      }))
+    this._subs.push(
+      this._rootStore.select(fromRoot.getIsLoading)
+        .subscribe(isLoading => {
+          this._isLoading = isLoading
+        }))
 
     this._subs.push(
-      space.subscribe((ev: KeyboardEvent) => {
+      togglePlayingHotkey.subscribe((ev: KeyboardEvent) => {
         ev.preventDefault()
         ev.stopPropagation()
         this._rootStore.dispatch(new player.PlayerTogglePlaying())
@@ -69,18 +64,20 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
         ev.preventDefault()
         ev.stopPropagation()
         this._rootStore.dispatch(new project.ProjectAddTrack({color: rndColor()}))
-      })
-    )
+      }))
 
     this._subs.push(
-      windowMousedown.withLatestFrom(annotationSelection.filter(selection => selection !== undefined))
+      windowMousedown
+        .withLatestFrom(annotationSelection.filter(selection => selection !== undefined))
         .subscribe(([, sel]) => {
           const deselectPayload = {selection: sel!}
           this._rootStore.dispatch(new selection.SelectionDeselectAnnotation(deselectPayload))
         }))
 
     this._subs.push(
-      deselectAnnotation
+      removeAnnotationHotkey
+        .withLatestFrom(annotationSelection)
+        .filter(([_, selection]) => selection !== undefined)
         .subscribe(([_, sel]) => {
           const deselectPayload = {selection: sel!}
           this._rootStore.dispatch(new selection.SelectionDeselectAnnotation(deselectPayload))
