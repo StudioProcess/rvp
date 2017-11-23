@@ -23,7 +23,8 @@ import {
 
 @Component({
   selector: 'rv-player',
-  template: `<video #video class="video-js vjs-big-play-centered"></video>`
+  template: `<video #video class="video-js vjs-big-play-centered"></video>`,
+  styles: [`:host {display: block;}`]
 })
 export class PlayerContainer implements AfterViewInit, OnDestroy {
   @ViewChild('video') private readonly _videoElem: ElementRef;
