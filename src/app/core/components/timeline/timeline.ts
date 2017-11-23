@@ -59,12 +59,13 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   readonly scrollbarCaption = _SCROLLBAR_CAPTION_
   readonly scrollbarRect = new ReplaySubject<ClientRect>(1)
   readonly scrollSettings = new ReplaySubject<ScrollSettings>(1)
+  readonly overflowContainerRect = new ReplaySubject<ClientRect>(1)
   readonly zoomContainerRect = new ReplaySubject<ClientRect>(1)
 
   @ViewChild('scrollbar') private readonly scrollbarRef: ElementRef
   @ViewChild('handlebar') private readonly handlebarRef: HandlebarComponent
-  @ViewChild('zoomContainer') private readonly zoomContainerRef: ElementRef
   @ViewChild('timelineOverflow') private readonly timelineOverflowRef: ElementRef
+  @ViewChild('zoomContainer') private readonly zoomContainerRef: ElementRef
   private readonly _subs: Subscription[] = []
   private readonly timelineSubj = this._store.select(fromProject.getProjectTimeline)
     .filter(timeline => timeline !== null)
@@ -114,6 +115,10 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       return this.scrollbarRef.nativeElement.getBoundingClientRect()
     }
 
+    const getOverflowContainerRect = () => {
+      return this.timelineOverflowRef.nativeElement.getBoundingClientRect()
+    }
+
     const getZoomContainerRect = () => {
       return this.zoomContainerRef.nativeElement.getBoundingClientRect()
     }
@@ -146,23 +151,25 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       })
 
     this._subs.push(
-      Observable.merge(winResize, scrollSetting).subscribe({
-        next: () => {
-          this.zoomContainerRect.next(getZoomContainerRect())
-        },
-        error: err => this.zoomContainerRect.error(err),
-        complete: () => this.zoomContainerRect.complete()
+      winResize.startWith(null).subscribe(() => {
+        this.overflowContainerRect.next(getOverflowContainerRect())
+        this.zoomContainerRect.next(getZoomContainerRect())
       }))
 
     this._subs.push(
       Observable.combineLatest(
-        this.zoomContainerRect, scrollSetting,
+        this.overflowContainerRect, scrollSetting,
         (rect, {zoom, scrollLeft}) => {
-          return {zoom, left: (rect.width/100)*scrollLeft}
+          const zoomContaierWidth = zoom * rect.width
+          return {zoom, left: zoomContaierWidth*scrollLeft/100}
         }).subscribe(({zoom, left}) => {
           this.zoom = zoom
           this.scrollLeft = left
           this._cdr.markForCheck()
+          setTimeout(() => {
+            // Emit zoom container rect
+            this.zoomContainerRect.next(getZoomContainerRect())
+          })
         }))
 
     const mousemove: Observable<MouseEvent> = fromEventPattern(this._renderer, this._document, 'mousemove')
