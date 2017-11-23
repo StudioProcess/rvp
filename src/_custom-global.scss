@@ -1,3 +1,7 @@
 @import 'animation';
 
-@import 'pace-progress.scss'
+@import 'pace-progress.scss';
+
+body {
+  user-select: none;
+}
