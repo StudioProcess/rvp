@@ -7,7 +7,6 @@ import {PlayerContainer} from './components/player/player'
 import {InspectorContainer} from './components/inspector/inspector'
 import {TimelineContainer} from './components/timeline/timeline'
 
-import {LoadingComponent} from './components/loading.component'
 import {NotFoundComponent} from './components/notFound.component'
 import {LogoComponent} from './components/logo.component'
 import {ProjectBtnComponent} from './components/project/projectBtn/projectBtn.component'
@@ -27,7 +26,7 @@ const _DECLS_ = [
   MainContainer, PlayerContainer, InspectorContainer,
   TimelineContainer,
   // Components
-  LoadingComponent, NotFoundComponent, LogoComponent,
+  NotFoundComponent, LogoComponent,
   ProjectBtnComponent, ProjectModalComponent, FooterComponent,
   // Inspector
   InspectorEntryComponent,

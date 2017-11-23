@@ -19,10 +19,13 @@
       "prefix": "rv",
       "styles": [
         "../node_modules/video.js/dist/video-js.min.css",
+        "assets/fonts/space_mono/SpaceMono.css",
+        "assets/fonts/roboto/Roboto.css",
         "assets/fonts/ionicons/ionicons.css",
         "styles.scss"
       ],
       "scripts": [
+        "../node_modules/pace-progress/pace.min.js",
         "../node_modules/jquery/dist/jquery.slim.min.js",
         "../node_modules/foundation-sites/dist/js/foundation.min.js"
       ],

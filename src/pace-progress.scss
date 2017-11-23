@@ -1,0 +1,68 @@
+@import 'colors';
+
+body {
+  .loading-overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color:$white;
+
+    .image {
+      padding-bottom: 0.5em;
+    }
+
+    .text {
+      font-weight: lighter;
+      font-size: 17px;
+    }
+
+    .pace {
+      pointer-events: none;
+
+      user-select: none;
+
+      // z-index: 1000;
+      position: fixed;
+      margin: auto;
+      top: 250px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 7px;
+      width: 360px;
+      background: inherit;
+
+      overflow: hidden;
+    }
+
+    .pace .pace-progress {
+      box-sizing: border-box;
+
+      transform: translate3d(0, 0, 0);
+
+      max-width: 360px;
+      position: fixed;
+      // z-index: 1000;
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 100%;
+      height: 100%;
+      width: 100%;
+      background: $black;
+    }
+  }
+
+  &.pace-done {
+    .loading-overlay {
+      display: none;
+    }
+  }
+}
+
