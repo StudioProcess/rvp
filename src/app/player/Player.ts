@@ -9,13 +9,11 @@ import {Observable} from 'rxjs/Observable'
 import {ReplaySubject} from 'rxjs/ReplaySubject'
 import {Subscription} from 'rxjs/Subscription'
 import {JQueryStyleEventEmitter} from 'rxjs/observable/FromEventObservable'
-import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame';
+// import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame';
 import 'rxjs/add/observable/fromEvent'
 import 'rxjs/add/operator/combineLatest'
 import 'rxjs/add/operator/withLatestFrom'
 import 'rxjs/add/operator/debounceTime'
-
-import {_PLAYER_TIMEUPDATE_DEBOUNCE_} from '../config/player'
 
 import * as fromPlayer from './reducers'
 import * as player from './actions'
@@ -56,7 +54,6 @@ export class Player implements OnDestroy {
             const playerInstSubs: Subscription[] = []
             playerInstSubs.push(
               Observable.fromEvent(playerEventEmitter, 'timeupdate')
-                .debounceTime(_PLAYER_TIMEUPDATE_DEBOUNCE_, animationScheduler)
                 .subscribe(() => {
                   const currentTime = playerInst.currentTime()
                   this._store.dispatch(new player.PlayerSetCurrentTime({currentTime}))
