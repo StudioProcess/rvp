@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core'
 import {BrowserModule} from '@angular/platform-browser'
-import {RouterModule} from '@angular/router';
+// import {RouterModule} from '@angular/router';
 
 import {StoreModule} from '@ngrx/store'
 import {StoreDevtoolsModule} from '@ngrx/store-devtools'
@@ -14,14 +14,15 @@ import {PlayerModule} from './player/player.module'
 
 import {reducers, metaReducers} from './core/reducers'
 
-import {AppShellContainer} from './shell'
+// import {AppShellContainer} from './shell'
+import {MainContainer} from './core/components/main/main'
 
-import {appRoutes} from './routes'
+// import {appRoutes} from './routes'
 
 @NgModule({
   imports: [
     BrowserModule,
-    RouterModule.forRoot(appRoutes/*, {enableTracing: !environment.production}*/),
+    // RouterModule.forRoot(appRoutes/*, {enableTracing: !environment.production}*/),
     StoreModule.forRoot(reducers, {metaReducers}),
     EffectsModule.forRoot([]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
@@ -30,7 +31,7 @@ import {appRoutes} from './routes'
     PersistenceModule,
     PlayerModule
   ],
-  declarations: [AppShellContainer],
-  bootstrap: [AppShellContainer]
+  // declarations: [AppShellContainer],
+  bootstrap: [MainContainer]
 })
 export class AppModule {}
