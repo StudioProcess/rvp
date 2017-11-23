@@ -13,7 +13,6 @@ import {Record} from 'immutable'
 
 import {Observable} from 'rxjs/Observable'
 import {ReplaySubject} from 'rxjs/ReplaySubject'
-import {Subject} from 'rxjs/Subject'
 import {Subscription} from 'rxjs/Subscription'
 import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame'
 import 'rxjs/add/observable/combineLatest'
@@ -29,7 +28,6 @@ import * as fromPlayer from '../../../player/reducers'
 import * as project from '../../../persistence/actions/project'
 import * as selection from '../../actions/selection'
 import {AnnotationSelectionFactory, SelectionSource} from '../../reducers/selection'
-import {_PLAYER_TIMEUPDATE_DEBOUNCE_} from '../../../config/player'
 import * as player from '../../../player/actions'
 import {Timeline, Track} from '../../../persistence/model'
 import {fromEventPattern} from '../../../lib/observable'
@@ -72,8 +70,6 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     .filter(timeline => timeline !== null)
     .share()
 
-  private isDragging = false
-
   constructor(
     private readonly _renderer: Renderer2,
     private readonly _cdr: ChangeDetectorRef,
@@ -107,11 +103,9 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
           }
         })
         .subscribe(({currentTime, progress}) => {
-          if(!this.isDragging) {
-            this.playerPos = progress
-            this.playerCurrentTime = currentTime
-            this._cdr.markForCheck()
-          }
+          this.playerPos = progress
+          this.playerCurrentTime = currentTime
+          this._cdr.markForCheck()
         }))
   }
 
@@ -176,16 +170,6 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     const mouseup: Observable<MouseEvent> = fromEventPattern(this._renderer, this._document, 'mouseup')
     const placeHeadMd: Observable<MouseEvent> = fromEventPattern(this._renderer, this.timelineOverflowRef.nativeElement, 'mousedown')
 
-    this._subs.push(placeHeadMd.subscribe(() => {
-      this.isDragging = true
-    }))
-
-    this._subs.push(mouseup.subscribe(() => {
-      this.isDragging = false
-    }))
-
-    const reqCurrentTimeSubj = new Subject<number>()
-
     this._subs.push(placeHeadMd
       .switchMap(md => {
         const init = {clientX: md.clientX}
@@ -215,16 +199,8 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
         this.playerPos = progress
         this.playerCurrentTime = currentTime
         this._cdr.markForCheck()
-        reqCurrentTimeSubj.next(currentTime)
+        this._store.dispatch(new player.PlayerRequestCurrentTime({currentTime}))
       }))
-
-
-    this._subs.push(
-      reqCurrentTimeSubj
-        .debounceTime(_PLAYER_TIMEUPDATE_DEBOUNCE_, animationScheduler)
-        .subscribe(currentTime => {
-          this._store.dispatch(new player.PlayerRequestCurrentTime({currentTime}))
-        }))
   }
 
   trackByFunc(_: number, track: Record<Track>) {

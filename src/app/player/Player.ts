@@ -7,9 +7,11 @@ import * as videojs from 'video.js'
 
 import {Observable} from 'rxjs/Observable'
 import {ReplaySubject} from 'rxjs/ReplaySubject'
+import {BehaviorSubject} from 'rxjs/BehaviorSubject'
+import {Subject} from 'rxjs/Subject'
 import {Subscription} from 'rxjs/Subscription'
 import {JQueryStyleEventEmitter} from 'rxjs/observable/FromEventObservable'
-// import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame';
+import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame';
 import 'rxjs/add/observable/fromEvent'
 import 'rxjs/add/operator/combineLatest'
 import 'rxjs/add/operator/withLatestFrom'
@@ -18,6 +20,7 @@ import 'rxjs/add/operator/debounceTime'
 import * as fromPlayer from './reducers'
 import * as player from './actions'
 import * as project from '../persistence/actions/project'
+import {_PLAYER_TIMEUPDATE_DEBOUNCE_} from '../config/player'
 
 // https://github.com/videojs/video.js/blob/master/src/js/player.js
 @Injectable()
@@ -28,6 +31,8 @@ export class Player implements OnDestroy {
     private readonly _actions: Actions,
     private readonly _store: Store<fromPlayer.State>) {
       const playerSubj = new ReplaySubject<videojs.Player>(1)
+      const playerPendingSubj = new BehaviorSubject<boolean>(false)
+      const setCurrentTimeSubj = new Subject<number>()
 
       this._subs.push(
         this.createPlayer.subscribe({
@@ -54,6 +59,8 @@ export class Player implements OnDestroy {
             const playerInstSubs: Subscription[] = []
             playerInstSubs.push(
               Observable.fromEvent(playerEventEmitter, 'timeupdate')
+                .withLatestFrom(playerPendingSubj)
+                .filter(([playerInst, isPending]) => !isPending)
                 .subscribe(() => {
                   const currentTime = playerInst.currentTime()
                   this._store.dispatch(new player.PlayerSetCurrentTime({currentTime}))
@@ -106,8 +113,17 @@ export class Player implements OnDestroy {
 
       this._subs.push(
         this.requestCurrentTime
+          .subscribe(({payload: {currentTime}}) => {
+            playerPendingSubj.next(true)
+            setCurrentTimeSubj.next(currentTime)
+          }))
+
+      this._subs.push(
+        setCurrentTimeSubj
+          .debounceTime(_PLAYER_TIMEUPDATE_DEBOUNCE_, animationScheduler)
           .withLatestFrom(playerSubj)
-          .subscribe(([{payload:{currentTime}}, playerInst]) => {
+          .subscribe(([currentTime, playerInst]) => {
+            playerPendingSubj.next(false)
             playerInst.currentTime(currentTime)
           }))
 
