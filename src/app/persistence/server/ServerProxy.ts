@@ -16,7 +16,8 @@ import * as fromProject from '../reducers'
 
 import {
   _DEFAULT_PROJECT_PATH_, _METADATA_PATH_,
-  _VIDEODATA_PATH_, _EXPORT_PROJECT_NAME_
+  _VIDEODATA_PATH_, _EXPORT_PROJECT_NAME_,
+  _PROJECT_AUTOSAVE_DEBOUNCE_
 } from '../../config/project'
 
 import {_DEFZIPOTPIONS_} from '../../config/zip'
@@ -166,6 +167,27 @@ export class ServerProxy {
             this._store.dispatch(new project.ProjectResetError(err))
           }
         }))
+
+      const projectUpdate =
+        this._actions.filter(action => {
+          return action.type === project.PROJECT_UPDATE_ANNOTATION ||
+            action.type === project.PROJECT_ADD_ANNOTATION ||
+            action.type === project.PROJECT_DELETE_ANNOTATION ||
+            action.type === project.PROJECT_UPDATE_TRACK ||
+            action.type === project.PROJECT_ADD_TRACK ||
+            action.type === project.PROJECT_DELETE_TRACK ||
+            action.type === project.PROJECT_SET_TIMELINE_DURATION
+        })
+
+      this._subs.push(
+        projectUpdate
+          .debounceTime(_PROJECT_AUTOSAVE_DEBOUNCE_)
+          .withLatestFrom(projectState)
+          .subscribe(([, projectData]) => {
+            // autosave
+            ensureValidProjectData(projectData)
+            this._cache.cache('meta', projectData.meta)
+          }))
     }
 
   @Effect({dispatch: false})

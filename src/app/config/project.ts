@@ -1,6 +1,8 @@
 import {OutputType} from 'jszip'
 import {id} from '../lib/fp'
 
+export const _PROJECT_AUTOSAVE_DEBOUNCE_ = 1000
+
 export const _DEFAULT_PROJECT_PATH_ = 'assets/projects/default.rv'
 
 export const _METADATA_PATH_ = 'project.json'
