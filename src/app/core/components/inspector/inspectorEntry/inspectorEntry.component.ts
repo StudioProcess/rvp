@@ -15,15 +15,15 @@ const _VALID_ = 'VALID' // not exported by @angular/forms
 
 import {Record} from 'immutable'
 
+import {Observable} from 'rxjs/Observable'
 import {Subscription} from 'rxjs/Subscription'
-import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame'
+import 'rxjs/add/observable/combineLatest'
 import 'rxjs/add/operator/withLatestFrom'
 import 'rxjs/add/operator/debounceTime'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/filter'
 import 'rxjs/add/operator/distinctUntilChanged'
 
-import {_FORM_INPUT_DEBOUNCE_} from '../../../../config/form'
 import {formatDuration} from '../../../../lib/time'
 
 import {
@@ -34,22 +34,7 @@ import {
 import * as fromSelection from '../../../reducers/selection'
 import * as selection from '../../../actions/selection'
 import * as project from '../../../../persistence/actions/project'
-
-const parseDurationRegex = /^(?:(?:([0-9]*):)|(?:([0-9]*):([0-9]*):))?([0-9]*)(?:\.([0-9]*))?$/
-
-function parseDuration(durationStr: string): number {
-  let result = parseDurationRegex.exec(durationStr)
-  if(result === null) {
-    return 0
-  } else {
-    let m1 = result[1] ? parseInt(result[1], 10) : 0;
-    let h = result[2] ? parseInt(result[2], 10) : 0;
-    let m2 = result[3] ? parseInt(result[3], 10) : 0;
-    let s = result[4] ? parseInt(result[4], 10) : 0;
-    let sFract = result[5] ? parseFloat('.'+result[5]) : 0;
-    return h*3600 + m1*60 + m2*60 + s + sFract;
-  }
-}
+import {parseDuration} from '../../../../lib/time'
 
 function durationValidatorFactory(): ValidatorFn {
   const durationRegex = /^([0-9]*:){0,2}[0-9]*(\.[0-9]*)?$/
@@ -77,6 +62,8 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   @ViewChild('start') readonly startInput: ElementRef
   @ViewChild('duration') readonly durationInput: ElementRef
+  @ViewChild('title') readonly titleInput: ElementRef
+  @ViewChild('descr') readonly descrInput: ElementRef
 
   form: FormGroup|null = null
 
@@ -108,12 +95,61 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
       duration: [duration, durationValidator],
       title, description
     })
+  }
+
+  ngAfterViewInit() {
+    const durationKeydown = Observable.merge(
+      Observable.fromEvent(this.startInput.nativeElement, 'keydown'),
+      Observable.fromEvent(this.durationInput.nativeElement, 'keydown'))
+
+    const formKeydown = Observable.merge(
+      durationKeydown,
+      Observable.fromEvent(this.titleInput.nativeElement, 'keydown'),
+      Observable.fromEvent(this.descrInput.nativeElement, 'keydown'))
+
+    const enterHotKey = formKeydown.filter((ev: KeyboardEvent) => ev.keyCode === 13)
+
+    const formBlur = Observable.merge(
+      Observable.fromEvent(this.startInput.nativeElement, 'blur'),
+      Observable.fromEvent(this.durationInput.nativeElement, 'blur'),
+      Observable.fromEvent(this.titleInput.nativeElement, 'blur'),
+      Observable.fromEvent(this.descrInput.nativeElement, 'blur'))
 
     this._subs.push(
-      this.form.valueChanges.withLatestFrom(this.form.statusChanges)
-        .debounceTime(_FORM_INPUT_DEBOUNCE_, animationScheduler)
+      formKeydown.subscribe((ev: KeyboardEvent) => {
+        ev.stopPropagation()
+      }))
+
+    const validDurationInputKey = (keyCode: number) => {
+      return (keyCode >= 48 && keyCode <= 57) || // 0-9
+        keyCode === 8 ||                         // backspace
+        keyCode === 186 ||                       // :
+        keyCode === 190 ||                       // .
+        keyCode === 37 ||                        // left arrow
+        keyCode === 39                           // right arrow
+    }
+
+    this._subs.push(
+      durationKeydown
+        .filter((ev: KeyboardEvent) => !validDurationInputKey(ev.keyCode))
+        .subscribe((ev: KeyboardEvent) => {
+          ev.preventDefault()
+        }))
+
+    this._subs.push(
+      enterHotKey.subscribe((ev: any) => {
+        if(ev.target.nodeName !== 'TEXTAREA') {
+          ev.target.blur()
+        }
+      }))
+
+    this._subs.push(
+      formBlur
+        .withLatestFrom(Observable.combineLatest(this.form!.valueChanges, this.form!.statusChanges), (_, [form, status]) => {
+          return [form, status]
+        })
         .filter(([_, status]) => status === _VALID_)
-        .map(([formData, _]) => formData)
+        .map(([form]) => form)
         .distinctUntilChanged((prev, cur) => {
           return prev.title === cur.title && prev.description === cur.description &&
             prev.utc_timestamp === cur.utc_timestamp && prev.duration === cur.duration
@@ -134,10 +170,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
             annotation
           })
         }))
-  }
-
-  ngAfterViewInit() {
-    // TODO: add keydown handler
   }
 
   ngOnChanges(changes: SimpleChanges) {
