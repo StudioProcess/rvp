@@ -27,8 +27,6 @@ declare var $: any
 export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   private readonly _subs: Subscription[] = []
 
-  _isLoading = false
-
   constructor(
     private readonly _cdr: ChangeDetectorRef,
     private readonly _rootStore: Store<fromRoot.State>,
@@ -45,12 +43,6 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     const addTrackHotkey = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 187 || e.keyCode === 221)
 
     const annotationSelection = this._rootStore.select(fromRoot.getAnnotationSelection).share()
-
-    this._subs.push(
-      this._rootStore.select(fromRoot.getIsLoading)
-        .subscribe(isLoading => {
-          this._isLoading = isLoading
-        }))
 
     this._subs.push(
       togglePlayingHotkey.subscribe((ev: KeyboardEvent) => {
