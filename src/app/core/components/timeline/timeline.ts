@@ -142,7 +142,6 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     const scrollSetting = this.handlebarRef.onHandlebarUpdate.startWith(initHB)
       .map(hb => {
         const zoom = 100/hb.width
-
         return {zoom, scrollLeft: hb.left}
       })
 
