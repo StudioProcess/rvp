@@ -26,6 +26,8 @@ export const PLAYER_SET_DIMENSIONS = '[Player] Set Dimensions'
 export const PLAYER_SET_DIMENSIONS_SUCCESS = '[Player] Set Dimensions Success'
 export const PLAYER_SET_DIMENSIONS_ERROR = '[Player] Set Dimensions Error'
 
+export const PLAYER_TOGGLE_PLAYING = '[Player] Toggle Playing'
+
 export class PlayerCreate implements Action {
   readonly type = PLAYER_CREATE
   constructor(readonly payload: PlayerCreatePayload) {}
@@ -91,9 +93,14 @@ export class PlayerSetDimensionsError implements Action {
   constructor(readonly payload: any) {}
 }
 
+export class PlayerTogglePlaying implements Action {
+  readonly type = PLAYER_TOGGLE_PLAYING
+}
+
 export type PlayerActions =
   PlayerCreate|PlayerCreateError|PlayerCreateSuccess|
   PlayerDestroy|PlayerDestroyError|PlayerDestroySuccess|
   PlayerSetDimensions|PlayerSetDimensionsSuccess|PlayerSetDimensionsError|
   PlayerSetSource|
-  PlayerSetCurrentTime
+  PlayerSetCurrentTime|
+  PlayerTogglePlaying

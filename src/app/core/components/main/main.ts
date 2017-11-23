@@ -12,6 +12,7 @@ import 'rxjs/add/operator/withLatestFrom'
 import * as fromRoot from '../../reducers'
 import * as project from '../../../persistence/actions/project'
 import * as selection from '../../actions/selection'
+import * as player from '../../../player/actions'
 import {fromEventPattern} from '../../../lib/observable'
 
 declare var $: any
@@ -39,6 +40,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     const windowKeydown = fromEventPattern(this._renderer, window, 'keydown')
 
     const backspace = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 8)
+    const space = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 32)
 
     const annotationSelection = this._rootStore.select(fromRoot.getAnnotationSelection).share()
 
@@ -49,6 +51,13 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     this._subs.push(this._rootStore.select(fromRoot.getIsLoading)
       .subscribe(isLoading => {
         this._isLoading = isLoading
+      }))
+
+    this._subs.push(
+      space.subscribe((ev: KeyboardEvent) => {
+        ev.preventDefault()
+        ev.stopPropagation()
+        this._rootStore.dispatch(new player.PlayerTogglePlaying())
       }))
 
     this._subs.push(

@@ -124,6 +124,17 @@ export class Player implements OnDestroy {
             this._store.dispatch(new player.PlayerDestroyError(err))
           }
         }))
+
+      this._subs.push(
+        this.togglePlaying
+          .withLatestFrom(playerSubj)
+          .subscribe(([, playerInst]) => {
+            if(playerInst.paused()) {
+              playerInst.play()
+            } else {
+              playerInst.pause()
+            }
+          }))
     }
 
   @Effect({dispatch: false})
@@ -140,6 +151,9 @@ export class Player implements OnDestroy {
 
   @Effect({dispatch: false})
   readonly requestCurrentTime = this._actions.ofType<player.PlayerRequestCurrentTime>(player.PLAYER_REQUEST_CURRENT_TIME)
+
+  @Effect({dispatch: false})
+  readonly togglePlaying = this._actions.ofType<player.PlayerTogglePlaying>(player.PLAYER_TOGGLE_PLAYING)
 
   ngOnDestroy() {
     this._subs.forEach(s => s.unsubscribe())
