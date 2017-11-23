@@ -40,7 +40,11 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
     const removeAnnotationHotkey = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 8)
     const togglePlayingHotkey = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 32)
-    const addTrackHotkey = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 187 || e.keyCode === 221)
+    const addTrackHotkey = windowKeydown.filter((e: KeyboardEvent) => {
+      return e.keyCode === 187 || // +
+        e.keyCode === 221 || // don't know
+        e.keyCode === 171    // + (firefox)
+    })
 
     const annotationSelection = this._rootStore.select(fromRoot.getAnnotationSelection).share()
 
