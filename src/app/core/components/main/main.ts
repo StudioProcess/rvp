@@ -14,6 +14,7 @@ import * as project from '../../../persistence/actions/project'
 import * as selection from '../../actions/selection'
 import * as player from '../../../player/actions'
 import {fromEventPattern} from '../../../lib/observable'
+import {rndColor} from '../../../lib/color'
 
 declare var $: any
 
@@ -41,6 +42,9 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
     const backspace = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 8)
     const space = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 32)
+    const addTrackHotkey = windowKeydown.filter((e: KeyboardEvent) => {
+      return e.keyCode === 187 || e.keyCode === 221
+    })
 
     const annotationSelection = this._rootStore.select(fromRoot.getAnnotationSelection).share()
 
@@ -59,6 +63,14 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
         ev.stopPropagation()
         this._rootStore.dispatch(new player.PlayerTogglePlaying())
       }))
+
+    this._subs.push(
+      addTrackHotkey.subscribe((ev: KeyboardEvent) => {
+        ev.preventDefault()
+        ev.stopPropagation()
+        this._rootStore.dispatch(new project.ProjectAddTrack({color: rndColor()}))
+      })
+    )
 
     this._subs.push(
       windowMousedown.withLatestFrom(annotationSelection.filter(selection => selection !== undefined))
