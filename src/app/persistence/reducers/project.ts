@@ -8,7 +8,7 @@ import {
   Project, TimelineRecordFactory, ProjectRecordFactory,
   TrackRecordFactory, TrackFieldsRecordFactory,
   AnnotationRecordFactory, AnnotationFieldsRecordFactory,
-  ProjectMetaRecordFactory, Timeline, ProjectMeta
+  ProjectMetaRecordFactory, Timeline, ProjectSnapshot
 } from '../model'
 
 const initialState = new ProjectRecordFactory()
@@ -122,7 +122,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state.deleteIn(['meta', 'timeline', 'tracks', trackIndex])
     }
     case project.PROJECT_PUSH_UNDO: {
-      return state.updateIn(['snapshots', 'undo'], (undoStack: Stack<Record<ProjectMeta>>) => {
+      return state.updateIn(['snapshots', 'undo'], (undoStack: Stack<Record<ProjectSnapshot>>) => {
         if(undoStack.size < _SNAPSHOTS_MAX_STACKSIZE_) {
           return undoStack.push(action.payload)
         } else {

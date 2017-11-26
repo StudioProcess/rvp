@@ -19,12 +19,13 @@ import {
   _VIDEODATA_PATH_, _EXPORT_PROJECT_NAME_,
   _PROJECT_AUTOSAVE_DEBOUNCE_
 } from '../../config/project'
-
+import {_SNAPSHOTS_DEBOUNCE_} from '../../config/snapshots'
 import {_DEFZIPOTPIONS_} from '../../config/zip'
 import {LFCache} from '../cache/LFCache'
 import {loadProject, extractProject} from '../project'
 import {ensureValidProjectData} from '../project/validate'
 import {loadZip} from '../zip'
+import {ProjectSnapshotRecordFactory} from '../model'
 
 @Injectable()
 export class ServerProxy {
@@ -40,13 +41,14 @@ export class ServerProxy {
     private readonly _store: Store<fromProject.State>) {
       const projectState = this._store.select(fromProject.getProjectState)
         .filter(proj => proj.get('meta', null) !== null && proj.get('video', null) !== null)
-        .map(proj => {
-          return {
-            meta: proj.get('meta', null)!.toJS(),
-            video: proj.get('video', null)
-          }
-        })
         .share()
+
+      const mutableProjectState = projectState.map(proj => {
+        return {
+          meta: proj.get('meta', null)!.toJS(),
+          video: proj.get('video', null)
+        }
+      })
 
       this._subs.push(
         this.loadProject.subscribe({
@@ -138,7 +140,7 @@ export class ServerProxy {
 
       this._subs.push(
         this.exportProject
-          .withLatestFrom(projectState, (_, proj) => proj)
+          .withLatestFrom(mutableProjectState, (_, proj) => proj)
           .subscribe({
             next: async ({meta, video}) => {
               try {
@@ -182,11 +184,24 @@ export class ServerProxy {
       this._subs.push(
         projectUpdate
           .debounceTime(_PROJECT_AUTOSAVE_DEBOUNCE_)
-          .withLatestFrom(projectState)
+          .withLatestFrom(mutableProjectState)
           .subscribe(([, projectData]) => {
             // autosave
             ensureValidProjectData(projectData)
             this._cache.cache('meta', projectData.meta)
+          }))
+
+      this._subs.push(
+        projectUpdate
+          .debounceTime(_SNAPSHOTS_DEBOUNCE_)
+          .withLatestFrom(projectState)
+          .subscribe(([, projectData]) => {
+            const projState = projectData.get('meta', null)!
+            const snapshot = new ProjectSnapshotRecordFactory({
+              timestamp: Date.now(),
+              state: projState
+            })
+            this._store.dispatch(new project.ProjectPushUndo(snapshot))
           }))
     }
 
