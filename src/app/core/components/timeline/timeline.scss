@@ -1,0 +1,63 @@
+@import 'colors';
+@import 'dimensions';
+
+:host {
+  user-select: none;
+
+  .scrollbar-wrapper {
+    display: block;
+    position: relative;
+    height: $handlebar-height;
+    background-color: $process-light-gray;
+    margin-top: $scrollbar-margintop;
+
+    rv-handlebar {
+      background-color: $process-gray3;
+
+      &:hover {
+        background-color: $process-gray5;
+
+        /deep/ .left-handle, /deep/ .right-handle {
+          color: $process-super-light-gray4;
+        }
+      }
+
+      /deep/ .content {
+        color: $process-gray4;
+      }
+
+      /deep/ .left-handle, /deep/ .right-handle {
+        color: $process-gray2;
+
+        &:hover {
+          color: $process-super-light-gray4;
+        }
+      }
+    }
+  }
+
+  .timeline-overflow {
+    position: relative;
+    overflow: hidden;
+    padding-top: $playhead-height;
+
+    .timeline-zoom {
+      position: relative;
+    }
+  }
+
+  .add-track {
+    cursor: pointer;
+    float: right;
+    font-size: $scrollbar-addtrack-fontsize;
+    font-weight: $scrollbar-addtrack-fontweight;
+    padding-right: $scrollbar-addtrack-paddingright;
+
+    &:focus {
+      outline: none;
+    }
+    &:hover {
+      color: $process-gray;
+    }
+  }
+}

@@ -1,0 +1,124 @@
+@import 'dimensions';
+@import 'colors';
+
+:host {
+  display: block;
+
+  .entry-container {
+    background-color: $process-super-light-gray3;
+
+    &:hover {
+      background-color: $white;
+    }
+  }
+
+  &.selected {
+    .entry-container {
+      background-color: $process-super-light-gray;
+      outline-offset: (-$selection-outlinewidth);
+      outline: $selection-outlinewidth solid $black;
+
+      &:hover {
+        background-color: $white;
+      }
+    }
+  }
+
+  &:nth-child(even) {
+    .entry-container {
+      background-color: $process-super-light-gray;
+
+      &:hover {
+        background-color: $white;
+      }
+    }
+  }
+}
+
+.entry-container {
+  .column {
+    padding: 0px;
+  }
+
+  .annotation-color {
+    height: 100%;
+    width: $inspector-annotation-color-width;
+    margin-right: 30px;
+  }
+
+  .annotation-info {
+    // padding: 5px 5px 5px 10px;
+
+    .time-row {
+      padding-top: 1.0em;
+      padding-right: 1.0em;
+      padding-bottom: 0.5em;
+    }
+
+    .text-row {
+      padding-right: 1.0em;
+      padding-bottom: 1.0em;
+    }
+
+    .title {
+      width: 100%;
+      font-weight: 500;
+      border: 1px solid transparent;
+      background-color: inherit;
+      padding: 0.2em;
+
+      &:focus {
+        background-color: $highlight-color;
+      }
+    }
+
+    .description {
+      font-size: 14px;
+      line-height: 15px;
+      resize: none;
+      margin: 0;
+      padding: 0.2em;
+      outline: none;
+      border-color: transparent;
+      box-shadow: 0 0 0 $white;
+      background-color: inherit;
+
+      &:focus {
+        color: $black;
+      }
+    }
+
+    .duration {
+      font-size: 14px; // TODO: 14px needed to be set explicitly
+      font-weight: 500;
+      width: 88px;
+      border: 1px solid transparent;
+      background-color: inherit;
+
+      &:hover {
+        color: #353535;
+      }
+    }
+
+    input, textarea, .duration, .description {
+      &:focus {
+        color: $white;
+        background-color: $highlight-color;
+        border-color: transparent;
+        box-shadow: 0 0 0 $white;
+      }
+    }
+
+    .ng-invalid {
+      outline-offset: (-$selection-outlinewidth);
+      outline: $selection-outlinewidth solid $process-orange;
+    }
+    input.ng-valid:focus {
+      outline: none;
+    }
+
+    textarea {
+      min-height: 5px !important;
+    }
+  }
+}

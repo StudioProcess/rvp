@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "project": {
-    "name": "rvp-migration"
+    "name": "rvp"
   },
   "apps": [
     {
@@ -15,20 +15,26 @@
       "index": "index.html",
       "main": "main.ts",
       "polyfills": "polyfills.ts",
-      "test": "test.ts",
       "tsconfig": "tsconfig.app.json",
-      "testTsconfig": "tsconfig.spec.json",
-      "prefix": "app",
+      "prefix": "rv",
       "styles": [
-        "styles.scss",
-        "../node_modules/video.js/dist/video-js.css"
+        "../node_modules/video.js/dist/video-js.min.css",
+        "assets/fonts/space_mono/SpaceMono.css",
+        "assets/fonts/roboto/Roboto.css",
+        "assets/fonts/ionicons/ionicons.css",
+        "styles.scss"
       ],
       "scripts": [
-        "../node_modules/pace-progress/pace.js",
-        "../node_modules/loglevel/dist/loglevel.js",
-        "../node_modules/jquery/dist/jquery.js",
-        "../node_modules/foundation-sites/dist/js/foundation.js"
+        "../node_modules/pace-progress/pace.min.js",
+        "../node_modules/jquery/dist/jquery.slim.min.js",
+        "../node_modules/foundation-sites/dist/js/foundation.min.js"
       ],
+      "stylePreprocessorOptions": {
+        "includePaths": [
+          "./",
+          "../node_modules/foundation-sites/scss"
+        ]
+      },
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
@@ -36,27 +42,11 @@
       }
     }
   ],
-  "e2e": {
-    "protractor": {
-      "config": "./protractor.conf.js"
-    }
-  },
   "lint": [
     {
       "project": "src/tsconfig.app.json"
-    },
-    {
-      "project": "src/tsconfig.spec.json"
-    },
-    {
-      "project": "e2e/tsconfig.e2e.json"
     }
   ],
-  "test": {
-    "karma": {
-      "config": "./karma.conf.js"
-    }
-  },
   "defaults": {
     "styleExt": "scss",
     "component": {}

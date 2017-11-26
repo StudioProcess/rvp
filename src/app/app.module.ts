@@ -1,62 +1,37 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
-import { StoreModule } from '@ngrx/store';
+import {NgModule} from '@angular/core'
+import {BrowserModule} from '@angular/platform-browser'
+// import {RouterModule} from '@angular/router';
 
-import { masterReducer } from './reducers';
-import { getEmptyData, getTutorialData, getMockData, getRulerData } from './shared/datasets';
+import {StoreModule} from '@ngrx/store'
+import {StoreDevtoolsModule} from '@ngrx/store-devtools'
+import {EffectsModule} from '@ngrx/effects'
 
-/* Pipes */
-import { TimePipe, UnixTimePipe } from './shared';
+import {environment} from '../environments/environment'
 
-/* Directives */
-import { KeyDirective } from './shared';
-import { ScrollZoom } from './timeline/';
+import {CoreModule} from './core/core.module'
+import {PersistenceModule} from './persistence/persistence.module'
+import {PlayerModule} from './player/player.module'
 
-/* Services */
-import { InspectorService, PlayerService, PlayheadService, TimelineService } from './shared';
-import { SimpleBackendService, ProjectIOService } from './backend';
+import {reducers, metaReducers} from './core/reducers'
 
-/* Components */
-import { AppComponent } from './app.component';
-import { VideoComponent } from './video';
-import { FilepickerComponent } from './project-handler/filepicker';
-import { ProjectHandlerComponent } from './project-handler';
-import { EntryComponent } from './inspector/entry';
-import { InspectorComponent } from './inspector';
-import { CursorComponent } from './timeline/cursor';
-import { HandlebarComponent } from './timeline/handlebar';
-import { PlayheadComponent } from './timeline/playhead';
-import { AnnotationComponent } from './timeline/track/annotation';
-import { TrackComponent } from './timeline/track';
-import { TimelineComponent } from './timeline';
+// import {AppShellContainer} from './shell'
+import {MainContainer} from './core/components/main/main'
+
+// import {appRoutes} from './routes'
 
 @NgModule({
-  declarations: [
-    TimePipe, UnixTimePipe,
-    KeyDirective, ScrollZoom,
-    
-    AppComponent,
-    VideoComponent,
-    FilepickerComponent,
-    ProjectHandlerComponent,
-    EntryComponent,
-    InspectorComponent,
-    CursorComponent,
-    HandlebarComponent,
-    PlayheadComponent,
-    AnnotationComponent,
-    TrackComponent,
-    TimelineComponent
-  ],
   imports: [
-    BrowserModule, ReactiveFormsModule,
-    StoreModule.forRoot( {project: masterReducer}, {initialState: {project: getEmptyData()}} )
+    BrowserModule,
+    // RouterModule.forRoot(appRoutes/*, {enableTracing: !environment.production}*/),
+    StoreModule.forRoot(reducers, {metaReducers}),
+    EffectsModule.forRoot([]),
+    !environment.production ? StoreDevtoolsModule.instrument() : [],
+
+    CoreModule,
+    PersistenceModule,
+    PlayerModule
   ],
-  providers: [
-    InspectorService, PlayerService, PlayheadService, TimelineService,
-    SimpleBackendService, ProjectIOService
-  ],
-  bootstrap: [AppComponent]
+  // declarations: [AppShellContainer],
+  bootstrap: [MainContainer]
 })
-export class AppModule { }
+export class AppModule {}

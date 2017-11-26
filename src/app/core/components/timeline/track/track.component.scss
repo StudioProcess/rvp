@@ -1,0 +1,76 @@
+@import 'colors';
+@import 'dimensions';
+
+:host {
+  display: block;
+  padding-top: $track-paddingtop;
+  padding-bottom: $track-paddingbottom;
+  background-color: $process-super-light-gray2;
+
+  &:hover {
+    background-color: $white2;
+  }
+}
+
+:host {
+  .title-row {
+    padding-bottom: $track-title-paddingbottom;
+    justify-content: space-between;
+
+    .track-color {
+      width: $track-color-width;
+      display: inline-block;
+
+      i {
+        padding-left: $track-icon-paddingleft;
+        padding-right: $track-icon-paddingright;
+      }
+    }
+
+    .title-input {
+      display: inline-block;
+      font-weight: $track-title-fontweight;
+      border: none;
+      background-color: inherit;
+
+      &:hover {
+        color: $dark-gray;
+      }
+
+      &:focus {
+        color: $white;
+        background-color: $highlight-color;
+        outline: none;
+      }
+    }
+  }
+}
+
+:host {
+  .track-options {
+    display: inline-block;
+    opacity: 0;
+
+    .track-delete-icon {
+      cursor: pointer;
+      padding-right: $track-deleteicon-paddingright;
+    }
+  }
+
+  &:hover {
+    .track-options {
+      animation: fadeIn ease-in 1;
+      animation-fill-mode: forwards;
+      animation-duration: $track-options-animationduration;
+      z-index: 100;
+    }
+  }
+}
+
+:host {
+  .annotations-wrapper {
+    background-color: $process-light-gray;
+    height: $handlebar-height;
+    margin-bottom: $track-annotationwrapper-marginbottom;
+  }
+}

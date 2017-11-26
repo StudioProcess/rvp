@@ -1,0 +1,58 @@
+@import 'colors';
+@import 'dimensions';
+
+$text-color: $black;
+
+@mixin handle {
+  cursor: ew-resize;
+  padding-left: $handlebar-handle-padding;
+  padding-right: $handlebar-handle-padding;
+
+  &:hover {
+    color: $text-color;
+    background-color: $text-color;
+  }
+}
+
+:host {
+  display: inline-block;
+  background-color: $process-gray2;
+  color: $process-gray2;
+  position: absolute;
+  height: $handlebar-height;
+  min-width: $handlebar-minwidth;
+
+  &.selected {
+    outline-offset: (-$selection-outlinewidth);
+    outline: $selection-outlinewidth solid $black;
+  }
+
+  .handlebar {
+    display: flex;
+    height: inherit;
+
+    &:hover {
+      color: $text-color;
+    }
+
+    .left-handle {
+      @include handle;
+      text-align: left;
+    }
+
+    .content {
+      width: $handlebar-content-width;
+      text-align: center;
+      cursor: all-scroll;
+      overflow: hidden;
+      word-break: break-all;
+      color: $text-color;
+      font-size: $handlebar-content-fontsize;
+    }
+
+    .right-handle {
+      @include handle;
+      text-align: right;
+    }
+  }
+}

@@ -1,0 +1,23 @@
+<div class="row title-row">
+  <div class="column shrink" [formGroup]="form">
+    <div class="track-color" [style.color]="data.get('color', null)">
+      <i class="ion-record" title="Track Color"></i>
+    </div>
+    <input class="title-input" placeholder="Track Title" title="Track Title" formControlName="title">
+  </div>
+  <div class="column shrink track-options">
+    <button class="ion-android-close track-delete-icon" title="Delete Track" alt="Delete Track" (click)="deleteTrackHandler()"></button>
+  </div>
+</div>
+<div class="annotations-wrapper" (dblclick)="addAnnotation($event)">
+  <rv-handlebar *ngFor="let annotation of data.get('annotations', []); index as i; trackBy: trackByFunc;"
+    [containerRect]="containerRect"
+    [caption]="getAnnotationTitle(annotation)"
+    [left]="getAnnotationPosition(annotation)"
+    [width]="getAnnotationWidth(annotation)"
+    [isSelected]="annotation.get('id', null) === selectedAnnotationId"
+    (onHandlebarUpdate)="updateHandlebar($event, i)"
+    (mousedown)="selectAnnotation($event, annotation, i)">
+  </rv-handlebar>
+</div>
+
