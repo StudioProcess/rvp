@@ -2,7 +2,7 @@ import {Action} from '@ngrx/store'
 
 import {Record} from 'immutable'
 
-import {Annotation, Track, ProjectMeta} from '../model'
+import {Annotation, Track, ProjectSnapshot} from '../model'
 
 export const PROJECT_LOAD = '[Project] Load'
 export const PROJECT_LOAD_SUCCESS = '[Project] Load Success'
@@ -156,7 +156,7 @@ export class ProjectSetTimelineDuration implements Action {
 
 export class ProjectPushUndo implements Action {
   readonly type = PROJECT_PUSH_UNDO
-  constructor(readonly payload: Record<ProjectMeta>){}
+  constructor(readonly payload: Record<ProjectSnapshot>){}
 }
 
 export type Actions =
