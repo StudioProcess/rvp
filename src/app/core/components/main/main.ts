@@ -46,6 +46,10 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
         e.keyCode === 171    // + (firefox)
     })
 
+    const undoHotkey = windowKeydown.filter((e: KeyboardEvent) => {
+      return e.keyCode === 90 && e.metaKey // cmd z
+    })
+
     const annotationSelection = this._rootStore.select(fromRoot.getAnnotationSelection).share()
 
     this._subs.push(
@@ -86,6 +90,11 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
           this._rootStore.dispatch(new project.ProjectDeleteAnnotation(deletePayload))
           this._cdr.markForCheck()
         }))
+
+    this._subs.push(
+      undoHotkey.subscribe((e: KeyboardEvent) => {
+        this._rootStore.dispatch(new project.ProjectUndo())
+      }))
   }
 
   importProject(projectFile: File) {
