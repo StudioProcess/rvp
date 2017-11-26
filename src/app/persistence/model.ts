@@ -2,20 +2,25 @@ import {List, Record, Stack} from 'immutable'
 
 // Record factories
 
-export const ProjectSnapshotsFactory = Record<ProjectSnapshots>({
-  undo: Stack<Record<ProjectMeta>>(),
-  redo: Stack<Record<ProjectMeta>>()
+export const ProjectMetaRecordFactory = Record<ProjectMeta>({
+  id: null,
+  timeline: null,
+})
+
+export const ProjectSnapshotRecordFactory = Record<ProjectSnapshot>({
+  timestamp: -1,
+  state: new ProjectMetaRecordFactory()
+})
+
+export const ProjectSnapshotsRecordFactory = Record<ProjectSnapshots>({
+  undo: Stack<Record<ProjectSnapshot>>(),
+  redo: Stack<Record<ProjectSnapshot>>()
 })
 
 export const ProjectRecordFactory = Record<Project>({
   meta: null,
   video: null,
-  snapshots: new ProjectSnapshotsFactory()
-})
-
-export const ProjectMetaRecordFactory = Record<ProjectMeta>({
-  id: null,
-  timeline: null,
+  snapshots: new ProjectSnapshotsRecordFactory()
 })
 
 export const TimelineRecordFactory = Record<Timeline>({
@@ -71,8 +76,13 @@ export interface ProjectMeta {
 }
 
 export interface ProjectSnapshots {
-  readonly undo: Stack<Record<ProjectMeta>>
-  readonly redo: Stack<Record<ProjectMeta>>
+  readonly undo: Stack<Record<ProjectSnapshot>>
+  readonly redo: Stack<Record<ProjectSnapshot>>
+}
+
+export interface ProjectSnapshot {
+  readonly timestamp: number
+  readonly state: Record<ProjectMeta>
 }
 
 export interface Timeline {
