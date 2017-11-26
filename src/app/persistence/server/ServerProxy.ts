@@ -10,6 +10,7 @@ import {Subscription} from 'rxjs/Subscription'
 import 'rxjs/add/operator/withLatestFrom'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/share'
+import 'rxjs/add/operator/pairwise'
 
 import * as project from '../actions/project'
 import * as fromProject from '../reducers'
@@ -195,9 +196,9 @@ export class ServerProxy {
         projectUpdate
           .filter(action => action.type !== project.PROJECT_SET_TIMELINE_DURATION)
           .debounceTime(_SNAPSHOTS_DEBOUNCE_)
-          .withLatestFrom(projectState)
-          .subscribe(([action, projectData]) => {
-            const projState = projectData.get('meta', null)!
+          .withLatestFrom(projectState.pairwise())
+          .subscribe(([action, [prevState, curState]]) => {
+            const projState = prevState.get('meta', null)!
             const snapshot = new ProjectSnapshotRecordFactory({
               timestamp: Date.now(),
               state: projState
