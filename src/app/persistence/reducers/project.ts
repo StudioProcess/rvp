@@ -1,12 +1,14 @@
-import {Record, List} from 'immutable'
+import {Record, List, Stack} from 'immutable'
 
 import * as project from '../actions/project'
+
+import {_SNAPSHOTS_MAX_STACKSIZE_} from '../../config/snapshots'
 
 import {
   Project, TimelineRecordFactory, ProjectRecordFactory,
   TrackRecordFactory, TrackFieldsRecordFactory,
   AnnotationRecordFactory, AnnotationFieldsRecordFactory,
-  ProjectMetaRecordFactory, Timeline
+  ProjectMetaRecordFactory, Timeline, ProjectMeta
 } from '../model'
 
 const initialState = new ProjectRecordFactory()
@@ -119,8 +121,21 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const {trackIndex} = action.payload
       return state.deleteIn(['meta', 'timeline', 'tracks', trackIndex])
     }
-    default:
+    case project.PROJECT_PUSH_UNDO: {
+      return state.updateIn(['snapshots', 'undo'], (undoStack: Stack<Record<ProjectMeta>>) => {
+        if(undoStack.size < _SNAPSHOTS_MAX_STACKSIZE_) {
+          return undoStack.push(action.payload)
+        } else {
+          return undoStack.withMutations(mutableStack => {
+            mutableStack.shift()
+            mutableStack.push(action.payload)
+          })
+        }
+      })
+    }
+    default: {
       return state
+    }
   }
 }
 
