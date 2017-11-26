@@ -47,7 +47,11 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     })
 
     const undoHotkey = windowKeydown.filter((e: KeyboardEvent) => {
-      return e.keyCode === 90 && e.metaKey // cmd z
+      return e.keyCode === 90 && e.metaKey && !e.shiftKey // cmd z (make sure shiftKey is not pressed)
+    })
+
+    const redoHotkey = windowKeydown.filter((e: KeyboardEvent) => {
+      return e.keyCode === 90 && e.metaKey && e.shiftKey // shift cmd z
     })
 
     const annotationSelection = this._rootStore.select(fromRoot.getAnnotationSelection).share()
@@ -92,8 +96,13 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
         }))
 
     this._subs.push(
-      undoHotkey.subscribe((e: KeyboardEvent) => {
+      undoHotkey.subscribe(() => {
         this._rootStore.dispatch(new project.ProjectUndo())
+      }))
+
+    this._subs.push(
+      redoHotkey.subscribe(() => {
+        this._rootStore.dispatch(new project.ProjectRedo())
       }))
   }
 
