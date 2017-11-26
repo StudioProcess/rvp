@@ -193,14 +193,16 @@ export class ServerProxy {
 
       this._subs.push(
         projectUpdate
+          .filter(action => action.type !== project.PROJECT_SET_TIMELINE_DURATION)
           .debounceTime(_SNAPSHOTS_DEBOUNCE_)
           .withLatestFrom(projectState)
-          .subscribe(([, projectData]) => {
+          .subscribe(([action, projectData]) => {
             const projState = projectData.get('meta', null)!
             const snapshot = new ProjectSnapshotRecordFactory({
               timestamp: Date.now(),
               state: projState
             })
+            this._store.dispatch(new project.ProjectClearRedo())
             this._store.dispatch(new project.ProjectPushUndo(snapshot))
           }))
     }
