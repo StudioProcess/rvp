@@ -32,6 +32,7 @@ export const PROJECT_DELETE_TRACK = '[Project] Delete Track'
 export const PROJECT_SET_TIMELINE_DURATION = '[Project] Set Timeline Duration'
 
 export const PROJECT_PUSH_UNDO = '[Project] Push Undo'
+export const PROJECT_UNDO = '[Project] Undo'
 
 export class ProjectLoad implements Action {
   readonly type = PROJECT_LOAD
@@ -159,6 +160,10 @@ export class ProjectPushUndo implements Action {
   constructor(readonly payload: Record<ProjectSnapshot>){}
 }
 
+export class ProjectUndo implements Action {
+  readonly type = PROJECT_UNDO
+}
+
 export type Actions =
   ProjectLoad|ProjectLoadSuccess|ProjectLoadError|
   ProjectImport|
@@ -168,4 +173,4 @@ export type Actions =
   ProjectAddTrack|ProjectUpdateTrack|ProjectDeleteTrack|
   ProjectAddAnnotation|ProjectUpdateAnnotation|ProjectDeleteAnnotation|
   ProjectSetTimelineDuration|
-  ProjectPushUndo
+  ProjectPushUndo|ProjectUndo
