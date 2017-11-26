@@ -197,7 +197,7 @@ export class ServerProxy {
           .filter(action => action.type !== project.PROJECT_SET_TIMELINE_DURATION)
           .debounceTime(_SNAPSHOTS_DEBOUNCE_)
           .withLatestFrom(projectState.pairwise())
-          .subscribe(([action, [prevState, curState]]) => {
+          .subscribe(([_, [prevState, __]]) => {
             const projState = prevState.get('meta', null)!
             const snapshot = new ProjectSnapshotRecordFactory({
               timestamp: Date.now(),

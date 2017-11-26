@@ -60,7 +60,7 @@ export class Player implements OnDestroy {
             playerInstSubs.push(
               Observable.fromEvent(playerEventEmitter, 'timeupdate')
                 .withLatestFrom(playerPendingSubj)
-                .filter(([playerInst, isPending]) => !isPending)
+                .filter(([_, isPending]) => !isPending)
                 .subscribe(() => {
                   const currentTime = playerInst.currentTime()
                   this._store.dispatch(new player.PlayerSetCurrentTime({currentTime}))
