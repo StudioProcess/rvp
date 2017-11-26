@@ -1,10 +1,13 @@
 import {
   Component, Input, ChangeDetectionStrategy,
   OnInit, OnDestroy, EventEmitter, Output,
-  OnChanges, SimpleChanges
+  OnChanges, SimpleChanges, ViewChild,
+  ElementRef
 } from '@angular/core'
 
 import {FormGroup, FormBuilder, Validators} from '@angular/forms'
+
+const _VALID_ = 'VALID' // not exported by @angular/forms
 
 import {Record} from 'immutable'
 
@@ -12,6 +15,13 @@ import {Observable} from 'rxjs/Observable'
 import {Subject} from 'rxjs/Subject'
 import {Subscription} from 'rxjs/Subscription'
 import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame'
+import 'rxjs/add/observable/fromEvent'
+import 'rxjs/add/observable/combineLatest'
+import 'rxjs/add/operator/withLatestFrom'
+import 'rxjs/add/operator/debounceTime'
+import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/filter'
+import 'rxjs/add/operator/distinctUntilChanged'
 
 import {
   Track, Annotation, AnnotationRecordFactory,
@@ -52,6 +62,8 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   private readonly addAnnotationClick = new Subject<MouseEvent>()
   private readonly updateAnnotationSubj = new Subject<{hb: Handlebar, annotationIndex: number}>()
 
+  @ViewChild('title') private readonly titleInput: ElementRef
+
   constructor(private readonly _fb: FormBuilder) {}
 
   ngOnInit() {
@@ -59,9 +71,14 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
       title: [this.data.getIn(['fields', 'title']), Validators.required]
     })
 
+    const formBlur = Observable.fromEvent(this.titleInput.nativeElement, 'blur')
+
     this._subs.push(
-      this.form.valueChanges.withLatestFrom(this.form.statusChanges)
-        .debounceTime(_FORM_INPUT_DEBOUNCE_, animationScheduler)
+      formBlur
+        .withLatestFrom(Observable.combineLatest(this.form.valueChanges, this.form.statusChanges), (_, [form, status]) => {
+          return [form, status]
+        })
+        .filter(([_, status]) => status === _VALID_)
         .map(([formData, _]) => formData)
         .distinctUntilChanged((prev, cur) => {
           return prev.title === cur.title
