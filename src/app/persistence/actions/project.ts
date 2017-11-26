@@ -2,7 +2,7 @@ import {Action} from '@ngrx/store'
 
 import {Record} from 'immutable'
 
-import {Annotation, Track} from '../model'
+import {Annotation, Track, ProjectMeta} from '../model'
 
 export const PROJECT_LOAD = '[Project] Load'
 export const PROJECT_LOAD_SUCCESS = '[Project] Load Success'
@@ -30,6 +30,8 @@ export const PROJECT_UPDATE_TRACK = '[Project] Update Track'
 export const PROJECT_DELETE_TRACK = '[Project] Delete Track'
 
 export const PROJECT_SET_TIMELINE_DURATION = '[Project] Set Timeline Duration'
+
+export const PROJECT_PUSH_UNDO = '[Project] Push Undo'
 
 export class ProjectLoad implements Action {
   readonly type = PROJECT_LOAD
@@ -152,6 +154,11 @@ export class ProjectSetTimelineDuration implements Action {
   constructor(readonly payload: {duration: number}) {}
 }
 
+export class ProjectPushUndo implements Action {
+  readonly type = PROJECT_PUSH_UNDO
+  constructor(readonly payload: Record<ProjectMeta>){}
+}
+
 export type Actions =
   ProjectLoad|ProjectLoadSuccess|ProjectLoadError|
   ProjectImport|
@@ -160,4 +167,5 @@ export type Actions =
   ProjectReset|
   ProjectAddTrack|ProjectUpdateTrack|ProjectDeleteTrack|
   ProjectAddAnnotation|ProjectUpdateAnnotation|ProjectDeleteAnnotation|
-  ProjectSetTimelineDuration
+  ProjectSetTimelineDuration|
+  ProjectPushUndo
