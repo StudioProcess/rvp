@@ -8,7 +8,8 @@ import {
   Project, TimelineRecordFactory, ProjectRecordFactory,
   TrackRecordFactory, TrackFieldsRecordFactory,
   AnnotationRecordFactory, AnnotationFieldsRecordFactory,
-  ProjectMetaRecordFactory, Timeline, ProjectSnapshot
+  ProjectMetaRecordFactory, Timeline, ProjectSnapshot,
+  ProjectSnapshotRecordFactory
 } from '../model'
 
 const initialState = new ProjectRecordFactory()
@@ -133,12 +134,42 @@ export function reducer(state: State = initialState, action: project.Actions): S
         }
       })
     }
+    case project.PROJECT_UNDO: {
+      const undoStack: Stack<Record<ProjectSnapshot>> = state.getIn(['snapshots', 'undo'])
+      if(undoStack.size > 0) {
+        const currentState = state.get('meta', null)!
+        let updatedState = state.updateIn(['snapshots', 'redo'], (redoStack: Stack<Record<ProjectSnapshot>>) => {
+          const redoRecord = ProjectSnapshotRecordFactory({
+            timestamp: Date.now(),
+            state: currentState
+          })
+          if(redoStack.size < _SNAPSHOTS_MAX_STACKSIZE_) {
+            return redoStack.push(redoRecord)
+          } else {
+            return redoStack.withMutations(mutableStack => {
+              mutableStack.shift()
+              mutableStack.push(redoRecord)
+            })
+          }
+        })
+
+        const snapshot = undoStack.peek()!
+        updatedState = updatedState.setIn(['snapshots', 'undo'], undoStack.pop())
+        return updatedState.set('meta', snapshot.get('state', null))
+      }
+
+      return state
+    }
+    case project.PROJECT_CLEAR_REDO: {
+      return state.setIn(['snapshots', 'redo'], Stack())
+    }
     default: {
       return state
     }
   }
 }
 
-export const getProjectMeta = (state: State) => state.get('meta', null)
-
+export const getProjectMeta = (state: State) => {
+  return state.get('meta', null)
+}
 export const getProjectVideo = (state: State) => state.get('video', null)
