@@ -1,10 +1,16 @@
-import {List, Record} from 'immutable'
+import {List, Record, Stack} from 'immutable'
 
 // Record factories
 
+export const ProjectSnapshotsFactory = Record<ProjectSnapshots>({
+  undo: Stack<Record<ProjectMeta>>(),
+  redo: Stack<Record<ProjectMeta>>()
+})
+
 export const ProjectRecordFactory = Record<Project>({
   meta: null,
-  video: null
+  video: null,
+  snapshots: new ProjectSnapshotsFactory()
 })
 
 export const ProjectMetaRecordFactory = Record<ProjectMeta>({
@@ -55,12 +61,18 @@ export const AnnotationColorMapRecordFactory = Record<AnnotationColorMap>({
 
 export interface Project {
   readonly meta: Record<ProjectMeta>|null
-  readonly video: Blob|null
+  readonly video: Blob|null,
+  readonly snapshots: ProjectSnapshots
 }
 
 export interface ProjectMeta {
   readonly id: number|null
   readonly timeline: Record<Timeline>|null
+}
+
+export interface ProjectSnapshots {
+  readonly undo: Stack<Record<ProjectMeta>>
+  readonly redo: Stack<Record<ProjectMeta>>
 }
 
 export interface Timeline {
