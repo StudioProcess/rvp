@@ -138,7 +138,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const undoStack: Stack<Record<ProjectSnapshot>> = state.getIn(['snapshots', 'undo'])
       if(undoStack.size > 0) {
         const currentState = state.get('meta', null)!
-        let updatedState = state.updateIn(['snapshots', 'redo'], (redoStack: Stack<Record<ProjectSnapshot>>) => {
+        const updatedRedo = state.updateIn(['snapshots', 'redo'], (redoStack: Stack<Record<ProjectSnapshot>>) => {
           const redoRecord = ProjectSnapshotRecordFactory({
             timestamp: Date.now(),
             state: currentState
@@ -154,8 +154,9 @@ export function reducer(state: State = initialState, action: project.Actions): S
         })
 
         const snapshot = undoStack.peek()!
-        updatedState = updatedState.setIn(['snapshots', 'undo'], undoStack.pop())
-        return updatedState.set('meta', snapshot.get('state', null))
+
+        const updatedUndo = updatedRedo.setIn(['snapshots', 'undo'], undoStack.pop())
+        return updatedUndo.set('meta', snapshot.get('state', null))
       }
 
       return state
