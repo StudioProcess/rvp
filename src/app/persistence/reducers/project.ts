@@ -161,6 +161,33 @@ export function reducer(state: State = initialState, action: project.Actions): S
 
       return state
     }
+    case project.PROJECT_REDO: {
+      const redoStack: Stack<Record<ProjectSnapshot>> = state.getIn(['snapshots', 'redo'])
+      if(redoStack.size > 0) {
+        const currentState = state.get('meta', null)!
+        const updatedUndo = state.updateIn(['snapshots', 'undo'], (undoStack: Stack<Record<ProjectSnapshot>>) => {
+          const undoRecord = ProjectSnapshotRecordFactory({
+            timestamp: Date.now(),
+            state: currentState
+          })
+          if(undoStack.size < _SNAPSHOTS_MAX_STACKSIZE_) {
+            return undoStack.push(undoRecord)
+          } else {
+            return undoStack.withMutations(mutableStack => {
+              mutableStack.shift()
+              mutableStack.push(undoRecord)
+            })
+          }
+        })
+
+        const snapshot = redoStack.peek()!
+
+        const updatedRedo = updatedUndo.setIn(['snapshots', 'redo'], redoStack.pop())
+        return updatedRedo.set('meta', snapshot.get('state', null))
+      }
+
+      return state
+    }
     case project.PROJECT_CLEAR_REDO: {
       return state.setIn(['snapshots', 'redo'], Stack())
     }
