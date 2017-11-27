@@ -6,7 +6,7 @@
 
 ### Bugfixes
 
-* Timeline:
+* Timeline: (Fixes [#150](https://github.com/StudioProcess/rvp/issues/150))
   * Track title
     * Fix setting player head on mousedown
     * Fix triggering app hotkey handler (e.g. space) when typing new track title
