@@ -20,7 +20,6 @@ import {
   _VIDEODATA_PATH_, _EXPORT_PROJECT_NAME_,
   _PROJECT_AUTOSAVE_DEBOUNCE_
 } from '../../config/project'
-// import {_SNAPSHOTS_DEBOUNCE_} from '../../config/snapshots'
 import {_DEFZIPOTPIONS_} from '../../config/zip'
 import {LFCache} from '../cache/LFCache'
 import {loadProject, extractProject} from '../project'
@@ -197,9 +196,9 @@ export class ServerProxy {
               action.type !== project.PROJECT_UNDO &&
               action.type !== project.PROJECT_REDO
           })
-          // .debounceTime(_SNAPSHOTS_DEBOUNCE_)
           .withLatestFrom(projectState.pairwise())
           .subscribe(([_, [prevState, __]]) => {
+            // push snapshot
             const projState = prevState.get('meta', null)!
             const snapshot = new ProjectSnapshotRecordFactory({
               timestamp: Date.now(),
