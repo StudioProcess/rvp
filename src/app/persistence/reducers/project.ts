@@ -2,13 +2,13 @@ import {Record, List} from 'immutable'
 
 import * as project from '../actions/project'
 
-import {_SNAPSHOTS_MAX_STACKSIZE_} from '../../config/snapshots'
+// import {_SNAPSHOTS_MAX_STACKSIZE_} from '../../config/snapshots'
 
 import {
   Project, TimelineRecordFactory, ProjectRecordFactory,
   TrackRecordFactory, TrackFieldsRecordFactory,
   AnnotationRecordFactory, AnnotationFieldsRecordFactory,
-  ProjectMetaRecordFactory, Timeline, ProjectSnapshot
+  ProjectMetaRecordFactory, Timeline, //ProjectSnapshot
 } from '../model'
 
 const initialState = new ProjectRecordFactory()
@@ -121,56 +121,58 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const {trackIndex} = action.payload
       return state.deleteIn(['meta', 'timeline', 'tracks', trackIndex])
     }
-    case project.PROJECT_PUSH_UNDO: {
-      return state.updateIn(['snapshots', 'undo'], (undoList: List<Record<ProjectSnapshot>>) => {
-        if(undoList.size < _SNAPSHOTS_MAX_STACKSIZE_) {
-          // Insert first
-          return undoList.unshift(action.payload)
-        } else {
-          // Remove last, insert first
-          return undoList.pop().unshift(action.payload)
-        }
-      })
-    }
-    case project.PROJECT_UNDO: {
-      const undoList: List<Record<ProjectSnapshot>> = state.getIn(['snapshots', 'undo'])
-      if(undoList.size > 0) {
-        const snapshot = undoList.first()!
-        const updatedRedo = state.updateIn(['snapshots', 'redo'], (redoList: List<Record<ProjectSnapshot>>) => {
-          if(redoList.size < _SNAPSHOTS_MAX_STACKSIZE_) {
-            return redoList.unshift(snapshot)
-          } else {
-            return redoList.pop().unshift(snapshot)
-          }
-        })
+    // case project.PROJECT_PUSH_UNDO: {
+    //   return state.updateIn(['snapshots', 'undo'], (undoList: List<Record<ProjectSnapshot>>) => {
+    //     if(undoList.size < _SNAPSHOTS_MAX_STACKSIZE_) {
+    //       // Insert first
+    //       return undoList.unshift(action.payload)
+    //     } else {
+    //       // Remove last, insert first
+    //       return undoList.withMutations(mutableUndo => {
+    //         mutableUndo.pop().unshift(action.payload)
+    //       })
+    //     }
+    //   })
+    // }
+    // case project.PROJECT_UNDO: {
+    //   const undoList: List<Record<ProjectSnapshot>> = state.getIn(['snapshots', 'undo'])
+    //   if(undoList.size > 0) {
+    //     const snapshot = undoList.first()!
+    //     const updatedRedo = state.updateIn(['snapshots', 'redo'], (redoList: List<Record<ProjectSnapshot>>) => {
+    //       if(redoList.size < _SNAPSHOTS_MAX_STACKSIZE_) {
+    //         return redoList.unshift(snapshot)
+    //       } else {
+    //         return redoList.pop().unshift(snapshot)
+    //       }
+    //     })
 
-        const updatedUndo = updatedRedo.setIn(['snapshots', 'undo'], undoList.shift())
-        return updatedUndo.set('meta', snapshot.get('state', null))
-      }
+    //     const updatedUndo = updatedRedo.setIn(['snapshots', 'undo'], undoList.shift())
+    //     return updatedUndo.set('meta', snapshot.get('state', null))
+    //   }
 
-      return state
-    }
-    case project.PROJECT_REDO: {
-      const redoList: List<Record<ProjectSnapshot>> = state.getIn(['snapshots', 'redo'])
-      if(redoList.size > 0) {
-        const snapshot = redoList.first()!
-        const updatedUndo = state.updateIn(['snapshots', 'undo'], (undoList: List<Record<ProjectSnapshot>>) => {
-          if(undoList.size < _SNAPSHOTS_MAX_STACKSIZE_) {
-            return undoList.unshift(snapshot)
-          } else {
-            return undoList.pop().unshift(snapshot)
-          }
-        })
+    //   return state
+    // }
+    // case project.PROJECT_REDO: {
+    //   const redoList: List<Record<ProjectSnapshot>> = state.getIn(['snapshots', 'redo'])
+    //   if(redoList.size > 0) {
+    //     const snapshot = redoList.first()!
+    //     const updatedUndo = state.updateIn(['snapshots', 'undo'], (undoList: List<Record<ProjectSnapshot>>) => {
+    //       if(undoList.size < _SNAPSHOTS_MAX_STACKSIZE_) {
+    //         return undoList.unshift(snapshot)
+    //       } else {
+    //         return undoList.pop().unshift(snapshot)
+    //       }
+    //     })
 
-        const updatedRedo = updatedUndo.setIn(['snapshots', 'redo'], redoList.shift())
-        return updatedRedo.set('meta', snapshot.get('state', null))
-      }
+    //     const updatedRedo = updatedUndo.setIn(['snapshots', 'redo'], redoList.shift())
+    //     return updatedRedo.set('meta', snapshot.get('state', null))
+    //   }
 
-      return state
-    }
-    case project.PROJECT_CLEAR_REDO: {
-      return state.setIn(['snapshots', 'redo'], List())
-    }
+    //   return state
+    // }
+    // case project.PROJECT_CLEAR_REDO: {
+    //   return state.setIn(['snapshots', 'redo'], List())
+    // }
     default: {
       return state
     }
