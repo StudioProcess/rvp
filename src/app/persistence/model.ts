@@ -75,7 +75,12 @@ export interface ProjectMeta {
   readonly timeline: Record<Timeline>|null
 }
 
-// Use List as double ended queue (with unshift, shift, first)
+/* Use List as double ended queue
+ *  - unshift: Insert first
+ *  - shift: Remove first
+ *  - first: Get first
+ *  - pop: Remove last
+ */
 export interface ProjectSnapshots {
   readonly undo: List<Record<ProjectSnapshot>>
   readonly redo: List<Record<ProjectSnapshot>>
