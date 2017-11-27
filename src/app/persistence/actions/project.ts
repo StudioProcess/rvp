@@ -34,7 +34,6 @@ export const PROJECT_SET_TIMELINE_DURATION = '[Project] Set Timeline Duration'
 export const PROJECT_PUSH_UNDO = '[Project] Push Undo'
 export const PROJECT_UNDO = '[Project] Undo'
 export const PROJECT_REDO = '[Project] Redo'
-export const PROJECT_CLEAR_REDO = '[Project] Clear Redo'
 
 export class ProjectLoad implements Action {
   readonly type = PROJECT_LOAD
@@ -166,10 +165,6 @@ export class ProjectUndo implements Action {
   readonly type = PROJECT_UNDO
 }
 
-export class ProjectClearRedo implements Action {
-  readonly type = PROJECT_CLEAR_REDO
-}
-
 export class ProjectRedo implements Action {
   readonly type = PROJECT_REDO
 }
@@ -183,4 +178,4 @@ export type Actions =
   ProjectAddTrack|ProjectUpdateTrack|ProjectDeleteTrack|
   ProjectAddAnnotation|ProjectUpdateAnnotation|ProjectDeleteAnnotation|
   ProjectSetTimelineDuration|
-  ProjectPushUndo|ProjectUndo|ProjectRedo|ProjectClearRedo
+  ProjectPushUndo|ProjectUndo|ProjectRedo

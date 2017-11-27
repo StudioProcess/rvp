@@ -204,7 +204,6 @@ export class ServerProxy {
               timestamp: Date.now(),
               state: projState
             })
-            this._store.dispatch(new project.ProjectClearRedo())
             this._store.dispatch(new project.ProjectPushUndo(snapshot))
           }))
     }
