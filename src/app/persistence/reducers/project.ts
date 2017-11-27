@@ -8,8 +8,7 @@ import {
   Project, TimelineRecordFactory, ProjectRecordFactory,
   TrackRecordFactory, TrackFieldsRecordFactory,
   AnnotationRecordFactory, AnnotationFieldsRecordFactory,
-  ProjectMetaRecordFactory, Timeline, ProjectSnapshot,
-  ProjectSnapshotRecordFactory
+  ProjectMetaRecordFactory, Timeline, ProjectSnapshot
 } from '../model'
 
 const initialState = new ProjectRecordFactory()
