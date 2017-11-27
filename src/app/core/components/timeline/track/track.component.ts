@@ -71,7 +71,15 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
       title: [this.data.getIn(['fields', 'title']), Validators.required]
     })
 
+    const titleInputKeydown = Observable.fromEvent(this.titleInput.nativeElement, 'keydown')
     const formBlur = Observable.fromEvent(this.titleInput.nativeElement, 'blur')
+
+    this._subs.push(
+      titleInputKeydown
+        .filter((ev: KeyboardEvent) => ev.keyCode === 13)
+        .subscribe((ev: any) => {
+          ev.target.blur()
+        }))
 
     this._subs.push(
       formBlur
@@ -93,7 +101,6 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
               annotations: this.data.get('annotations', null)
             })
           }
-
           this.onUpdateTrack.emit(updateTrackPayload)
         }))
 
