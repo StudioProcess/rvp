@@ -1,5 +1,19 @@
 # Changelog
 
+# 0.2.0 (2017-11-27) Undo/Redo
+
+* Undo/redo feature (default: 20 actions are saved, see `src/app/config/snapshots.ts`)
+
+### Bugfixes
+
+* Timeline:
+  * Track title
+    * Fix setting player head on mousedown
+    * Fix triggering app hotkey handler (e.g. space) when typing new track title
+  * Delete track
+    * Fix setting player head on mousedown
+* Fix unnecessary handlebar update emits
+
 # 0.1.0 (2017-11-23) Refactoring Pass
 
 * Changelog init
