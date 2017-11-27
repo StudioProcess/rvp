@@ -1,4 +1,4 @@
-import {List, Record, Stack} from 'immutable'
+import {List, Record} from 'immutable'
 
 // Record factories
 
@@ -13,8 +13,8 @@ export const ProjectSnapshotRecordFactory = Record<ProjectSnapshot>({
 })
 
 export const ProjectSnapshotsRecordFactory = Record<ProjectSnapshots>({
-  undo: Stack<Record<ProjectSnapshot>>(),
-  redo: Stack<Record<ProjectSnapshot>>()
+  undo: List<Record<ProjectSnapshot>>(),
+  redo: List<Record<ProjectSnapshot>>()
 })
 
 export const ProjectRecordFactory = Record<Project>({
@@ -75,9 +75,10 @@ export interface ProjectMeta {
   readonly timeline: Record<Timeline>|null
 }
 
+// Use List as double ended queue (with unshift, shift, first)
 export interface ProjectSnapshots {
-  readonly undo: Stack<Record<ProjectSnapshot>>
-  readonly redo: Stack<Record<ProjectSnapshot>>
+  readonly undo: List<Record<ProjectSnapshot>>
+  readonly redo: List<Record<ProjectSnapshot>>
 }
 
 export interface ProjectSnapshot {
