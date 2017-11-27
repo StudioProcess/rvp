@@ -32,10 +32,6 @@ import {ProjectSnapshotRecordFactory} from '../model'
 export class ServerProxy {
   private readonly _subs: Subscription[] = []
 
-  // TODO: openProject: unzip, cache video, cache project, project load success
-  // TODO: openVideo: cache video, project load success
-  // TODO: autoSave: cache project
-
   constructor(
     private readonly _actions: Actions,
     private readonly _cache: LFCache,
@@ -194,7 +190,11 @@ export class ServerProxy {
 
       this._subs.push(
         projectUpdate
-          .filter(action => action.type !== project.PROJECT_SET_TIMELINE_DURATION)
+          .filter(action => {
+            return action.type !== project.PROJECT_SET_TIMELINE_DURATION &&
+              action.type !== project.PROJECT_UNDO &&
+              action.type !== project.PROJECT_REDO
+          })
           .debounceTime(_SNAPSHOTS_DEBOUNCE_)
           .withLatestFrom(projectState.pairwise())
           .subscribe(([_, [prevState, __]]) => {
