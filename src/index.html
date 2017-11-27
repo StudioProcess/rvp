@@ -10,6 +10,20 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="apple-touch-icon" href="touch-icon-iphone.png">
     <script>paceOptions = {ajax:true, document:true, eventLag:true, restartOnRequestAfter:2000, maxProgressPerFrame:20, initialRate:0.01, ghostTime:1000, target:'.progress'}</script>
+    <style>
+      .loading-overlay {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: white;
+      }
+    </style>
   </head>
   <body>
     <!-- <rv-app></rv-app> -->
