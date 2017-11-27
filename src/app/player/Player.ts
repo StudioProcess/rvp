@@ -52,6 +52,7 @@ export class Player implements OnDestroy {
       this._subs.push(
         playerSubj.subscribe({
           next: playerInst => {
+            console.log('new player')
             // Player is an instance of a video.js Component class, with methods from
             // mixin class EventTarget.
             // https://github.com/videojs/video.js/blob/master/src/js/component.js#L88
@@ -62,6 +63,7 @@ export class Player implements OnDestroy {
                 .withLatestFrom(playerPendingSubj)
                 .filter(([_, isPending]) => !isPending)
                 .subscribe(() => {
+                  console.log('Report')
                   const currentTime = playerInst.currentTime()
                   this._store.dispatch(new player.PlayerSetCurrentTime({currentTime}))
                 }))
@@ -114,6 +116,7 @@ export class Player implements OnDestroy {
       this._subs.push(
         this.requestCurrentTime
           .subscribe(({payload: {currentTime}}) => {
+            console.log('Req')
             playerPendingSubj.next(true)
             setCurrentTimeSubj.next(currentTime)
           }))
@@ -123,6 +126,7 @@ export class Player implements OnDestroy {
           .debounceTime(_PLAYER_TIMEUPDATE_DEBOUNCE_, animationScheduler)
           .withLatestFrom(playerSubj)
           .subscribe(([currentTime, playerInst]) => {
+            console.log('Set')
             playerPendingSubj.next(false)
             playerInst.currentTime(currentTime)
           }))
