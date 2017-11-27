@@ -96,12 +96,14 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
         }))
 
     this._subs.push(
-      undoHotkey.subscribe(() => {
+      undoHotkey.subscribe((e: KeyboardEvent) => {
+        e.preventDefault()
         this._rootStore.dispatch(new project.ProjectUndo())
       }))
 
     this._subs.push(
-      redoHotkey.subscribe(() => {
+      redoHotkey.subscribe((e: KeyboardEvent) => {
+        e.preventDefault()
         this._rootStore.dispatch(new project.ProjectRedo())
       }))
   }
