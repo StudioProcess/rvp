@@ -71,8 +71,19 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
       title: [this.data.getIn(['fields', 'title']), Validators.required]
     })
 
+    const titleInputMd = Observable.fromEvent(this.titleInput.nativeElement, 'mousedown')
     const titleInputKeydown = Observable.fromEvent(this.titleInput.nativeElement, 'keydown')
     const formBlur = Observable.fromEvent(this.titleInput.nativeElement, 'blur')
+
+    this._subs.push(
+      titleInputMd.subscribe((ev: KeyboardEvent) => {
+        ev.stopPropagation()
+      }))
+
+    this._subs.push(
+      titleInputKeydown.subscribe((ev: KeyboardEvent) => {
+        ev.stopPropagation()
+      }))
 
     this._subs.push(
       titleInputKeydown
