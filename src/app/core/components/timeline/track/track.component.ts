@@ -181,7 +181,8 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
     return track.get('id', null)
   }
 
-  deleteTrackHandler() {
+  deleteTrackHandler(ev: MouseEvent) {
+    ev.stopPropagation()
     if(window.confirm("Really delete track? All annotations will be deleted too.")){
       this.onDeleteTrack.emit({trackIndex: this.trackIndex})
     }
