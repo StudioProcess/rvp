@@ -1,7 +1,7 @@
 import {
   Component, ChangeDetectionStrategy, OnInit,
   OnDestroy, AfterViewInit, Renderer2,
-  ChangeDetectorRef
+  //ChangeDetectorRef
 } from '@angular/core'
 
 import {Store} from '@ngrx/store'
@@ -11,7 +11,6 @@ import 'rxjs/add/operator/withLatestFrom'
 
 import * as fromRoot from '../../reducers'
 import * as project from '../../../persistence/actions/project'
-import * as selection from '../../actions/selection'
 import * as player from '../../../player/actions'
 import {fromEventPattern} from '../../../lib/observable'
 import {rndColor} from '../../../lib/color'
@@ -28,17 +27,17 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   private readonly _subs: Subscription[] = []
 
   constructor(
-    private readonly _cdr: ChangeDetectorRef,
+    //private readonly _cdr: ChangeDetectorRef,
     private readonly _rootStore: Store<fromRoot.State>,
     private readonly _renderer: Renderer2) {}
 
   ngOnInit() {
     this._rootStore.dispatch(new project.ProjectLoad())
 
-    const windowMousedown = fromEventPattern(this._renderer, window, 'mousedown')
+    // const windowMousedown = fromEventPattern(this._renderer, window, 'mousedown')
     const windowKeydown = fromEventPattern(this._renderer, window, 'keydown')
 
-    const removeAnnotationHotkey = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 8)
+    //const removeAnnotationHotkey = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 8)
     const togglePlayingHotkey = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 32)
     const addTrackHotkey = windowKeydown.filter((e: KeyboardEvent) => {
       return e.keyCode === 187 || // +
@@ -54,7 +53,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       return e.keyCode === 90 && e.metaKey && e.shiftKey // shift cmd z
     })
 
-    const annotationSelection = this._rootStore.select(fromRoot.getAnnotationSelection).share()
+    //const annotationSelection = this._rootStore.select(fromRoot.getAnnotationSelection).share()
 
     this._subs.push(
       togglePlayingHotkey.subscribe((ev: KeyboardEvent) => {
@@ -70,30 +69,31 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
         this._rootStore.dispatch(new project.ProjectAddTrack({color: rndColor()}))
       }))
 
-    this._subs.push(
-      windowMousedown
-        .withLatestFrom(annotationSelection.filter(selection => selection !== undefined))
-        .subscribe(([, sel]) => {
-          const deselectPayload = {selection: sel!}
-          this._rootStore.dispatch(new selection.SelectionDeselectAnnotation(deselectPayload))
-        }))
+    // this._subs.push(
+    //   windowMousedown
+    //     .withLatestFrom(annotationSelection.filter(selection => selection !== undefined))
+    //     .subscribe(([, sel]) => {
+    //       const deselectPayload = {selection: sel!}
+    //       this._rootStore.dispatch(new selection.SelectionDeselectAnnotation(deselectPayload))
+    //     }))
 
-    this._subs.push(
-      removeAnnotationHotkey
-        .withLatestFrom(annotationSelection)
-        .filter(([_, selection]) => selection !== undefined)
-        .subscribe(([_, sel]) => {
-          const deselectPayload = {selection: sel!}
-          this._rootStore.dispatch(new selection.SelectionDeselectAnnotation(deselectPayload))
+    // TODO: adapt remove selected annotations
+    // this._subs.push(
+    //   removeAnnotationHotkey
+    //     .withLatestFrom(annotationSelection)
+    //     .filter(([_, selection]) => selection !== undefined)
+    //     .subscribe(([_, sel]) => {
+    //       const deselectPayload = {selection: sel!}
+    //       this._rootStore.dispatch(new selection.SelectionDeselectAnnotation(deselectPayload))
 
-          const deletePayload = {
-            trackIndex: sel!.get('trackIndex', null),
-            annotationIndex: sel!.get('annotationIndex', null),
-            annotation: sel!.get('annotation', null)
-          }
-          this._rootStore.dispatch(new project.ProjectDeleteAnnotation(deletePayload))
-          this._cdr.markForCheck()
-        }))
+    //       const deletePayload = {
+    //         trackIndex: sel!.get('trackIndex', null),
+    //         annotationIndex: sel!.get('annotationIndex', null),
+    //         annotation: sel!.get('annotation', null)
+    //       }
+    //       this._rootStore.dispatch(new project.ProjectDeleteAnnotation(deletePayload))
+    //       this._cdr.markForCheck()
+    //     }))
 
     this._subs.push(
       undoHotkey.subscribe((e: KeyboardEvent) => {

@@ -204,3 +204,7 @@ export const getProjectMeta = (state: State) => {
   return state.get('meta', null)
 }
 export const getProjectVideo = (state: State) => state.get('video', null)
+
+export const getProjectSelection = (state: State) => {
+  return state.get('selection', null)
+}

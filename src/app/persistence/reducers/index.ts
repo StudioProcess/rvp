@@ -66,4 +66,24 @@ export const getSortedFlattenedAnnotations = createSelector(getFlattenedAnnotati
 export const getProjectVideo = createSelector(getProjectState, fromProject.getProjectVideo)
 
 
+// Selection
 
+export const getProjectSelection = createSelector(getProjectState, fromProject.getProjectSelection)
+
+export const getProjectAnnotationSelection = createSelector(getProjectSelection, selection => {
+  return selection.get('annotation', null)
+})
+
+// Get complete annotation selection info
+export const getAnnotationsSelections = createSelector(getProjectAnnotationSelection, annotationSelection => {
+  const ranged = annotationSelection.get('range', null)
+  const picked = annotationSelection.get('pick', null)
+  return ranged.union(picked)
+})
+
+// Just pick annotation from selection info
+export const getSelectedAnnotations = createSelector(getAnnotationsSelections, annotationSelections => {
+  return annotationSelections.map(elem => {
+    return elem.get('annotation', null)
+  })
+})

@@ -2,7 +2,7 @@ import {Action} from '@ngrx/store'
 
 import {Record} from 'immutable'
 
-import {Annotation, Track, ProjectSnapshot} from '../model'
+import {Annotation, AnnotationSelection, Track, ProjectSnapshot} from '../model'
 
 export const PROJECT_LOAD = '[Project] Load'
 export const PROJECT_LOAD_SUCCESS = '[Project] Load Success'
@@ -24,6 +24,7 @@ export const PROJECT_RESET_ERROR = '[Project] Reset Error'
 export const PROJECT_ADD_ANNOTATION = '[Project] Add Annotation'
 export const PROJECT_UPDATE_ANNOTATION = '[Project] Update Annotation'
 export const PROJECT_DELETE_ANNOTATION = '[Project] Delete Annotation'
+export const PROJECT_SELECT_ANNOTATION = '[Project] Selection Annotation'
 
 export const PROJECT_ADD_TRACK = '[Project] Add Track'
 export const PROJECT_UPDATE_TRACK = '[Project] Update Track'
@@ -125,6 +126,22 @@ export interface DeleteAnnotationPayload {
 export class ProjectDeleteAnnotation implements Action {
   readonly type = PROJECT_DELETE_ANNOTATION
   constructor(readonly payload: DeleteAnnotationPayload) {}
+}
+
+const enum AnnotationSelectionType {
+  Default,
+  Pick,
+  Range
+}
+
+export interface SelectAnnotationPayload {
+  type: AnnotationSelectionType,
+  selection: AnnotationSelection
+}
+
+export class ProjectSelectAnnotation implements Action {
+  readonly type = PROJECT_SELECT_ANNOTATION
+  constructor(readonly payload: SelectAnnotationPayload){}
 }
 
 type AddTrackPayload = Partial<Track>

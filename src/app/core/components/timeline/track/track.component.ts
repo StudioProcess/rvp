@@ -32,8 +32,6 @@ import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 import {coordTransform} from '../../../../lib/coords'
 import {Handlebar} from '../handlebar/handlebar.component'
 import * as project from '../../../../persistence/actions/project'
-import * as selection from '../../../actions/selection'
-import * as fromSelection from '../../../reducers/selection'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -56,7 +54,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   @Output() readonly onUpdateTrack = new EventEmitter<project.UpdateTrackPayload>()
   @Output() readonly onUpdateAnnotation = new EventEmitter<project.UpdateAnnotationPayload>()
   @Output() readonly onDeleteTrack = new EventEmitter<project.DeleteTrackPlayload>()
-  @Output() readonly onSelectAnnotation = new EventEmitter<selection.SelectionAnnotationPayload>()
+  // @Output() readonly onSelectAnnotation = new EventEmitter<selection.SelectionAnnotationPayload>()
   @Output() readonly onAddAnnotation = new EventEmitter<project.AddAnnotationPayload>()
   @Output() readonly onDuplicateTrack = new EventEmitter<project.DuplicateTrackPayload>()
   @Output() readonly onInsertAtTrack = new EventEmitter<project.TrackInsertAtPayload>()
@@ -163,14 +161,14 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
 
     defaultClick.subscribe(({annotationIndex, annotation}) => {
       console.log('default click')
-      this.onSelectAnnotation.emit({
-        selection: new fromSelection.AnnotationSelectionFactory({
-          annotationIndex,
-          trackIndex: this.trackIndex,
-          annotation,
-          source: fromSelection.SelectionSource.Timeline
-        })
-      })
+      // this.onSelectAnnotation.emit({
+      //   selection: new fromSelection.AnnotationSelectionFactory({
+      //     annotationIndex,
+      //     trackIndex: this.trackIndex,
+      //     annotation,
+      //     source: fromSelection.SelectionSource.Timeline
+      //   })
+      // })
     })
 
     shiftClick.subscribe(() => {

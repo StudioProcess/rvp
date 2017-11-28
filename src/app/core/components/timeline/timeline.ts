@@ -14,7 +14,7 @@ import {Record} from 'immutable'
 import {Observable} from 'rxjs/Observable'
 import {ReplaySubject} from 'rxjs/ReplaySubject'
 import {Subscription} from 'rxjs/Subscription'
-import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame'
+// import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame'
 import 'rxjs/add/observable/combineLatest'
 import 'rxjs/add/observable/merge'
 import 'rxjs/add/observable/concat'
@@ -22,12 +22,9 @@ import 'rxjs/add/observable/of'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/startWith'
 
-import * as fromSelection from '../../reducers'
 import * as fromProject from '../../../persistence/reducers'
 import * as fromPlayer from '../../../player/reducers'
 import * as project from '../../../persistence/actions/project'
-import * as selection from '../../actions/selection'
-import {AnnotationSelectionFactory, SelectionSource} from '../../reducers/selection'
 import * as player from '../../../player/actions'
 import {Timeline, Track} from '../../../persistence/model'
 import {fromEventPattern} from '../../../lib/observable'
@@ -84,16 +81,16 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
         this._cdr.markForCheck()
       }))
 
-    this._subs.push(
-      this._store.select(fromSelection.getAnnotationSelection)
-        .subscribe(annotationSelection => {
-          if(annotationSelection !== undefined) {
-            this.selectedAnnotationId = annotationSelection.getIn(['annotation', 'id'])
-          } else {
-            this.selectedAnnotationId = null
-          }
-          this._cdr.markForCheck()
-        }))
+    // this._subs.push(
+    //   this._store.select(fromSelection.getAnnotationSelection)
+    //     .subscribe(annotationSelection => {
+    //       if(annotationSelection !== undefined) {
+    //         this.selectedAnnotationId = annotationSelection.getIn(['annotation', 'id'])
+    //       } else {
+    //         this.selectedAnnotationId = null
+    //       }
+    //       this._cdr.markForCheck()
+    //     }))
 
     this._subs.push(
       this._store.select(fromPlayer.getCurrentTime)
@@ -229,24 +226,24 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   updateAnnotation(updateAnnotation: project.UpdateAnnotationPayload) {
     this._store.dispatch(new project.ProjectUpdateAnnotation(updateAnnotation))
 
-    const sub = Observable.of(null, animationScheduler).subscribe(() => {
-      // Keep annotation focused in inspector
-      this.selectAnnotation({
-        selection: new AnnotationSelectionFactory({
-          trackIndex: updateAnnotation.trackIndex,
-          annotationIndex: updateAnnotation.annotationIndex,
-          annotation: updateAnnotation.annotation,
-          source: SelectionSource.Timeline
-        })
-      })
-      sub.unsubscribe()
-    })
+    // const sub = Observable.of(null, animationScheduler).subscribe(() => {
+    //   // Keep annotation focused in inspector
+    //   this.selectAnnotation({
+    //     selection: new AnnotationSelectionFactory({
+    //       trackIndex: updateAnnotation.trackIndex,
+    //       annotationIndex: updateAnnotation.annotationIndex,
+    //       annotation: updateAnnotation.annotation,
+    //       source: SelectionSource.Timeline
+    //     })
+    //   })
+    //   sub.unsubscribe()
+    // })
   }
 
-  selectAnnotation(annotation: selection.SelectionAnnotationPayload) {
-    this._store.dispatch(new selection.SelectionResetAnnotation())
-    this._store.dispatch(new selection.SelectionSelectAnnotation(annotation))
-  }
+  // selectAnnotation(annotation: selection.SelectionAnnotationPayload) {
+  //   this._store.dispatch(new selection.SelectionResetAnnotation())
+  //   this._store.dispatch(new selection.SelectionSelectAnnotation(annotation))
+  // }
 
   addTrack() {
     this._store.dispatch(new project.ProjectAddTrack({color: rndColor()}))

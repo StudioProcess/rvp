@@ -19,7 +19,7 @@ export const ProjectSnapshotsRecordFactory = Record<ProjectSnapshots>({
 
 export const ProjectAnnotationSelectionRecordFactory = Record<ProjectAnnotationSelection>({
   range: Set(),
-  click: Set(),
+  pick: Set(),
   selected: null
 })
 
@@ -88,12 +88,12 @@ export interface ProjectMeta {
 }
 
 export interface ProjectSelection {
-  readonly annotation: ProjectAnnotationSelection
+  readonly annotation: Record<ProjectAnnotationSelection>
 }
 
 export interface ProjectAnnotationSelection {
   readonly range: Set<Record<AnnotationSelection>> // ranged selection via shift click
-  readonly click: Set<Record<AnnotationSelection>> // click selection via cmd click
+  readonly pick: Set<Record<AnnotationSelection>> // picked selection via cmd click
   readonly selected: Record<AnnotationSelection>|null   // special usage
 }
 
