@@ -10,7 +10,7 @@ import {
   AnnotationRecordFactory, AnnotationFieldsRecordFactory,
   ProjectMetaRecordFactory, Timeline, ProjectSnapshot,
   ProjectSnapshotRecordFactory, ProjectAnnotationSelection,
-  AnnotationSelection
+  AnnotationSelection, AnnotationSelectionRecordFactory
 } from '../model'
 
 const initialState = new ProjectRecordFactory()
@@ -241,7 +241,37 @@ export function reducer(state: State = initialState, action: project.Actions): S
           }
         }
         case project.AnnotationSelectionType.Range: {
-          return state
+          const curTrackIndex = selection.get('trackIndex', null)
+          const curSource = selection.get('source', null)
+          const curSelected = state.getIn(['selection', 'annotation', 'selected'])
+          const curTrack = state.getIn(['meta', 'timeline', 'tracks', curTrackIndex])
+          const pivot = curSelected ? curSelected.get('annotation', null) : curTrack.getIn(['annotations', 0])
+
+          const curAnnotations = curTrack.get('annotations')
+          const pivotKey = curAnnotations.findKey((a: any) => a === pivot)
+          const selectionKey = selection.get('annotationIndex', null)
+
+          if(pivotKey < selectionKey) {
+            const range = curAnnotations.slice(pivotKey, selectionKey+1).map((a: any, i: number) => {
+              return AnnotationSelectionRecordFactory({
+                trackIndex: curTrackIndex,
+                annotationIndex: pivotKey+i,
+                annotation: a,
+                source: curSource
+              })
+            })
+            return state.setIn(['selection', 'annotation', 'range'], range.toSet())
+          } else {
+            const range = curAnnotations.slice(selectionKey, pivotKey+1).map((a: any, i: number) => {
+              return AnnotationSelectionRecordFactory({
+                trackIndex: curTrackIndex,
+                annotationIndex: pivotKey-i,
+                annotation: a,
+                source: curSource
+              })
+            })
+            return state.setIn(['selection', 'annotation', 'range'], range.toSet())
+          }
         }
       }
     }
