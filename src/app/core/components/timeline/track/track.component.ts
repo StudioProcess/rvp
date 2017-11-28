@@ -58,6 +58,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   @Output() readonly onDeleteTrack = new EventEmitter<project.DeleteTrackPlayload>()
   @Output() readonly onSelectAnnotation = new EventEmitter<selection.SelectionAnnotationPayload>()
   @Output() readonly onAddAnnotation = new EventEmitter<project.AddAnnotationPayload>()
+  @Output() readonly onDuplicateTrack = new EventEmitter<project.DuplicateTrackPayload>()
 
   private readonly _subs: Subscription[] = []
   private readonly addAnnotationClick = new Subject<MouseEvent>()
@@ -213,8 +214,9 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
     $event.stopPropagation()
   }
 
-  duplicateTrack($event: MouseEvent) {
+  duplicateTrack($event: MouseEvent, trackIndex: number) {
     $event.stopPropagation()
+    this.onDuplicateTrack.emit({trackIndex})
   }
 
   ngOnDestroy() {

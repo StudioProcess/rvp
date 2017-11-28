@@ -122,6 +122,23 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const {trackIndex} = action.payload
       return state.deleteIn(['meta', 'timeline', 'tracks', trackIndex])
     }
+    case project.PROJECT_DUPLICATE_TRACK: {
+      const {trackIndex} = action.payload
+      const timeline = state.getIn(['meta', 'timeline'])
+      const track = state.getIn(['meta', 'timeline', 'tracks', trackIndex])
+      const duplicate = track.withMutations((mutableTrack: any) => {
+        mutableTrack.set('id', nextTrackId(timeline))
+        const oldTitle = track.getIn(['fields', 'title'])
+        mutableTrack.setIn(['fields', 'title'], oldTitle !== '' ? `${oldTitle} Copy` : '')
+        mutableTrack.set('annotations', mutableTrack.get('annotations').map((annotation: any, i: number) => {
+          return annotation.set('id', nextAnnotationId(timeline)+i)
+        }))
+      })
+
+      return state.updateIn(['meta', 'timeline', 'tracks'], tracks => {
+        return tracks.insert(trackIndex+1, duplicate)
+      })
+    }
     case project.PROJECT_PUSH_UNDO: {
       const updatedRedo = state.setIn(['snapshots', 'redo'], List())
       return updatedRedo.updateIn(['snapshots', 'undo'], (undoList: List<Record<ProjectSnapshot>>) => {
