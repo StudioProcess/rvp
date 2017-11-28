@@ -8,6 +8,7 @@
       "root": "src",
       "outDir": "dist",
       "assets": [
+        "sw.js",
         "assets",
         "favicon.ico",
         "apple-touch-icon.png"

@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.3.0 (2017-11-28) Offline
+
+* Offline feature via service-worker
+
 # 0.2.0 (2017-11-27) Undo/Redo
 
 * Undo/redo feature (default: 20 actions are saved, see `src/app/config/snapshots.ts`)
