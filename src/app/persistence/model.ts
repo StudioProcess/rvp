@@ -1,4 +1,4 @@
-import {List, Record} from 'immutable'
+import {List, Record, Set} from 'immutable'
 
 // Record factories
 
@@ -17,9 +17,20 @@ export const ProjectSnapshotsRecordFactory = Record<ProjectSnapshots>({
   redo: List<Record<ProjectSnapshot>>()
 })
 
+export const ProjectAnnotationSelectionRecordFactory = Record<ProjectAnnotationSelection>({
+  range: Set(),
+  click: Set(),
+  selected: null
+})
+
+export const ProjectSelectionRecordFactory = Record<ProjectSelection>({
+  annotation: new ProjectAnnotationSelectionRecordFactory()
+})
+
 export const ProjectRecordFactory = Record<Project>({
   meta: null,
   video: null,
+  selection: new ProjectSelectionRecordFactory(),
   snapshots: new ProjectSnapshotsRecordFactory()
 })
 
@@ -67,12 +78,36 @@ export const AnnotationColorMapRecordFactory = Record<AnnotationColorMap>({
 export interface Project {
   readonly meta: Record<ProjectMeta>|null
   readonly video: Blob|null,
+  readonly selection: Record<ProjectSelection>
   readonly snapshots: ProjectSnapshots
 }
 
 export interface ProjectMeta {
   readonly id: number|null
   readonly timeline: Record<Timeline>|null
+}
+
+export interface ProjectSelection {
+  readonly annotation: ProjectAnnotationSelection
+}
+
+export interface ProjectAnnotationSelection {
+  readonly range: Set<Record<AnnotationSelection>> // ranged selection via shift click
+  readonly click: Set<Record<AnnotationSelection>> // click selection via cmd click
+  readonly selected: Record<AnnotationSelection>|null   // special usage
+}
+
+export const enum SelectionSource {
+  None,
+  Timeline,
+  Inspector
+}
+
+export interface AnnotationSelection {
+  readonly trackIndex: number
+  readonly annotationIndex: number
+  readonly annotation: Record<Annotation>
+  readonly source: SelectionSource
 }
 
 /* Use List as double ended queue
