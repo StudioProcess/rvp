@@ -84,6 +84,6 @@ export const getAnnotationsSelections = createSelector(getProjectAnnotationSelec
 // Just pick annotation from selection info
 export const getSelectedAnnotations = createSelector(getAnnotationsSelections, annotationSelections => {
   return annotationSelections.map(elem => {
-    return elem.get('annotation', null)
+    return elem.get('annotation', null)!
   })
 })
