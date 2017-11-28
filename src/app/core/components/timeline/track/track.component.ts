@@ -64,6 +64,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   private readonly _subs: Subscription[] = []
   private readonly addAnnotationClick = new Subject<MouseEvent>()
   private readonly updateAnnotationSubj = new Subject<{hb: Handlebar, annotationIndex: number}>()
+  private readonly annotationMdSubj = new Subject<{ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number}>()
 
   @ViewChild('title') private readonly titleInput: ElementRef
 
@@ -155,6 +156,30 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
             })
           })
         }))
+
+    const defaultClick = this.annotationMdSubj.filter(({ev}) => !ev.shiftKey && !ev.metaKey)
+    const shiftClick = this.annotationMdSubj.filter(({ev}) => ev.shiftKey && !ev.metaKey)
+    const cmdClick = this.annotationMdSubj.filter(({ev}) => !ev.shiftKey && ev.metaKey)
+
+    defaultClick.subscribe(({annotationIndex, annotation}) => {
+      console.log('default click')
+      this.onSelectAnnotation.emit({
+        selection: new fromSelection.AnnotationSelectionFactory({
+          annotationIndex,
+          trackIndex: this.trackIndex,
+          annotation,
+          source: fromSelection.SelectionSource.Timeline
+        })
+      })
+    })
+
+    shiftClick.subscribe(() => {
+      console.log('shift click')
+    })
+
+    cmdClick.subscribe(() => {
+      console.log('cmd click')
+    })
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -191,16 +216,9 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  selectAnnotation(ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number) {
+  annotationClick(ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number) {
     ev.stopPropagation()
-    this.onSelectAnnotation.emit({
-      selection: new fromSelection.AnnotationSelectionFactory({
-        annotationIndex,
-        trackIndex: this.trackIndex,
-        annotation,
-        source: fromSelection.SelectionSource.Timeline
-      })
-    })
+    this.annotationMdSubj.next({ev, annotation, annotationIndex})
   }
 
   addAnnotation(ev: MouseEvent) {
