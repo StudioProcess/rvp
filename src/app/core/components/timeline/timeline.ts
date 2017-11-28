@@ -19,6 +19,7 @@ import 'rxjs/add/observable/combineLatest'
 import 'rxjs/add/observable/merge'
 import 'rxjs/add/observable/concat'
 import 'rxjs/add/observable/of'
+import 'rxjs/add/observable/fromEvent'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/startWith'
 
@@ -178,9 +179,9 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
           })
         }))
 
-    const mousemove: Observable<MouseEvent> = fromEventPattern(this._renderer, this._document, 'mousemove')
-    const mouseup: Observable<MouseEvent> = fromEventPattern(this._renderer, this._document, 'mouseup')
-    const placeHeadMd: Observable<MouseEvent> = fromEventPattern(this._renderer, this.timelineOverflowRef.nativeElement, 'mousedown')
+    const mousemove: Observable<MouseEvent> = Observable.fromEvent(this._document, 'mousemove')
+    const mouseup: Observable<MouseEvent> = Observable.fromEvent(this._document, 'mouseup')
+    const placeHeadMd: Observable<MouseEvent> = Observable.fromEvent(this.timelineOverflowRef.nativeElement, 'mousedown')
 
     this._subs.push(placeHeadMd
       .switchMap(md => {
