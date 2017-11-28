@@ -85,7 +85,6 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       this._store.select(fromProject.getSelectedAnnotations)
         .subscribe(selAnnotations => {
           this.selectedAnnotations = selAnnotations
-          console.log('selection')
           this._cdr.markForCheck()
         }))
 
