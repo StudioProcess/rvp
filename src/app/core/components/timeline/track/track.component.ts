@@ -25,13 +25,21 @@ import 'rxjs/add/operator/distinctUntilChanged'
 
 import {
   Track, Annotation, AnnotationRecordFactory,
-  TrackRecordFactory, TrackFieldsRecordFactory
+  TrackRecordFactory, TrackFieldsRecordFactory,
+  AnnotationSelectionRecordFactory, SelectionSource
 } from '../../../../persistence/model'
 import {_FORM_INPUT_DEBOUNCE_} from '../../../../config/form'
 import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 import {coordTransform} from '../../../../lib/coords'
 import {Handlebar} from '../handlebar/handlebar.component'
 import * as project from '../../../../persistence/actions/project'
+
+interface EmitAnnotationSelectionArgs {
+  readonly annotationIndex: number
+  readonly trackIndex: number
+  readonly annotation: Record<Annotation>
+  readonly type: project.AnnotationSelectionType
+}
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,7 +62,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   @Output() readonly onUpdateTrack = new EventEmitter<project.UpdateTrackPayload>()
   @Output() readonly onUpdateAnnotation = new EventEmitter<project.UpdateAnnotationPayload>()
   @Output() readonly onDeleteTrack = new EventEmitter<project.DeleteTrackPlayload>()
-  // @Output() readonly onSelectAnnotation = new EventEmitter<selection.SelectionAnnotationPayload>()
+  @Output() readonly onSelectAnnotation = new EventEmitter<project.SelectAnnotationPayload>()
   @Output() readonly onAddAnnotation = new EventEmitter<project.AddAnnotationPayload>()
   @Output() readonly onDuplicateTrack = new EventEmitter<project.DuplicateTrackPayload>()
   @Output() readonly onInsertAtTrack = new EventEmitter<project.TrackInsertAtPayload>()
@@ -156,27 +164,43 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
         }))
 
     const defaultClick = this.annotationMdSubj.filter(({ev}) => !ev.shiftKey && !ev.metaKey)
-    const shiftClick = this.annotationMdSubj.filter(({ev}) => ev.shiftKey && !ev.metaKey)
-    const cmdClick = this.annotationMdSubj.filter(({ev}) => !ev.shiftKey && ev.metaKey)
+    const rangeClick = this.annotationMdSubj.filter(({ev}) => ev.shiftKey && !ev.metaKey)
+    const pickClick = this.annotationMdSubj.filter(({ev}) => !ev.shiftKey && ev.metaKey)
 
     defaultClick.subscribe(({annotationIndex, annotation}) => {
-      console.log('default click')
-      // this.onSelectAnnotation.emit({
-      //   selection: new fromSelection.AnnotationSelectionFactory({
-      //     annotationIndex,
-      //     trackIndex: this.trackIndex,
-      //     annotation,
-      //     source: fromSelection.SelectionSource.Timeline
-      //   })
-      // })
+      this.emitSelectAnnotation({
+        type: project.AnnotationSelectionType.Default,
+        annotation, annotationIndex,
+        trackIndex: this.trackIndex
+      })
     })
 
-    shiftClick.subscribe(() => {
-      console.log('shift click')
+    rangeClick.subscribe(({annotationIndex, annotation}) => {
+      this.emitSelectAnnotation({
+        type: project.AnnotationSelectionType.Range,
+        annotation, annotationIndex,
+        trackIndex: this.trackIndex
+      })
     })
 
-    cmdClick.subscribe(() => {
-      console.log('cmd click')
+    pickClick.subscribe(({annotationIndex, annotation}) => {
+      this.emitSelectAnnotation({
+        type: project.AnnotationSelectionType.Pick,
+        annotation, annotationIndex,
+        trackIndex: this.trackIndex
+      })
+    })
+  }
+
+  private emitSelectAnnotation({annotationIndex, trackIndex, annotation, type}: EmitAnnotationSelectionArgs) {
+    this.onSelectAnnotation.emit({
+      type,
+      selection: AnnotationSelectionRecordFactory({
+        annotationIndex,
+        trackIndex,
+        annotation,
+        source: SelectionSource.Timeline
+      })
     })
   }
 
