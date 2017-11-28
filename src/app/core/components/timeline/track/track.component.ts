@@ -9,7 +9,7 @@ import {FormGroup, FormBuilder, Validators} from '@angular/forms'
 
 const _VALID_ = 'VALID' // not exported by @angular/forms
 
-import {Record} from 'immutable'
+import {Record, Set} from 'immutable'
 
 import {Observable} from 'rxjs/Observable'
 import {Subject} from 'rxjs/Subject'
@@ -52,7 +52,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   @Input() readonly trackIndex: number
   @Input() readonly numTracks: number
   @Input() readonly totalDuration: number
-  @Input() readonly selectedAnnotationId: number
+  @Input() readonly selectedAnnotations: Set<Record<Annotation>>
   @Input() readonly containerRect: Observable<ClientRect>
 
   form: FormGroup|null = null
@@ -225,6 +225,10 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
 
   getAnnotationWidth(annotation: Annotation) {
     return Math.min(Math.max(_MIN_WIDTH_, annotation.duration / this.totalDuration * 100), 100)
+  }
+
+  isSelectedAnnotation(annotation: Record<Annotation>) {
+    return this.selectedAnnotations ? this.selectedAnnotations.has(annotation) : null
   }
 
   trackByFunc(_: number, track: Record<Track>) {

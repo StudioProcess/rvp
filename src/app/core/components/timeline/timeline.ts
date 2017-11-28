@@ -9,7 +9,7 @@ import {DOCUMENT} from '@angular/platform-browser'
 
 import {Store} from '@ngrx/store'
 
-import {Record} from 'immutable'
+import {Record, Set} from 'immutable'
 
 import {Observable} from 'rxjs/Observable'
 import {ReplaySubject} from 'rxjs/ReplaySubject'
@@ -27,7 +27,7 @@ import * as fromProject from '../../../persistence/reducers'
 import * as fromPlayer from '../../../player/reducers'
 import * as project from '../../../persistence/actions/project'
 import * as player from '../../../player/actions'
-import {Timeline, Track} from '../../../persistence/model'
+import {Timeline, Track, Annotation} from '../../../persistence/model'
 import {fromEventPattern} from '../../../lib/observable'
 import {HandlebarComponent} from '../../components/timeline/handlebar/handlebar.component'
 import {_SCROLLBAR_CAPTION_} from '../../../config/timeline/scrollbar'
@@ -47,8 +47,7 @@ export interface ScrollSettings {
 })
 export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   timeline: Record<Timeline>
-  selectedAnnotationId: number|null
-  // scrollLeft = 0
+  selectedAnnotations: Set<Record<Annotation>>
   zoom = 1
   playerPos = 0
   playerCurrentTime = 0
@@ -82,16 +81,13 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
         this._cdr.markForCheck()
       }))
 
-    // this._subs.push(
-    //   this._store.select(fromSelection.getAnnotationSelection)
-    //     .subscribe(annotationSelection => {
-    //       if(annotationSelection !== undefined) {
-    //         this.selectedAnnotationId = annotationSelection.getIn(['annotation', 'id'])
-    //       } else {
-    //         this.selectedAnnotationId = null
-    //       }
-    //       this._cdr.markForCheck()
-    //     }))
+    this._subs.push(
+      this._store.select(fromProject.getSelectedAnnotations)
+        .subscribe(selAnnotations => {
+          this.selectedAnnotations = selAnnotations
+          console.log('selection')
+          this._cdr.markForCheck()
+        }))
 
     this._subs.push(
       this._store.select(fromPlayer.getCurrentTime)

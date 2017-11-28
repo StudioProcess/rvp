@@ -10,7 +10,7 @@
     <rv-track *ngFor="let track of timeline?.get('tracks', []); index as i; trackBy: trackByFunc;"
       [data]="track" [trackIndex]="i" [numTracks]="getNumTracks()" [totalDuration]="timeline.duration"
       [containerRect]="zoomContainerRect"
-      [selectedAnnotationId]="selectedAnnotationId"
+      [selectedAnnotations]="selectedAnnotations"
       (onUpdateTrack)="updateTrack($event)"
       (onDeleteTrack)="deleteTrack($event)"
       (onDuplicateTrack)="duplicateTrack($event)"
