@@ -1,10 +1,10 @@
-import {List} from 'immutable'
+import {List, Record, Set} from 'immutable'
 
 import {ActionReducerMap, createSelector, createFeatureSelector} from '@ngrx/store'
 
 import * as fromProject from './project'
 
-import {AnnotationColorMapRecordFactory} from '../model'
+import {AnnotationColorMapRecordFactory, AnnotationSelection} from '../model'
 
 export interface State {
   readonly project: fromProject.State,
@@ -78,7 +78,9 @@ export const getProjectAnnotationSelection = createSelector(getProjectSelection,
 export const getAnnotationsSelections = createSelector(getProjectAnnotationSelection, annotationSelection => {
   const ranged = annotationSelection.get('range', null)
   const picked = annotationSelection.get('pick', null)
-  return ranged.union(picked)
+  const selected = annotationSelection.get('selected', null)
+  const selectedSet: Set<Record<AnnotationSelection>> = selected ? Set().add(selected) : Set()
+  return ranged.union(picked, selectedSet)
 })
 
 // Just pick annotation from selection info
