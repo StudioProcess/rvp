@@ -2,7 +2,10 @@ import {Action} from '@ngrx/store'
 
 import {Record} from 'immutable'
 
-import {Annotation, AnnotationSelection, Track, ProjectSnapshot} from '../model'
+import {
+  Annotation, AnnotationSelection,
+  Track, ProjectSnapshot
+} from '../model'
 
 export const PROJECT_LOAD = '[Project] Load'
 export const PROJECT_LOAD_SUCCESS = '[Project] Load Success'
@@ -128,7 +131,7 @@ export class ProjectDeleteAnnotation implements Action {
   constructor(readonly payload: DeleteAnnotationPayload) {}
 }
 
-const enum AnnotationSelectionType {
+export const enum AnnotationSelectionType {
   Default,
   Pick,
   Range
@@ -136,7 +139,7 @@ const enum AnnotationSelectionType {
 
 export interface SelectAnnotationPayload {
   type: AnnotationSelectionType,
-  selection: AnnotationSelection
+  selection: Record<AnnotationSelection>
 }
 
 export class ProjectSelectAnnotation implements Action {
