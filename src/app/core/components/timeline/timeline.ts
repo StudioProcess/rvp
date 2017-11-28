@@ -264,6 +264,10 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     this._store.dispatch(new project.ProjectDuplicateTrack(duplicateTrack))
   }
 
+  insertTrackAt(insertTrackAt: project.TrackInsertAtPayload) {
+    this._store.dispatch(new project.ProjectInsertAtTrack(insertTrackAt))
+  }
+
   getNumTracks() {
     return this.timeline.get('tracks', null).size
   }

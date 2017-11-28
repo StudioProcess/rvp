@@ -139,6 +139,18 @@ export function reducer(state: State = initialState, action: project.Actions): S
         return tracks.insert(trackIndex+1, duplicate)
       })
     }
+    case project.PROJECT_INSERTAT_TRACK: {
+      const {currentTrackIndex, insertAtIndex} = action.payload
+      const tracks = state.getIn(['meta', 'timeline', 'tracks'])
+      const swapped = tracks.withMutations((mTracks: any) => {
+        // mTracks ~ mutableTracks
+        const tmp = mTracks.get(currentTrackIndex)
+        mTracks.set(currentTrackIndex, mTracks.get(insertAtIndex))
+        mTracks.set(insertAtIndex, tmp)
+      })
+
+      return state.setIn(['meta', 'timeline', 'tracks'], swapped)
+    }
     case project.PROJECT_PUSH_UNDO: {
       const updatedRedo = state.setIn(['snapshots', 'redo'], List())
       return updatedRedo.updateIn(['snapshots', 'undo'], (undoList: List<Record<ProjectSnapshot>>) => {

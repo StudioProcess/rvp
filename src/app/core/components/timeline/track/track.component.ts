@@ -59,6 +59,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   @Output() readonly onSelectAnnotation = new EventEmitter<selection.SelectionAnnotationPayload>()
   @Output() readonly onAddAnnotation = new EventEmitter<project.AddAnnotationPayload>()
   @Output() readonly onDuplicateTrack = new EventEmitter<project.DuplicateTrackPayload>()
+  @Output() readonly onInsertAtTrack = new EventEmitter<project.TrackInsertAtPayload>()
 
   private readonly _subs: Subscription[] = []
   private readonly addAnnotationClick = new Subject<MouseEvent>()
@@ -210,8 +211,12 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
     this.updateAnnotationSubj.next({hb, annotationIndex})
   }
 
-  moveTrack($event: MouseEvent) {
+  moveTrack($event: MouseEvent, trackIndex: number, direction: 'up'|'down') {
     $event.stopPropagation()
+    this.onInsertAtTrack.emit({
+      currentTrackIndex: trackIndex,
+      insertAtIndex: direction === 'up' ? trackIndex-1 : trackIndex+1
+    })
   }
 
   duplicateTrack($event: MouseEvent, trackIndex: number) {
