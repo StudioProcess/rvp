@@ -103,10 +103,17 @@ export const enum SelectionSource {
   Inspector
 }
 
+export const AnnotationSelectionRecordFactory = Record<AnnotationSelection>({
+  trackIndex: -1,
+  annotationIndex: -1,
+  annotation: null,
+  source: SelectionSource.None
+})
+
 export interface AnnotationSelection {
   readonly trackIndex: number
   readonly annotationIndex: number
-  readonly annotation: Record<Annotation>
+  readonly annotation: Record<Annotation>|null
   readonly source: SelectionSource
 }
 
