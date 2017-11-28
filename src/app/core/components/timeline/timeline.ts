@@ -240,10 +240,9 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     // })
   }
 
-  // selectAnnotation(annotation: selection.SelectionAnnotationPayload) {
-  //   this._store.dispatch(new selection.SelectionResetAnnotation())
-  //   this._store.dispatch(new selection.SelectionSelectAnnotation(annotation))
-  // }
+  selectAnnotation(annotation: project.SelectAnnotationPayload) {
+    this._store.dispatch(new project.ProjectSelectAnnotation(annotation))
+  }
 
   addTrack() {
     this._store.dispatch(new project.ProjectAddTrack({color: rndColor()}))
