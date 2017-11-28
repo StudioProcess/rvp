@@ -1,4 +1,4 @@
-import {Record, List} from 'immutable'
+import {Record, List, Set} from 'immutable'
 
 import * as project from '../actions/project'
 
@@ -193,6 +193,28 @@ export function reducer(state: State = initialState, action: project.Actions): S
         return updatedRedo.set('meta', redoSnapshot.get('state', null))
       }
       return state
+    }
+    case project.PROJECT_SELECT_ANNOTATION: {
+      const {type, selection} = action.payload
+      switch(type) {
+        case project.AnnotationSelectionType.Default: {
+          const ret =  state.updateIn(['selection', 'annotation'], annotationSelection => {
+            return annotationSelection.withMutations((mSelection: any) => {
+              mSelection.set('range', Set()),
+              mSelection.set('pick', Set()),
+              mSelection.set('selected', selection)
+            })
+          })
+          debugger
+          return ret
+        }
+        case project.AnnotationSelectionType.Pick: {
+          return state
+        }
+        case project.AnnotationSelectionType.Range: {
+          return state
+        }
+      }
     }
     default: {
       return state
