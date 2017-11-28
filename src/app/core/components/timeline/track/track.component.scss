@@ -51,9 +51,16 @@
     display: inline-block;
     opacity: 0;
 
-    .track-delete-icon {
+    i {
       cursor: pointer;
-      padding-right: $track-deleteicon-paddingright;
+      padding-left: $track-optionsicon-padding;
+      padding-left: $track-optionsicon-padding;
+
+      &.track-delete-icon {
+        cursor: pointer;
+        padding-left: 3*$track-optionsicon-padding;
+        padding-right: $track-deleteicon-paddingright;
+      }
     }
   }
 

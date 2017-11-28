@@ -260,6 +260,10 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     this._store.dispatch(new project.ProjectDeleteTrack(deleteTrack))
   }
 
+  getNumTracks() {
+    return this.timeline.get('tracks', null).size
+  }
+
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
   }

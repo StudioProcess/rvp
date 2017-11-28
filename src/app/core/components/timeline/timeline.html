@@ -8,7 +8,7 @@
 <div #timelineOverflow class="timeline-overflow">
   <div #zoomContainer class="timeline-zoom" [style.width.%]="zoom*100">
     <rv-track *ngFor="let track of timeline?.get('tracks', []); index as i; trackBy: trackByFunc;"
-      [data]="track" [trackIndex]="i" [totalDuration]="timeline.duration"
+      [data]="track" [trackIndex]="i" [numTracks]="getNumTracks()" [totalDuration]="timeline.duration"
       [containerRect]="zoomContainerRect"
       [selectedAnnotationId]="selectedAnnotationId"
       (onUpdateTrack)="updateTrack($event)"

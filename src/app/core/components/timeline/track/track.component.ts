@@ -44,6 +44,7 @@ import * as fromSelection from '../../../reducers/selection'
 export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   @Input() readonly data: Record<Track>
   @Input() readonly trackIndex: number
+  @Input() readonly numTracks: number
   @Input() readonly totalDuration: number
   @Input() readonly selectedAnnotationId: number
   @Input() readonly containerRect: Observable<ClientRect>
@@ -206,6 +207,14 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
 
   updateHandlebar(hb: Handlebar, annotationIndex: number) {
     this.updateAnnotationSubj.next({hb, annotationIndex})
+  }
+
+  moveTrack($event: MouseEvent) {
+    $event.stopPropagation()
+  }
+
+  duplicateTrack($event: MouseEvent) {
+    $event.stopPropagation()
   }
 
   ngOnDestroy() {

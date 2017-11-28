@@ -6,7 +6,10 @@
     <input #title class="title-input" placeholder="Track Title" title="Track Title" formControlName="title">
   </div>
   <div class="column shrink track-options">
-    <button class="ion-android-close track-delete-icon" title="Delete Track" alt="Delete Track" (mousedown)="deleteTrackHandler($event)"></button>
+    <i class="ion-ios-copy-outline track-copy-icon" title="Duplicate" alt="Duplicate" (mousedown)="duplicateTrack($event)"></i>
+    <i *ngIf="trackIndex > 0" class="ion-ios-arrow-up" title="Move Up" alt="Move Up" (mousedown)="moveTrack($event)"></i>
+    <i *ngIf="trackIndex < numTracks-1" class="ion-ios-arrow-down" title="Move Down" alt="Move Down" (mousedown)="moveTrack($event)"></i>
+    <i class="ion-android-close track-delete-icon" title="Delete Track" alt="Delete Track" (mousedown)="deleteTrackHandler($event)"></i>
   </div>
 </div>
 <div class="annotations-wrapper" (dblclick)="addAnnotation($event)">
@@ -20,4 +23,3 @@
     (mousedown)="selectAnnotation($event, annotation, i)">
   </rv-handlebar>
 </div>
-
