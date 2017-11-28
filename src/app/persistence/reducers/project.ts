@@ -9,7 +9,8 @@ import {
   TrackRecordFactory, TrackFieldsRecordFactory,
   AnnotationRecordFactory, AnnotationFieldsRecordFactory,
   ProjectMetaRecordFactory, Timeline, ProjectSnapshot,
-  ProjectSnapshotRecordFactory
+  ProjectSnapshotRecordFactory, ProjectAnnotationSelection,
+  AnnotationSelection
 } from '../model'
 
 const initialState = new ProjectRecordFactory()
@@ -43,6 +44,12 @@ function nextAnnotationId(timeline: Record<Timeline>): number {
   })
 
   return maxId+1
+}
+
+function filterTrackIndex(selection: Set<Record<AnnotationSelection>>, trackIndex: number) {
+  return selection.filter(s => {
+    return s.get('trackIndex', null) === trackIndex
+  })
 }
 
 export function reducer(state: State = initialState, action: project.Actions): State {
@@ -207,7 +214,31 @@ export function reducer(state: State = initialState, action: project.Actions): S
           })
         }
         case project.AnnotationSelectionType.Pick: {
-          return state
+          const aSel: Record<ProjectAnnotationSelection> = state.getIn(['selection', 'annotation'])
+          const pickSelections = aSel.get('pick', null)!
+          const curTrackIndex = selection.get('trackIndex', null)
+          const curSelected = state.getIn(['selection', 'annotation', 'selected'])
+          if(pickSelections.has(selection)) {
+            return state.updateIn(['selection', 'annotation'], annotationSelection => {
+              return annotationSelection.withMutations((mSelection: any) => {
+                mSelection.set('pick', mSelection.get('pick').remove(selection))
+                mSelection.set('range', mSelection.get('range').remove(selection))
+                mSelection.set('selected', null)
+              })
+            })
+          } else {
+            return state.updateIn(['selection', 'annotation'], annotationSelection => {
+              return annotationSelection.withMutations((mSelection: any) => {
+                if(mSelection.get('selected')) {
+                  mSelection.set('pick', mSelection.get('pick').add(curSelected))
+                }
+                mSelection.set('pick', filterTrackIndex(mSelection.get('pick'), curTrackIndex))
+                mSelection.set('range', filterTrackIndex(mSelection.get('range'), curTrackIndex))
+                mSelection.set('pick', mSelection.get('pick').add(selection))
+                mSelection.set('selected', selection)
+              })
+            })
+          }
         }
         case project.AnnotationSelectionType.Range: {
           return state
