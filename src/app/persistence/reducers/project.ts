@@ -225,6 +225,8 @@ export function reducer(state: State = initialState, action: project.Actions): S
                 mState.setIn(['selection', 'annotation', 'selected'], null)
               }
             } else {
+              // Set range, might be different due to filter
+              mState.setIn(['selection', 'annotation', 'range'], rangeSelections)
               mState.setIn(['selection', 'annotation', 'pick'], pickSelections.add(selection))
               mState.setIn(['selection', 'annotation', 'selected'], selection)
             }
