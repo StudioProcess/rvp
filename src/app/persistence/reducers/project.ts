@@ -212,41 +212,23 @@ export function reducer(state: State = initialState, action: project.Actions): S
           })
         }
         case project.AnnotationSelectionType.Pick: {
-          return state
-          // const aSel: Record<ProjectAnnotationSelection> = state.getIn(['selection', 'annotation'])
-          // const pickSelections = aSel.get('pick', null)!
-          // const rangeSelections = aSel.get('range', null)
-          // const curTrackIndex = selection.get('trackIndex', null)
-          // const curSelected = state.getIn(['selection', 'annotation', 'selected'])
-          // debugger
-          // if(rangeSelections.has(selection)) {
-          //   debugger
-          //   return state.updateIn(['selection', 'annotation'], annotationSelection => {
-          //     return annotationSelection.set('range', annotationSelection.get('range').remove(selection))
-          //   })
-          // } else {
-          //   if(pickSelections.has(selection)) {
-          //     return state.updateIn(['selection', 'annotation'], annotationSelection => {
-          //       return annotationSelection.withMutations((mSelection: any) => {
-          //         mSelection.set('pick', mSelection.get('pick').remove(selection))
-          //         mSelection.set('range', mSelection.get('range').remove(selection))
-          //         mSelection.set('selected', null)
-          //       })
-          //     })
-          //   } else {
-          //     return state.updateIn(['selection', 'annotation'], annotationSelection => {
-          //       return annotationSelection.withMutations((mSelection: any) => {
-          //         if(mSelection.get('selected')) {
-          //           mSelection.set('pick', mSelection.get('pick').add(curSelected))
-          //         }
-          //         mSelection.set('pick', filterTrackIndex(mSelection.get('pick'), curTrackIndex))
-          //         mSelection.set('range', filterTrackIndex(mSelection.get('range'), curTrackIndex))
-          //         mSelection.set('pick', mSelection.get('pick').add(selection))
-          //         mSelection.set('selected', selection)
-          //       })
-          //     })
-          //   }
-          // }
+          const rangeSelections = state.getIn(['selection', 'annotation', 'range'])
+          const pickSelections = state.getIn(['selection', 'annotation', 'pick'])
+          const peekSelected = state.getIn(['selection', 'annotation', 'selected'])
+          const isAlreadyPicked = rangeSelections.has(selection) || pickSelections.has(selection)
+          return state.withMutations(mState => {
+            if(isAlreadyPicked) {
+              mState.setIn(['selection', 'annotation', 'range'], rangeSelections.remove(selection))
+              mState.setIn(['selection', 'annotation', 'pick'], pickSelections.remove(selection))
+
+              if(peekSelected === selection) {
+                mState.setIn(['selection', 'annotation', 'selected'], null)
+              }
+            } else {
+              mState.setIn(['selection', 'annotation', 'pick'], pickSelections.add(selection))
+              mState.setIn(['selection', 'annotation', 'selected'], selection)
+            }
+          })
         }
         case project.AnnotationSelectionType.Range: {
           const source = selection.get('source', null)!
