@@ -35,8 +35,7 @@ import {Handlebar} from '../handlebar/handlebar.component'
 import * as project from '../../../../persistence/actions/project'
 
 interface EmitAnnotationSelectionArgs {
-  readonly annotationIndex: number
-  readonly trackIndex: number
+  readonly track: Record<Track>
   readonly annotation: Record<Annotation>
   readonly type: project.AnnotationSelectionType
 }
@@ -170,35 +169,30 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
     defaultClick.subscribe(({annotationIndex, annotation}) => {
       this.emitSelectAnnotation({
         type: project.AnnotationSelectionType.Default,
-        annotation, annotationIndex,
-        trackIndex: this.trackIndex
+        track: this.data, annotation
       })
     })
 
     rangeClick.subscribe(({annotationIndex, annotation}) => {
       this.emitSelectAnnotation({
         type: project.AnnotationSelectionType.Range,
-        annotation, annotationIndex,
-        trackIndex: this.trackIndex
+        track: this.data, annotation
       })
     })
 
     pickClick.subscribe(({annotationIndex, annotation}) => {
       this.emitSelectAnnotation({
         type: project.AnnotationSelectionType.Pick,
-        annotation, annotationIndex,
-        trackIndex: this.trackIndex
+        track: this.data, annotation
       })
     })
   }
 
-  private emitSelectAnnotation({annotationIndex, trackIndex, annotation, type}: EmitAnnotationSelectionArgs) {
+  private emitSelectAnnotation({track, annotation, type}: EmitAnnotationSelectionArgs) {
     this.onSelectAnnotation.emit({
       type,
       selection: AnnotationSelectionRecordFactory({
-        annotationIndex,
-        trackIndex,
-        annotation,
+        track, annotation,
         source: SelectionSource.Timeline
       })
     })
