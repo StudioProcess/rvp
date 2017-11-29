@@ -208,7 +208,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
         case project.AnnotationSelectionType.Pick: {
           const track = selection.get('track', null)!
           const filterByTrackFunc = (sel: Record<AnnotationSelection>) => {
-            return sel.get('track', null) === track
+            return sel.get('track', null)!.equals(track)
           }
 
           const rangeSelections = state.getIn(['selection', 'annotation', 'range']).filter(filterByTrackFunc)
@@ -233,19 +233,23 @@ export function reducer(state: State = initialState, action: project.Actions): S
         case project.AnnotationSelectionType.Range: {
           const source = selection.get('source', null)!
           const track = selection.get('track', null)!
+          const filterByTrackFunc = (sel: Record<AnnotationSelection>) => {
+            return sel.get('track', null)!.equals(track)
+          }
           const annotation = selection.get('annotation', null)!
           const annotations = track.get('annotations', null)
           const sortedAnnotations = annotations.sort((a1, a2) => {
             return a1.get('utc_timestamp', null)! - a2.get('utc_timestamp', null)!
           })
-          const peekSelected: Record<AnnotationSelection> = state.getIn(['selection', 'annotation', 'selected'])
+          const peekSelected: Record<AnnotationSelection>|null = state.getIn(['selection', 'annotation', 'selected'])
           const fa = track.getIn(['annotations', 0]) // fa ~ first annotation in current track
 
-          const pivot = peekSelected ? peekSelected.get('annotation', null) : fa
+          const pivot = peekSelected && peekSelected.get('track', null)!.equals(track) ?
+            peekSelected.get('annotation', null) : fa
           const limit = annotation
 
-          const pivotKey = sortedAnnotations.findKey(a => a === pivot)!
-          const limitKey = sortedAnnotations.findKey(a => a === limit)!
+          const pivotKey = sortedAnnotations.findKey(a => a.equals(pivot))!
+          const limitKey = sortedAnnotations.findKey(a => a.equals(limit))!
 
           const range = pivotKey < limitKey ?
             sortedAnnotations.slice(pivotKey, limitKey+1):
@@ -255,19 +259,20 @@ export function reducer(state: State = initialState, action: project.Actions): S
             return AnnotationSelectionRecordFactory({track, annotation: aRec, source})
           })
 
-          const rangeSelection = rangeSelectionRecords.toSet()
+          return state.withMutations(mState => {
+            const pickSelections = mState.getIn(['selection', 'annotation', 'pick'])
+            mState.setIn(['selection', 'annotation', 'pick'], pickSelections.filter(filterByTrackFunc))
 
-          if(peekSelected) {
-            return state.setIn(['selection', 'annotation', 'range'], rangeSelection)
-          } else {
-            const newSelectionRecord = AnnotationSelectionRecordFactory({
-              track, annotation: fa, source
-            })
-            return state.withMutations(mState => {
+            const rangeSelection = rangeSelectionRecords.toSet()
+            mState.setIn(['selection', 'annotation', 'range'], rangeSelection)
+
+            if(peekSelected === null || !peekSelected.get('track', null)!.equals(track)) {
+              const newSelectionRecord = AnnotationSelectionRecordFactory({
+                track, annotation: fa, source
+              })
               mState.setIn(['selection', 'annotation', 'selected'], newSelectionRecord)
-              mState.setIn(['selection', 'annotation', 'range'], rangeSelection)
-            })
-          }
+            }
+          })
         }
       }
     }
