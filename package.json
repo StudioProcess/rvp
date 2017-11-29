@@ -42,7 +42,7 @@
     "immutable": "^4.0.0-rc.9",
     "jszip": "^3.1.5",
     "jszip-utils": "0.0.2",
-    "localforage": "^1.5.3",
+    "localforage": "^1.5.4",
     "moment": "^2.19.2",
     "pace-progress": "^1.0.2",
     "rxjs": "^5.5.2",
