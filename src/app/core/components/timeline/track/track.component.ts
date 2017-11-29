@@ -73,7 +73,9 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
 
   @ViewChild('title') private readonly titleInput: ElementRef
 
-  constructor(private readonly _fb: FormBuilder) {}
+  constructor(
+    private readonly _elem: ElementRef,
+    private readonly _fb: FormBuilder) {}
 
   ngOnInit() {
     this.form = this._fb.group({
@@ -83,6 +85,25 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
     const titleInputMd = Observable.fromEvent(this.titleInput.nativeElement, 'mousedown')
     const titleInputKeydown = Observable.fromEvent(this.titleInput.nativeElement, 'keydown')
     const formBlur = Observable.fromEvent(this.titleInput.nativeElement, 'blur')
+
+    const hostMouseEnterTs = Observable.fromEvent(this._elem.nativeElement, 'mouseenter').map(() => Date.now())
+    const hostMouseLeaveTs = Observable.fromEvent(this._elem.nativeElement, 'mouseleave').map(() => Date.now()).startWith(Date.now())
+
+    const hostHover = hostMouseEnterTs
+      .combineLatest(hostMouseLeaveTs, (enterTs, leaveTs) => {
+        return enterTs > leaveTs
+      })
+
+    const pasteHotkey: Observable<KeyboardEvent> = Observable.fromEvent(window, 'keydown')
+      .filter((ev: KeyboardEvent) => {
+        return ev.keyCode === 86 && ev.metaKey // cmd v
+      })
+
+    this._subs.push(
+      pasteHotkey.withLatestFrom(hostHover).filter(([, hover]) => hover)
+        .subscribe(() => {
+          console.log('paste', this.trackIndex)
+        }))
 
     this._subs.push(
       titleInputMd.subscribe((ev: KeyboardEvent) => {
