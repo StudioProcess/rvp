@@ -171,6 +171,7 @@ export class ServerProxy {
           return action.type === project.PROJECT_UPDATE_ANNOTATION ||
             action.type === project.PROJECT_ADD_ANNOTATION ||
             action.type === project.PROJECT_DELETE_SELECTED_ANNOTATIONS ||
+            action.type === project.PROJECT_PASTE_CLIPBOARD ||
             action.type === project.PROJECT_UPDATE_TRACK ||
             action.type === project.PROJECT_ADD_TRACK ||
             action.type === project.PROJECT_DELETE_TRACK ||
