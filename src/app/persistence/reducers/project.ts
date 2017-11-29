@@ -9,9 +9,8 @@ import {
   TrackRecordFactory, TrackFieldsRecordFactory,
   AnnotationRecordFactory, AnnotationFieldsRecordFactory,
   ProjectMetaRecordFactory, Timeline, ProjectSnapshot,
-  ProjectSnapshotRecordFactory, /*ProjectAnnotationSelection,*/
-  AnnotationSelection, AnnotationSelectionRecordFactory,
-  Track
+  ProjectSnapshotRecordFactory, Track, Annotation,
+  AnnotationSelection, AnnotationSelectionRecordFactory
 } from '../model'
 
 const initialState = new ProjectRecordFactory()
@@ -342,8 +341,24 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state.set('clipboard', all)
     }
     case project.PROJECT_PASTE_CLIPBOARD: {
-      debugger
-      return state
+      const {trackIndex} = action.payload
+      const all = getAllSelections(state)
+      if(!all.isEmpty()) {
+        const timeline = state.getIn(['meta', 'timeline'])
+        const annotations: List<Record<Annotation>> = state.getIn(['meta', 'timeline', 'tracks', trackIndex, 'annotations'])
+        const newAnnotations = all.toList().map((annotationSelection, i) => {
+          const annotation = annotationSelection.get('annotation', null)!
+          return annotation.set('id', nextAnnotationId(timeline)+i)
+        })
+
+        return state.withMutations(mState => {
+          mState.set('clipboard', Set())
+          const concatAnnotations = annotations.concat(newAnnotations)
+          mState.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotations'], concatAnnotations)
+        })
+      } else {
+        return state
+      }
     }
     default: {
       return state
