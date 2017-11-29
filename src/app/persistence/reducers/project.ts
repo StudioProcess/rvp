@@ -205,14 +205,11 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const {type, selection} = action.payload
       switch(type) {
         case project.AnnotationSelectionType.Default: {
-          return state
-          // return state.updateIn(['selection', 'annotation'], annotationSelection => {
-          //   return annotationSelection.withMutations((mSelection: any) => {
-          //     mSelection.set('range', Set()),
-          //     mSelection.set('pick', Set()),
-          //     mSelection.set('selected', selection)
-          //   })
-          // })
+          return state.withMutations(mState => {
+            mState.setIn(['selection', 'annotation', 'range'], Set())
+            mState.setIn(['selection', 'annotation', 'pick'], Set())
+            mState.setIn(['selection', 'annotation', 'selected'], selection)
+          })
         }
         case project.AnnotationSelectionType.Pick: {
           return state
