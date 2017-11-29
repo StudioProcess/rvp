@@ -112,7 +112,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
         return annotationSelection.get('annotation', null)!
       })
 
-      if(all.first()) {
+      if(!all.isEmpty()) {
         const fa = all.first()!
         const track = fa.get('track', null)!
         const tracks: List<Record<Track>> = state.getIn(['meta', 'timeline', 'tracks'])
@@ -154,10 +154,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const {trackIndex} = action.payload
       const track: Record<Track> = state.getIn(['meta', 'timeline', 'tracks', trackIndex])
       const allSelections = getAllSelections(state)
-      const fs = allSelections.first()
 
       // Deleted track is track with selections? If so, clear selection
-      if(fs) {
+      if(!allSelections.isEmpty()) {
+        const fs = allSelections.first()!
         const trackWithSelections = fs.get('track', null)!
         if(track.equals(trackWithSelections)) {
           return state.withMutations(mState => {
