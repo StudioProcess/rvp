@@ -213,7 +213,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
 
           const rangeSelections = state.getIn(['selection', 'annotation', 'range']).filter(filterByTrackFunc)
           const pickSelections = state.getIn(['selection', 'annotation', 'pick']).filter(filterByTrackFunc)
-          const peekSelected = state.getIn(['selection', 'annotation', 'selected'])
+          const peekSelected: Record<AnnotationSelection>|null = state.getIn(['selection', 'annotation', 'selected'])
           const isAlreadyPicked = rangeSelections.has(selection) || pickSelections.has(selection)
 
           return state.withMutations(mState => {
@@ -221,13 +221,17 @@ export function reducer(state: State = initialState, action: project.Actions): S
               mState.setIn(['selection', 'annotation', 'range'], rangeSelections.remove(selection))
               mState.setIn(['selection', 'annotation', 'pick'], pickSelections.remove(selection))
 
-              if(peekSelected.equals(selection)) {
+              if(peekSelected && peekSelected.equals(selection)) {
                 mState.setIn(['selection', 'annotation', 'selected'], null)
               }
             } else {
               // Set range, might be different due to filter
               mState.setIn(['selection', 'annotation', 'range'], rangeSelections)
-              mState.setIn(['selection', 'annotation', 'pick'], pickSelections.add(selection))
+              if(peekSelected && peekSelected.get('track', null)!.equals(track)) {
+                mState.setIn(['selection', 'annotation', 'pick'], pickSelections.add(selection).add(peekSelected))
+              } else {
+                mState.setIn(['selection', 'annotation', 'pick'], pickSelections.add(selection))
+              }
               mState.setIn(['selection', 'annotation', 'selected'], selection)
             }
           })
