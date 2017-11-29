@@ -46,12 +46,6 @@ function nextAnnotationId(timeline: Record<Timeline>): number {
   return maxId+1
 }
 
-// function filterTrackIndex(selection: Set<Record<AnnotationSelection>>, trackIndex: number) {
-//   return selection.filter(s => {
-//     return s.get('trackIndex', null) === trackIndex
-//   })
-// }
-
 export function reducer(state: State = initialState, action: project.Actions): State {
   switch(action.type) {
     case project.PROJECT_LOAD_SUCCESS: {
@@ -212,16 +206,22 @@ export function reducer(state: State = initialState, action: project.Actions): S
           })
         }
         case project.AnnotationSelectionType.Pick: {
-          const rangeSelections = state.getIn(['selection', 'annotation', 'range'])
-          const pickSelections = state.getIn(['selection', 'annotation', 'pick'])
+          const track = selection.get('track', null)!
+          const filterByTrackFunc = (sel: Record<AnnotationSelection>) => {
+            return sel.get('track', null) === track
+          }
+
+          const rangeSelections = state.getIn(['selection', 'annotation', 'range']).filter(filterByTrackFunc)
+          const pickSelections = state.getIn(['selection', 'annotation', 'pick']).filter(filterByTrackFunc)
           const peekSelected = state.getIn(['selection', 'annotation', 'selected'])
           const isAlreadyPicked = rangeSelections.has(selection) || pickSelections.has(selection)
+
           return state.withMutations(mState => {
             if(isAlreadyPicked) {
               mState.setIn(['selection', 'annotation', 'range'], rangeSelections.remove(selection))
               mState.setIn(['selection', 'annotation', 'pick'], pickSelections.remove(selection))
 
-              if(peekSelected === selection) {
+              if(peekSelected.equals(selection)) {
                 mState.setIn(['selection', 'annotation', 'selected'], null)
               }
             } else {
