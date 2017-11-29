@@ -158,7 +158,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       if(!allSelections.isEmpty()) {
         const fs = allSelections.first()!
         const trackWithSelections = fs.get('track', null)!
-        if(track.equals(trackWithSelections)) {
+        if(track.get('id',null) === trackWithSelections.get('id', null)) {
           return state.withMutations(mState => {
             mState.setIn(['selection', 'annotation', 'range'], Set())
             mState.setIn(['selection', 'annotation', 'pick'], Set())
@@ -255,7 +255,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
         case project.AnnotationSelectionType.Pick: {
           const track = selection.get('track', null)!
           const filterByTrackFunc = (sel: Record<AnnotationSelection>) => {
-            return sel.get('track', null)!.equals(track)
+            return sel.getIn(['track', 'id']) === track.get('id', null)
           }
 
           const rangeSelections: Set<Record<AnnotationSelection>> = state.getIn(['selection', 'annotation', 'range']).filter(filterByTrackFunc)
@@ -268,13 +268,13 @@ export function reducer(state: State = initialState, action: project.Actions): S
               mState.setIn(['selection', 'annotation', 'range'], rangeSelections.delete(selection))
               mState.setIn(['selection', 'annotation', 'pick'], pickSelections.delete(selection))
 
-              if(peekSelected && peekSelected.equals(selection)) {
+              if(peekSelected && peekSelected.getIn(['annotation', 'id']) === selection.getIn(['annotation', 'id'])) {
                 mState.setIn(['selection', 'annotation', 'selected'], null)
               }
             } else {
               // Set range, might be different due to filter
               mState.setIn(['selection', 'annotation', 'range'], rangeSelections)
-              if(peekSelected && peekSelected.get('track', null)!.equals(track) && rangeSelections.size === 0) {
+              if(peekSelected && peekSelected.getIn(['track', 'id']) === track.get('id', null) && rangeSelections.isEmpty()) {
                 mState.setIn(['selection', 'annotation', 'pick'], pickSelections.add(selection).add(peekSelected))
               } else {
                 mState.setIn(['selection', 'annotation', 'pick'], pickSelections.add(selection))
@@ -299,7 +299,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
           const peekSelected: Record<AnnotationSelection>|null = state.getIn(['selection', 'annotation', 'selected'])
           const fa: Record<Annotation> = track.getIn(['annotations']).sort(sortFunc).first() // fa ~ first annotation in current track
 
-          const pivot: Record<Annotation> = peekSelected && peekSelected.get('track', null)!.equals(track) ?
+          const pivot: Record<Annotation> = peekSelected && peekSelected.getIn(['track', 'id']) === track.get('id', null) ?
             peekSelected.get('annotation', null)! : fa
           const limit = annotation
 
@@ -321,7 +321,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
             const rangeSelection = rangeSelectionRecords.toSet()
             mState.setIn(['selection', 'annotation', 'range'], rangeSelection)
 
-            if(peekSelected === null || !peekSelected.get('track', null)!.equals(track)) {
+            if(peekSelected === null || peekSelected.getIn(['track', 'id']) !== track.get('id', null)) {
               const newSelectionRecord = AnnotationSelectionRecordFactory({
                 track, annotation: fa, source
               })
@@ -359,7 +359,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
           })
           .map((sa, i) => {
             return sa.set('id', nextAnnotationId(timeline)+i)
-        })
+          })
 
         return state.withMutations(mState => {
           mState.set('clipboard', Set())
