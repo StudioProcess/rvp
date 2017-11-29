@@ -47,6 +47,14 @@ function nextAnnotationId(timeline: Record<Timeline>): number {
   return maxId+1
 }
 
+function getAllSelections(state: State): Set<Record<AnnotationSelection>> {
+  const rangeSelections = state.getIn(['selection', 'annotation', 'range'])
+  const pickSelections = state.getIn(['selection', 'annotation', 'pick'])
+  const selected = state.getIn(['selection', 'annotation', 'selected'])
+  const selectedSet = Set().add(selected)
+  return rangeSelections.union(pickSelections).union(selectedSet)
+}
+
 export function reducer(state: State = initialState, action: project.Actions): State {
   switch(action.type) {
     case project.PROJECT_LOAD_SUCCESS: {
@@ -99,16 +107,12 @@ export function reducer(state: State = initialState, action: project.Actions): S
       ], annotation)
     }
     case project.PROJECT_DELETE_SELECTED_ANNOTATIONS: {
-      const rangeSelections: Set<Record<AnnotationSelection>> = state.getIn(['selection', 'annotation', 'range'])
-      const pickSelections: Set<Record<AnnotationSelection>> = state.getIn(['selection', 'annotation', 'pick'])
-      const selected: Record<AnnotationSelection>|null = state.getIn(['selection', 'annotation', 'selected'])
-      const selectedSet: Set<Record<AnnotationSelection>> = selected ? Set().add(selected) : Set()
-      const all = rangeSelections.union(pickSelections).union(selectedSet)
-      const selectedAnnotations = rangeSelections.union(pickSelections.union(selectedSet)).map(annotationSelection => {
+      const all = getAllSelections(state)
+      const selectedAnnotations = all.map(annotationSelection => {
         return annotationSelection.get('annotation', null)!
       })
 
-      if(all.size > 0) {
+      if(all.first()) {
         const fa = all.first()!
         const track = fa.get('track', null)!
         const tracks: List<Record<Track>> = state.getIn(['meta', 'timeline', 'tracks'])
@@ -148,6 +152,23 @@ export function reducer(state: State = initialState, action: project.Actions): S
     }
     case project.PROJECT_DELETE_TRACK: {
       const {trackIndex} = action.payload
+      const track: Record<Track> = state.getIn(['meta', 'timeline', 'tracks', trackIndex])
+      const allSelections = getAllSelections(state)
+      const fs = allSelections.first()
+
+      // Deleted track is track with selections? If so, clear selection
+      if(fs) {
+        const trackWithSelections = fs.get('track', null)!
+        if(track.equals(trackWithSelections)) {
+          return state.withMutations(mState => {
+            mState.setIn(['selection', 'annotation', 'range'], Set())
+            mState.setIn(['selection', 'annotation', 'pick'], Set())
+            mState.setIn(['selection', 'annotation', 'selected'], null)
+            mState.deleteIn(['meta', 'timeline', 'tracks', trackIndex])
+          })
+        }
+      }
+      // Otherwise just delete track
       return state.deleteIn(['meta', 'timeline', 'tracks', trackIndex])
     }
     case project.PROJECT_DUPLICATE_TRACK: {
@@ -245,8 +266,8 @@ export function reducer(state: State = initialState, action: project.Actions): S
 
           return state.withMutations(mState => {
             if(isAlreadyPicked) {
-              mState.setIn(['selection', 'annotation', 'range'], rangeSelections.remove(selection))
-              mState.setIn(['selection', 'annotation', 'pick'], pickSelections.remove(selection))
+              mState.setIn(['selection', 'annotation', 'range'], rangeSelections.delete(selection))
+              mState.setIn(['selection', 'annotation', 'pick'], pickSelections.delete(selection))
 
               if(peekSelected && peekSelected.equals(selection)) {
                 mState.setIn(['selection', 'annotation', 'selected'], null)
