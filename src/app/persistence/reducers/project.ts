@@ -10,7 +10,8 @@ import {
   AnnotationRecordFactory, AnnotationFieldsRecordFactory,
   ProjectMetaRecordFactory, Timeline, ProjectSnapshot,
   ProjectSnapshotRecordFactory, /*ProjectAnnotationSelection,*/
-  AnnotationSelection, AnnotationSelectionRecordFactory
+  AnnotationSelection, AnnotationSelectionRecordFactory,
+  Track
 } from '../model'
 
 const initialState = new ProjectRecordFactory()
@@ -97,11 +98,37 @@ export function reducer(state: State = initialState, action: project.Actions): S
         'annotations', annotationIndex
       ], annotation)
     }
-    case project.PROJECT_DELETE_ANNOTATION: {
-      const {trackIndex, annotationIndex} = action.payload
-      return state.updateIn(['meta', 'timeline', 'tracks', trackIndex, 'annotations'], annotations => {
-        return annotations.delete(annotationIndex)
+    case project.PROJECT_DELETE_SELECTED_ANNOTATIONS: {
+      const rangeSelections: Set<Record<AnnotationSelection>> = state.getIn(['selection', 'annotation', 'range'])
+      const pickSelections: Set<Record<AnnotationSelection>> = state.getIn(['selection', 'annotation', 'pick'])
+      const selected: Record<AnnotationSelection>|null = state.getIn(['selection', 'annotation', 'selected'])
+      const selectedSet: Set<Record<AnnotationSelection>> = selected ? Set().add(selected) : Set()
+      const all = rangeSelections.union(pickSelections).union(selectedSet)
+      const selectedAnnotations = rangeSelections.union(pickSelections.union(selectedSet)).map(annotationSelection => {
+        return annotationSelection.get('annotation', null)!
       })
+
+      if(all.size > 0) {
+        const fa = all.first()!
+        const track = fa.get('track', null)!
+        const tracks: List<Record<Track>> = state.getIn(['meta', 'timeline', 'tracks'])
+        const trackIndex = tracks.findIndex(t => t.equals(track))!
+        const cTrack = tracks.get(trackIndex)!
+        const cAnnotations = cTrack.get('annotations', null)
+
+        const updatedAnnotations = cAnnotations.filter(ann => {
+          return !selectedAnnotations.has(ann)
+        })
+
+        return state.withMutations(mState => {
+          mState.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotations'], updatedAnnotations)
+          mState.setIn(['selection', 'annotation', 'range'], Set())
+          mState.setIn(['selection', 'annotation', 'pick'], Set())
+          mState.setIn(['selection', 'annotation', 'selected'], null)
+        })
+      } else {
+        return state
+      }
     }
     case project.PROJECT_ADD_TRACK: {
       const trackPartial = action.payload

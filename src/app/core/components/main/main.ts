@@ -37,7 +37,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     const windowMousedown = fromEventPattern(this._renderer, window, 'mousedown')
     const windowKeydown = fromEventPattern(this._renderer, window, 'keydown')
 
-    //const removeAnnotationHotkey = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 8)
+    const removeAnnotationHotkey = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 8)
     const togglePlayingHotkey = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 32)
     const addTrackHotkey = windowKeydown.filter((e: KeyboardEvent) => {
       return e.keyCode === 187 || // +
@@ -52,8 +52,6 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     const redoHotkey = windowKeydown.filter((e: KeyboardEvent) => {
       return e.keyCode === 90 && e.metaKey && e.shiftKey // shift cmd z
     })
-
-    //const annotationSelection = this._rootStore.select(fromRoot.getAnnotationSelection).share()
 
     this._subs.push(
       togglePlayingHotkey.subscribe((ev: KeyboardEvent) => {
@@ -74,23 +72,11 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
         this._rootStore.dispatch(new project.ProjectResetAnnotationSelection())
       }))
 
-    // TODO: adapt remove selected annotations
-    // this._subs.push(
-    //   removeAnnotationHotkey
-    //     .withLatestFrom(annotationSelection)
-    //     .filter(([_, selection]) => selection !== undefined)
-    //     .subscribe(([_, sel]) => {
-    //       const deselectPayload = {selection: sel!}
-    //       this._rootStore.dispatch(new selection.SelectionDeselectAnnotation(deselectPayload))
-
-    //       const deletePayload = {
-    //         trackIndex: sel!.get('trackIndex', null),
-    //         annotationIndex: sel!.get('annotationIndex', null),
-    //         annotation: sel!.get('annotation', null)
-    //       }
-    //       this._rootStore.dispatch(new project.ProjectDeleteAnnotation(deletePayload))
-    //       this._cdr.markForCheck()
-    //     }))
+    this._subs.push(
+      removeAnnotationHotkey
+        .subscribe(([_, sel]) => {
+          this._rootStore.dispatch(new project.ProjectDeleteSelectedAnnotations())
+        }))
 
     this._subs.push(
       undoHotkey.subscribe((e: KeyboardEvent) => {

@@ -26,7 +26,7 @@ export const PROJECT_RESET_ERROR = '[Project] Reset Error'
 
 export const PROJECT_ADD_ANNOTATION = '[Project] Add Annotation'
 export const PROJECT_UPDATE_ANNOTATION = '[Project] Update Annotation'
-export const PROJECT_DELETE_ANNOTATION = '[Project] Delete Annotation'
+export const PROJECT_DELETE_SELECTED_ANNOTATIONS = '[Project] Delete Selected Annotations'
 export const PROJECT_SELECT_ANNOTATION = '[Project] Selection Annotation'
 export const PROJECT_SELECTION_RESETALL_ANNOTATION = '[Project] Reset Annotation Selection'
 
@@ -121,15 +121,8 @@ export class ProjectUpdateAnnotation implements Action {
   constructor(readonly payload: UpdateAnnotationPayload) {}
 }
 
-export interface DeleteAnnotationPayload {
-  readonly trackIndex: number
-  readonly annotationIndex: number
-  readonly annotation: Record<Annotation>
-}
-
-export class ProjectDeleteAnnotation implements Action {
-  readonly type = PROJECT_DELETE_ANNOTATION
-  constructor(readonly payload: DeleteAnnotationPayload) {}
+export class ProjectDeleteSelectedAnnotations implements Action {
+  readonly type = PROJECT_DELETE_SELECTED_ANNOTATIONS
 }
 
 export const enum AnnotationSelectionType {
@@ -222,6 +215,6 @@ export type Actions =
   ProjectExport|ProjectExportError|
   ProjectReset|
   ProjectAddTrack|ProjectUpdateTrack|ProjectDeleteTrack|ProjectDuplicateTrack|ProjectInsertAtTrack|
-  ProjectAddAnnotation|ProjectUpdateAnnotation|ProjectDeleteAnnotation|ProjectSelectAnnotation|ProjectResetAnnotationSelection|
+  ProjectAddAnnotation|ProjectUpdateAnnotation|ProjectDeleteSelectedAnnotations|ProjectSelectAnnotation|ProjectResetAnnotationSelection|
   ProjectSetTimelineDuration|
   ProjectPushUndo|ProjectUndo|ProjectRedo
