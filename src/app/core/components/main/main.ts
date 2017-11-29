@@ -53,6 +53,15 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       return e.keyCode === 90 && e.metaKey && e.shiftKey // shift cmd z
     })
 
+    const copyToClipboardHotkey = windowKeydown.filter((e: KeyboardEvent) => {
+      return e.keyCode === 67 && e.metaKey // cmd c
+    })
+
+    this._subs.push(
+      copyToClipboardHotkey.subscribe((ev: KeyboardEvent) => {
+        this._rootStore.dispatch(new project.ProjectCopyAnnotationSelectionToClipboard())
+      }))
+
     this._subs.push(
       togglePlayingHotkey.subscribe((ev: KeyboardEvent) => {
         ev.preventDefault()

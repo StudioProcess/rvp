@@ -337,6 +337,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
         mState.setIn(['selection', 'annotation', 'selected'], null)
       })
     }
+    case project.PROJECT_COPY_ANNOTATION_SELECTION_TO_CLIPBOARD: {
+      debugger
+      return state
+    }
     default: {
       return state
     }

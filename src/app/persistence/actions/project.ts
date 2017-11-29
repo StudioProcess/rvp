@@ -29,6 +29,7 @@ export const PROJECT_UPDATE_ANNOTATION = '[Project] Update Annotation'
 export const PROJECT_DELETE_SELECTED_ANNOTATIONS = '[Project] Delete Selected Annotations'
 export const PROJECT_SELECT_ANNOTATION = '[Project] Selection Annotation'
 export const PROJECT_SELECTION_RESETALL_ANNOTATION = '[Project] Reset Annotation Selection'
+export const PROJECT_COPY_ANNOTATION_SELECTION_TO_CLIPBOARD = '[Project] Copy Annotation Selection to Clipboard'
 
 export const PROJECT_ADD_TRACK = '[Project] Add Track'
 export const PROJECT_UPDATE_TRACK = '[Project] Update Track'
@@ -145,6 +146,10 @@ export class ProjectResetAnnotationSelection implements Action {
   readonly type = PROJECT_SELECTION_RESETALL_ANNOTATION
 }
 
+export class ProjectCopyAnnotationSelectionToClipboard {
+  readonly type = PROJECT_COPY_ANNOTATION_SELECTION_TO_CLIPBOARD
+}
+
 type AddTrackPayload = Partial<Track>
 
 export class ProjectAddTrack implements Action {
@@ -215,6 +220,8 @@ export type Actions =
   ProjectExport|ProjectExportError|
   ProjectReset|
   ProjectAddTrack|ProjectUpdateTrack|ProjectDeleteTrack|ProjectDuplicateTrack|ProjectInsertAtTrack|
-  ProjectAddAnnotation|ProjectUpdateAnnotation|ProjectDeleteSelectedAnnotations|ProjectSelectAnnotation|ProjectResetAnnotationSelection|
+  ProjectAddAnnotation|ProjectUpdateAnnotation|
+  ProjectDeleteSelectedAnnotations|ProjectSelectAnnotation|
+  ProjectResetAnnotationSelection|ProjectCopyAnnotationSelectionToClipboard|
   ProjectSetTimelineDuration|
   ProjectPushUndo|ProjectUndo|ProjectRedo
