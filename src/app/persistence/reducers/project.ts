@@ -115,7 +115,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
         const fa = all.first()!
         const track = fa.get('track', null)!
         const tracks: List<Record<Track>> = state.getIn(['meta', 'timeline', 'tracks'])
-        const trackIndex = tracks.findIndex(t => t.equals(track))!
+        const trackIndex = tracks.findIndex(t => t.get('id', null) === track.get('id', null))!
         const cTrack = tracks.get(trackIndex)!
         const cAnnotations = cTrack.get('annotations', null)
 
@@ -287,22 +287,24 @@ export function reducer(state: State = initialState, action: project.Actions): S
           const source = selection.get('source', null)!
           const track = selection.get('track', null)!
           const filterByTrackFunc = (sel: Record<AnnotationSelection>) => {
-            return sel.get('track', null)!.equals(track)
+            return sel.get('track', null)!.get('id', null)! === track.get('id', null)
           }
           const annotation = selection.get('annotation', null)!
           const annotations = track.get('annotations', null)
-          const sortedAnnotations = annotations.sort((a1, a2) => {
-            return a1.get('utc_timestamp', null)! - a2.get('utc_timestamp', null)!
-          })
-          const peekSelected: Record<AnnotationSelection>|null = state.getIn(['selection', 'annotation', 'selected'])
-          const fa = track.getIn(['annotations', 0]) // fa ~ first annotation in current track
 
-          const pivot = peekSelected && peekSelected.get('track', null)!.equals(track) ?
-            peekSelected.get('annotation', null) : fa
+          const sortFunc = (a1: Record<Annotation>, a2: Record<Annotation>) => {
+            return a1.get('utc_timestamp', null)! - a2.get('utc_timestamp', null)!
+          }
+          const sortedAnnotations = annotations.sort(sortFunc)
+          const peekSelected: Record<AnnotationSelection>|null = state.getIn(['selection', 'annotation', 'selected'])
+          const fa: Record<Annotation> = track.getIn(['annotations']).sort(sortFunc).first() // fa ~ first annotation in current track
+
+          const pivot: Record<Annotation> = peekSelected && peekSelected.get('track', null)!.equals(track) ?
+            peekSelected.get('annotation', null)! : fa
           const limit = annotation
 
-          const pivotKey = sortedAnnotations.findKey(a => a.equals(pivot))!
-          const limitKey = sortedAnnotations.findKey(a => a.equals(limit))!
+          const pivotKey = sortedAnnotations.findIndex(a => a.get('id', null) === pivot.get('id', null))!
+          const limitKey = sortedAnnotations.findIndex(a => a.get('id', null) === limit.get('id', null))!
 
           const range = pivotKey < limitKey ?
             sortedAnnotations.slice(pivotKey, limitKey+1):
