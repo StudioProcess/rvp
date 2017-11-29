@@ -338,8 +338,8 @@ export function reducer(state: State = initialState, action: project.Actions): S
       })
     }
     case project.PROJECT_COPY_ANNOTATION_SELECTION_TO_CLIPBOARD: {
-      debugger
-      return state
+      const all = getAllSelections(state)
+      return state.set('clipboard', all)
     }
     default: {
       return state
