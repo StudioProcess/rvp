@@ -341,6 +341,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const all = getAllSelections(state)
       return state.set('clipboard', all)
     }
+    case project.PROJECT_PASTE_CLIPBOARD: {
+      debugger
+      return state
+    }
     default: {
       return state
     }

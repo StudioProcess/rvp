@@ -30,6 +30,7 @@ export const PROJECT_DELETE_SELECTED_ANNOTATIONS = '[Project] Delete Selected An
 export const PROJECT_SELECT_ANNOTATION = '[Project] Selection Annotation'
 export const PROJECT_SELECTION_RESETALL_ANNOTATION = '[Project] Reset Annotation Selection'
 export const PROJECT_COPY_ANNOTATION_SELECTION_TO_CLIPBOARD = '[Project] Copy Annotation Selection to Clipboard'
+export const PROJECT_PASTE_CLIPBOARD = '[Project] Paste Annotation Selection form Clipboard'
 
 export const PROJECT_ADD_TRACK = '[Project] Add Track'
 export const PROJECT_UPDATE_TRACK = '[Project] Update Track'
@@ -133,8 +134,8 @@ export const enum AnnotationSelectionType {
 }
 
 export interface SelectAnnotationPayload {
-  type: AnnotationSelectionType,
-  selection: Record<AnnotationSelection>
+  readonly type: AnnotationSelectionType,
+  readonly selection: Record<AnnotationSelection>
 }
 
 export class ProjectSelectAnnotation implements Action {
@@ -146,8 +147,17 @@ export class ProjectResetAnnotationSelection implements Action {
   readonly type = PROJECT_SELECTION_RESETALL_ANNOTATION
 }
 
-export class ProjectCopyAnnotationSelectionToClipboard {
+export class ProjectCopyAnnotationSelectionToClipboard implements Action {
   readonly type = PROJECT_COPY_ANNOTATION_SELECTION_TO_CLIPBOARD
+}
+
+export interface PasteClipboardPayload {
+  readonly trackIndex: number
+}
+
+export class ProjectPasteClipBoard implements Action {
+  readonly type = PROJECT_PASTE_CLIPBOARD
+  constructor(readonly payload: PasteClipboardPayload) {}
 }
 
 type AddTrackPayload = Partial<Track>
@@ -222,6 +232,6 @@ export type Actions =
   ProjectAddTrack|ProjectUpdateTrack|ProjectDeleteTrack|ProjectDuplicateTrack|ProjectInsertAtTrack|
   ProjectAddAnnotation|ProjectUpdateAnnotation|
   ProjectDeleteSelectedAnnotations|ProjectSelectAnnotation|
-  ProjectResetAnnotationSelection|ProjectCopyAnnotationSelectionToClipboard|
+  ProjectResetAnnotationSelection|ProjectCopyAnnotationSelectionToClipboard|ProjectPasteClipBoard|
   ProjectSetTimelineDuration|
   ProjectPushUndo|ProjectUndo|ProjectRedo

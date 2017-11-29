@@ -65,6 +65,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   @Output() readonly onAddAnnotation = new EventEmitter<project.AddAnnotationPayload>()
   @Output() readonly onDuplicateTrack = new EventEmitter<project.DuplicateTrackPayload>()
   @Output() readonly onInsertAtTrack = new EventEmitter<project.TrackInsertAtPayload>()
+  @Output() readonly onPasteAnnotations = new EventEmitter<project.PasteClipboardPayload>()
 
   private readonly _subs: Subscription[] = []
   private readonly addAnnotationClick = new Subject<MouseEvent>()
@@ -102,7 +103,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
     this._subs.push(
       pasteHotkey.withLatestFrom(hostHover).filter(([, hover]) => hover)
         .subscribe(() => {
-          console.log('paste', this.trackIndex)
+          this.onPasteAnnotations.next({trackIndex: this.trackIndex})
         }))
 
     this._subs.push(

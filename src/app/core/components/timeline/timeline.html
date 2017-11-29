@@ -17,7 +17,8 @@
       (onInsertAtTrack)="insertTrackAt($event)"
       (onUpdateAnnotation)="updateAnnotation($event)"
       (onSelectAnnotation)="selectAnnotation($event)"
-      (onAddAnnotation)="addAnnotation($event)">
+      (onAddAnnotation)="addAnnotation($event)"
+      (onPasteAnnotations)="pasteAnnotations($event)">
     </rv-track>
     <rv-playhead [style.left.%]="playerPos*100" [currentTime]="playerCurrentTime"></rv-playhead>
   </div>

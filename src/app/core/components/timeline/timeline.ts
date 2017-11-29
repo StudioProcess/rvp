@@ -260,6 +260,10 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     this._store.dispatch(new project.ProjectInsertAtTrack(insertTrackAt))
   }
 
+  pasteAnnotations(pasteAnnotations: project.PasteClipboardPayload) {
+    this._store.dispatch(new project.ProjectPasteClipBoard(pasteAnnotations))
+  }
+
   getNumTracks() {
     return this.timeline.get('tracks', null).size
   }
