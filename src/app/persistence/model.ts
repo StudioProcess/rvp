@@ -31,7 +31,8 @@ export const ProjectRecordFactory = Record<Project>({
   meta: null,
   video: null,
   selection: new ProjectSelectionRecordFactory(),
-  snapshots: new ProjectSnapshotsRecordFactory()
+  snapshots: new ProjectSnapshotsRecordFactory(),
+  clipboard: Set()
 })
 
 export const TimelineRecordFactory = Record<Timeline>({
@@ -80,6 +81,7 @@ export interface Project {
   readonly video: Blob|null,
   readonly selection: Record<ProjectSelection>
   readonly snapshots: ProjectSnapshots
+  readonly clipboard: Set<Record<AnnotationSelection>>
 }
 
 export interface ProjectMeta {
