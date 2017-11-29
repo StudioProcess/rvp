@@ -347,10 +347,18 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const all = state.get('clipboard', null)!
       if(!all.isEmpty()) {
         const timeline = state.getIn(['meta', 'timeline'])
+        const tracks: List<Record<Track>> = state.getIn(['meta', 'timeline', 'tracks'])
+        const srcTrackId: number = all.first()!.getIn(['track', 'id'])
+        const srcTrack = tracks.find(t => t.get('id', null) === srcTrackId)!
+        const srcAnnotations = srcTrack.get('annotations', null)
         const annotations: List<Record<Annotation>> = state.getIn(['meta', 'timeline', 'tracks', trackIndex, 'annotations'])
-        const newAnnotations = all.toList().map((annotationSelection, i) => {
-          const annotation = annotationSelection.get('annotation', null)!
-          return annotation.set('id', nextAnnotationId(timeline)+i)
+
+        const newAnnotations = srcAnnotations
+          .filter(a => {
+            return all.find(sa => sa.getIn(['annotation', 'id']) === a.get('id', null)) !== undefined
+          })
+          .map((sa, i) => {
+            return sa.set('id', nextAnnotationId(timeline)+i)
         })
 
         return state.withMutations(mState => {
