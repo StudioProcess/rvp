@@ -275,6 +275,13 @@ export function reducer(state: State = initialState, action: project.Actions): S
         }
       }
     }
+    case project.PROJECT_SELECTION_RESETALL_ANNOTATION: {
+      return state.withMutations(mState => {
+        mState.setIn(['selection', 'annotation', 'range'], Set())
+        mState.setIn(['selection', 'annotation', 'pick'], Set())
+        mState.setIn(['selection', 'annotation', 'selected'], null)
+      })
+    }
     default: {
       return state
     }

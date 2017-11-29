@@ -34,7 +34,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     this._rootStore.dispatch(new project.ProjectLoad())
 
-    // const windowMousedown = fromEventPattern(this._renderer, window, 'mousedown')
+    const windowMousedown = fromEventPattern(this._renderer, window, 'mousedown')
     const windowKeydown = fromEventPattern(this._renderer, window, 'keydown')
 
     //const removeAnnotationHotkey = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 8)
@@ -69,13 +69,10 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
         this._rootStore.dispatch(new project.ProjectAddTrack({color: rndColor()}))
       }))
 
-    // this._subs.push(
-    //   windowMousedown
-    //     .withLatestFrom(annotationSelection.filter(selection => selection !== undefined))
-    //     .subscribe(([, sel]) => {
-    //       const deselectPayload = {selection: sel!}
-    //       this._rootStore.dispatch(new selection.SelectionDeselectAnnotation(deselectPayload))
-    //     }))
+    this._subs.push(
+      windowMousedown.subscribe(() => {
+        this._rootStore.dispatch(new project.ProjectResetAnnotationSelection())
+      }))
 
     // TODO: adapt remove selected annotations
     // this._subs.push(
