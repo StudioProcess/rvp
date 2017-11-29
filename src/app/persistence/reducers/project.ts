@@ -342,7 +342,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
     }
     case project.PROJECT_PASTE_CLIPBOARD: {
       const {trackIndex} = action.payload
-      const all = getAllSelections(state)
+      const all = state.get('clipboard', null)!
       if(!all.isEmpty()) {
         const timeline = state.getIn(['meta', 'timeline'])
         const annotations: List<Record<Annotation>> = state.getIn(['meta', 'timeline', 'tracks', trackIndex, 'annotations'])
