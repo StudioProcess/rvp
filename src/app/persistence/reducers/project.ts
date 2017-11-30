@@ -54,10 +54,10 @@ function getAllSelections(state: State): Set<Record<AnnotationSelection>> {
   return rangeSelections.union(pickSelections).union(selectedSet)
 }
 
-const findAnnotationFunc = (annotationId: number) => (annotationSelection:Record<AnnotationSelection>) => {
-  const selectedAnnotation = annotationSelection.get('annotation', null)!
-  return selectedAnnotation.get('id', null) === annotationId
-}
+// const findAnnotationFunc = (annotationId: number) => (annotationSelection:Record<AnnotationSelection>) => {
+//   const selectedAnnotation = annotationSelection.get('annotation', null)!
+//   return selectedAnnotation.get('id', null) === annotationId
+// }
 
 export function reducer(state: State = initialState, action: project.Actions): State {
   switch(action.type) {
@@ -122,6 +122,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
             mState.setIn(['selection', 'annotation', 'selected'], updatedSingleSel)
           }
 
+          // Also sync clipboard? Needs discussion
           // if(inClipboard) {
           //   const updatedClipboard = inClipboard.set('annotation', annotation)
           //   mState.set('clipboard', clipboardAnnotations.delete(inClipboard).add(updatedClipboard))
