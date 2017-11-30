@@ -134,11 +134,11 @@ export function reducer(state: State = initialState, action: project.Actions): S
           ], annotation)
         })
       } else {
-      return state.setIn([
-        'meta', 'timeline', 'tracks', trackIndex,
-        'annotations', annotationIndex
-      ], annotation)
-    }
+        return state.setIn([
+          'meta', 'timeline', 'tracks', trackIndex,
+          'annotations', annotationIndex
+        ], annotation)
+      }
     }
     case project.PROJECT_DELETE_SELECTED_ANNOTATIONS: {
       const all = getAllSelections(state)
