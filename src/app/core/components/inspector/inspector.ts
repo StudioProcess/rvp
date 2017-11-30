@@ -1,7 +1,7 @@
 import {
   Component, OnInit, OnDestroy, AfterViewInit,
   ChangeDetectionStrategy, ChangeDetectorRef,
-//  ElementRef, QueryList, ViewChild, ViewChildren
+ ElementRef, QueryList, ViewChild, ViewChildren
 } from '@angular/core'
 
 import {List, Record, Set} from 'immutable'
@@ -14,8 +14,11 @@ import {Store} from '@ngrx/store'
 import * as project from '../../../persistence/actions/project'
 import * as fromProject from '../../../persistence/reducers'
 import * as fromPlayer from '../../../player/reducers'
-import {AnnotationColorMap, Annotation} from '../../../persistence/model'
-// import {InspectorEntryComponent} from './inspectorEntry/inspectorEntry.component'
+import {
+  AnnotationColorMap, Annotation,
+  SelectionSource, AnnotationSelection
+} from '../../../persistence/model'
+import {InspectorEntryComponent} from './inspectorEntry/inspectorEntry.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,12 +41,11 @@ import {AnnotationColorMap, Annotation} from '../../../persistence/model'
   `]
 })
 export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
-  // @ViewChild('wrapper') private readonly scrollWrapper: ElementRef
-  // @ViewChildren(InspectorEntryComponent) private readonly entries: QueryList<InspectorEntryComponent>
+  @ViewChild('wrapper') private readonly scrollWrapper: ElementRef
+  @ViewChildren(InspectorEntryComponent) private readonly entries: QueryList<InspectorEntryComponent>
   private readonly _subs: Subscription[] = []
   annotations: List<Record<AnnotationColorMap>>
   height = this._playerStore.select(fromPlayer.getDimensions).map(({height}) => height)
-  // selectedAnnotations: any
   selectedAnnotations: Set<Record<Annotation>>
 
   constructor(
@@ -73,34 +75,36 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    // type annotationSelectionWithEntries = [Record<fromSelection.AnnotationSelection>, QueryList<InspectorEntryComponent>]
+    type annotationSelectionWithEntries = [Record<AnnotationSelection>, QueryList<InspectorEntryComponent>]
 
-    // this._subs.push(
-    //   this._store.select(fromRoot.getAnnotationSelection)
-    //     .filter(annotationSelection => {
-    //       if(annotationSelection !== undefined) {
-    //         return annotationSelection.getIn(['annotation', 'id']) !== null &&
-    //           annotationSelection.get('source', null) === fromSelection.SelectionSource.Timeline
-    //       } else {
-    //         return false
-    //       }
-    //     })
-    //     .withLatestFrom(this.entries.changes)
-    //     .subscribe(([annotationSelection, currentEntries]: annotationSelectionWithEntries) => {
-    //       const selectedId = annotationSelection.getIn(['annotation', 'id'])
+    this._subs.push(
+      this._store.select(fromProject.getProjectFocusAnnotationSelection)
+        .filter(annotationSelection => {
+          if(annotationSelection !== null) {
+            return annotationSelection.get('source', null) === SelectionSource.Timeline
+          } else {
+            return false
+          }
+        })
+        .withLatestFrom(this.entries.changes)
+        .subscribe(([annotationSelection, currentEntries]: annotationSelectionWithEntries) => {
+          const selectedId = annotationSelection.getIn(['annotation', 'id'])
 
-    //       const entry = currentEntries.find(item => {
-    //         return item.entry.getIn(['annotation', 'id']) === selectedId
-    //       })
+          const entry = currentEntries.find(item => {
+            return item.entry.getIn(['annotation', 'id']) === selectedId
+          })
 
-    //       if(entry) {
-    //         const wrapper = this.scrollWrapper.nativeElement
-    //         const e = entry.elem.nativeElement
+          if(entry) {
+            setTimeout(() => {
+              const wrapper = this.scrollWrapper.nativeElement
+              const e = entry.elem.nativeElement
 
-    //         // Position centered
-    //         wrapper.scrollTop = e.offsetTop - ((wrapper.offsetHeight - e.offsetHeight)/2)
-    //       }
-    //     }))
+              // Position centered
+              wrapper.scrollTop = e.offsetTop - ((wrapper.offsetHeight - e.offsetHeight)/2)
+              this._cdr.markForCheck()
+            })
+          }
+        }))
   }
 
   isSelectedAnnotation(annotation: Record<Annotation>) {

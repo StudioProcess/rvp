@@ -74,6 +74,10 @@ export const getProjectAnnotationSelection = createSelector(getProjectSelection,
   return selection.get('annotation', null)
 })
 
+export const getProjectFocusAnnotationSelection = createSelector(getProjectAnnotationSelection, annotationSelection => {
+  return annotationSelection.get('selected', null)
+})
+
 // Get complete annotation selection info
 export const getAnnotationsSelections = createSelector(getProjectAnnotationSelection, annotationSelection => {
   const ranged = annotationSelection.get('range', null)
