@@ -108,24 +108,24 @@ export function reducer(state: State = initialState, action: project.Actions): S
 
       const annotationId = annotation.get('id', null)!
       const singleSel: Record<AnnotationSelection> = state.getIn(['selection', 'annotation', 'selected'])
-      const clipboardAnnotations = state.get('clipboard', null)
+      // const clipboardAnnotations = state.get('clipboard', null)
 
-      const findFunc = findAnnotationFunc(annotationId)
+      // const findFunc = findAnnotationFunc(annotationId)
 
       let inSelection = singleSel !== null && singleSel.get('annotation', null)!.get('id', null) === annotationId ? singleSel : null
-      let inClipboard = !clipboardAnnotations.isEmpty() ? clipboardAnnotations.find(findFunc) : null
+      // let inClipboard = !clipboardAnnotations.isEmpty() ? clipboardAnnotations.find(findFunc) : null
 
-      if(inSelection || inClipboard) {
+      if(inSelection /*|| inClipboard*/) {
         return state.withMutations(mState => {
           if(inSelection) {
             const updatedSingleSel = inSelection.set('annotation', annotation)
             mState.setIn(['selection', 'annotation', 'selected'], updatedSingleSel)
           }
 
-          if(inClipboard) {
-            const updatedClipboard = inClipboard.set('annotation', annotation)
-            mState.set('clipboard', clipboardAnnotations.delete(inClipboard).add(updatedClipboard))
-          }
+          // if(inClipboard) {
+          //   const updatedClipboard = inClipboard.set('annotation', annotation)
+          //   mState.set('clipboard', clipboardAnnotations.delete(inClipboard).add(updatedClipboard))
+          // }
 
           mState.setIn([
             'meta', 'timeline', 'tracks', trackIndex,
