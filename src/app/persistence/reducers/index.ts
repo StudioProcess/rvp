@@ -37,7 +37,7 @@ export const getFlattenedAnnotations = createSelector(getProjectTimeline, timeli
       const color = track.get('color', null)
       return track.get('annotations', null).map((annotation, annotationIndex) => {
         return new AnnotationColorMapRecordFactory({
-          trackIndex, color, annotation, annotationIndex
+          track, trackIndex, color, annotation, annotationIndex
         })
       })
     })

@@ -117,10 +117,9 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
     this._store.dispatch(new project.ProjectUpdateAnnotation(updateAnnotation))
   }
 
-  // selectAnnotation(selectAnnotation: selection.SelectionAnnotationPayload) {
-  //   this._store.dispatch(new selection.SelectionResetAnnotation())
-  //   this._store.dispatch(new selection.SelectionSelectAnnotation(selectAnnotation))
-  // }
+  selectAnnotation(selectAnnotation: project.SelectAnnotationPayload) {
+    this._store.dispatch(new project.ProjectSelectAnnotation(selectAnnotation))
+  }
 
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
