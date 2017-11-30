@@ -221,19 +221,6 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
 
   updateAnnotation(updateAnnotation: project.UpdateAnnotationPayload) {
     this._store.dispatch(new project.ProjectUpdateAnnotation(updateAnnotation))
-
-    // const sub = Observable.of(null, animationScheduler).subscribe(() => {
-    //   // Keep annotation focused in inspector
-    //   this.selectAnnotation({
-    //     selection: new AnnotationSelectionFactory({
-    //       trackIndex: updateAnnotation.trackIndex,
-    //       annotationIndex: updateAnnotation.annotationIndex,
-    //       annotation: updateAnnotation.annotation,
-    //       source: SelectionSource.Timeline
-    //     })
-    //   })
-    //   sub.unsubscribe()
-    // })
   }
 
   selectAnnotation(annotation: project.SelectAnnotationPayload) {
