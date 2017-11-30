@@ -54,6 +54,11 @@ function getAllSelections(state: State): Set<Record<AnnotationSelection>> {
   return rangeSelections.union(pickSelections).union(selectedSet)
 }
 
+const findAnnotationFunc = (annotationId: number) => (annotationSelection:Record<AnnotationSelection>) => {
+  const selectedAnnotation = annotationSelection.get('annotation', null)!
+  return selectedAnnotation.get('id', null) === annotationId
+}
+
 export function reducer(state: State = initialState, action: project.Actions): State {
   switch(action.type) {
     case project.PROJECT_LOAD_SUCCESS: {
@@ -100,10 +105,54 @@ export function reducer(state: State = initialState, action: project.Actions): S
     }
     case project.PROJECT_UPDATE_ANNOTATION: {
       const {trackIndex, annotationIndex, annotation} = action.payload
+
+      const annotationId = annotation.get('id', null)!
+      const rangeSel: Set<Record<AnnotationSelection>> = state.getIn(['selection', 'annotation', 'range'])
+      const pickSel: Set<Record<AnnotationSelection>> = state.getIn(['selection', 'annotation', 'pick'])
+      const singleSel: Record<AnnotationSelection> = state.getIn(['selection', 'annotation', 'selected'])
+      const clipboardAnnotations = state.get('clipboard', null)
+
+      const findFunc = findAnnotationFunc(annotationId)
+
+      let inRangeSel = !rangeSel.isEmpty() ? rangeSel.find(findFunc) : null
+      let inPickSel = !pickSel.isEmpty() ? pickSel.find(findFunc) : null
+      let inSingleSel = singleSel !== null && singleSel.get('annotation', null)!.get('id', null) === annotationId ? singleSel : null
+      let inSelection = inRangeSel || inPickSel || inSingleSel
+      let inClipboard = !clipboardAnnotations.isEmpty() ? clipboardAnnotations.find(findFunc) : null
+
+      if(inSelection || inClipboard) {
+        return state.withMutations(mState => {
+          if(inRangeSel) {
+            const updatedInRangeSel = inRangeSel.set('annotation', annotation)
+            mState.setIn(['selection', 'annotation', 'range'], rangeSel.delete(inRangeSel).add(updatedInRangeSel))
+          }
+
+          if(inPickSel) {
+            const updatedInPickSel = inPickSel.set('annotation', annotation)
+            mState.setIn(['selection', 'annotation', 'range'], pickSel.delete(inPickSel).add(updatedInPickSel))
+          }
+
+          if(inSingleSel) {
+            const updatedSingleSel = inSingleSel.set('annotation', annotation)
+            mState.setIn(['selection', 'annotation', 'selected'], updatedSingleSel)
+          }
+
+          if(inClipboard) {
+            const updatedClipboard = inClipboard.set('annotation', annotation)
+            mState.set('clipboard', clipboardAnnotations.delete(inClipboard).add(updatedClipboard))
+          }
+
+          mState.setIn([
+            'meta', 'timeline', 'tracks', trackIndex,
+            'annotations', annotationIndex
+          ], annotation)
+        })
+      } else {
       return state.setIn([
         'meta', 'timeline', 'tracks', trackIndex,
         'annotations', annotationIndex
       ], annotation)
+    }
     }
     case project.PROJECT_DELETE_SELECTED_ANNOTATIONS: {
       const all = getAllSelections(state)
