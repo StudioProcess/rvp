@@ -35,9 +35,11 @@ export const getFlattenedAnnotations = createSelector(getProjectTimeline, timeli
   if(timeline !== null) {
     return timeline.get('tracks', null).flatMap((track, trackIndex) => {
       const color = track.get('color', null)
-      return track.get('annotations', null).map((annotation, annotationIndex) => {
-        return new AnnotationColorMapRecordFactory({
-          track, trackIndex, color, annotation, annotationIndex
+      return track.get('annotationStacks', null).flatMap((annotations) => {
+        return annotations.map((annotation, annotationIndex) => {
+          return new AnnotationColorMapRecordFactory({
+            track, trackIndex, color, annotation, annotationIndex
+          })
         })
       })
     })
