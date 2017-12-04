@@ -121,8 +121,9 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const newAnnotation = annotation.set('id', newId)
       const annotations: List<Record<Annotation>> = state.getIn(['meta', 'timeline', 'tracks', trackIndex, 'annotations'])
       const insertIndex = findInsertIndex(annotations, annotation.get('utc_timestamp', null))
+      const newIndex = insertIndex > -1 ? insertIndex : annotations.size
       return state.updateIn(['meta', 'timeline', 'tracks', trackIndex, 'annotations'], annotations => {
-        return insertIndex > -1 ? annotations.insert(insertIndex, newAnnotation) : annotations.push(newAnnotation)
+        return annotations.insert(newIndex, newAnnotation)
       })
     }
     case project.PROJECT_UPDATE_ANNOTATION: {
