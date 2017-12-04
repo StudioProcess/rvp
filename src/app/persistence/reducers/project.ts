@@ -134,7 +134,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
 
       // const findFunc = findAnnotationFunc(annotationId)
 
-      let inSelection = singleSel !== null && singleSel.get('annotation', null)!.get('id', null) === annotationId ? singleSel : null
+      let inSelection = singleSel !== null && singleSel.getIn(['annotation', 'id']) === annotationId ? singleSel : null
       // let inClipboard = !clipboardAnnotations.isEmpty() ? clipboardAnnotations.find(findFunc) : null
 
       if(inSelection /*|| inClipboard*/) {
