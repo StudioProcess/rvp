@@ -68,7 +68,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   @Output() readonly onPasteAnnotations = new EventEmitter<project.PasteClipboardPayload>()
 
   private readonly _subs: Subscription[] = []
-  private readonly addAnnotationClick = new Subject<MouseEvent>()
+  private readonly addAnnotationClick = new Subject<{ev: MouseEvent, stackIndex: number}>()
   private readonly updateAnnotationSubj = new Subject<{hb: Handlebar, annotationIndex: number}>()
   private readonly annotationMdSubj = new Subject<{ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number}>()
 
@@ -148,12 +148,13 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
 
     this._subs.push(
       this.addAnnotationClick
-        .withLatestFrom(this.containerRect, (ev, rect) => {
+        .withLatestFrom(this.containerRect, ({ev, stackIndex}, rect) => {
           const localX = coordTransform(ev.clientX, rect)
           const perc = localX/rect.width*100
           const tPerc = this.totalDuration/100
           return {
             trackIndex: this.trackIndex,
+            annotationStackIndex: stackIndex,
             annotation: new AnnotationRecordFactory({
               utc_timestamp: perc*tPerc,
               duration: 5
@@ -265,8 +266,8 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
     this.annotationMdSubj.next({ev, annotation, annotationIndex})
   }
 
-  addAnnotation(ev: MouseEvent) {
-    this.addAnnotationClick.next(ev)
+  addAnnotation(ev: MouseEvent, stackIndex: number) {
+    this.addAnnotationClick.next({ev, stackIndex})
   }
 
   updateHandlebar(hb: Handlebar, annotationIndex: number) {
