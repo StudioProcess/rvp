@@ -123,13 +123,13 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state.setIn(['meta', 'timeline', 'duration'], action.payload.duration)
     }
     case project.PROJECT_ADD_ANNOTATION: {
-      const {trackIndex, annotation} = action.payload
+      const {trackIndex, annotationStackIndex, annotation} = action.payload
       const newId = nextAnnotationId(state.getIn(['meta', 'timeline']))
       const newAnnotation = annotation.set('id', newId)
-      const annotations: List<Record<Annotation>> = state.getIn(['meta', 'timeline', 'tracks', trackIndex, 'annotations'])
+      const annotations: List<Record<Annotation>> = state.getIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks', annotationStackIndex])
       const insertIndex = findInsertIndex(annotations, annotation.get('utc_timestamp', null))
       const newIndex = insertIndex > -1 ? insertIndex : annotations.size
-      return state.updateIn(['meta', 'timeline', 'tracks', trackIndex, 'annotations'], annotations => {
+      return state.updateIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks', annotationStackIndex], annotations => {
         return annotations.insert(newIndex, newAnnotation)
       })
     }

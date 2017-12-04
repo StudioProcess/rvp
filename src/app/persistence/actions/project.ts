@@ -104,6 +104,7 @@ export class ProjectResetError implements Action {
 
 export interface AddAnnotationPayload {
   readonly trackIndex: number
+  readonly annotationStackIndex: number
   readonly annotation: Record<Annotation>
 }
 
