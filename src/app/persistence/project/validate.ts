@@ -60,9 +60,30 @@ function ensureEntityIds(projectData: any) {
   })
 }
 
+function ensureSortedAnnotations(projectData: any) {
+  const tracks = projectData.meta.timeline.tracks
+  projectData.meta.timeline.tracks = tracks.map((track: any) => {
+    track.annotations = track.annotations.sort((a1: any, a2: any) => {
+      const a1Start = a1.utc_timestamp
+      const a2Start = a2.utc_timestamp
+      if(a1Start < a2Start) {
+        return -1
+      } else if(a1Start > a2Start) {
+        return 1
+      } else {
+        return 0
+      }
+    })
+    return track
+  })
+
+  return projectData
+}
+
 export function ensureValidProjectData(projectData: any) {
   if(hasFishyEntityIds(projectData)) {
     // Seems like some entity id is fishy - just overwrite for now
     ensureEntityIds(projectData)
   }
+  ensureSortedAnnotations(projectData)
 }
