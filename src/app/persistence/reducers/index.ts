@@ -46,6 +46,21 @@ export const getFlattenedAnnotations = createSelector(getProjectTimeline, timeli
   }
 })
 
+const path = ['annotation', 'utc_timestamp']
+export const getSortedFlattenedAnnotations = createSelector(getFlattenedAnnotations, annotations => {
+  return annotations.sort((a1, a2) => {
+    const a1Start = a1.getIn(path)
+    const a2Start = a2.getIn(path)
+    if(a1Start < a2Start) {
+      return -1
+    } else if(a1Start > a2Start) {
+      return 1
+    } else {
+      return 0
+    }
+  })
+})
+
 // Project video
 
 export const getProjectVideo = createSelector(getProjectState, fromProject.getProjectVideo)
