@@ -44,7 +44,7 @@
     "localforage": "^1.5.5",
     "moment": "^2.19.3",
     "pace-progress": "^1.0.2",
-    "rxjs": "^5.5.2",
+    "rxjs": "^5.5.3",
     "video.js": "^6.5.0",
     "zone.js": "^0.8.18"
   },
