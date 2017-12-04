@@ -1,3 +1,16 @@
+import {adaptLegacyModel} from './adapt'
+import {sortAnnotationsFunc} from './sort'
+
+function hasLegacyModel(projectData: any) {
+  const tracks = projectData.meta.timeline.tracks
+
+  const hasLegacyAnnotations = tracks.find((track: any) => {
+    return !Array.isArray(track.annotationStacks)
+  })
+
+  return hasLegacyAnnotations !== undefined
+}
+
 function isNil<T>(data: T) {
   return data === null || data === undefined
 }
@@ -24,10 +37,12 @@ function hasFishyEntityIds(projectData: any) {
   const fishyTrackOrAnnotationId = tracks.find((track: any) => {
     const isDupTrack = tracksIdMap[track.id] !== undefined // is unique?
     tracksIdMap[track.id] = track.id // add to map
-    return isDupTrack || isNil(track.id) || track.annotations.find((annotation: any) => {
-      const isDupAnnotation = annotationsIdMap[annotation.id] !== undefined // is unique?
-      annotationsIdMap[annotation.id] = annotation.id // add to map
-      return isDupAnnotation || isNil(annotation.id)
+    return isDupTrack || isNil(track.id) || track.annotationStacks.find((annotations: any) => {
+      return annotations.find((annotation: any) => {
+        const isDupAnnotation = annotationsIdMap[annotation.id] !== undefined // is unique?
+        annotationsIdMap[annotation.id] = annotation.id // add to map
+        return isDupAnnotation || isNil(annotation.id)
+      }) !== undefined
     }) !== undefined
   })
 
@@ -54,8 +69,10 @@ function ensureEntityIds(projectData: any) {
 
   tracks.forEach((track: any) => {
     track.id = trackCounter++
-    track.annotations.forEach((annotation: any) => {
-      annotation.id = annotationCounter++
+    track.annotationStacks.forEach((annotations: any) => {
+      annotations.forEach((annotation: any) => {
+        annotation.id = annotationCounter++
+      })
     })
   })
 }
@@ -63,27 +80,32 @@ function ensureEntityIds(projectData: any) {
 function ensureSortedAnnotations(projectData: any) {
   const tracks = projectData.meta.timeline.tracks
   projectData.meta.timeline.tracks = tracks.map((track: any) => {
-    track.annotations = track.annotations.sort((a1: any, a2: any) => {
-      const a1Start = a1.utc_timestamp
-      const a2Start = a2.utc_timestamp
-      if(a1Start < a2Start) {
-        return -1
-      } else if(a1Start > a2Start) {
-        return 1
-      } else {
-        return 0
-      }
+    track.annotations = track.annotations.sort(sortAnnotationsFunc)
+    return track
+  })
+}
+
+function ensureSortedAnnotationStacks(projectData: any) {
+  const tracks = projectData.meta.timeline.tracks
+  projectData.meta.timeline.tracks = tracks.map((track: any) => {
+    track.annotationStacks.map((annotations: any[]) => {
+      return annotations.sort(sortAnnotationsFunc)
     })
     return track
   })
-
-  return projectData
 }
 
 export function ensureValidProjectData(projectData: any) {
+  if(hasLegacyModel(projectData)) {
+    ensureSortedAnnotations(projectData)
+    adaptLegacyModel(projectData)
+  } else {
+    ensureSortedAnnotationStacks(projectData)
+  }
+
   if(hasFishyEntityIds(projectData)) {
     // Seems like some entity id is fishy - just overwrite for now
     ensureEntityIds(projectData)
   }
-  ensureSortedAnnotations(projectData)
+  // ensureSortedAnnotations(projectData)
 }
