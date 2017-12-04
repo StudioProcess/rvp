@@ -13,13 +13,15 @@
   </div>
 </div>
 <div class="annotations-wrapper" (dblclick)="addAnnotation($event)">
-  <rv-handlebar *ngFor="let annotation of data.get('annotations', []); index as i; trackBy: trackByFunc;"
-    [containerRect]="containerRect"
-    [caption]="getAnnotationTitle(annotation)"
-    [left]="getAnnotationPosition(annotation)"
-    [width]="getAnnotationWidth(annotation)"
-    [isSelected]="isSelectedAnnotation(annotation)"
-    (onHandlebarUpdate)="updateHandlebar($event, i)"
-    (mousedown)="annotationClick($event, annotation, i)">
-  </rv-handlebar>
+  <div *ngFor="let stack of data.get('annotationStacks', [])">
+    <rv-handlebar *ngFor="let annotation of stack; index as i; trackBy: trackByFunc;"
+      [containerRect]="containerRect"
+      [caption]="getAnnotationTitle(annotation)"
+      [left]="getAnnotationPosition(annotation)"
+      [width]="getAnnotationWidth(annotation)"
+      [isSelected]="isSelectedAnnotation(annotation)"
+      (onHandlebarUpdate)="updateHandlebar($event, i)"
+      (mousedown)="annotationClick($event, annotation, i)">
+    </rv-handlebar>
+  </div>
 </div>
