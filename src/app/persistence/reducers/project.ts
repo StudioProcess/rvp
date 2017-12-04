@@ -54,10 +54,11 @@ function getAllSelections(state: State): Set<Record<AnnotationSelection>> {
   return rangeSelections.union(pickSelections).union(selectedSet)
 }
 
-// const findAnnotationFunc = (annotationId: number) => (annotationSelection:Record<AnnotationSelection>) => {
-//   const selectedAnnotation = annotationSelection.get('annotation', null)!
-//   return selectedAnnotation.get('id', null) === annotationId
-// }
+function findInsertIndex(annotations: List<Record<Annotation>>, ts: number) {
+  return annotations.findIndex(a => {
+    return a.get('utc_timestamp', null) > ts
+  })
+}
 
 export function reducer(state: State = initialState, action: project.Actions): State {
   switch(action.type) {
@@ -98,9 +99,11 @@ export function reducer(state: State = initialState, action: project.Actions): S
     case project.PROJECT_ADD_ANNOTATION: {
       const {trackIndex, annotation} = action.payload
       const newId = nextAnnotationId(state.getIn(['meta', 'timeline']))
-      const a = annotation.set('id', newId)
+      const newAnnotation = annotation.set('id', newId)
+      const annotations: List<Record<Annotation>> = state.getIn(['meta', 'timeline', 'tracks', trackIndex, 'annotations'])
+      const insertIndex = findInsertIndex(annotations, annotation.get('utc_timestamp', null))
       return state.updateIn(['meta', 'timeline', 'tracks', trackIndex, 'annotations'], annotations => {
-        return annotations.push(a)
+        return insertIndex > -1 ? annotations.insert(insertIndex, newAnnotation) : annotations.push(newAnnotation)
       })
     }
     case project.PROJECT_UPDATE_ANNOTATION: {
