@@ -54,10 +54,29 @@ function getAllSelections(state: State): Set<Record<AnnotationSelection>> {
   return rangeSelections.union(pickSelections).union(selectedSet)
 }
 
+
+function binarySearchIndex<T, S>(sortedList: T, size: number, getter: (list: T, i: number) => S, val: S): number {
+  let l = 0
+  let r = size-1
+  let m, curVal
+  while(l <= r) {
+    m = Math.floor((l+r)/2)
+    curVal = getter(sortedList, m)
+    if(curVal < val) {
+      l = m+1
+    } else if(curVal > val) {
+      r = m-1
+    } else {
+      return m
+    }
+  }
+  return -1
+}
+
 function findInsertIndex(annotations: List<Record<Annotation>>, ts: number) {
-  return annotations.findIndex(a => {
-    return a.get('utc_timestamp', null) > ts
-  })
+  return binarySearchIndex(annotations, annotations.size, (list, i) => {
+    return list.getIn([i, 'utc_timestamp'])
+  }, ts)
 }
 
 export function reducer(state: State = initialState, action: project.Actions): State {
