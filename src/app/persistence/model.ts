@@ -52,7 +52,7 @@ export const TrackRecordFactory = Record<Track>({
   id: null,
   color: '#000',
   fields: new TrackFieldsRecordFactory(),
-  annotations: List([])
+  annotationStacks: List(List([]))
 })
 
 export const AnnotationFieldsRecordFactory = Record<AnnotationFields>({
@@ -147,7 +147,7 @@ export interface Track {
   readonly id: number|null
   readonly color: string
   readonly fields: Record<TrackFields>
-  readonly annotations: List<Record<Annotation>>
+  readonly annotationStacks: List<List<Record<Annotation>>>
 }
 
 export interface TrackFields {
