@@ -7,7 +7,7 @@ import {
 
 import {FormGroup, FormBuilder, Validators} from '@angular/forms'
 
-const _VALID_ = 'VALID' // not exported by @angular/forms
+//const _VALID_ = 'VALID' // not exported by @angular/forms
 
 import {Record, Set} from 'immutable'
 
@@ -25,7 +25,7 @@ import 'rxjs/add/operator/distinctUntilChanged'
 
 import {
   Track, Annotation, AnnotationRecordFactory,
-  TrackRecordFactory, TrackFieldsRecordFactory,
+  //TrackRecordFactory, TrackFieldsRecordFactory,
   AnnotationSelectionRecordFactory, SelectionSource
 } from '../../../../persistence/model'
 import {_FORM_INPUT_DEBOUNCE_} from '../../../../config/form'
@@ -85,7 +85,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
 
     const titleInputMd = Observable.fromEvent(this.titleInput.nativeElement, 'mousedown')
     const titleInputKeydown = Observable.fromEvent(this.titleInput.nativeElement, 'keydown')
-    const formBlur = Observable.fromEvent(this.titleInput.nativeElement, 'blur')
+    //const formBlur = Observable.fromEvent(this.titleInput.nativeElement, 'blur')
 
     const hostMouseEnterTs = Observable.fromEvent(this._elem.nativeElement, 'mouseenter').map(() => Date.now())
     const hostMouseLeaveTs = Observable.fromEvent(this._elem.nativeElement, 'mouseleave').map(() => Date.now()).startWith(Date.now())
@@ -123,28 +123,28 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
           ev.target.blur()
         }))
 
-    this._subs.push(
-      formBlur
-        .withLatestFrom(Observable.combineLatest(this.form.valueChanges, this.form.statusChanges), (_, [form, status]) => {
-          return [form, status]
-        })
-        .filter(([_, status]) => status === _VALID_)
-        .map(([formData, _]) => formData)
-        .distinctUntilChanged((prev, cur) => {
-          return prev.title === cur.title
-        })
-        .subscribe(({title}) => {
-          const updateTrackPayload = {
-            trackIndex: this.trackIndex,
-            track: new TrackRecordFactory({
-              id: this.data.get('id', null),
-              color: this.data.get('color', null),
-              fields: new TrackFieldsRecordFactory({title}),
-              annotations: this.data.get('annotations', null)
-            })
-          }
-          this.onUpdateTrack.emit(updateTrackPayload)
-        }))
+    // this._subs.push(
+    //   formBlur
+    //     .withLatestFrom(Observable.combineLatest(this.form.valueChanges, this.form.statusChanges), (_, [form, status]) => {
+    //       return [form, status]
+    //     })
+    //     .filter(([_, status]) => status === _VALID_)
+    //     .map(([formData, _]) => formData)
+    //     .distinctUntilChanged((prev, cur) => {
+    //       return prev.title === cur.title
+    //     })
+    //     .subscribe(({title}) => {
+    //       const updateTrackPayload = {
+    //         trackIndex: this.trackIndex,
+    //         track: new TrackRecordFactory({
+    //           id: this.data.get('id', null),
+    //           color: this.data.get('color', null),
+    //           fields: new TrackFieldsRecordFactory({title}),
+    //           annotations: this.data.get('annotations', null)
+    //         })
+    //       }
+    //       this.onUpdateTrack.emit(updateTrackPayload)
+    //     }))
 
     this._subs.push(
       this.addAnnotationClick
