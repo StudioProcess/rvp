@@ -55,28 +55,31 @@ function getAllSelections(state: State): Set<Record<AnnotationSelection>> {
 }
 
 
-function binarySearchIndex<T, S>(sortedList: T, size: number, getter: (list: T, i: number) => S, val: S): number {
-  let l = 0
-  let r = size-1
-  let m, curVal
-  while(l <= r) {
-    m = Math.floor((l+r)/2)
-    curVal = getter(sortedList, m)
-    if(curVal < val) {
-      l = m+1
-    } else if(curVal > val) {
-      r = m-1
-    } else {
-      return m
-    }
-  }
-  return -1
-}
+// function binarySearchIndex<T, S>(sortedList: T, size: number, getter: (list: T, i: number) => S, val: S): number {
+//   let l = 0
+//   let r = size-1
+//   let m, curVal
+//   while(l <= r) {
+//     m = Math.floor((l+r)/2)
+//     curVal = getter(sortedList, m)
+//     if(curVal < val) {
+//       l = m+1
+//     } else if(curVal > val) {
+//       r = m-1
+//     } else {
+//       return m
+//     }
+//   }
+//   return -1
+// }
 
 function findInsertIndex(annotations: List<Record<Annotation>>, ts: number) {
-  return binarySearchIndex(annotations, annotations.size, (list, i) => {
-    return list.getIn([i, 'utc_timestamp'])
-  }, ts)
+  // const index = binarySearchIndex(annotations, annotations.size, (list, i) => {
+  //   return list.getIn([i, 'utc_timestamp'])
+  // }, ts)
+  return annotations.findIndex(ann => {
+    return ann.get('utc_timestamp', null) > ts
+  })
 }
 
 export function reducer(state: State = initialState, action: project.Actions): State {
@@ -129,15 +132,18 @@ export function reducer(state: State = initialState, action: project.Actions): S
     case project.PROJECT_UPDATE_ANNOTATION: {
       const {trackIndex, annotationIndex, annotation} = action.payload
 
+      const annotations = state.getIn(['meta', 'timeline', 'tracks', trackIndex, 'annotations'])
+      const annotationsWithout = annotations.delete(annotationIndex)
+      const insertIndex = findInsertIndex(annotationsWithout, annotation.get('utc_timestamp', null))
+      const newAnnotationIndex = insertIndex > -1 ? insertIndex : annotationsWithout.size
+
       const annotationId = annotation.get('id', null)!
       const singleSel: Record<AnnotationSelection> = state.getIn(['selection', 'annotation', 'selected'])
       // const clipboardAnnotations = state.get('clipboard', null)
-
       // const findFunc = findAnnotationFunc(annotationId)
 
       let inSelection = singleSel !== null && singleSel.getIn(['annotation', 'id']) === annotationId ? singleSel : null
       // let inClipboard = !clipboardAnnotations.isEmpty() ? clipboardAnnotations.find(findFunc) : null
-
       if(inSelection /*|| inClipboard*/) {
         return state.withMutations(mState => {
           if(inSelection) {
@@ -151,16 +157,30 @@ export function reducer(state: State = initialState, action: project.Actions): S
           //   mState.set('clipboard', clipboardAnnotations.delete(inClipboard).add(updatedClipboard))
           // }
 
-          mState.setIn([
+          if(newAnnotationIndex !== annotationIndex) {
+            console.log('Reindex (mutations)')
+            mState.setIn([
+              'meta', 'timeline', 'tracks', trackIndex,
+              'annotations'], annotationsWithout.insert(newAnnotationIndex, annotation))
+          } else {
+            mState.setIn([
+              'meta', 'timeline', 'tracks', trackIndex,
+              'annotations', annotationIndex
+            ], annotation)
+          }
+        })
+      } else {
+        if(newAnnotationIndex !== annotationIndex) {
+          console.log('Reindex')
+          return state.setIn([
+            'meta', 'timeline', 'tracks', trackIndex,
+            'annotations'], annotationsWithout.insert(newAnnotationIndex, annotation))
+        } else {
+          return state.setIn([
             'meta', 'timeline', 'tracks', trackIndex,
             'annotations', annotationIndex
           ], annotation)
-        })
-      } else {
-        return state.setIn([
-          'meta', 'timeline', 'tracks', trackIndex,
-          'annotations', annotationIndex
-        ], annotation)
+        }
       }
     }
     case project.PROJECT_DELETE_SELECTED_ANNOTATIONS: {
