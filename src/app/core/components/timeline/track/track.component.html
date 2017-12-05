@@ -20,7 +20,7 @@
         [left]="getAnnotationPosition(annotation)"
         [width]="getAnnotationWidth(annotation)"
         [isSelected]="isSelectedAnnotation(annotation)"
-        (onHandlebarUpdate)="updateHandlebar($event, i)"
+        (onHandlebarUpdate)="updateHandlebar($event, i, stackIndex)"
         (mousedown)="annotationClick($event, annotation, i)">
       </rv-handlebar>
   </div>

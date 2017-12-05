@@ -68,8 +68,8 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   @Output() readonly onPasteAnnotations = new EventEmitter<project.PasteClipboardPayload>()
 
   private readonly _subs: Subscription[] = []
-  private readonly addAnnotationClick = new Subject<{ev: MouseEvent, stackIndex: number}>()
-  private readonly updateAnnotationSubj = new Subject<{hb: Handlebar, annotationIndex: number}>()
+  private readonly addAnnotationClick = new Subject<{ev: MouseEvent, annotationStackIndex: number}>()
+  private readonly updateAnnotationSubj = new Subject<{hb: Handlebar, annotationIndex: number, annotationStackIndex: number}>()
   private readonly annotationMdSubj = new Subject<{ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number}>()
 
   @ViewChild('title') private readonly titleInput: ElementRef
@@ -148,16 +148,16 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
 
     this._subs.push(
       this.addAnnotationClick
-        .withLatestFrom(this.containerRect, ({ev, stackIndex}, rect) => {
+        .withLatestFrom(this.containerRect, ({ev, annotationStackIndex}, rect) => {
           const localX = coordTransform(ev.clientX, rect)
           const perc = localX/rect.width*100
           const tPerc = this.totalDuration/100
           return {
             trackIndex: this.trackIndex,
-            annotationStackIndex: stackIndex,
+            annotationStackIndex,
             annotation: new AnnotationRecordFactory({
               utc_timestamp: perc*tPerc,
-              duration: 5
+              duration: 2
             })
           }
         })
@@ -166,9 +166,9 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
     this._subs.push(
       this.updateAnnotationSubj
         .debounceTime(_FORM_INPUT_DEBOUNCE_, animationScheduler)
-        .subscribe(({hb, annotationIndex}) => {
-          const oldAnnotation = this.data.getIn(['annotations', annotationIndex])
-
+        .subscribe(({hb, annotationIndex, annotationStackIndex}) => {
+          const oldAnnotation = this.data.getIn(['annotationStacks', annotationStackIndex, annotationIndex])
+          debugger
           const tPerc = this.totalDuration/100
           const newStart = tPerc*hb.left
           const newDuration = tPerc*hb.width
@@ -176,6 +176,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
           this.onUpdateAnnotation.emit({
             trackIndex: this.trackIndex,
             annotationIndex,
+            annotationStackIndex,
             annotation: AnnotationRecordFactory({
               id: oldAnnotation.get('id', null),
               fields: oldAnnotation.get('fields', null),
@@ -266,12 +267,12 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
     this.annotationMdSubj.next({ev, annotation, annotationIndex})
   }
 
-  addAnnotation(ev: MouseEvent, stackIndex: number) {
-    this.addAnnotationClick.next({ev, stackIndex})
+  addAnnotation(ev: MouseEvent, annotationStackIndex: number) {
+    this.addAnnotationClick.next({ev, annotationStackIndex})
   }
 
-  updateHandlebar(hb: Handlebar, annotationIndex: number) {
-    this.updateAnnotationSubj.next({hb, annotationIndex})
+  updateHandlebar(hb: Handlebar, annotationIndex: number, annotationStackIndex: number) {
+    this.updateAnnotationSubj.next({hb, annotationIndex, annotationStackIndex})
   }
 
   moveTrack($event: MouseEvent, trackIndex: number, direction: 'up'|'down') {

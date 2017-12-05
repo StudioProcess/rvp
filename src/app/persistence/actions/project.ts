@@ -116,6 +116,7 @@ export class ProjectAddAnnotation implements Action {
 export interface UpdateAnnotationPayload {
   readonly trackIndex: number
   readonly annotationIndex: number
+  readonly annotationStackIndex: number
   readonly annotation: Record<Annotation>
 }
 
