@@ -1,16 +1,6 @@
+import {hasCollisionFactory} from '../lib/collision'
 
-
-function start(annotation: any) {
-  return annotation.utc_timestamp
-}
-
-function end(annotation: any) {
-  return annotation.utc_timestamp + annotation.duration
-}
-
-function hasCollision(a1: any, a2: any) {
-  return end(a1) > start(a2) && start(a1) < end(a2)
-}
+const defaultHasCollision = hasCollisionFactory((a: any) => a.utc_timestamp, (a: any) => (a.utc_timestamp + a.duration))
 
 export function computeStacks(annotations: any[], fixateIndex?: number): any[] {
   if(annotations.length > 1) {
@@ -18,8 +8,9 @@ export function computeStacks(annotations: any[], fixateIndex?: number): any[] {
     const colliding = []
     let rest = annotations
     let n = 1
+
     while(rest.length > 0) {
-      while(n < rest.length && hasCollision(rest[0], rest[n])) {
+      while(n < rest.length && defaultHasCollision(rest[0], rest[n])) {
         colliding.push(rest[n++])
       }
 
