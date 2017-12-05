@@ -140,9 +140,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
       // const newAnnotations = annotations.insert(newIndex, newAnnotation)
 
       const lower = annotationStacks.slice(0, annotationStackIndex)
-      const upper = embedAnnotation(annotationStacks.slice(annotationStackIndex), newAnnotation)
-
-      return state.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], lower.concat(upper))
+      const upper = annotationStacks.slice(annotationStackIndex)
+      const newUpper = embedAnnotation(upper, List([newAnnotation]))
+      const newAnnotationsStacks = lower.concat(newUpper)
+      return state.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], newAnnotationsStacks)
     }
     case project.PROJECT_UPDATE_ANNOTATION: {
       const {trackIndex, annotationIndex, annotation} = action.payload
