@@ -165,6 +165,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
           this.onUpdate.emit({
             trackIndex: this.entry.get('trackIndex', null),
+            annotationStackIndex: this.entry.get('annotationStackIndex', null),
             annotationIndex: this.entry.get('annotationIndex', null),
             annotation
           })

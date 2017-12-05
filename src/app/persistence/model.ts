@@ -70,6 +70,7 @@ export const AnnotationRecordFactory = Record<Annotation>({
 export const AnnotationColorMapRecordFactory = Record<AnnotationColorMap>({
   trackIndex: -1,
   track: null,
+  annotationStackIndex: -1,
   annotationIndex: -1,
   annotation: new AnnotationRecordFactory(),
   color: '#000'
@@ -169,6 +170,7 @@ export interface AnnotationFields {
 export interface AnnotationColorMap {
   readonly track: Record<Track>|null
   readonly trackIndex: number // TODO: really needed?
+  readonly annotationStackIndex: number
   readonly annotationIndex: number
   readonly annotation: Record<Annotation>
   readonly color: string
