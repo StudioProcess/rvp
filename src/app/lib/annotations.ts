@@ -13,23 +13,24 @@ function hasCollision(a1: any, a2: any) {
 }
 
 export function computeStacks(annotations: any[], fixateIndex?: number): any[] {
-  if(annotations.length > 2) {
+  if(annotations.length > 1) {
     const stack = []
     const colliding = []
     let rest = annotations
     let n = 1
-    while(rest.length > 1) {
-      while(hasCollision(rest[0], rest[n])) {
+    while(rest.length > 0) {
+      while(n < rest.length && hasCollision(rest[0], rest[n])) {
         colliding.push(rest[n++])
       }
 
       stack.push(rest[0])
       rest.splice(0, n)
+      n = 1
     }
     const stacks = [stack]
     return stacks.concat(computeStacks(colliding))
   } else {
-    return [annotations]
+    return []
   }
 }
 
