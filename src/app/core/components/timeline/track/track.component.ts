@@ -168,7 +168,6 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
         .debounceTime(_FORM_INPUT_DEBOUNCE_, animationScheduler)
         .subscribe(({hb, annotationIndex, annotationStackIndex}) => {
           const oldAnnotation = this.data.getIn(['annotationStacks', annotationStackIndex, annotationIndex])
-          debugger
           const tPerc = this.totalDuration/100
           const newStart = tPerc*hb.left
           const newDuration = tPerc*hb.width
