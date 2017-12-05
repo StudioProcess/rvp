@@ -13,6 +13,8 @@ import {
   AnnotationSelection, //AnnotationSelectionRecordFactory
 } from '../model'
 
+import {embedAnnotation} from '../../lib/annotationStack'
+
 const initialState = new ProjectRecordFactory()
 
 export type State = Record<Project>
@@ -125,18 +127,22 @@ export function reducer(state: State = initialState, action: project.Actions): S
     case project.PROJECT_ADD_ANNOTATION: {
       const {trackIndex, annotationStackIndex, annotation} = action.payload
 
+      const annotationStacks = state.getIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'])
       const newId = nextAnnotationId(state.getIn(['meta', 'timeline']))
       const newAnnotation = annotation.set('id', newId)
-      const path = ['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks', annotationStackIndex]
+      // const path = ['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks', annotationStackIndex]
 
-      const annotations: List<Record<Annotation>> = state.getIn(path)
+      // const annotations: List<Record<Annotation>> = state.getIn(path)
 
-      const insertIndex = findInsertIndex(annotations, annotation.get('utc_timestamp', null))
-      const newIndex = insertIndex > -1 ? insertIndex : annotations.size
+      // const insertIndex = findInsertIndex(annotations, annotation.get('utc_timestamp', null))
+      // const newIndex = insertIndex > -1 ? insertIndex : annotations.size
 
-      return state.updateIn(path, annotations => {
-        return annotations.insert(newIndex, newAnnotation)
-      })
+      // const newAnnotations = annotations.insert(newIndex, newAnnotation)
+
+      const lower = annotationStacks.slice(0, annotationStackIndex)
+      const upper = embedAnnotation(annotationStacks.slice(annotationStackIndex), newAnnotation)
+
+      return state.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], lower.concat(upper))
     }
     case project.PROJECT_UPDATE_ANNOTATION: {
       const {trackIndex, annotationIndex, annotation} = action.payload
