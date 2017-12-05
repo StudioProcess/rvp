@@ -1,5 +1,7 @@
 import {adaptLegacyModel} from './adapt'
-import {sortAnnotationsFunc} from './sort'
+import {sortFactory} from '../../lib/sort'
+
+const defaultSortFunc = sortFactory((a: any) => a.utc_timestamp)
 
 function hasLegacyModel(projectData: any) {
   const tracks = projectData.meta.timeline.tracks
@@ -80,7 +82,7 @@ function ensureEntityIds(projectData: any) {
 function ensureSortedAnnotations(projectData: any) {
   const tracks = projectData.meta.timeline.tracks
   projectData.meta.timeline.tracks = tracks.map((track: any) => {
-    track.annotations = track.annotations.sort(sortAnnotationsFunc)
+    track.annotations = track.annotations.sort(defaultSortFunc)
     return track
   })
 }
@@ -89,7 +91,7 @@ function ensureSortedAnnotationStacks(projectData: any) {
   const tracks = projectData.meta.timeline.tracks
   projectData.meta.timeline.tracks = tracks.map((track: any) => {
     track.annotationStacks.map((annotations: any[]) => {
-      return annotations.sort(sortAnnotationsFunc)
+      return annotations.sort(defaultSortFunc)
     })
     return track
   })
