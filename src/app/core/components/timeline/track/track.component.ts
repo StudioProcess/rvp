@@ -250,7 +250,11 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
       null
   }
 
-  trackByFunc(_: number, track: Record<Track>) {
+  outerTrackByFunc(index: number) {
+    return index
+  }
+
+  innerTrackByFunc(_: number, track: Record<Track>) {
     return track.get('id', null)
   }
 
