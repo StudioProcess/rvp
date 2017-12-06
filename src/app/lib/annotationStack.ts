@@ -36,8 +36,28 @@ function findHorizontalCollisions(list: List<Record<Annotation>>, indices: List<
   return collisions
 }
 
-function findVerticalCollisions(stacks: List<List<Record<Annotation>>>, indices: List<number>) {
-  return []
+function findVerticalCollisions(stacks: List<List<Record<Annotation>>>, stackStartIndex: number, annotations: List<Record<Annotation>>) {
+  const collisions: {annotation: Record<Annotation>, index: number, annotationStackIndex: number}[] = []
+  let spread = annotations
+  for(let i = stackStartIndex; i < stacks.size; i++) {
+    const stack = stacks.get(i)!
+    const withInsertions = stack.concat(spread).sort(recordSort)
+    const insertionIndices = spread.map(mapIndicesFunc(withInsertions))
+    const hCollisions = findHorizontalCollisions(withInsertions, insertionIndices)
+
+    spread = spread.concat(hCollisions.map(({annotation}) => annotation)).sort(recordSort)
+
+    stack.forEach((annotation, annotationIndex)  => {
+      const isCollision = hCollisions.find(hColl => {
+        return hColl.annotation.get('id', null) === annotation.get('id', null)
+      }) !== undefined
+
+      if(isCollision) {
+        collisions.push({annotation, index: annotationIndex, annotationStackIndex: i})
+      }
+    })
+  }
+  return collisions
 }
 
 const mapIndicesFunc = (stack: List<Record<Annotation>>) => (annotation: Record<Annotation>) => {
@@ -53,27 +73,36 @@ export function embedAnnotations(annotationStacks: List<List<Record<Annotation>>
   }
   const stack = annotationStacks.get(annotationStackIndex)!
 
-  const removeIndices = removeAnnotations.map(mapIndicesFunc(stack))
-
-  const vCollisions = findVerticalCollisions(annotationStacks.slice(annotationStackIndex), removeIndices)
-
-  const withoutVCollisions = stack.filter((a, i) => {
-    return vCollisions.find(({index}) => {
-      return i === index
+  const withRemovals = stack.filter(a => {
+    return removeAnnotations.find(annotation => {
+      return annotation.get('id', null) === a.get('id', null)
     }) === undefined
+  })
+
+  let updatedStacks = annotationStacks.set(annotationStackIndex, withRemovals)
+  const vCollisions = findVerticalCollisions(updatedStacks, annotationStackIndex+1, removeAnnotations)
+
+  updatedStacks = updatedStacks.withMutations(mStacks => {
+    mStacks.forEach((stack, stackIndex) => {
+      const filtered = stack.filter((annotation, annotationIndex) => {
+        return vCollisions.find(vColl => {
+          return vColl.index === annotationIndex && vColl.annotationStackIndex === stackIndex
+        }) === undefined
+      })
+      mStacks.set(stackIndex, filtered)
+    })
   })
 
   // O(n+m) + O((n+m) log (n+m))
   // Complexity of sort impl depends of browser
-  const withInsertions = withoutVCollisions.concat(addAnnotations).sort(recordSort)
-
+  const withInsertions = withRemovals.concat(addAnnotations).sort(recordSort)
   // O(m * log (n+m))
   const insertionIndices = addAnnotations.map(mapIndicesFunc(withInsertions))
 
   // O(i*c)
   const hCollisions: {annotation: Record<Annotation>, index: number}[] = findHorizontalCollisions(withInsertions, insertionIndices)
 
-  const collisions = vCollisions.concat(hCollisions)
+  const collisions = vCollisions.map(({annotation, index}) => ({annotation, index})).concat(hCollisions)
 
   if(collisions.length > 0) {
     const withoutHCollisions = withInsertions.filter((a, i) => {
@@ -81,9 +110,10 @@ export function embedAnnotations(annotationStacks: List<List<Record<Annotation>>
         return i === index
       }) === undefined
     })
-    const stackInsertions = annotationStacks.set(annotationStackIndex, withoutHCollisions)
+    const stackInsertions = updatedStacks.set(annotationStackIndex, withoutHCollisions)
     const stacksFitted = fitOptimized(stackInsertions, List(collisions.map(({annotation}) => annotation)))
     const maxSize = Math.max(stackInsertions.size, stacksFitted.size)
+
     let tmp: List<List<Record<Annotation>>> = List()
     const ret = tmp.withMutations(mRet => {
       for(let i = 0; i < maxSize; i++) {
@@ -96,7 +126,7 @@ export function embedAnnotations(annotationStacks: List<List<Record<Annotation>>
         }
       }
     })
-    return ret
+    return ret.filter(stack => stack.size > 0)
   } else {
     return annotationStacks.set(annotationStackIndex, withInsertions)
   }
