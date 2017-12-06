@@ -52,7 +52,7 @@ export const TrackRecordFactory = Record<Track>({
   id: null,
   color: '#000',
   fields: new TrackFieldsRecordFactory(),
-  annotationStacks: List(List([]))
+  annotationStacks: List([List([])])
 })
 
 export const AnnotationFieldsRecordFactory = Record<AnnotationFields>({

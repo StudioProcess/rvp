@@ -196,17 +196,14 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state
     }
     case project.PROJECT_ADD_TRACK: {
-      // const trackPartial = action.payload
-      // const nextId = nextTrackId(state.getIn(['meta', 'timeline']))
-      // return state.updateIn(['meta', 'timeline', 'tracks'], tracks => {
-      //   return tracks.push(new TrackRecordFactory({
-      //     id: nextId,
-      //     color: trackPartial.color,
-      //     fields: trackPartial.fields,
-      //     annotations: trackPartial.annotations
-      //   }))
-      // })
-      return state
+      const trackPartial = action.payload
+      const nextId = nextTrackId(state.getIn(['meta', 'timeline']))
+      return state.updateIn(['meta', 'timeline', 'tracks'], tracks => {
+        return tracks.push(new TrackRecordFactory({
+          id: nextId,
+          color: trackPartial.color
+        }))
+      })
     }
     case project.PROJECT_UPDATE_TRACK: {
       const {trackIndex, track} = action.payload
