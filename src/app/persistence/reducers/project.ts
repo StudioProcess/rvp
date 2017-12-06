@@ -103,7 +103,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const newId = nextAnnotationId(state.getIn(['meta', 'timeline']))
       const newAnnotation = annotation.set('id', newId)
 
-      const stacksWithEmbedded = embedAnnotations(annotationStacks, annotationStackIndex, List([newAnnotation]))
+      const stacksWithEmbedded = embedAnnotations(annotationStacks, annotationStackIndex, List([newAnnotation]), List([]))
       return state.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], stacksWithEmbedded)
     }
     case project.PROJECT_UPDATE_ANNOTATION: {
@@ -111,10 +111,9 @@ export function reducer(state: State = initialState, action: project.Actions): S
 
       const path = ['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks']
       const annotationStacks: List<List<Record<Annotation>>> = state.getIn(path)
-      const stack = annotationStacks.get(annotationStackIndex)!
-      const stacksWithout = annotationStacks.set(annotationStackIndex, stack.delete(annotationIndex))
-
-      return state.setIn(path, embedAnnotations(stacksWithout, annotationStackIndex, List([annotation])))
+      const prevAnnotation: Record<Annotation> = annotationStacks.getIn([annotationStackIndex, annotationIndex])
+      const stacksWithEmbedded = embedAnnotations(annotationStacks, annotationStackIndex, List([annotation]), List([prevAnnotation]))
+      return state.setIn(path, stacksWithEmbedded)
 
       // const annotations = state.getIn(['meta', 'timeline', 'tracks', trackIndex, 'annotations'])
       // const annotationsWithout = annotations.delete(annotationIndex)
