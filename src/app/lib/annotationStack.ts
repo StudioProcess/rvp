@@ -68,7 +68,7 @@ const mapIndicesFunc = (stack: List<Record<Annotation>>) => (annotation: Record<
 
 export function embedAnnotations(annotationStacks: List<List<Record<Annotation>>>, annotationStackIndex: number,
   addAnnotations: List<Record<Annotation>>, removeAnnotations: List<Record<Annotation>>): List<List<Record<Annotation>>> {
-  if(annotationStackIndex >= annotationStacks.size) {
+  if(annotationStackIndex < 0 || annotationStackIndex >= annotationStacks.size) {
     return annotationStacks
   }
   const stack = annotationStacks.get(annotationStackIndex)!
