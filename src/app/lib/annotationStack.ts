@@ -93,13 +93,10 @@ export function embedAnnotations(annotationStacks: List<List<Record<Annotation>>
     })
   })
 
-  // O(n+m) + O((n+m) log (n+m))
-  // Complexity of sort impl depends of browser
   const withInsertions = withRemovals.concat(addAnnotations).sort(recordSort)
-  // O(m * log (n+m))
+
   const insertionIndices = addAnnotations.map(mapIndicesFunc(withInsertions))
 
-  // O(i*c)
   const hCollisions: {annotation: Record<Annotation>, index: number}[] = findHorizontalCollisions(withInsertions, insertionIndices)
 
   const collisions = vCollisions.map(({annotation, index}) => ({annotation, index})).concat(hCollisions)
