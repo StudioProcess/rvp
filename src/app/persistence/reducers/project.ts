@@ -13,7 +13,7 @@ import {
   AnnotationSelection, //AnnotationSelectionRecordFactory
 } from '../model'
 
-import {embedAnnotation} from '../../lib/annotationStack'
+import {embedAnnotations} from '../../lib/annotationStack'
 
 const initialState = new ProjectRecordFactory()
 
@@ -105,8 +105,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
 
       const lower = annotationStacks.slice(0, annotationStackIndex)
       const upper = annotationStacks.slice(annotationStackIndex)
-      const updatedUpper = embedAnnotation(upper, List([newAnnotation]))
+      const updatedUpper = embedAnnotations(upper, annotationStackIndex, List([newAnnotation]))
+
       const updatedAnnotationStacks = lower.concat(updatedUpper)
+
       return state.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], updatedAnnotationStacks)
     }
     case project.PROJECT_UPDATE_ANNOTATION: {
@@ -119,9 +121,11 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const upper = annotationStacks.slice(annotationStackIndex+1)
 
       const upperBefore = List([middle.delete(annotationIndex)]).concat(upper)
-      const upperAfter = embedAnnotation(upperBefore, List([annotation]))
+      const upperAfter = embedAnnotations(upperBefore, annotationStackIndex, List([annotation]))
 
-      return state.setIn(path, lower.concat(upperAfter))
+      const updatedAnnotationStacks = lower.concat(upperAfter)
+
+      return state.setIn(path, updatedAnnotationStacks)
 
       // const annotations = state.getIn(['meta', 'timeline', 'tracks', trackIndex, 'annotations'])
       // const annotationsWithout = annotations.delete(annotationIndex)
