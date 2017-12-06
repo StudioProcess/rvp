@@ -238,8 +238,11 @@ export function reducer(state: State = initialState, action: project.Actions): S
         mutableTrack.set('id', nextTrackId(timeline))
         const oldTitle = track.getIn(['fields', 'title'])
         mutableTrack.setIn(['fields', 'title'], oldTitle !== '' ? `${oldTitle} Copy` : '')
-        mutableTrack.set('annotations', mutableTrack.get('annotations').map((annotation: any, i: number) => {
-          return annotation.set('id', nextAnnotationId(timeline)+i)
+        let annotationCounter = 0;
+        mutableTrack.set('annotationStacks', mutableTrack.get('annotationStacks').map((stack: any) => {
+          return stack.map((annotation: any) => {
+            return annotation.set('id', nextAnnotationId(timeline)+(annotationCounter++))
+          })
         }))
       })
 
