@@ -103,29 +103,18 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const newId = nextAnnotationId(state.getIn(['meta', 'timeline']))
       const newAnnotation = annotation.set('id', newId)
 
-      const lower = annotationStacks.slice(0, annotationStackIndex)
-      const upper = annotationStacks.slice(annotationStackIndex)
-      const updatedUpper = embedAnnotations(upper, annotationStackIndex, List([newAnnotation]))
-
-      const updatedAnnotationStacks = lower.concat(updatedUpper)
-
-      return state.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], updatedAnnotationStacks)
+      const stacksWithEmbedded = embedAnnotations(annotationStacks, annotationStackIndex, List([newAnnotation]))
+      return state.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], stacksWithEmbedded)
     }
     case project.PROJECT_UPDATE_ANNOTATION: {
       const {trackIndex, annotationIndex, annotationStackIndex, annotation} = action.payload
 
       const path = ['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks']
       const annotationStacks: List<List<Record<Annotation>>> = state.getIn(path)
-      const lower = annotationStacks.slice(0, annotationStackIndex)
-      const middle = annotationStacks.get(annotationStackIndex)!
-      const upper = annotationStacks.slice(annotationStackIndex+1)
+      const stack = annotationStacks.get(annotationStackIndex)!
+      const stacksWithout = annotationStacks.set(annotationStackIndex, stack.delete(annotationIndex))
 
-      const upperBefore = List([middle.delete(annotationIndex)]).concat(upper)
-      const upperAfter = embedAnnotations(upperBefore, annotationStackIndex, List([annotation]))
-
-      const updatedAnnotationStacks = lower.concat(upperAfter)
-
-      return state.setIn(path, updatedAnnotationStacks)
+      return state.setIn(path, embedAnnotations(stacksWithout, annotationStackIndex, List([annotation])))
 
       // const annotations = state.getIn(['meta', 'timeline', 'tracks', trackIndex, 'annotations'])
       // const annotationsWithout = annotations.delete(annotationIndex)
