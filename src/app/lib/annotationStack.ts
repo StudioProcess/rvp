@@ -36,9 +36,9 @@ function findHorizontalCollisions(list: List<Record<Annotation>>, indices: List<
   return collisions
 }
 
-// function findVerticalCollisions(stacks: List<List<Record<Annotation>>>, indices: List<number>) {
-//   return []
-// }
+function findVerticalCollisions(stacks: List<List<Record<Annotation>>>, indices: List<number>) {
+  return []
+}
 
 const mapIndicesFunc = (stack: List<Record<Annotation>>) => (annotation: Record<Annotation>) => {
   return binarySearch(stack, stack.size, (list, i) => {
@@ -53,40 +53,46 @@ export function embedAnnotations(annotationStacks: List<List<Record<Annotation>>
   }
   const stack = annotationStacks.get(annotationStackIndex)!
 
-  const withRemoval = stack.filter(annotation => {
-    return removeAnnotations.find(rm => {
-      return rm.get('id', null) === annotation.get('id', null)
+  const removeIndices = removeAnnotations.map(mapIndicesFunc(stack))
+
+  const vCollisions = findVerticalCollisions(annotationStacks.slice(annotationStackIndex), removeIndices)
+
+  const withoutVCollisions = stack.filter((a, i) => {
+    return vCollisions.find(({index}) => {
+      return i === index
     }) === undefined
   })
 
   // O(n+m) + O((n+m) log (n+m))
   // Complexity of sort impl depends of browser
-  const withInsertions = withRemoval.concat(addAnnotations).sort(recordSort)
+  const withInsertions = withoutVCollisions.concat(addAnnotations).sort(recordSort)
 
   // O(m * log (n+m))
   const insertionIndices = addAnnotations.map(mapIndicesFunc(withInsertions))
 
   // O(i*c)
-  const collisions: {annotation: Record<Annotation>, index: number}[] = findHorizontalCollisions(withInsertions, insertionIndices)
+  const hCollisions: {annotation: Record<Annotation>, index: number}[] = findHorizontalCollisions(withInsertions, insertionIndices)
+
+  const collisions = vCollisions.concat(hCollisions)
 
   if(collisions.length > 0) {
-    const withoutCollisions = withInsertions.filter((a, i) => {
-      return collisions.find(({index}) => {
+    const withoutHCollisions = withInsertions.filter((a, i) => {
+      return hCollisions.find(({index}) => {
         return i === index
       }) === undefined
     })
-    const stacksWithInsertions = annotationStacks.set(annotationStackIndex, withoutCollisions)
-    const stacksWithFitted = fitOptimized(stacksWithInsertions, List(collisions.map(({annotation}) => annotation)))
-    const maxSize = Math.max(stacksWithInsertions.size, stacksWithFitted.size)
+    const stackInsertions = annotationStacks.set(annotationStackIndex, withoutHCollisions)
+    const stacksFitted = fitOptimized(stackInsertions, List(collisions.map(({annotation}) => annotation)))
+    const maxSize = Math.max(stackInsertions.size, stacksFitted.size)
     let tmp: List<List<Record<Annotation>>> = List()
     const ret = tmp.withMutations(mRet => {
       for(let i = 0; i < maxSize; i++) {
-        if(i < stacksWithInsertions.size && i < stacksWithFitted.size) {
-          mRet.push(stacksWithInsertions.get(i)!.concat(stacksWithFitted.get(i)!).sort(recordSort))
-        } else if(i < stacksWithInsertions.size) {
-          mRet.push(stacksWithInsertions.get(i)!)
+        if(i < stackInsertions.size && i < stacksFitted.size) {
+          mRet.push(stackInsertions.get(i)!.concat(stacksFitted.get(i)!).sort(recordSort))
+        } else if(i < stackInsertions.size) {
+          mRet.push(stackInsertions.get(i)!)
         } else {
-          mRet.push(stacksWithFitted.get(i)!)
+          mRet.push(stacksFitted.get(i)!)
         }
       }
     })
