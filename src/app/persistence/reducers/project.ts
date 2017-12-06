@@ -54,7 +54,7 @@ function getAllSelections(state: State): Set<Record<AnnotationSelection>> {
   const rangeSelections = state.getIn(['selection', 'annotation', 'range'])
   const pickSelections = state.getIn(['selection', 'annotation', 'pick'])
   const selected = state.getIn(['selection', 'annotation', 'selected'])
-  const selectedSet = Set().add(selected)
+  const selectedSet = selected !== null ? Set().add(selected) : Set()
   return rangeSelections.union(pickSelections).union(selectedSet)
 }
 
