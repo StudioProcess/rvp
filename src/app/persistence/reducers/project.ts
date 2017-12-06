@@ -10,7 +10,7 @@ import {
   AnnotationRecordFactory, AnnotationFieldsRecordFactory,
   ProjectMetaRecordFactory, Timeline, ProjectSnapshot,
   ProjectSnapshotRecordFactory, Track, Annotation,
-  AnnotationSelection, //AnnotationSelectionRecordFactory
+  AnnotationSelection, AnnotationSelectionRecordFactory
 } from '../model'
 
 import {embedAnnotations} from '../../lib/annotationStack'
@@ -306,93 +306,93 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state
     }
     case project.PROJECT_SELECT_ANNOTATION: {
-      // const {type, selection} = action.payload
-      // switch(type) {
-      //   case project.AnnotationSelectionType.Default: {
-      //     return state.withMutations(mState => {
-      //       mState.setIn(['selection', 'annotation', 'range'], Set())
-      //       mState.setIn(['selection', 'annotation', 'pick'], Set())
-      //       mState.setIn(['selection', 'annotation', 'selected'], selection)
-      //     })
-      //   }
-      //   case project.AnnotationSelectionType.Pick: {
-      //     const track = selection.get('track', null)!
-      //     const filterByTrackFunc = (sel: Record<AnnotationSelection>) => {
-      //       return sel.getIn(['track', 'id']) === track.get('id', null)
-      //     }
+      const {type, selection} = action.payload
+      switch(type) {
+        case project.AnnotationSelectionType.Default: {
+          return state.withMutations(mState => {
+            mState.setIn(['selection', 'annotation', 'range'], Set())
+            mState.setIn(['selection', 'annotation', 'pick'], Set())
+            mState.setIn(['selection', 'annotation', 'selected'], selection)
+          })
+        }
+        case project.AnnotationSelectionType.Pick: {
+          const track = selection.get('track', null)!
+          const filterByTrackFunc = (sel: Record<AnnotationSelection>) => {
+            return sel.getIn(['track', 'id']) === track.get('id', null)
+          }
 
-      //     const rangeSelections: Set<Record<AnnotationSelection>> = state.getIn(['selection', 'annotation', 'range']).filter(filterByTrackFunc)
-      //     const pickSelections: Set<Record<AnnotationSelection>> = state.getIn(['selection', 'annotation', 'pick']).filter(filterByTrackFunc)
-      //     const peekSelected: Record<AnnotationSelection>|null = state.getIn(['selection', 'annotation', 'selected'])
-      //     const isAlreadyPicked = rangeSelections.has(selection) || pickSelections.has(selection)
+          const rangeSelections: Set<Record<AnnotationSelection>> = state.getIn(['selection', 'annotation', 'range']).filter(filterByTrackFunc)
+          const pickSelections: Set<Record<AnnotationSelection>> = state.getIn(['selection', 'annotation', 'pick']).filter(filterByTrackFunc)
+          const peekSelected: Record<AnnotationSelection>|null = state.getIn(['selection', 'annotation', 'selected'])
+          const isAlreadyPicked = rangeSelections.has(selection) || pickSelections.has(selection)
 
-      //     return state.withMutations(mState => {
-      //       if(isAlreadyPicked) {
-      //         mState.setIn(['selection', 'annotation', 'range'], rangeSelections.delete(selection))
-      //         mState.setIn(['selection', 'annotation', 'pick'], pickSelections.delete(selection))
+          return state.withMutations(mState => {
+            if(isAlreadyPicked) {
+              mState.setIn(['selection', 'annotation', 'range'], rangeSelections.delete(selection))
+              mState.setIn(['selection', 'annotation', 'pick'], pickSelections.delete(selection))
 
-      //         if(peekSelected && peekSelected.getIn(['annotation', 'id']) === selection.getIn(['annotation', 'id'])) {
-      //           mState.setIn(['selection', 'annotation', 'selected'], null)
-      //         }
-      //       } else {
-      //         // Set range, might be different due to filter
-      //         mState.setIn(['selection', 'annotation', 'range'], rangeSelections)
-      //         if(peekSelected && peekSelected.getIn(['track', 'id']) === track.get('id', null) && rangeSelections.isEmpty()) {
-      //           mState.setIn(['selection', 'annotation', 'pick'], pickSelections.add(selection).add(peekSelected))
-      //         } else {
-      //           mState.setIn(['selection', 'annotation', 'pick'], pickSelections.add(selection))
-      //         }
-      //         mState.setIn(['selection', 'annotation', 'selected'], selection)
-      //       }
-      //     })
-      //   }
-      //   case project.AnnotationSelectionType.Range: {
-      //     const source = selection.get('source', null)!
-      //     const track = selection.get('track', null)!
-      //     const filterByTrackFunc = (sel: Record<AnnotationSelection>) => {
-      //       return sel.get('track', null)!.get('id', null)! === track.get('id', null)
-      //     }
-      //     const annotation = selection.get('annotation', null)!
-      //     const annotations = track.get('annotations', null)
+              if(peekSelected && peekSelected.getIn(['annotation', 'id']) === selection.getIn(['annotation', 'id'])) {
+                mState.setIn(['selection', 'annotation', 'selected'], null)
+              }
+            } else {
+              // Set range, might be different due to filter
+              mState.setIn(['selection', 'annotation', 'range'], rangeSelections)
+              if(peekSelected && peekSelected.getIn(['track', 'id']) === track.get('id', null) && rangeSelections.isEmpty()) {
+                mState.setIn(['selection', 'annotation', 'pick'], pickSelections.add(selection).add(peekSelected))
+              } else {
+                mState.setIn(['selection', 'annotation', 'pick'], pickSelections.add(selection))
+              }
+              mState.setIn(['selection', 'annotation', 'selected'], selection)
+            }
+          })
+        }
+        case project.AnnotationSelectionType.Range: {
+          const source = selection.get('source', null)!
+          const track = selection.get('track', null)!
+          const filterByTrackFunc = (sel: Record<AnnotationSelection>) => {
+            return sel.get('track', null)!.get('id', null)! === track.get('id', null)
+          }
+          const annotation = selection.get('annotation', null)!
+          const annotations = track.get('annotationStacks', null).flatMap(stack => stack)
 
-      //     const sortFunc = (a1: Record<Annotation>, a2: Record<Annotation>) => {
-      //       return a1.get('utc_timestamp', null)! - a2.get('utc_timestamp', null)!
-      //     }
-      //     const sortedAnnotations = annotations.sort(sortFunc)
-      //     const peekSelected: Record<AnnotationSelection>|null = state.getIn(['selection', 'annotation', 'selected'])
-      //     const fa: Record<Annotation> = track.getIn(['annotations']).sort(sortFunc).first() // fa ~ first annotation in current track
+          const sortFunc = (a1: Record<Annotation>, a2: Record<Annotation>) => {
+            return a1.get('utc_timestamp', null)! - a2.get('utc_timestamp', null)!
+          }
+          const sortedAnnotations = annotations.sort(sortFunc)
+          const peekSelected: Record<AnnotationSelection>|null = state.getIn(['selection', 'annotation', 'selected'])
+          const fa: Record<Annotation> = annotations.first()! // fa ~ first annotation in current track
 
-      //     const pivot: Record<Annotation> = peekSelected && peekSelected.getIn(['track', 'id']) === track.get('id', null) ?
-      //       peekSelected.get('annotation', null)! : fa
-      //     const limit = annotation
+          const pivot: Record<Annotation> = peekSelected && peekSelected.getIn(['track', 'id']) === track.get('id', null) ?
+            peekSelected.get('annotation', null)! : fa
+          const limit = annotation
 
-      //     const pivotKey = sortedAnnotations.findIndex(a => a.get('id', null) === pivot.get('id', null))!
-      //     const limitKey = sortedAnnotations.findIndex(a => a.get('id', null) === limit.get('id', null))!
+          const pivotKey = sortedAnnotations.findIndex(a => a.get('id', null) === pivot.get('id', null))!
+          const limitKey = sortedAnnotations.findIndex(a => a.get('id', null) === limit.get('id', null))!
 
-      //     const range = pivotKey < limitKey ?
-      //       sortedAnnotations.slice(pivotKey, limitKey+1):
-      //       sortedAnnotations.slice(limitKey, pivotKey+1)
+          const range = pivotKey < limitKey ?
+            sortedAnnotations.slice(pivotKey, limitKey+1):
+            sortedAnnotations.slice(limitKey, pivotKey+1)
 
-      //     const rangeSelectionRecords = range.map(aRec => {
-      //       return AnnotationSelectionRecordFactory({track, annotation: aRec, source})
-      //     })
+          const rangeSelectionRecords = range.map(aRec => {
+            return AnnotationSelectionRecordFactory({track, annotation: aRec, source})
+          })
 
-      //     return state.withMutations(mState => {
-      //       const pickSelections = mState.getIn(['selection', 'annotation', 'pick'])
-      //       mState.setIn(['selection', 'annotation', 'pick'], pickSelections.filter(filterByTrackFunc))
+          return state.withMutations(mState => {
+            const pickSelections = mState.getIn(['selection', 'annotation', 'pick'])
+            mState.setIn(['selection', 'annotation', 'pick'], pickSelections.filter(filterByTrackFunc))
 
-      //       const rangeSelection = rangeSelectionRecords.toSet()
-      //       mState.setIn(['selection', 'annotation', 'range'], rangeSelection)
+            const rangeSelection = rangeSelectionRecords.toSet()
+            mState.setIn(['selection', 'annotation', 'range'], rangeSelection)
 
-      //       if(peekSelected === null || peekSelected.getIn(['track', 'id']) !== track.get('id', null)) {
-      //         const newSelectionRecord = AnnotationSelectionRecordFactory({
-      //           track, annotation: fa, source
-      //         })
-      //         mState.setIn(['selection', 'annotation', 'selected'], newSelectionRecord)
-      //       }
-      //     })
-      //   }
-      // }
+            if(peekSelected === null || peekSelected.getIn(['track', 'id']) !== track.get('id', null)) {
+              const newSelectionRecord = AnnotationSelectionRecordFactory({
+                track, annotation: fa, source
+              })
+              mState.setIn(['selection', 'annotation', 'selected'], newSelectionRecord)
+            }
+          })
+        }
+      }
       return state
     }
     case project.PROJECT_SELECTION_RESETALL_ANNOTATION: {
