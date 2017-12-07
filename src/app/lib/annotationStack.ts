@@ -13,6 +13,7 @@ const recordHasCollision = hasCollisionFactory<Record<Annotation>, number>(
 
 function findHorizontalCollisions(list: List<Record<Annotation>>, indices: List<number>) {
   const collisions: {annotation: Record<Annotation>, index: number}[] = []
+  const isInIndices = (k: number) => indices.find(i => i === k) !== undefined
 
   let n = 1
   let nextIndex
@@ -20,20 +21,28 @@ function findHorizontalCollisions(list: List<Record<Annotation>>, indices: List<
     // Collision to right
     n = 1
     nextIndex = i+n
-    while(nextIndex < list.size && recordHasCollision(list.get(i)!, list.get(nextIndex)!)) {
+    while(nextIndex < list.size && !isInIndices(nextIndex) && recordHasCollision(list.get(i)!, list.get(nextIndex)!)) {
       collisions.push({annotation: list.get(nextIndex)!, index: nextIndex})
       nextIndex = i+(++n)
     }
     // Collision to left
     n = 1
     nextIndex = i-n
-    while(nextIndex >= 0 && recordHasCollision(list.get(i)!, list.get(nextIndex)!)) {
+    while(nextIndex >= 0 && !isInIndices(nextIndex) && recordHasCollision(list.get(i)!, list.get(nextIndex)!)) {
       collisions.push({annotation: list.get(nextIndex)!, index: nextIndex})
       nextIndex = i-(++n)
     }
   })
 
-  return collisions
+  const uniqueMapIndexMap: {[key: number]: boolean} = {}
+  return collisions.filter(({index}) => {
+    if(uniqueMapIndexMap[index]) {
+      return false
+    } else {
+      uniqueMapIndexMap[index] = true
+      return true
+    }
+  })
 }
 
 function findVerticalCollisions(stacks: List<List<Record<Annotation>>>, stackStartIndex: number, annotations: List<Record<Annotation>>) {
@@ -47,6 +56,7 @@ function findVerticalCollisions(stacks: List<List<Record<Annotation>>>, stackSta
 
     spread = spread.concat(hCollisions.map(({annotation}) => annotation)).sort(recordSort)
 
+    // Get actual indices of horiz. collisions
     stack.forEach((annotation, annotationIndex)  => {
       const isCollision = hCollisions.find(hColl => {
         return hColl.annotation.get('id', null) === annotation.get('id', null)
