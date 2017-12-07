@@ -21,7 +21,7 @@ export function computeStacks(annotations: any[]): any[] {
     const stacks = [stack]
     return stacks.concat(computeStacks(colliding))
   } else {
-    return []
+    return [[]]
   }
 }
 
