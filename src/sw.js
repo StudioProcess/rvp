@@ -11,7 +11,7 @@ self.addEventListener('install', function(e) {
         '/vendor.bundle.js',
         '/main.bundle.js',
         '/assets/img/rv_animation.gif',
-        '/ionicons.24712f6c47821394fba7.ttf',
+        '/ionicons.ttf',
         '/assets/img/rv-logo_1000px.png',
         '/assets/projects/default.rv'
       ]);
