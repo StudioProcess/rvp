@@ -1,7 +1,8 @@
 # Changelog
 
-# 0.2.0 (2017-11-28) Undo/Redo, Offline, Manage tracks, Select/Copy/Paste Annotations
+# 0.2.0 (2017-12-07) Undo/Redo, Offline, Manage tracks, Select/Copy/Paste Annotations, Stacking Annotations
 
+* Stacking annotations
 * Select/copy/paste annotations
 * Undo/redo feature (default: 20 actions are saved, see `src/app/config/snapshots.ts`)
 * Offline feature via service-worker
