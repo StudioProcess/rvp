@@ -116,23 +116,14 @@ export function reducer(state: State = initialState, action: project.Actions): S
 
       const annotationId = annotation.get('id', null)!
       const singleSel: Record<AnnotationSelection> = state.getIn(['selection', 'annotation', 'selected'])
-      // const clipboardAnnotations = state.get('clipboard', null)
-      // const findFunc = findAnnotationFunc(annotationId)
-
       let inSelection = singleSel !== null && singleSel.getIn(['annotation', 'id']) === annotationId ? singleSel : null
-      // let inClipboard = !clipboardAnnotations.isEmpty() ? clipboardAnnotations.find(findFunc) : null
-      if(inSelection /*|| inClipboard*/) {
-        return state.withMutations(mState => {
-          if(inSelection) {
-            const updatedSingleSel = inSelection.set('annotation', annotation)
-            mState.setIn(['selection', 'annotation', 'selected'], updatedSingleSel)
-          }
 
-          mState.setIn(path, stacksWithEmbedded)
-        })
-      } else {
-        state.setIn(path, stacksWithEmbedded)
+      let updatedState = state
+      if(inSelection) {
+        const updatedSingleSel = inSelection.set('annotation', annotation)
+        updatedState = state.setIn(['selection', 'annotation', 'selected'], updatedSingleSel)
       }
+      return updatedState.setIn(path, stacksWithEmbedded)
     }
     case project.PROJECT_DELETE_SELECTED_ANNOTATIONS: {
       const all = getAllSelections(state)
