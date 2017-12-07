@@ -1,4 +1,4 @@
-import {List, Record} from 'immutable'
+import {List, Record, Set} from 'immutable'
 
 import {Annotation} from '../persistence/model'
 import {binarySearch} from '../lib/search'
@@ -11,9 +11,15 @@ const recordHasCollision = hasCollisionFactory<Record<Annotation>, number>(
   a => a.get('utc_timestamp', null),
   a => (a.get('utc_timestamp', null)+a.get('duration', null)))
 
-function findHorizontalCollisions(list: List<Record<Annotation>>, indices: List<number>) {
+function findHorizontalCollisions(list: List<Record<Annotation>>, indices: List<number>, checkSelf: boolean=false) {
   const collisions: {annotation: Record<Annotation>, index: number}[] = []
-  const isInIndices = (k: number) => indices.find(i => i === k) !== undefined
+  const isInIndices = (k: number) => {
+    if(checkSelf) {
+      indices.find(i => i === k) !== undefined
+    } else {
+      return false
+    }
+  }
 
   let n = 1
   let nextIndex
@@ -53,7 +59,7 @@ function findVerticalCollisions(stacks: List<List<Record<Annotation>>>, stackSta
     const spreadList = spread.toList().sort(recordSort)
     const withInsertions = stack.concat(spreadList).sort(recordSort)
     const insertionIndices = spreadList.map(mapIndicesFunc(withInsertions))
-    const hCollisions = findHorizontalCollisions(withInsertions, insertionIndices)
+    const hCollisions = findHorizontalCollisions(withInsertions, insertionIndices, true)
 
     spread = spread.union(hCollisions.map(({annotation}) => annotation))
 
