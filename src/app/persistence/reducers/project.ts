@@ -360,7 +360,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
           }
           const sortedAnnotations = annotations.sort(sortFunc)
           const peekSelected: Record<AnnotationSelection>|null = state.getIn(['selection', 'annotation', 'selected'])
-          const fa: Record<Annotation> = annotations.first()! // fa ~ first annotation in current track
+          const fa: Record<Annotation> = sortedAnnotations.first()! // fa ~ first annotation in current track
 
           const pivot: Record<Annotation> = peekSelected && peekSelected.getIn(['track', 'id']) === track.get('id', null) ?
             peekSelected.get('annotation', null)! : fa
