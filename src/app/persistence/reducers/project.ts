@@ -113,58 +113,26 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const annotationStacks: List<List<Record<Annotation>>> = state.getIn(path)
       const prevAnnotation: Record<Annotation> = annotationStacks.getIn([annotationStackIndex, annotationIndex])
       const stacksWithEmbedded = embedAnnotations(annotationStacks, annotationStackIndex, List([annotation]), List([prevAnnotation]))
-      return state.setIn(path, stacksWithEmbedded)
 
-      // const annotations = state.getIn(['meta', 'timeline', 'tracks', trackIndex, 'annotations'])
-      // const annotationsWithout = annotations.delete(annotationIndex)
-      // const insertIndex = findInsertIndex(annotationsWithout, annotation.get('utc_timestamp', null))
-      // const newAnnotationIndex = insertIndex > -1 ? insertIndex : annotationsWithout.size
+      const annotationId = annotation.get('id', null)!
+      const singleSel: Record<AnnotationSelection> = state.getIn(['selection', 'annotation', 'selected'])
+      // const clipboardAnnotations = state.get('clipboard', null)
+      // const findFunc = findAnnotationFunc(annotationId)
 
-      // const annotationId = annotation.get('id', null)!
-      // const singleSel: Record<AnnotationSelection> = state.getIn(['selection', 'annotation', 'selected'])
-      // // const clipboardAnnotations = state.get('clipboard', null)
-      // // const findFunc = findAnnotationFunc(annotationId)
+      let inSelection = singleSel !== null && singleSel.getIn(['annotation', 'id']) === annotationId ? singleSel : null
+      // let inClipboard = !clipboardAnnotations.isEmpty() ? clipboardAnnotations.find(findFunc) : null
+      if(inSelection /*|| inClipboard*/) {
+        return state.withMutations(mState => {
+          if(inSelection) {
+            const updatedSingleSel = inSelection.set('annotation', annotation)
+            mState.setIn(['selection', 'annotation', 'selected'], updatedSingleSel)
+          }
 
-      // let inSelection = singleSel !== null && singleSel.getIn(['annotation', 'id']) === annotationId ? singleSel : null
-      // // let inClipboard = !clipboardAnnotations.isEmpty() ? clipboardAnnotations.find(findFunc) : null
-      // if(inSelection /*|| inClipboard*/) {
-      //   return state.withMutations(mState => {
-      //     if(inSelection) {
-      //       const updatedSingleSel = inSelection.set('annotation', annotation)
-      //       mState.setIn(['selection', 'annotation', 'selected'], updatedSingleSel)
-      //     }
-
-      //     // Also sync clipboard? Needs discussion
-      //     // if(inClipboard) {
-      //     //   const updatedClipboard = inClipboard.set('annotation', annotation)
-      //     //   mState.set('clipboard', clipboardAnnotations.delete(inClipboard).add(updatedClipboard))
-      //     // }
-
-      //     if(newAnnotationIndex !== annotationIndex) {
-      //       console.log('Reindex (mutations)')
-      //       mState.setIn([
-      //         'meta', 'timeline', 'tracks', trackIndex,
-      //         'annotations'], annotationsWithout.insert(newAnnotationIndex, annotation))
-      //     } else {
-      //       mState.setIn([
-      //         'meta', 'timeline', 'tracks', trackIndex,
-      //         'annotations', annotationIndex
-      //       ], annotation)
-      //     }
-      //   })
-      // } else {
-      //   if(newAnnotationIndex !== annotationIndex) {
-      //     console.log('Reindex')
-      //     return state.setIn([
-      //       'meta', 'timeline', 'tracks', trackIndex,
-      //       'annotations'], annotationsWithout.insert(newAnnotationIndex, annotation))
-      //   } else {
-      //     return state.setIn([
-      //       'meta', 'timeline', 'tracks', trackIndex,
-      //       'annotations', annotationIndex
-      //     ], annotation)
-      //   }
-      // }
+          mState.setIn(path, stacksWithEmbedded)
+        })
+      } else {
+        state.setIn(path, stacksWithEmbedded)
+      }
     }
     case project.PROJECT_DELETE_SELECTED_ANNOTATIONS: {
       const all = getAllSelections(state)
