@@ -47,14 +47,15 @@ function findHorizontalCollisions(list: List<Record<Annotation>>, indices: List<
 
 function findVerticalCollisions(stacks: List<List<Record<Annotation>>>, stackStartIndex: number, annotations: List<Record<Annotation>>) {
   const collisions: {annotation: Record<Annotation>, index: number, annotationStackIndex: number}[] = []
-  let spread = annotations
+  let spread = Set(annotations)
   for(let i = stackStartIndex; i < stacks.size; i++) {
     const stack = stacks.get(i)!
-    const withInsertions = stack.concat(spread).sort(recordSort)
-    const insertionIndices = spread.map(mapIndicesFunc(withInsertions))
+    const spreadList = spread.toList().sort(recordSort)
+    const withInsertions = stack.concat(spreadList).sort(recordSort)
+    const insertionIndices = spreadList.map(mapIndicesFunc(withInsertions))
     const hCollisions = findHorizontalCollisions(withInsertions, insertionIndices)
 
-    spread = spread.concat(hCollisions.map(({annotation}) => annotation)).sort(recordSort)
+    spread = spread.union(hCollisions.map(({annotation}) => annotation))
 
     // Get actual indices of horiz. collisions
     stack.forEach((annotation, annotationIndex)  => {
