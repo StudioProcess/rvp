@@ -2,7 +2,7 @@ import {hasCollisionFactory} from '../lib/collision'
 
 const defaultHasCollision = hasCollisionFactory((a: any) => a.utc_timestamp, (a: any) => (a.utc_timestamp + a.duration))
 
-export function computeStacks(annotations: any[], fixateIndex?: number): any[] {
+export function computeStacks(annotations: any[]): any[] {
   if(annotations.length > 1) {
     const stack = []
     const colliding = []
