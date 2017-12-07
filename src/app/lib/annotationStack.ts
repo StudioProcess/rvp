@@ -149,15 +149,16 @@ export function embedAnnotations(annotationStacks: List<List<Record<Annotation>>
 function fitOptimized(annotationStacks: List<List<Record<Annotation>>>, annotations: List<Record<Annotation>>) {
   let fittedStacks: Array<List<Record<Annotation>>> = []
   let rest = annotations
-  for(let i = 0; i < annotationStacks.size; i++) {
-    const stack = annotationStacks.get(i)!
-    const collisions = []
+  let stackCounter = 0
+  while(rest.size > 0) {
+    const stack = stackCounter < annotationStacks.size ? annotationStacks.get(stackCounter)! : List([])
     let updatedStack = stack
+    const collisions = []
     let justFitted = []
     for(let j = 0; j < rest.size; j++) {
       const annotation = rest.get(j)!
       // TODO: instead of concat+sort+binarysearch, just insert sorted
-      const withInsertion = updatedStack.concat(List([annotation])).sort(recordSort)
+      const withInsertion = updatedStack.push(annotation).sort(recordSort)
       const insertionIndex = binarySearch(withInsertion, withInsertion.size, (list, k) => {
         return list.getIn([k, 'utc_timestamp'])
       }, annotation.get('utc_timestamp', null))
@@ -171,10 +172,7 @@ function fitOptimized(annotationStacks: List<List<Record<Annotation>>>, annotati
     }
     fittedStacks.push(List(justFitted.sort(recordSort)))
     rest = List(collisions)
-  }
-
-  if(rest.size > 0) {
-    fittedStacks.push(rest.sort(recordSort))
+    stackCounter++;
   }
 
   return List(fittedStacks)
