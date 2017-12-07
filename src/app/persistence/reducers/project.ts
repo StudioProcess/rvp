@@ -187,12 +187,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
         const fs = allSelections.first()!
         const trackWithSelections = fs.get('track', null)!
         if(track.get('id',null) === trackWithSelections.get('id', null)) {
-          return state.withMutations(mState => {
-            mState.setIn(['selection', 'annotation', 'range'], Set())
-            mState.setIn(['selection', 'annotation', 'pick'], Set())
-            mState.setIn(['selection', 'annotation', 'selected'], null)
-            mState.deleteIn(['meta', 'timeline', 'tracks', trackIndex])
-          })
+          return state.setIn(['selection', 'annotation', 'range'], Set())
+            .setIn(['selection', 'annotation', 'pick'], Set())
+            .setIn(['selection', 'annotation', 'selected'], null)
+            .deleteIn(['meta', 'timeline', 'tracks', trackIndex])
         }
       }
       // Otherwise just delete track
