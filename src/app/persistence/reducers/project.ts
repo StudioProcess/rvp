@@ -144,12 +144,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
           })
         })
 
-        return state.withMutations(mState => {
-          mState.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], updatedStacks)
-          mState.setIn(['selection', 'annotation', 'range'], Set())
-          mState.setIn(['selection', 'annotation', 'pick'], Set())
-          mState.setIn(['selection', 'annotation', 'selected'], null)
-        })
+        return state.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], updatedStacks)
+          .setIn(['selection', 'annotation', 'range'], Set())
+          .setIn(['selection', 'annotation', 'pick'], Set())
+          .setIn(['selection', 'annotation', 'selected'], null)
       } else {
         return state
       }
