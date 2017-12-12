@@ -80,10 +80,20 @@ export const AnnotationColorMapRecordFactory = Record<AnnotationColorMap>({
 
 export interface Project {
   readonly meta: Record<ProjectMeta>|null
-  readonly video: Blob|null,
+  readonly video: Blob|Record<ProjectVideoURL>|null,
   readonly selection: Record<ProjectSelection>
   readonly snapshots: ProjectSnapshots
   readonly clipboard: Set<Record<AnnotationSelection>>
+}
+
+export const enum VideoURLSource {
+  Youtube,
+  Vimeo
+}
+
+export interface ProjectVideoURL {
+  source: VideoURLSource,
+  url: URL
 }
 
 export interface ProjectMeta {
