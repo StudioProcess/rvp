@@ -3,6 +3,9 @@ import {
   Output, OnDestroy
 } from '@angular/core'
 
+import {ProjectVideoRecordFactory, VideoSource} from '../../../../persistence/model'
+import {ImportVideoPayload} from '../../../../persistence/actions/project'
+
 function extractFile(e: any): File|null {
   if(e && e.target && e.target.files && e.target.files.length) {
     return e.target.files[0]
@@ -19,11 +22,12 @@ function extractFile(e: any): File|null {
 })
 export class ProjectModalComponent implements OnDestroy {
   @Output() readonly onImportProject = new EventEmitter()
-  @Output() readonly onImportVideo = new EventEmitter()
+  @Output() readonly onImportVideo = new EventEmitter<ImportVideoPayload>()
   @Output() readonly onExportProject = new EventEmitter()
   @Output() readonly onResetProject = new EventEmitter()
 
   youtubeURL: string = ''
+  vimeoURL: string = ''
 
   importProject(e: any) {
     const file = extractFile(e)
@@ -36,7 +40,10 @@ export class ProjectModalComponent implements OnDestroy {
   importVideo(e: any) {
     const file = extractFile(e)
     if(file !== null) {
-      this.onImportVideo.emit(file)
+      this.onImportProject.emit(ProjectVideoRecordFactory({
+        source: VideoSource.Blob,
+        data: file
+      }))
       e.target.value = null
     }
   }
@@ -52,8 +59,16 @@ export class ProjectModalComponent implements OnDestroy {
   openURL(src: string, url: URL) {
     switch(src) {
       case 'youtube':
+      this.onImportProject.emit(ProjectVideoRecordFactory({
+        source: VideoSource.Youtube,
+        data: url
+      }))
       break;
       case 'vimeo':
+      this.onImportProject.emit(ProjectVideoRecordFactory({
+        source: VideoSource.Vimeo,
+        data: url
+      }))
       break;
     }
   }
