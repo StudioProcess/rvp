@@ -35,7 +35,7 @@
     "@ngrx/effects": "^4.1.1",
     "@ngrx/store": "^4.1.1",
     "@ngrx/store-devtools": "^4.1.1",
-    "core-js": "^2.5.2",
+    "core-js": "^2.5.3",
     "file-saver": "^1.3.3",
     "foundation-sites": "^6.4.3",
     "immutable": "^4.0.0-rc.9",
@@ -46,6 +46,7 @@
     "pace-progress": "^1.0.2",
     "rxjs": "^5.5.5",
     "video.js": "^6.5.1",
+    "videojs-youtube": "^2.4.1",
     "zone.js": "^0.8.18"
   },
   "devDependencies": {
@@ -55,8 +56,8 @@
     "@angular/language-service": "^4.4.6",
     "@types/file-saver": "^1.0.0",
     "@types/jszip": "^3.1.2",
-    "@types/node": "^6.0.92",
-    "@types/video.js": "^6.2.2",
+    "@types/node": "^6.0.93",
+    "@types/video.js": "^6.2.3",
     "codelyzer": "~3.1.1",
     "tslint": "^5.8.0",
     "typescript": "~2.3.3"
