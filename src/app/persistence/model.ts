@@ -67,6 +67,18 @@ export const AnnotationRecordFactory = Record<Annotation>({
   fields: new AnnotationFieldsRecordFactory()
 })
 
+export const enum VideoSource {
+  None,
+  Blob,
+  Youtube,
+  Vimeo
+}
+
+export const ProjectVideoRecordFactory = Record<ProjectVideo>({
+  source: VideoSource.None,
+  data: null
+})
+
 export const AnnotationColorMapRecordFactory = Record<AnnotationColorMap>({
   trackIndex: -1,
   track: null,
@@ -80,20 +92,15 @@ export const AnnotationColorMapRecordFactory = Record<AnnotationColorMap>({
 
 export interface Project {
   readonly meta: Record<ProjectMeta>|null
-  readonly video: Blob|Record<ProjectVideoURL>|null,
+  readonly video: Record<ProjectVideo>|null,
   readonly selection: Record<ProjectSelection>
   readonly snapshots: ProjectSnapshots
   readonly clipboard: Set<Record<AnnotationSelection>>
 }
 
-export const enum VideoURLSource {
-  Youtube,
-  Vimeo
-}
-
-export interface ProjectVideoURL {
-  source: VideoURLSource,
-  url: URL
+export interface ProjectVideo {
+  source: VideoSource,
+  data: File|Blob|URL|null
 }
 
 export interface ProjectMeta {
