@@ -1,5 +1,21 @@
 @import 'colors';
 
+@mixin button($bgColor, $color: black) {
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  color: $color;
+  display: inline-block;
+  background-color: $bgColor;
+
+  &:hover {
+    color: $white;
+    background-color: $black;
+    cursor: pointer;
+  }
+}
+
 :host {
   display: block;
 
@@ -37,57 +53,23 @@
   }
 
   .inputfile + label {
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    color: white;
-    background-color: black;
-    display: inline-block;
-    color: $black;
-    background-color: $process-light-gray;
-
-    &:focus, &:hover {
-      color: $white;
-      background-color: $black;
-      cursor: pointer;
-    }
+    @include button($process-light-gray);
   }
 }
 
 :host {
   .button-export {
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    color: white;
-    display: inline-block;
-    color: $black;
-    background-color: $process-light-gray;
+    @include button($process-light-gray);
+  }
 
-    &:hover {
-      color: $white;
-      background-color: $black;
-    }
+  button {
+    @include button($process-light-gray);
   }
 }
 
 :host {
   .button-reset {
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    color: white;
-    display: inline-block;
-    color: $white;
-    background-color: red;
-
-    &:hover {
-      color: $white;
-      background-color: $black;
-    }
+    @include button(red, white)
   }
 }
 
