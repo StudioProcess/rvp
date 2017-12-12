@@ -142,7 +142,7 @@ export class ServerProxy {
               try {
                 const zip = new JSZip()
                 zip.file(`${_METADATA_PATH_}`, JSON.stringify(meta))
-                zip.file(`${_VIDEODATA_PATH_}`, video!)
+                zip.file(`${_VIDEODATA_PATH_}`, video as Blob)
 
                 const zipBlob = await zip.generateAsync(_DEFZIPOTPIONS_) as Blob
                 saveAs(zipBlob, _EXPORT_PROJECT_NAME_)
