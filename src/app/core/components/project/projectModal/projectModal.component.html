@@ -24,8 +24,8 @@
     </div>
     <div>
       <h3 class="title-settings">Youtube Video</h3>
-      <input type="text">
-      <button>Open</button>
+      <input type="text" [(ngModel)]="youtubeURL">
+      <button (click)="openURL('youtube', youtubeURL)">Open</button>
     </div>
   </div>
   <div class="column">

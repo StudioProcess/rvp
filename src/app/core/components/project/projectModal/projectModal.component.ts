@@ -23,6 +23,8 @@ export class ProjectModalComponent implements OnDestroy {
   @Output() readonly onExportProject = new EventEmitter()
   @Output() readonly onResetProject = new EventEmitter()
 
+  youtubeURL: string = ''
+
   importProject(e: any) {
     const file = extractFile(e)
     if(file !== null) {
@@ -45,6 +47,15 @@ export class ProjectModalComponent implements OnDestroy {
 
   resetProject() {
     this.onResetProject.emit()
+  }
+
+  openURL(src: string, url: URL) {
+    switch(src) {
+      case 'youtube':
+      break;
+      case 'vimeo':
+      break;
+    }
   }
 
   ngOnDestroy() {
