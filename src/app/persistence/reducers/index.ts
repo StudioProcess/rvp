@@ -65,7 +65,7 @@ export const getSortedFlattenedAnnotations = createSelector(getFlattenedAnnotati
 
 // Project video
 
-export const getProjectVideo = createSelector(getProjectState, fromProject.getProjectVideo)
+export const getProjectVideoBlob = createSelector(getProjectState, fromProject.getProjectVideoBlob)
 
 
 // Selection

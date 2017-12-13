@@ -92,7 +92,8 @@ export function reducer(state: State = initialState, action: project.Actions): S
     }
     case project.PROJECT_IMPORT_VIDEO_SUCCESS: {
       const video = action.payload
-      return state.set('video', video)
+      // TODO: adapt import video
+      return state.set('videoBlob', video)
     }
     case project.PROJECT_SET_TIMELINE_DURATION: {
       return state.setIn(['meta', 'timeline', 'duration'], action.payload.duration)
@@ -394,7 +395,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
 export const getProjectMeta = (state: State) => {
   return state.get('meta', null)
 }
-export const getProjectVideo = (state: State) => state.get('video', null)
+export const getProjectVideoBlob = (state: State) => state.get('videoBlob', null)
 
 export const getProjectSelection = (state: State) => {
   return state.get('selection', null)

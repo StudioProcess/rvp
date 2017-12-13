@@ -36,13 +36,13 @@ export class ServerProxy {
     private readonly _cache: LFCache,
     private readonly _store: Store<fromProject.State>) {
       const projectState = this._store.select(fromProject.getProjectState)
-        .filter(proj => proj.get('meta', null) !== null && proj.get('video', null) !== null)
+        .filter(proj => proj.get('meta', null) !== null && proj.get('videoBlob', null) !== null)
         .share()
 
       const mutableProjectState = projectState.map(proj => {
         return {
           meta: proj.get('meta', null)!.toJS(),
-          video: proj.get('video', null)
+          video: proj.get('videoBlob', null)
         }
       })
 

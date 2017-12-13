@@ -45,7 +45,7 @@ export class PlayerContainer implements AfterViewInit, OnDestroy {
     }))
 
     this._subs.push(
-      this._projectStore.select(fromProject.getProjectVideo)
+      this._projectStore.select(fromProject.getProjectVideoBlob)
         .filter(video => video !== null)
         .subscribe((video: File|Blob) => {
           this._store.dispatch(new player.PlayerSetSource(video))
