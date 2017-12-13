@@ -4,6 +4,7 @@ import {List, Record, Set} from 'immutable'
 
 export interface Project {
   readonly meta: Record<ProjectMeta>|null
+  readonly videoBlob: Blob|null
   readonly selection: Record<ProjectSelection>
   readonly snapshots: ProjectSnapshots
   readonly clipboard: Set<Record<AnnotationSelection>>
@@ -159,6 +160,7 @@ export const ProjectSelectionRecordFactory = Record<ProjectSelection>({
 
 export const ProjectRecordFactory = Record<Project>({
   meta: null,
+  videoBlob: null,
   selection: new ProjectSelectionRecordFactory(),
   snapshots: new ProjectSnapshotsRecordFactory(),
   clipboard: Set()
