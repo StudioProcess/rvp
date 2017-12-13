@@ -62,12 +62,13 @@ function getAllSelections(state: State): Set<Record<AnnotationSelection>> {
 export function reducer(state: State = initialState, action: project.Actions): State {
   switch(action.type) {
     case project.PROJECT_LOAD_SUCCESS: {
-      const {meta: {id, timeline, video}} = action.payload
+      const {meta: {id, timeline, video:videoMeta}, video} = action.payload
       // Create immutable representation
       return new ProjectRecordFactory({
+        videoBlob: video,
         meta: ProjectMetaRecordFactory({
           id,
-          video: ProjectVideoRecordFactory(video),
+          video: ProjectVideoRecordFactory(videoMeta),
           timeline: TimelineRecordFactory({
             ...timeline,
             tracks: List(timeline.tracks.map((track: any) => {
