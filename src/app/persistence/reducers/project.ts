@@ -10,7 +10,8 @@ import {
   AnnotationRecordFactory, AnnotationFieldsRecordFactory,
   ProjectMetaRecordFactory, Timeline, ProjectSnapshot,
   ProjectSnapshotRecordFactory, Track, Annotation,
-  AnnotationSelection, AnnotationSelectionRecordFactory
+  AnnotationSelection, AnnotationSelectionRecordFactory,
+  ProjectVideoRecordFactory
 } from '../model'
 
 import {embedAnnotations} from '../../lib/annotationStack'
@@ -61,12 +62,12 @@ function getAllSelections(state: State): Set<Record<AnnotationSelection>> {
 export function reducer(state: State = initialState, action: project.Actions): State {
   switch(action.type) {
     case project.PROJECT_LOAD_SUCCESS: {
-      const {meta: {id, timeline}, video} = action.payload
+      const {meta: {id, timeline, video}} = action.payload
       // Create immutable representation
       return new ProjectRecordFactory({
-        video,
         meta: ProjectMetaRecordFactory({
           id,
+          video: ProjectVideoRecordFactory(video),
           timeline: TimelineRecordFactory({
             ...timeline,
             tracks: List(timeline.tracks.map((track: any) => {
