@@ -1,7 +1,13 @@
-import {adaptLegacyAnnotations} from './adapt'
+import {adaptLegacyAnnotations, adaptLegacyVideoMeta} from './adapt'
 import {sortFactory} from '../../lib/sort'
 
 const defaultSortFunc = sortFactory((a: any) => a.utc_timestamp)
+
+function hasLegacyVideoMeta(projectData: any) {
+  const meta = projectData.meta
+
+  return isNil(meta.video) || isNil(meta.video.type)
+}
 
 function hasLegacyAnnotations(projectData: any) {
   const tracks = projectData.meta.timeline.tracks
@@ -103,6 +109,10 @@ export function ensureValidProjectData(projectData: any) {
     adaptLegacyAnnotations(projectData)
   } else {
     ensureSortedAnnotationStacks(projectData)
+  }
+
+  if(hasLegacyVideoMeta(projectData)) {
+    adaptLegacyVideoMeta(projectData)
   }
 
   if(hasFishyEntityIds(projectData)) {
