@@ -4,7 +4,6 @@ import {List, Record, Set} from 'immutable'
 
 export interface Project {
   readonly meta: Record<ProjectMeta>|null
-  readonly video: Record<ProjectVideo>|null,
   readonly selection: Record<ProjectSelection>
   readonly snapshots: ProjectSnapshots
   readonly clipboard: Set<Record<AnnotationSelection>>
@@ -24,23 +23,25 @@ export const enum VideoUrlSource {
 export type ProjectVideo = BlobVideo|UrlVideo|NullVideo
 
 export interface BlobVideo {
-  kind: VideoType.Blob
+  type: VideoType.Blob
   blob: File|Blob
+  filename: string
 }
 
 export class UrlVideo {
-  kind: VideoType.Url
+  type: VideoType.Url
   source: VideoUrlSource
   url: URL
 }
 
 // Allow record fallback value
 export class NullVideo {
-  kind: VideoType.None
+  type: VideoType.None
 }
 
 export interface ProjectMeta {
   readonly id: number|null
+  readonly video: Record<ProjectVideo>|null,
   readonly timeline: Record<Timeline>|null
 }
 
@@ -133,6 +134,7 @@ export interface AnnotationColorMap {
 
 export const ProjectMetaRecordFactory = Record<ProjectMeta>({
   id: null,
+  video: null,
   timeline: null,
 })
 
@@ -158,7 +160,6 @@ export const ProjectSelectionRecordFactory = Record<ProjectSelection>({
 
 export const ProjectRecordFactory = Record<Project>({
   meta: null,
-  video: null,
   selection: new ProjectSelectionRecordFactory(),
   snapshots: new ProjectSnapshotsRecordFactory(),
   clipboard: Set()
@@ -197,7 +198,7 @@ export const AnnotationRecordFactory = Record<Annotation>({
 })
 
 export const ProjectVideoRecordFactory = Record<ProjectVideo>({
-  kind: VideoType.None
+  type: VideoType.None
 })
 
 export const AnnotationColorMapRecordFactory = Record<AnnotationColorMap>({
