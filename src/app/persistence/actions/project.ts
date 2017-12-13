@@ -4,7 +4,8 @@ import {Record} from 'immutable'
 
 import {
   Annotation, AnnotationSelection,
-  Track, ProjectSnapshot, ProjectVideo
+  Track, ProjectSnapshot,
+  VideoType, VideoUrlSource
 } from '../model'
 
 export const PROJECT_LOAD = '[Project] Load'
@@ -78,7 +79,11 @@ export class ProjectExportError implements Action {
   constructor(readonly payload: any){}
 }
 
-export type ImportVideoPayload = Record<ProjectVideo>
+export interface ImportVideoPayload {
+  readonly type: VideoType
+  readonly source?: VideoUrlSource
+  readonly data: File|Blob|URL
+}
 
 export class ProjectImportVideo implements Action {
   readonly type = PROJECT_IMPORT_VIDEO
@@ -87,7 +92,7 @@ export class ProjectImportVideo implements Action {
 
 export class ProjectImportVideoSuccess implements Action {
   readonly type = PROJECT_IMPORT_VIDEO_SUCCESS
-  constructor(readonly payload: File) {}
+  constructor(readonly payload: any) {}
 }
 
 export class ProjectImportVideoError implements Action {
