@@ -25,7 +25,6 @@ export type ProjectVideo = BlobVideo|UrlVideo|NullVideo
 export interface BlobVideo {
   type: VideoType.Blob
   blob: File|Blob
-  filename: string
 }
 
 export class UrlVideo {
