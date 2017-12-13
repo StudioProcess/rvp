@@ -14,6 +14,6 @@ function ensureAnnotationStacks(projectData: any) {
   })
 }
 
-export function adaptLegacyModel(projectData: any) {
+export function adaptLegacyAnnotations(projectData: any) {
   ensureAnnotationStacks(projectData)
 }

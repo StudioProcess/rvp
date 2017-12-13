@@ -1,9 +1,9 @@
-import {adaptLegacyModel} from './adapt'
+import {adaptLegacyAnnotations} from './adapt'
 import {sortFactory} from '../../lib/sort'
 
 const defaultSortFunc = sortFactory((a: any) => a.utc_timestamp)
 
-function hasLegacyModel(projectData: any) {
+function hasLegacyAnnotations(projectData: any) {
   const tracks = projectData.meta.timeline.tracks
 
   const hasLegacyAnnotations = tracks.find((track: any) => {
@@ -98,9 +98,9 @@ function ensureSortedAnnotationStacks(projectData: any) {
 }
 
 export function ensureValidProjectData(projectData: any) {
-  if(hasLegacyModel(projectData)) {
+  if(hasLegacyAnnotations(projectData)) {
     ensureSortedAnnotations(projectData)
-    adaptLegacyModel(projectData)
+    adaptLegacyAnnotations(projectData)
   } else {
     ensureSortedAnnotationStacks(projectData)
   }
