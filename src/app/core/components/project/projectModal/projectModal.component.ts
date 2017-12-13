@@ -3,7 +3,7 @@ import {
   Output, OnDestroy
 } from '@angular/core'
 
-import {VideoType, VideoUrlSource} from '../../../../persistence/model'
+import {VIDEO_TYPE_BLOB, VIDEO_TYPE_URL, VIDEO_URL_SOURCE_YT, VIDEO_URL_SOURCE_VIMEO} from '../../../../persistence/model'
 import {ImportVideoPayload} from '../../../../persistence/actions/project'
 
 function extractFile(e: any): File|null {
@@ -41,7 +41,7 @@ export class ProjectModalComponent implements OnDestroy {
     const file = extractFile(e)
     if(file !== null) {
       this.onImportVideo.emit({
-        type: VideoType.Blob,
+        type: VIDEO_TYPE_BLOB,
         data: file
       })
       e.target.value = null
@@ -58,17 +58,17 @@ export class ProjectModalComponent implements OnDestroy {
 
   openURL(src: string, url: URL) {
     switch(src) {
-      case 'youtube':
+      case VIDEO_URL_SOURCE_YT:
       this.onImportVideo.emit({
-        type: VideoType.Url,
-        source: VideoUrlSource.Youtube,
+        type: VIDEO_TYPE_URL,
+        source: VIDEO_URL_SOURCE_YT,
         data: url
       })
       break;
-      case 'vimeo':
+      case VIDEO_URL_SOURCE_VIMEO:
       this.onImportVideo.emit({
-        type: VideoType.Url,
-        source: VideoUrlSource.Vimeo,
+        type: VIDEO_TYPE_URL,
+        source: VIDEO_URL_SOURCE_VIMEO,
         data: url
       })
       break;

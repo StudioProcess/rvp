@@ -1,5 +1,5 @@
 import {computeStacks} from '../../lib/annotations'
-import {VideoType} from '../../persistence/model'
+import {VIDEO_TYPE_BLOB} from '../../persistence/model'
 
 function ensureAnnotationStacks(projectData: any) {
   const tracks = projectData.meta.timeline.tracks
@@ -22,7 +22,7 @@ export function adaptLegacyAnnotations(projectData: any) {
 export function adaptLegacyVideoMeta(projectData: any) {
   // Just assume blob video
   projectData.meta.video = {
-    type: VideoType.Blob
+    type: VIDEO_TYPE_BLOB
   }
 
   return projectData

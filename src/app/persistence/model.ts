@@ -10,33 +10,31 @@ export interface Project {
   readonly clipboard: Set<Record<AnnotationSelection>>
 }
 
-export const enum VideoType {
-  None,
-  Blob,
-  Url
-}
+export const VIDEO_TYPE_BLOB = 'blob'
+export const VIDEO_TYPE_URL = 'url'
+export const VIDEO_TYPE_NONE = 'none'
+export type VideoType = 'blob'|'url'|'none'
 
-export const enum VideoUrlSource {
-  Youtube,
-  Vimeo
-}
+export const VIDEO_URL_SOURCE_YT = 'youtube'
+export const VIDEO_URL_SOURCE_VIMEO = 'vimeo'
+export type VideoUrlSource = 'youtube'|'vimeo'
 
 export type ProjectVideo = BlobVideo|UrlVideo|NullVideo
 
-export interface BlobVideo {
-  type: VideoType.Blob
+export class BlobVideo {
+  type = VIDEO_TYPE_BLOB
   blob: File|Blob
 }
 
 export class UrlVideo {
-  type: VideoType.Url
-  source: VideoUrlSource
+  type = VIDEO_TYPE_URL
+  source: 'youtube'|'vimeo'
   url: URL
 }
 
 // Allow record fallback value
 export class NullVideo {
-  type: VideoType.None
+  type = VIDEO_TYPE_NONE
 }
 
 export interface ProjectMeta {
@@ -199,7 +197,7 @@ export const AnnotationRecordFactory = Record<Annotation>({
 })
 
 export const ProjectVideoRecordFactory = Record<ProjectVideo>({
-  type: VideoType.None
+  type: 'none'
 })
 
 export const AnnotationColorMapRecordFactory = Record<AnnotationColorMap>({
