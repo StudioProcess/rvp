@@ -23,7 +23,6 @@ export type ProjectVideo = BlobVideo|UrlVideo|NullVideo
 
 export class BlobVideo {
   type = VIDEO_TYPE_BLOB
-  blob: File|Blob
 }
 
 export class UrlVideo {
