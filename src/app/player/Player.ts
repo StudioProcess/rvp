@@ -4,6 +4,7 @@ import {Store} from '@ngrx/store'
 import {Effect, Actions} from '@ngrx/effects'
 
 import * as videojs from 'video.js'
+import 'videojs-youtube'
 
 import {Observable} from 'rxjs/Observable'
 import {ReplaySubject} from 'rxjs/ReplaySubject'
