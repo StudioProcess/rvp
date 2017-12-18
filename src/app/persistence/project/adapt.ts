@@ -22,7 +22,8 @@ export function adaptLegacyAnnotations(projectData: any) {
 export function adaptLegacyVideoMeta(projectData: any) {
   // Just assume blob video
   projectData.meta.video = {
-    type: VIDEO_TYPE_BLOB
+    type: VIDEO_TYPE_BLOB,
+    blob: projectData.video
   }
 
   return projectData
