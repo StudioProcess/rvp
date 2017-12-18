@@ -196,7 +196,7 @@ export const AnnotationRecordFactory = Record<Annotation>({
 })
 
 export const ProjectVideoRecordFactory = Record<ProjectVideo>({
-  type: 'none'
+  type: VIDEO_TYPE_NONE
 })
 
 export const AnnotationColorMapRecordFactory = Record<AnnotationColorMap>({
