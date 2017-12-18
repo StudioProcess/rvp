@@ -28,7 +28,7 @@ export class BlobVideo {
 
 export class UrlVideo {
   type = VIDEO_TYPE_URL
-  source: 'youtube'|'vimeo'
+  source: VideoUrlSource
   url: URL
 }
 
