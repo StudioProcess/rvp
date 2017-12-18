@@ -5,11 +5,16 @@ import {
 
 import {Store} from '@ngrx/store'
 
+import {Record} from 'immutable'
+
 import {Observable} from 'rxjs/Observable'
 import {Subscription} from 'rxjs/Subscription'
 import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame';
+import 'rxjs/add/observable/of'
 import 'rxjs/add/operator/filter'
 import 'rxjs/add/operator/startWith'
+import 'rxjs/add/operator/concatMap'
+import 'rxjs/add/operator/take'
 
 import * as fromProject from '../../../persistence/reducers'
 import * as fromPlayer from '../../../player/reducers'
@@ -20,6 +25,11 @@ import {
   _PLAYER_ASPECT_RATIO_,
   _PLAYER_RESIZE_DEBOUNCE_
 } from '../../../config'
+
+import {
+  VIDEO_TYPE_BLOB, VIDEO_TYPE_URL,
+  VIDEO_URL_SOURCE_YT, VIDEO_URL_SOURCE_VIMEO,
+  UrlVideo} from '../../../persistence/model'
 
 @Component({
   selector: 'rv-player',
@@ -44,12 +54,35 @@ export class PlayerContainer implements AfterViewInit, OnDestroy {
       playerOptions: _DEFAULT_PLAYER_OPTIONS_
     }))
 
+    const setSource: Observable<{type: string, src: string}|null> = this._projectStore.select(fromProject.getProjectVideoMeta)
+      .filter(videoMeta => videoMeta !== null)
+      .concatMap(videoMeta => {
+        switch(videoMeta!.get('type', null)) {
+          case VIDEO_TYPE_BLOB:
+            return this._projectStore.select(fromProject.getProjectVideoBlob).take(1)
+              .map(videoBlob => {
+                const objectURL = URL.createObjectURL(videoBlob)
+                return {type: 'video/mp4', src: objectURL}
+              })
+          case VIDEO_TYPE_URL: {
+            const urlVideo = videoMeta as Record<UrlVideo>
+            switch(urlVideo.get('source', null)) {
+              case VIDEO_URL_SOURCE_YT:
+                return Observable.of({type: 'video/youtube', src: urlVideo.get('url', null).toString()})
+              case VIDEO_URL_SOURCE_VIMEO:
+                return Observable.of({type: 'video/vimeo', src: urlVideo.get('url', null).toString()})
+            }
+          }
+        }
+
+        return Observable.of(null)
+      })
+
+
     this._subs.push(
-      this._projectStore.select(fromProject.getProjectVideoBlob)
-        .filter(video => video !== null)
-        .subscribe((video: File|Blob) => {
-          this._store.dispatch(new player.PlayerSetSource(video))
-        }))
+      setSource.subscribe((src: any) => {
+        this._store.dispatch(new player.PlayerSetSource(src))
+      }))
 
     this._subs.push(
       Observable.fromEvent(window, 'resize')

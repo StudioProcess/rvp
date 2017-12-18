@@ -92,8 +92,7 @@ export class Player implements OnDestroy {
         this.setSource
           .withLatestFrom(playerSubj)
           .subscribe(([{payload}, playerInst]) => {
-            const objectURL = URL.createObjectURL(payload)
-            playerInst.src({src: objectURL, type: 'video/mp4'})
+            playerInst.src(payload)
           }))
 
       this._subs.push(
