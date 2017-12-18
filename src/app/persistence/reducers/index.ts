@@ -27,6 +27,10 @@ export const getProjectId = createSelector(getProjectMeta, meta => {
   return meta ? meta.get('id', null): null
 })
 
+export const getProjectVideoMeta = createSelector(getProjectMeta, meta => {
+  return meta ? meta.get('video', null): null
+})
+
 export const getProjectTimeline = createSelector(getProjectMeta, meta => {
   return meta ? meta.get('timeline', null): null
 })
