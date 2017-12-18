@@ -14,6 +14,7 @@ import 'rxjs/add/operator/pairwise'
 
 import * as project from '../actions/project'
 import * as fromProject from '../reducers'
+import {VIDEO_TYPE_BLOB} from '../../persistence/model'
 
 import {
   _DEFAULT_PROJECT_PATH_, _METADATA_PATH_,
@@ -122,7 +123,7 @@ export class ServerProxy {
           next: async ({payload}) => {
             try {
               await this._cache.clear('video')
-              await this._cache.cache('video', payload)
+              await this._cache.cache('video', payload.type === VIDEO_TYPE_BLOB ? payload.data: null)
 
               this._store.dispatch(new project.ProjectImportVideoSuccess(payload))
             } catch(err) {

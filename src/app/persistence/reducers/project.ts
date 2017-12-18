@@ -11,7 +11,7 @@ import {
   ProjectMetaRecordFactory, Timeline, ProjectSnapshot,
   ProjectSnapshotRecordFactory, Track, Annotation,
   AnnotationSelection, AnnotationSelectionRecordFactory,
-  ProjectVideoRecordFactory
+  ProjectVideoRecordFactory, VIDEO_TYPE_BLOB, VIDEO_TYPE_URL
 } from '../model'
 
 import {embedAnnotations} from '../../lib/annotationStack'
@@ -92,9 +92,15 @@ export function reducer(state: State = initialState, action: project.Actions): S
       })
     }
     case project.PROJECT_IMPORT_VIDEO_SUCCESS: {
-      const video = action.payload
-      // TODO: adapt import video
-      return state.set('videoBlob', video)
+      const payload = action.payload
+      switch(payload.type) {
+        case VIDEO_TYPE_BLOB: {
+          return state.set('videoBlob', payload.data)
+        }
+        case VIDEO_TYPE_URL: {
+          return state.set('videoBlob', null)
+        }
+      }
     }
     case project.PROJECT_SET_TIMELINE_DURATION: {
       return state.setIn(['meta', 'timeline', 'duration'], action.payload.duration)
