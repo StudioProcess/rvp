@@ -13,13 +13,13 @@ export interface Project {
 export const VIDEO_TYPE_BLOB = 'blob'
 export const VIDEO_TYPE_URL = 'url'
 export const VIDEO_TYPE_NONE = 'none'
-export type VideoType = 'blob'|'url'|'none'
+export type VideoType = 'blob'|'url'
 
 export const VIDEO_URL_SOURCE_YT = 'youtube'
 export const VIDEO_URL_SOURCE_VIMEO = 'vimeo'
 export type VideoUrlSource = 'youtube'|'vimeo'
 
-export type ProjectVideo = BlobVideo|UrlVideo|NullVideo
+export type ProjectVideo = BlobVideo|UrlVideo
 
 export class BlobVideo {
   type = VIDEO_TYPE_BLOB
@@ -27,13 +27,8 @@ export class BlobVideo {
 
 export class UrlVideo {
   type = VIDEO_TYPE_URL
-  source: VideoUrlSource
-  url: URL
-}
-
-// Allow record fallback value
-export class NullVideo {
-  type = VIDEO_TYPE_NONE
+  source: VideoUrlSource|null
+  url: URL|null
 }
 
 export interface ProjectMeta {
@@ -195,8 +190,14 @@ export const AnnotationRecordFactory = Record<Annotation>({
   fields: new AnnotationFieldsRecordFactory()
 })
 
-export const ProjectVideoRecordFactory = Record<ProjectVideo>({
-  type: VIDEO_TYPE_NONE
+export const BlobVideoRecordFactory = Record<BlobVideo>({
+  type: VIDEO_TYPE_BLOB
+})
+
+export const UrlVideoRecordFactory = Record<UrlVideo>({
+  type: VIDEO_TYPE_URL,
+  source: null,
+  url: null
 })
 
 export const AnnotationColorMapRecordFactory = Record<AnnotationColorMap>({
