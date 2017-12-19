@@ -92,7 +92,7 @@ export class ProjectImportVideo implements Action {
 
 export class ProjectImportVideoSuccess implements Action {
   readonly type = PROJECT_IMPORT_VIDEO_SUCCESS
-  constructor(readonly payload: any) {}
+  constructor(readonly payload: ImportVideoPayload) {}
 }
 
 export class ProjectImportVideoError implements Action {
