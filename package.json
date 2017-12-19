@@ -45,7 +45,8 @@
     "moment": "^2.20.1",
     "pace-progress": "^1.0.2",
     "rxjs": "^5.5.5",
-    "video.js": "^6.6.0",
+    "video.js": "^5.16",
+    "videojs-vimeo": "ssh+git@github.com:dinony/videojs-vimeo.git#patch-1",
     "videojs-youtube": "^2.4.1",
     "zone.js": "^0.8.18"
   },
@@ -57,7 +58,7 @@
     "@types/file-saver": "^1.0.0",
     "@types/jszip": "^3.1.2",
     "@types/node": "^6.0.94",
-    "@types/video.js": "^6.2.3",
+    "@types/video.js": "^5.16",
     "codelyzer": "~3.1.1",
     "tslint": "^5.8.0",
     "typescript": "~2.3.3"
