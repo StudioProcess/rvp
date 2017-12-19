@@ -59,7 +59,9 @@ export class PlayerContainer implements AfterViewInit, OnDestroy {
       .concatMap(videoMeta => {
         switch(videoMeta!.get('type', null)) {
           case VIDEO_TYPE_BLOB:
-            return this._projectStore.select(fromProject.getProjectVideoBlob).take(1)
+            return this._projectStore.select(fromProject.getProjectVideoBlob)
+              .filter(blob => blob !== null)
+              .take(1)
               .map(videoBlob => {
                 const objectURL = URL.createObjectURL(videoBlob)
                 return {type: 'video/mp4', src: objectURL}
@@ -68,9 +70,9 @@ export class PlayerContainer implements AfterViewInit, OnDestroy {
             const urlVideo = videoMeta as Record<UrlVideo>
             switch(urlVideo.get('source', null)) {
               case VIDEO_URL_SOURCE_YT:
-                return Observable.of({type: 'video/youtube', src: urlVideo.get('url', null).toString()})
+                return Observable.of({type: 'video/youtube', src: urlVideo.get('url', null)!.toString()})
               case VIDEO_URL_SOURCE_VIMEO:
-                return Observable.of({type: 'video/vimeo', src: urlVideo.get('url', null).toString()})
+                return Observable.of({type: 'video/vimeo', src: urlVideo.get('url', null)!.toString()})
             }
           }
         }
