@@ -11,7 +11,8 @@ import {
   ProjectMetaRecordFactory, Timeline, ProjectSnapshot,
   ProjectSnapshotRecordFactory, Track, Annotation,
   AnnotationSelection, AnnotationSelectionRecordFactory,
-  ProjectVideoRecordFactory, VIDEO_TYPE_BLOB, VIDEO_TYPE_URL
+  BlobVideoRecordFactory, UrlVideoRecordFactory,
+  VIDEO_TYPE_BLOB, VIDEO_TYPE_URL, VideoUrlSource
 } from '../model'
 
 import {embedAnnotations} from '../../lib/annotationStack'
@@ -68,7 +69,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
         videoBlob: video,
         meta: ProjectMetaRecordFactory({
           id,
-          video: ProjectVideoRecordFactory(videoMeta),
+          video: videoMeta.type === VIDEO_TYPE_BLOB ? BlobVideoRecordFactory(videoMeta) : UrlVideoRecordFactory(videoMeta),
           timeline: TimelineRecordFactory({
             ...timeline,
             tracks: List(timeline.tracks.map((track: any) => {
@@ -95,12 +96,23 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const payload = action.payload
       switch(payload.type) {
         case VIDEO_TYPE_BLOB: {
-          return state.set('videoBlob', payload.data)
+          const blobVideo = payload.data as File|Blob
+          return state
+            .set('videoBlob', blobVideo)
+            .setIn(['meta', 'video'], BlobVideoRecordFactory({type: VIDEO_TYPE_BLOB}))
         }
         case VIDEO_TYPE_URL: {
-          return state.set('videoBlob', null)
+          const videoMeta = {
+            type: VIDEO_TYPE_URL,
+            source: payload.source as VideoUrlSource,
+            url: payload.data as URL
+          }
+          return state
+            .set('videoBlob', null)
+            .setIn(['meta', 'video'], UrlVideoRecordFactory(videoMeta))
         }
       }
+      return state
     }
     case project.PROJECT_SET_TIMELINE_DURATION: {
       return state.setIn(['meta', 'timeline', 'duration'], action.payload.duration)
