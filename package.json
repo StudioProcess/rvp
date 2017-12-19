@@ -42,7 +42,7 @@
     "jszip": "^3.1.5",
     "jszip-utils": "0.0.2",
     "localforage": "^1.5.5",
-    "moment": "^2.20.0",
+    "moment": "^2.20.1",
     "pace-progress": "^1.0.2",
     "rxjs": "^5.5.5",
     "video.js": "^6.6.0",
