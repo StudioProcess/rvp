@@ -25,7 +25,6 @@ export class ProjectModalComponent implements OnDestroy {
   @Output() readonly onImportVideo = new EventEmitter<ImportVideoPayload>()
   @Output() readonly onExportProject = new EventEmitter()
   @Output() readonly onResetProject = new EventEmitter()
-  @Output() readonly onCloseModal = new EventEmitter()
 
   youtubeURL: string = ''
   vimeoURL: string = ''
@@ -74,10 +73,6 @@ export class ProjectModalComponent implements OnDestroy {
       })
       break;
     }
-  }
-
-  onClose() {
-    this.onCloseModal.emit()
   }
 
   ngOnDestroy() {
