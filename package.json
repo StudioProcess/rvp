@@ -44,14 +44,14 @@
     "localforage": "^1.5.5",
     "moment": "^2.20.1",
     "pace-progress": "^1.0.2",
-    "rxjs": "^5.5.5",
+    "rxjs": "^5.5.6",
     "video.js": "^5.16",
     "videojs-vimeo": "git+ssh://git@github.com/dinony/videojs-vimeo.git#patch-1",
     "videojs-youtube": "^2.4.1",
-    "zone.js": "^0.8.18"
+    "zone.js": "^0.8.19"
   },
   "devDependencies": {
-    "@angular/cli": "^1.6.2",
+    "@angular/cli": "^1.6.3",
     "@angular/compiler": "^4.4.6",
     "@angular/compiler-cli": "^4.4.6",
     "@angular/language-service": "^4.4.6",
