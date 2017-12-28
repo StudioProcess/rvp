@@ -74,6 +74,12 @@ export class Player implements OnDestroy {
                 this._store.dispatch(new project.ProjectSetTimelineDuration({duration}))
               }))
 
+            // playerInstSubs.push(
+            //   Observable.fromEvent(playerEventEmitter, 'loadedmetadata').subscribe(() => {
+            //     const duration = playerInst.duration()
+            //     console.log(duration)
+            //   }))
+
             playerInstSubs.push(
               Observable.fromEvent(playerEventEmitter, 'dispose').subscribe(() => {
                 // On dispose clear all subs
