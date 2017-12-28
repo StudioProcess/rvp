@@ -17,7 +17,8 @@ export type VideoType = 'blob'|'url'
 
 export const VIDEO_URL_SOURCE_YT = 'youtube'
 export const VIDEO_URL_SOURCE_VIMEO = 'vimeo'
-export type VideoUrlSource = 'youtube'|'vimeo'
+export const VIDEO_URL_SOURCE_CUSTOM = 'customurl'
+export type VideoUrlSource = 'youtube'|'vimeo'|'customurl'
 
 export type ProjectVideo = BlobVideo|UrlVideo
 

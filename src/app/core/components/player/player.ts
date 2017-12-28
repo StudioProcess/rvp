@@ -29,7 +29,8 @@ import {
 import {
   VIDEO_TYPE_BLOB, VIDEO_TYPE_URL,
   VIDEO_URL_SOURCE_YT, VIDEO_URL_SOURCE_VIMEO,
-  UrlVideo} from '../../../persistence/model'
+  VIDEO_URL_SOURCE_CUSTOM, UrlVideo
+} from '../../../persistence/model'
 
 @Component({
   selector: 'rv-player',
@@ -69,6 +70,8 @@ export class PlayerContainer implements AfterViewInit, OnDestroy {
           case VIDEO_TYPE_URL: {
             const urlVideo = videoMeta as Record<UrlVideo>
             switch(urlVideo.get('source', null)) {
+              case VIDEO_URL_SOURCE_CUSTOM:
+                return Observable.of({type: 'video/mp4', src: urlVideo.get('url', null)!.toString()})
               case VIDEO_URL_SOURCE_YT:
                 return Observable.of({type: 'video/youtube', src: urlVideo.get('url', null)!.toString()})
               case VIDEO_URL_SOURCE_VIMEO:

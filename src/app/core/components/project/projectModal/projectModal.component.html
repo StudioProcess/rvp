@@ -23,6 +23,11 @@
       <label for="videoChooser">Choose a file...</label>
     </div>
     <div>
+      <h3 class="title-settings">HTTP URL</h3>
+      <input type="text" [(ngModel)]="customURL">
+      <button class="button-importurl" (click)="openURL('customurl', customURL)">Open</button>
+    </div>
+    <div>
       <h3 class="title-settings">YouTube</h3>
       <input type="text" [(ngModel)]="youtubeURL">
       <button class="button-importurl" (click)="openURL('youtube', youtubeURL)">Open</button>
