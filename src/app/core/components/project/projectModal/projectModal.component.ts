@@ -84,6 +84,10 @@ export class ProjectModalComponent implements OnDestroy {
       })
       break
     }
+
+    this.youtubeURL = ''
+    this.vimeoURL = ''
+    this.customURL = ''
   }
 
   ngOnDestroy() {
