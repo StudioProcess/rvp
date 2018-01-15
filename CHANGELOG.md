@@ -18,6 +18,8 @@
   * Delete track
     * Fix setting player head on mousedown
 * Fix unnecessary handlebar update emits
+* Project modal
+  * Fix close button issue
 
 # 0.1.0 (2017-11-23) Refactoring Pass
 
