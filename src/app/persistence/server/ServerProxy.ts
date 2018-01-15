@@ -103,7 +103,7 @@ export class ServerProxy {
 
               const cachePromises = [
                 this._cache.cache('meta', projectData.meta),
-                this._cache.cache('video', projectData.video)
+                this._cache.cache('video', projectData.meta.video.type === VIDEO_TYPE_BLOB ? projectData.video : null)
               ]
 
               await Promise.all(cachePromises)
