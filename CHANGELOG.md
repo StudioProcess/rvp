@@ -7,6 +7,7 @@
 * Undo/redo feature (default: 20 actions are saved, see `src/app/config/snapshots.ts`)
 * Offline feature via service-worker
 * Duplicate and re-arrange tracks
+* Http video sources and youtube/vimeo tech
 
 ### Bugfixes
 
