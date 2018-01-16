@@ -22,6 +22,7 @@ import 'rxjs/add/observable/of'
 import 'rxjs/add/observable/fromEvent'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/startWith'
+import 'rxjs/add/operator/filter'
 
 import * as fromProject from '../../../persistence/reducers'
 import * as fromPlayer from '../../../player/reducers'
@@ -174,9 +175,11 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
           })
         }))
 
+    const isLeftBtn = (ev: MouseEvent) => ev.button === 0
+
     const mousemove: Observable<MouseEvent> = Observable.fromEvent(this._document, 'mousemove')
     const mouseup: Observable<MouseEvent> = Observable.fromEvent(this._document, 'mouseup')
-    const placeHeadMd: Observable<MouseEvent> = Observable.fromEvent(this.timelineOverflowRef.nativeElement, 'mousedown')
+    const placeHeadMd: Observable<MouseEvent> = Observable.fromEvent(this.timelineOverflowRef.nativeElement, 'mousedown').filter(isLeftBtn)
 
     this._subs.push(placeHeadMd
       .switchMap(md => {
