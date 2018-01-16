@@ -17,9 +17,26 @@
 </div>
 <div class="row">
   <div class="column">
-    <h3 class="title-settings">Change Video File</h3>
-    <input type="file" name="videoChooser" id="videoChooser" class="inputfile" accept="video/*" (change)="importVideo($event)">
-    <label for="videoChooser">Choose a file...</label>
+    <div>
+      <h3 class="title-settings">Change Video File</h3>
+      <input type="file" name="videoChooser" id="videoChooser" class="inputfile" accept="video/*" (change)="importVideo($event)">
+      <label for="videoChooser">Choose a file...</label>
+    </div>
+    <div>
+      <h3 class="title-settings">HTTP URL</h3>
+      <input type="text" [(ngModel)]="customURL">
+      <button class="button-importurl" (click)="openURL('customurl', customURL)">Open</button>
+    </div>
+    <div>
+      <h3 class="title-settings">YouTube</h3>
+      <input type="text" [(ngModel)]="youtubeURL">
+      <button class="button-importurl" (click)="openURL('youtube', youtubeURL)">Open</button>
+    </div>
+    <div>
+      <h3 class="title-settings">Vimeo</h3>
+      <input type="text" [(ngModel)]="vimeoURL">
+      <button class="button-importurl" (click)="openURL('vimeo', vimeoURL)">Open</button>
+    </div>
   </div>
   <div class="column">
     <h3 class="title-settings">Reset Project</h3>

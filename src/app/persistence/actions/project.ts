@@ -2,7 +2,11 @@ import {Action} from '@ngrx/store'
 
 import {Record} from 'immutable'
 
-import {Annotation, Track} from '../model'
+import {
+  Annotation, AnnotationSelection,
+  Track, ProjectSnapshot,
+  VideoType, VideoUrlSource
+} from '../model'
 
 export const PROJECT_LOAD = '[Project] Load'
 export const PROJECT_LOAD_SUCCESS = '[Project] Load Success'
@@ -23,13 +27,23 @@ export const PROJECT_RESET_ERROR = '[Project] Reset Error'
 
 export const PROJECT_ADD_ANNOTATION = '[Project] Add Annotation'
 export const PROJECT_UPDATE_ANNOTATION = '[Project] Update Annotation'
-export const PROJECT_DELETE_ANNOTATION = '[Project] Delete Annotation'
+export const PROJECT_DELETE_SELECTED_ANNOTATIONS = '[Project] Delete Selected Annotations'
+export const PROJECT_SELECT_ANNOTATION = '[Project] Selection Annotation'
+export const PROJECT_SELECTION_RESETALL_ANNOTATION = '[Project] Reset Annotation Selection'
+export const PROJECT_COPY_ANNOTATION_SELECTION_TO_CLIPBOARD = '[Project] Copy Annotation Selection to Clipboard'
+export const PROJECT_PASTE_CLIPBOARD = '[Project] Paste Annotation Selection form Clipboard'
 
 export const PROJECT_ADD_TRACK = '[Project] Add Track'
 export const PROJECT_UPDATE_TRACK = '[Project] Update Track'
 export const PROJECT_DELETE_TRACK = '[Project] Delete Track'
+export const PROJECT_DUPLICATE_TRACK = '[Project] Duplicate Track'
+export const PROJECT_INSERTAT_TRACK = '[Project] Move Insert At Track'
 
 export const PROJECT_SET_TIMELINE_DURATION = '[Project] Set Timeline Duration'
+
+export const PROJECT_PUSH_UNDO = '[Project] Push Undo'
+export const PROJECT_UNDO = '[Project] Undo'
+export const PROJECT_REDO = '[Project] Redo'
 
 export class ProjectLoad implements Action {
   readonly type = PROJECT_LOAD
@@ -65,14 +79,20 @@ export class ProjectExportError implements Action {
   constructor(readonly payload: any){}
 }
 
+export interface ImportVideoPayload {
+  readonly type: VideoType
+  readonly source?: VideoUrlSource
+  readonly data: File|Blob|URL
+}
+
 export class ProjectImportVideo implements Action {
   readonly type = PROJECT_IMPORT_VIDEO
-  constructor(readonly payload: File) {}
+  constructor(readonly payload: ImportVideoPayload) {}
 }
 
 export class ProjectImportVideoSuccess implements Action {
   readonly type = PROJECT_IMPORT_VIDEO_SUCCESS
-  constructor(readonly payload: File) {}
+  constructor(readonly payload: ImportVideoPayload) {}
 }
 
 export class ProjectImportVideoError implements Action {
@@ -91,6 +111,7 @@ export class ProjectResetError implements Action {
 
 export interface AddAnnotationPayload {
   readonly trackIndex: number
+  readonly annotationStackIndex: number
   readonly annotation: Record<Annotation>
 }
 
@@ -102,6 +123,7 @@ export class ProjectAddAnnotation implements Action {
 export interface UpdateAnnotationPayload {
   readonly trackIndex: number
   readonly annotationIndex: number
+  readonly annotationStackIndex: number
   readonly annotation: Record<Annotation>
 }
 
@@ -110,15 +132,41 @@ export class ProjectUpdateAnnotation implements Action {
   constructor(readonly payload: UpdateAnnotationPayload) {}
 }
 
-export interface DeleteAnnotationPayload {
-  readonly trackIndex: number
-  readonly annotationIndex: number
-  readonly annotation: Record<Annotation>
+export class ProjectDeleteSelectedAnnotations implements Action {
+  readonly type = PROJECT_DELETE_SELECTED_ANNOTATIONS
 }
 
-export class ProjectDeleteAnnotation implements Action {
-  readonly type = PROJECT_DELETE_ANNOTATION
-  constructor(readonly payload: DeleteAnnotationPayload) {}
+export const enum AnnotationSelectionType {
+  Default,
+  Pick,
+  Range
+}
+
+export interface SelectAnnotationPayload {
+  readonly type: AnnotationSelectionType,
+  readonly selection: Record<AnnotationSelection>
+}
+
+export class ProjectSelectAnnotation implements Action {
+  readonly type = PROJECT_SELECT_ANNOTATION
+  constructor(readonly payload: SelectAnnotationPayload){}
+}
+
+export class ProjectResetAnnotationSelection implements Action {
+  readonly type = PROJECT_SELECTION_RESETALL_ANNOTATION
+}
+
+export class ProjectCopyAnnotationSelectionToClipboard implements Action {
+  readonly type = PROJECT_COPY_ANNOTATION_SELECTION_TO_CLIPBOARD
+}
+
+export interface PasteClipboardPayload {
+  readonly trackIndex: number
+}
+
+export class ProjectPasteClipBoard implements Action {
+  readonly type = PROJECT_PASTE_CLIPBOARD
+  constructor(readonly payload: PasteClipboardPayload) {}
 }
 
 type AddTrackPayload = Partial<Track>
@@ -147,9 +195,41 @@ export class ProjectDeleteTrack implements Action {
   constructor(readonly payload: DeleteTrackPlayload){}
 }
 
+export interface DuplicateTrackPayload {
+  readonly trackIndex: number
+}
+
+export class ProjectDuplicateTrack implements Action {
+  readonly type = PROJECT_DUPLICATE_TRACK
+  constructor(readonly payload: DuplicateTrackPayload) {}
+}
+
+export interface TrackInsertAtPayload {
+  readonly currentTrackIndex: number
+  readonly insertAtIndex: number
+}
+
+export class ProjectInsertAtTrack implements Action {
+  readonly type = PROJECT_INSERTAT_TRACK
+  constructor(readonly payload: TrackInsertAtPayload) {}
+}
+
 export class ProjectSetTimelineDuration implements Action {
   readonly type = PROJECT_SET_TIMELINE_DURATION
   constructor(readonly payload: {duration: number}) {}
+}
+
+export class ProjectPushUndo implements Action {
+  readonly type = PROJECT_PUSH_UNDO
+  constructor(readonly payload: Record<ProjectSnapshot>){}
+}
+
+export class ProjectUndo implements Action {
+  readonly type = PROJECT_UNDO
+}
+
+export class ProjectRedo implements Action {
+  readonly type = PROJECT_REDO
 }
 
 export type Actions =
@@ -158,6 +238,9 @@ export type Actions =
   ProjectImportVideo|ProjectImportVideoSuccess|ProjectImportVideoError|
   ProjectExport|ProjectExportError|
   ProjectReset|
-  ProjectAddTrack|ProjectUpdateTrack|ProjectDeleteTrack|
-  ProjectAddAnnotation|ProjectUpdateAnnotation|ProjectDeleteAnnotation|
-  ProjectSetTimelineDuration
+  ProjectAddTrack|ProjectUpdateTrack|ProjectDeleteTrack|ProjectDuplicateTrack|ProjectInsertAtTrack|
+  ProjectAddAnnotation|ProjectUpdateAnnotation|
+  ProjectDeleteSelectedAnnotations|ProjectSelectAnnotation|
+  ProjectResetAnnotationSelection|ProjectCopyAnnotationSelectionToClipboard|ProjectPasteClipBoard|
+  ProjectSetTimelineDuration|
+  ProjectPushUndo|ProjectUndo|ProjectRedo

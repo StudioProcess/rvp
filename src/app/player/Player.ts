@@ -4,6 +4,8 @@ import {Store} from '@ngrx/store'
 import {Effect, Actions} from '@ngrx/effects'
 
 import * as videojs from 'video.js'
+import 'videojs-vimeo'
+import 'videojs-youtube'
 
 import {Observable} from 'rxjs/Observable'
 import {ReplaySubject} from 'rxjs/ReplaySubject'
@@ -60,7 +62,7 @@ export class Player implements OnDestroy {
             playerInstSubs.push(
               Observable.fromEvent(playerEventEmitter, 'timeupdate')
                 .withLatestFrom(playerPendingSubj)
-                .filter(([playerInst, isPending]) => !isPending)
+                .filter(([_, isPending]) => !isPending)
                 .subscribe(() => {
                   const currentTime = playerInst.currentTime()
                   this._store.dispatch(new player.PlayerSetCurrentTime({currentTime}))
@@ -71,6 +73,12 @@ export class Player implements OnDestroy {
                 const duration = playerInst.duration()
                 this._store.dispatch(new project.ProjectSetTimelineDuration({duration}))
               }))
+
+            // playerInstSubs.push(
+            //   Observable.fromEvent(playerEventEmitter, 'loadedmetadata').subscribe(() => {
+            //     const duration = playerInst.duration()
+            //     console.log(duration)
+            //   }))
 
             playerInstSubs.push(
               Observable.fromEvent(playerEventEmitter, 'dispose').subscribe(() => {
@@ -92,8 +100,7 @@ export class Player implements OnDestroy {
         this.setSource
           .withLatestFrom(playerSubj)
           .subscribe(([{payload}, playerInst]) => {
-            const objectURL = URL.createObjectURL(payload)
-            playerInst.src({src: objectURL, type: 'video/mp4'})
+            playerInst.src(payload)
           }))
 
       this._subs.push(

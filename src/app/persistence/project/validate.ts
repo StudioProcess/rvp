@@ -1,3 +1,24 @@
+import {adaptLegacyAnnotations, adaptLegacyVideoMeta} from './adapt'
+import {sortFactory} from '../../lib/sort'
+
+const defaultSortFunc = sortFactory((a: any) => a.utc_timestamp)
+
+function hasLegacyVideoMeta(projectData: any) {
+  const meta = projectData.meta
+
+  return isNil(meta.video) || isNil(meta.video.type)
+}
+
+function hasLegacyAnnotations(projectData: any) {
+  const tracks = projectData.meta.timeline.tracks
+
+  const hasLegacyAnnotations = tracks.find((track: any) => {
+    return !Array.isArray(track.annotationStacks)
+  })
+
+  return hasLegacyAnnotations !== undefined
+}
+
 function isNil<T>(data: T) {
   return data === null || data === undefined
 }
@@ -24,10 +45,12 @@ function hasFishyEntityIds(projectData: any) {
   const fishyTrackOrAnnotationId = tracks.find((track: any) => {
     const isDupTrack = tracksIdMap[track.id] !== undefined // is unique?
     tracksIdMap[track.id] = track.id // add to map
-    return isDupTrack || isNil(track.id) || track.annotations.find((annotation: any) => {
-      const isDupAnnotation = annotationsIdMap[annotation.id] !== undefined // is unique?
-      annotationsIdMap[annotation.id] = annotation.id // add to map
-      return isDupAnnotation || isNil(annotation.id)
+    return isDupTrack || isNil(track.id) || track.annotationStacks.find((annotations: any) => {
+      return annotations.find((annotation: any) => {
+        const isDupAnnotation = annotationsIdMap[annotation.id] !== undefined // is unique?
+        annotationsIdMap[annotation.id] = annotation.id // add to map
+        return isDupAnnotation || isNil(annotation.id)
+      }) !== undefined
     }) !== undefined
   })
 
@@ -54,15 +77,47 @@ function ensureEntityIds(projectData: any) {
 
   tracks.forEach((track: any) => {
     track.id = trackCounter++
-    track.annotations.forEach((annotation: any) => {
-      annotation.id = annotationCounter++
+    track.annotationStacks.forEach((annotations: any) => {
+      annotations.forEach((annotation: any) => {
+        annotation.id = annotationCounter++
+      })
     })
   })
 }
 
+function ensureSortedAnnotations(projectData: any) {
+  const tracks = projectData.meta.timeline.tracks
+  projectData.meta.timeline.tracks = tracks.map((track: any) => {
+    track.annotations = track.annotations.sort(defaultSortFunc)
+    return track
+  })
+}
+
+function ensureSortedAnnotationStacks(projectData: any) {
+  const tracks = projectData.meta.timeline.tracks
+  projectData.meta.timeline.tracks = tracks.map((track: any) => {
+    track.annotationStacks.map((annotations: any[]) => {
+      return annotations.sort(defaultSortFunc)
+    })
+    return track
+  })
+}
+
 export function ensureValidProjectData(projectData: any) {
+  if(hasLegacyAnnotations(projectData)) {
+    ensureSortedAnnotations(projectData)
+    adaptLegacyAnnotations(projectData)
+  } else {
+    ensureSortedAnnotationStacks(projectData)
+  }
+
+  if(hasLegacyVideoMeta(projectData)) {
+    adaptLegacyVideoMeta(projectData)
+  }
+
   if(hasFishyEntityIds(projectData)) {
     // Seems like some entity id is fishy - just overwrite for now
     ensureEntityIds(projectData)
   }
+  // ensureSortedAnnotations(projectData)
 }

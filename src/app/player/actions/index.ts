@@ -58,7 +58,7 @@ export class PlayerDestroyError implements Action {
 
 export class PlayerSetSource implements Action {
   readonly type = PLAYER_SET_SOURCE
-  constructor(readonly payload: File|Blob) {}
+  constructor(readonly payload: {type: string, src: string}) {}
 }
 
 // Player state

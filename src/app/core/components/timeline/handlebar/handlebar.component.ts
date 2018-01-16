@@ -19,7 +19,7 @@ import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/switchMap'
 import 'rxjs/add/operator/distinctUntilChanged'
 import 'rxjs/add/operator/distinctUntilKeyChanged'
-import 'rxjs/add/operator/skip'
+import 'rxjs/add/operator/filter'
 
 import {fromEventPattern} from '../../../../lib/observable'
 
@@ -28,6 +28,7 @@ import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 export interface Handlebar {
   readonly left: number
   readonly width: number
+  readonly source: 'intern' | 'extern'
 }
 
 @Component({
@@ -75,7 +76,8 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   ngOnInit() {
     const _initRect: Handlebar = {
       left: this.inLeft,
-      width: this.inWidth
+      width: this.inWidth,
+      source: 'extern'
     }
 
     // Init sync
@@ -87,7 +89,8 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
     // No need to inform the outer world of the first handlebar update
     // since it's provided as @Input values
     this._subs.push(
-      this.handlebarSubj.skip(1)
+      this.handlebarSubj
+        .filter(hb => hb.source !== 'extern')
         .subscribe(this.onHandlebarUpdate))
   }
 
@@ -173,11 +176,20 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
     }))
 
     this._subs.push(
-      Observable.merge(left, middle, right, this.syncValueSubj)
+      Observable.merge(left, middle, right)
         .subscribe(({left, width}) => {
           this.internLeft = left
           this.internWidth = width
-          this.handlebarSubj.next({left, width})
+          this.handlebarSubj.next({source: 'intern', left, width})
+          this._cdr.markForCheck()
+        }))
+
+    this._subs.push(
+      this.syncValueSubj
+        .subscribe(({left, width}) => {
+          this.internLeft = left
+          this.internWidth = width
+          this.handlebarSubj.next({source: 'extern', left, width})
           this._cdr.markForCheck()
         }))
   }
@@ -190,13 +202,13 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
       if(hasLeftChanges && hasWidthChanges) {
         const newLeft = changes.inLeft.currentValue
         const newWidth = changes.inWidth.currentValue
-        this.syncValueSubj.next({left: newLeft, width: newWidth})
+        this.syncValueSubj.next({source: 'extern', left: newLeft, width: newWidth})
       } else if(hasLeftChanges) {
         const newLeft = changes.inLeft.currentValue
-        this.syncValueSubj.next({left: newLeft, width: this.internWidth})
+        this.syncValueSubj.next({source: 'extern', left: newLeft, width: this.internWidth})
       } else if(hasWidthChanges) {
         const newWidth = changes.inWidth.currentValue
-        this.syncValueSubj.next({left: this.internLeft, width: newWidth})
+        this.syncValueSubj.next({source: 'extern', left: this.internLeft, width: newWidth})
       }
     }
   }

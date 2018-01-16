@@ -1,7 +1,7 @@
 import {
   Component, ChangeDetectionStrategy, OnInit,
   OnDestroy, AfterViewInit, Renderer2,
-  ChangeDetectorRef
+  //ChangeDetectorRef
 } from '@angular/core'
 
 import {Store} from '@ngrx/store'
@@ -11,7 +11,6 @@ import 'rxjs/add/operator/withLatestFrom'
 
 import * as fromRoot from '../../reducers'
 import * as project from '../../../persistence/actions/project'
-import * as selection from '../../actions/selection'
 import * as player from '../../../player/actions'
 import {fromEventPattern} from '../../../lib/observable'
 import {rndColor} from '../../../lib/color'
@@ -28,7 +27,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   private readonly _subs: Subscription[] = []
 
   constructor(
-    private readonly _cdr: ChangeDetectorRef,
+    //private readonly _cdr: ChangeDetectorRef,
     private readonly _rootStore: Store<fromRoot.State>,
     private readonly _renderer: Renderer2) {}
 
@@ -46,7 +45,22 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
         e.keyCode === 171    // + (firefox)
     })
 
-    const annotationSelection = this._rootStore.select(fromRoot.getAnnotationSelection).share()
+    const undoHotkey = windowKeydown.filter((e: KeyboardEvent) => {
+      return e.keyCode === 90 && e.metaKey && !e.shiftKey // cmd z (make sure shiftKey is not pressed)
+    })
+
+    const redoHotkey = windowKeydown.filter((e: KeyboardEvent) => {
+      return e.keyCode === 90 && e.metaKey && e.shiftKey // shift cmd z
+    })
+
+    const copyToClipboardHotkey = windowKeydown.filter((e: KeyboardEvent) => {
+      return e.keyCode === 67 && e.metaKey // cmd c
+    })
+
+    this._subs.push(
+      copyToClipboardHotkey.subscribe((ev: KeyboardEvent) => {
+        this._rootStore.dispatch(new project.ProjectCopyAnnotationSelectionToClipboard())
+      }))
 
     this._subs.push(
       togglePlayingHotkey.subscribe((ev: KeyboardEvent) => {
@@ -63,29 +77,27 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       }))
 
     this._subs.push(
-      windowMousedown
-        .withLatestFrom(annotationSelection.filter(selection => selection !== undefined))
-        .subscribe(([, sel]) => {
-          const deselectPayload = {selection: sel!}
-          this._rootStore.dispatch(new selection.SelectionDeselectAnnotation(deselectPayload))
-        }))
+      windowMousedown.subscribe(() => {
+        this._rootStore.dispatch(new project.ProjectResetAnnotationSelection())
+      }))
 
     this._subs.push(
       removeAnnotationHotkey
-        .withLatestFrom(annotationSelection)
-        .filter(([_, selection]) => selection !== undefined)
         .subscribe(([_, sel]) => {
-          const deselectPayload = {selection: sel!}
-          this._rootStore.dispatch(new selection.SelectionDeselectAnnotation(deselectPayload))
-
-          const deletePayload = {
-            trackIndex: sel!.get('trackIndex', null),
-            annotationIndex: sel!.get('annotationIndex', null),
-            annotation: sel!.get('annotation', null)
-          }
-          this._rootStore.dispatch(new project.ProjectDeleteAnnotation(deletePayload))
-          this._cdr.markForCheck()
+          this._rootStore.dispatch(new project.ProjectDeleteSelectedAnnotations())
         }))
+
+    this._subs.push(
+      undoHotkey.subscribe((e: KeyboardEvent) => {
+        e.preventDefault()
+        this._rootStore.dispatch(new project.ProjectUndo())
+      }))
+
+    this._subs.push(
+      redoHotkey.subscribe((e: KeyboardEvent) => {
+        e.preventDefault()
+        this._rootStore.dispatch(new project.ProjectRedo())
+      }))
   }
 
   importProject(projectFile: File) {
@@ -93,8 +105,8 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     this.closeProjectModal()
   }
 
-  importVideo(video: File) {
-    this._rootStore.dispatch(new project.ProjectImportVideo(video))
+  importVideo(videoImport: project.ImportVideoPayload) {
+    this._rootStore.dispatch(new project.ProjectImportVideo(videoImport))
     this.closeProjectModal()
   }
 
@@ -113,6 +125,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
   closeProjectModal() {
     const modal = $('#settings-reveal') as any;
+    // $('body').removeClass('is-reveal-open')
     modal.foundation('close');
   }
 

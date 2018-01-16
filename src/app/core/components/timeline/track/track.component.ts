@@ -1,29 +1,44 @@
 import {
   Component, Input, ChangeDetectionStrategy,
   OnInit, OnDestroy, EventEmitter, Output,
-  OnChanges, SimpleChanges
+  OnChanges, SimpleChanges, ViewChild,
+  ElementRef
 } from '@angular/core'
 
 import {FormGroup, FormBuilder, Validators} from '@angular/forms'
 
-import {Record} from 'immutable'
+const _VALID_ = 'VALID' // not exported by @angular/forms
+
+import {Record, Set} from 'immutable'
 
 import {Observable} from 'rxjs/Observable'
 import {Subject} from 'rxjs/Subject'
 import {Subscription} from 'rxjs/Subscription'
 import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame'
+import 'rxjs/add/observable/fromEvent'
+import 'rxjs/add/observable/combineLatest'
+import 'rxjs/add/operator/withLatestFrom'
+import 'rxjs/add/operator/debounceTime'
+import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/filter'
+import 'rxjs/add/operator/distinctUntilChanged'
 
 import {
   Track, Annotation, AnnotationRecordFactory,
-  TrackRecordFactory, TrackFieldsRecordFactory
+  TrackRecordFactory, TrackFieldsRecordFactory,
+  AnnotationSelectionRecordFactory, SelectionSource
 } from '../../../../persistence/model'
 import {_FORM_INPUT_DEBOUNCE_} from '../../../../config/form'
 import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 import {coordTransform} from '../../../../lib/coords'
 import {Handlebar} from '../handlebar/handlebar.component'
 import * as project from '../../../../persistence/actions/project'
-import * as selection from '../../../actions/selection'
-import * as fromSelection from '../../../reducers/selection'
+
+interface EmitAnnotationSelectionArgs {
+  readonly track: Record<Track>
+  readonly annotation: Record<Annotation>
+  readonly type: project.AnnotationSelectionType
+}
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,8 +49,9 @@ import * as fromSelection from '../../../reducers/selection'
 export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   @Input() readonly data: Record<Track>
   @Input() readonly trackIndex: number
+  @Input() readonly numTracks: number
   @Input() readonly totalDuration: number
-  @Input() readonly selectedAnnotationId: number
+  @Input() readonly selectedAnnotations: Set<Record<Annotation>>
   @Input() readonly containerRect: Observable<ClientRect>
 
   form: FormGroup|null = null
@@ -45,23 +61,74 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   @Output() readonly onUpdateTrack = new EventEmitter<project.UpdateTrackPayload>()
   @Output() readonly onUpdateAnnotation = new EventEmitter<project.UpdateAnnotationPayload>()
   @Output() readonly onDeleteTrack = new EventEmitter<project.DeleteTrackPlayload>()
-  @Output() readonly onSelectAnnotation = new EventEmitter<selection.SelectionAnnotationPayload>()
+  @Output() readonly onSelectAnnotation = new EventEmitter<project.SelectAnnotationPayload>()
   @Output() readonly onAddAnnotation = new EventEmitter<project.AddAnnotationPayload>()
+  @Output() readonly onDuplicateTrack = new EventEmitter<project.DuplicateTrackPayload>()
+  @Output() readonly onInsertAtTrack = new EventEmitter<project.TrackInsertAtPayload>()
+  @Output() readonly onPasteAnnotations = new EventEmitter<project.PasteClipboardPayload>()
 
   private readonly _subs: Subscription[] = []
-  private readonly addAnnotationClick = new Subject<MouseEvent>()
-  private readonly updateAnnotationSubj = new Subject<{hb: Handlebar, annotationIndex: number}>()
+  private readonly addAnnotationClick = new Subject<{ev: MouseEvent, annotationStackIndex: number}>()
+  private readonly updateAnnotationSubj = new Subject<{hb: Handlebar, annotationIndex: number, annotationStackIndex: number}>()
+  private readonly annotationMdSubj = new Subject<{ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number}>()
 
-  constructor(private readonly _fb: FormBuilder) {}
+  @ViewChild('title') private readonly titleInput: ElementRef
+
+  constructor(
+    private readonly _elem: ElementRef,
+    private readonly _fb: FormBuilder) {}
 
   ngOnInit() {
     this.form = this._fb.group({
       title: [this.data.getIn(['fields', 'title']), Validators.required]
     })
 
+    const titleInputMd = Observable.fromEvent(this.titleInput.nativeElement, 'mousedown')
+    const titleInputKeydown = Observable.fromEvent(this.titleInput.nativeElement, 'keydown')
+    const formBlur = Observable.fromEvent(this.titleInput.nativeElement, 'blur')
+
+    const hostMouseEnterTs = Observable.fromEvent(this._elem.nativeElement, 'mouseenter').map(() => Date.now())
+    const hostMouseLeaveTs = Observable.fromEvent(this._elem.nativeElement, 'mouseleave').map(() => Date.now()).startWith(Date.now())
+
+    const hostHover = hostMouseEnterTs
+      .combineLatest(hostMouseLeaveTs, (enterTs, leaveTs) => {
+        return enterTs > leaveTs
+      })
+
+    const pasteHotkey: Observable<KeyboardEvent> = Observable.fromEvent(window, 'keydown')
+      .filter((ev: KeyboardEvent) => {
+        return ev.keyCode === 86 && ev.metaKey // cmd v
+      })
+
     this._subs.push(
-      this.form.valueChanges.withLatestFrom(this.form.statusChanges)
-        .debounceTime(_FORM_INPUT_DEBOUNCE_, animationScheduler)
+      pasteHotkey.withLatestFrom(hostHover).filter(([, hover]) => hover)
+        .subscribe(() => {
+          this.onPasteAnnotations.next({trackIndex: this.trackIndex})
+        }))
+
+    this._subs.push(
+      titleInputMd.subscribe((ev: KeyboardEvent) => {
+        ev.stopPropagation()
+      }))
+
+    this._subs.push(
+      titleInputKeydown.subscribe((ev: KeyboardEvent) => {
+        ev.stopPropagation()
+      }))
+
+    this._subs.push(
+      titleInputKeydown
+        .filter((ev: KeyboardEvent) => ev.keyCode === 13)
+        .subscribe((ev: any) => {
+          ev.target.blur()
+        }))
+
+    this._subs.push(
+      formBlur
+        .withLatestFrom(Observable.combineLatest(this.form.valueChanges, this.form.statusChanges), (_, [form, status]) => {
+          return [form, status]
+        })
+        .filter(([_, status]) => status === _VALID_)
         .map(([formData, _]) => formData)
         .distinctUntilChanged((prev, cur) => {
           return prev.title === cur.title
@@ -73,24 +140,24 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
               id: this.data.get('id', null),
               color: this.data.get('color', null),
               fields: new TrackFieldsRecordFactory({title}),
-              annotations: this.data.get('annotations', null)
+              annotationStacks: this.data.get('annotationStacks', null)
             })
           }
-
           this.onUpdateTrack.emit(updateTrackPayload)
         }))
 
     this._subs.push(
       this.addAnnotationClick
-        .withLatestFrom(this.containerRect, (ev, rect) => {
+        .withLatestFrom(this.containerRect, ({ev, annotationStackIndex}, rect) => {
           const localX = coordTransform(ev.clientX, rect)
           const perc = localX/rect.width*100
           const tPerc = this.totalDuration/100
           return {
             trackIndex: this.trackIndex,
+            annotationStackIndex,
             annotation: new AnnotationRecordFactory({
               utc_timestamp: perc*tPerc,
-              duration: 5
+              duration: 2
             })
           }
         })
@@ -99,9 +166,8 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
     this._subs.push(
       this.updateAnnotationSubj
         .debounceTime(_FORM_INPUT_DEBOUNCE_, animationScheduler)
-        .subscribe(({hb, annotationIndex}) => {
-          const oldAnnotation = this.data.getIn(['annotations', annotationIndex])
-
+        .subscribe(({hb, annotationIndex, annotationStackIndex}) => {
+          const oldAnnotation = this.data.getIn(['annotationStacks', annotationStackIndex, annotationIndex])
           const tPerc = this.totalDuration/100
           const newStart = tPerc*hb.left
           const newDuration = tPerc*hb.width
@@ -109,6 +175,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
           this.onUpdateAnnotation.emit({
             trackIndex: this.trackIndex,
             annotationIndex,
+            annotationStackIndex,
             annotation: AnnotationRecordFactory({
               id: oldAnnotation.get('id', null),
               fields: oldAnnotation.get('fields', null),
@@ -117,6 +184,41 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
             })
           })
         }))
+
+    const defaultClick = this.annotationMdSubj.filter(({ev}) => !ev.shiftKey && !ev.metaKey)
+    const rangeClick = this.annotationMdSubj.filter(({ev}) => ev.shiftKey && !ev.metaKey)
+    const pickClick = this.annotationMdSubj.filter(({ev}) => !ev.shiftKey && ev.metaKey)
+
+    defaultClick.subscribe(({annotationIndex, annotation}) => {
+      this.emitSelectAnnotation({
+        type: project.AnnotationSelectionType.Default,
+        track: this.data, annotation
+      })
+    })
+
+    rangeClick.subscribe(({annotationIndex, annotation}) => {
+      this.emitSelectAnnotation({
+        type: project.AnnotationSelectionType.Range,
+        track: this.data, annotation
+      })
+    })
+
+    pickClick.subscribe(({annotationIndex, annotation}) => {
+      this.emitSelectAnnotation({
+        type: project.AnnotationSelectionType.Pick,
+        track: this.data, annotation
+      })
+    })
+  }
+
+  private emitSelectAnnotation({track, annotation, type}: EmitAnnotationSelectionArgs) {
+    this.onSelectAnnotation.emit({
+      type,
+      selection: AnnotationSelectionRecordFactory({
+        track, annotation,
+        source: SelectionSource.Timeline
+      })
+    })
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -142,34 +244,51 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
     return Math.min(Math.max(_MIN_WIDTH_, annotation.duration / this.totalDuration * 100), 100)
   }
 
-  trackByFunc(_: number, track: Record<Track>) {
+  isSelectedAnnotation(annotation: Record<Annotation>) {
+    return this.selectedAnnotations ?
+      this.selectedAnnotations.find(sel => sel.get('id', null) === annotation.get('id', null)) !== undefined :
+      null
+  }
+
+  outerTrackByFunc(index: number) {
+    return index
+  }
+
+  innerTrackByFunc(_: number, track: Record<Track>) {
     return track.get('id', null)
   }
 
-  deleteTrackHandler() {
+  deleteTrackHandler(ev: MouseEvent) {
+    ev.stopPropagation()
     if(window.confirm("Really delete track? All annotations will be deleted too.")){
       this.onDeleteTrack.emit({trackIndex: this.trackIndex})
     }
   }
 
-  selectAnnotation(ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number) {
+  annotationClick(ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number) {
     ev.stopPropagation()
-    this.onSelectAnnotation.emit({
-      selection: new fromSelection.AnnotationSelectionFactory({
-        annotationIndex,
-        trackIndex: this.trackIndex,
-        annotation,
-        source: fromSelection.SelectionSource.Timeline
-      })
+    this.annotationMdSubj.next({ev, annotation, annotationIndex})
+  }
+
+  addAnnotation(ev: MouseEvent, annotationStackIndex: number) {
+    this.addAnnotationClick.next({ev, annotationStackIndex})
+  }
+
+  updateHandlebar(hb: Handlebar, annotationIndex: number, annotationStackIndex: number) {
+    this.updateAnnotationSubj.next({hb, annotationIndex, annotationStackIndex})
+  }
+
+  moveTrack($event: MouseEvent, trackIndex: number, direction: 'up'|'down') {
+    $event.stopPropagation()
+    this.onInsertAtTrack.emit({
+      currentTrackIndex: trackIndex,
+      insertAtIndex: direction === 'up' ? trackIndex-1 : trackIndex+1
     })
   }
 
-  addAnnotation(ev: MouseEvent) {
-    this.addAnnotationClick.next(ev)
-  }
-
-  updateHandlebar(hb: Handlebar, annotationIndex: number) {
-    this.updateAnnotationSubj.next({hb, annotationIndex})
+  duplicateTrack($event: MouseEvent, trackIndex: number) {
+    $event.stopPropagation()
+    this.onDuplicateTrack.emit({trackIndex})
   }
 
   ngOnDestroy() {

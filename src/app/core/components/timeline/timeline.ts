@@ -9,27 +9,25 @@ import {DOCUMENT} from '@angular/platform-browser'
 
 import {Store} from '@ngrx/store'
 
-import {Record} from 'immutable'
+import {Record, Set} from 'immutable'
 
 import {Observable} from 'rxjs/Observable'
 import {ReplaySubject} from 'rxjs/ReplaySubject'
 import {Subscription} from 'rxjs/Subscription'
-import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame'
+// import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame'
 import 'rxjs/add/observable/combineLatest'
 import 'rxjs/add/observable/merge'
 import 'rxjs/add/observable/concat'
 import 'rxjs/add/observable/of'
+import 'rxjs/add/observable/fromEvent'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/startWith'
 
-import * as fromSelection from '../../reducers'
 import * as fromProject from '../../../persistence/reducers'
 import * as fromPlayer from '../../../player/reducers'
 import * as project from '../../../persistence/actions/project'
-import * as selection from '../../actions/selection'
-import {AnnotationSelectionFactory, SelectionSource} from '../../reducers/selection'
 import * as player from '../../../player/actions'
-import {Timeline, Track} from '../../../persistence/model'
+import {Timeline, Track, Annotation} from '../../../persistence/model'
 import {fromEventPattern} from '../../../lib/observable'
 import {HandlebarComponent} from '../../components/timeline/handlebar/handlebar.component'
 import {_SCROLLBAR_CAPTION_} from '../../../config/timeline/scrollbar'
@@ -49,8 +47,7 @@ export interface ScrollSettings {
 })
 export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   timeline: Record<Timeline>
-  selectedAnnotationId: number|null
-  // scrollLeft = 0
+  selectedAnnotations: Set<Record<Annotation>>
   zoom = 1
   playerPos = 0
   playerCurrentTime = 0
@@ -85,13 +82,9 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       }))
 
     this._subs.push(
-      this._store.select(fromSelection.getAnnotationSelection)
-        .subscribe(annotationSelection => {
-          if(annotationSelection !== undefined) {
-            this.selectedAnnotationId = annotationSelection.getIn(['annotation', 'id'])
-          } else {
-            this.selectedAnnotationId = null
-          }
+      this._store.select(fromProject.getSelectedAnnotations)
+        .subscribe(selAnnotations => {
+          this.selectedAnnotations = selAnnotations
           this._cdr.markForCheck()
         }))
 
@@ -181,9 +174,9 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
           })
         }))
 
-    const mousemove: Observable<MouseEvent> = fromEventPattern(this._renderer, this._document, 'mousemove')
-    const mouseup: Observable<MouseEvent> = fromEventPattern(this._renderer, this._document, 'mouseup')
-    const placeHeadMd: Observable<MouseEvent> = fromEventPattern(this._renderer, this.timelineOverflowRef.nativeElement, 'mousedown')
+    const mousemove: Observable<MouseEvent> = Observable.fromEvent(this._document, 'mousemove')
+    const mouseup: Observable<MouseEvent> = Observable.fromEvent(this._document, 'mouseup')
+    const placeHeadMd: Observable<MouseEvent> = Observable.fromEvent(this.timelineOverflowRef.nativeElement, 'mousedown')
 
     this._subs.push(placeHeadMd
       .switchMap(md => {
@@ -228,24 +221,10 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
 
   updateAnnotation(updateAnnotation: project.UpdateAnnotationPayload) {
     this._store.dispatch(new project.ProjectUpdateAnnotation(updateAnnotation))
-
-    const sub = Observable.of(null, animationScheduler).subscribe(() => {
-      // Keep annotation focused in inspector
-      this.selectAnnotation({
-        selection: new AnnotationSelectionFactory({
-          trackIndex: updateAnnotation.trackIndex,
-          annotationIndex: updateAnnotation.annotationIndex,
-          annotation: updateAnnotation.annotation,
-          source: SelectionSource.Timeline
-        })
-      })
-      sub.unsubscribe()
-    })
   }
 
-  selectAnnotation(annotation: selection.SelectionAnnotationPayload) {
-    this._store.dispatch(new selection.SelectionResetAnnotation())
-    this._store.dispatch(new selection.SelectionSelectAnnotation(annotation))
+  selectAnnotation(annotation: project.SelectAnnotationPayload) {
+    this._store.dispatch(new project.ProjectSelectAnnotation(annotation))
   }
 
   addTrack() {
@@ -258,6 +237,22 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
 
   deleteTrack(deleteTrack: project.DeleteTrackPlayload) {
     this._store.dispatch(new project.ProjectDeleteTrack(deleteTrack))
+  }
+
+  duplicateTrack(duplicateTrack: project.DuplicateTrackPayload) {
+    this._store.dispatch(new project.ProjectDuplicateTrack(duplicateTrack))
+  }
+
+  insertTrackAt(insertTrackAt: project.TrackInsertAtPayload) {
+    this._store.dispatch(new project.ProjectInsertAtTrack(insertTrackAt))
+  }
+
+  pasteAnnotations(pasteAnnotations: project.PasteClipboardPayload) {
+    this._store.dispatch(new project.ProjectPasteClipBoard(pasteAnnotations))
+  }
+
+  getNumTracks() {
+    return this.timeline.get('tracks', null).size
   }
 
   ngOnDestroy() {

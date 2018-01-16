@@ -1,5 +1,26 @@
 # Changelog
 
+# 0.2.0 (2017-12-07) Undo/Redo, Offline, Manage tracks, Select/Copy/Paste Annotations, Stacking Annotations
+
+* Stacking annotations
+* Select/copy/paste annotations
+* Undo/redo feature (default: 20 actions are saved, see `src/app/config/snapshots.ts`)
+* Offline feature via service-worker
+* Duplicate and re-arrange tracks
+* Http video sources and youtube/vimeo tech
+
+### Bugfixes
+
+* Timeline: (Fixes [#150](https://github.com/StudioProcess/rvp/issues/150))
+  * Track title
+    * Fix setting player head on mousedown
+    * Fix triggering app hotkey handler (e.g. space) when typing new track title
+  * Delete track
+    * Fix setting player head on mousedown
+* Fix unnecessary handlebar update emits
+* Project modal
+  * Fix close button issue
+
 # 0.1.0 (2017-11-23) Refactoring Pass
 
 * Changelog init

@@ -28,11 +28,10 @@ import {formatDuration} from '../../../../lib/time'
 
 import {
   AnnotationColorMap, AnnotationRecordFactory,
-  AnnotationFieldsRecordFactory
+  AnnotationFieldsRecordFactory, SelectionSource,
+  AnnotationSelectionRecordFactory
 } from '../../../../persistence/model'
 
-import * as fromSelection from '../../../reducers/selection'
-import * as selection from '../../../actions/selection'
 import * as project from '../../../../persistence/actions/project'
 import {parseDuration} from '../../../../lib/time'
 
@@ -58,7 +57,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   @Input() @HostBinding('class.selected') readonly isSelected = false
 
   @Output() readonly onUpdate = new EventEmitter<project.UpdateAnnotationPayload>()
-  @Output() readonly onSelectAnnotation = new EventEmitter<selection.SelectionAnnotationPayload>()
+  @Output() readonly onSelectAnnotation = new EventEmitter<project.SelectAnnotationPayload>()
 
   @ViewChild('start') readonly startInput: ElementRef
   @ViewChild('duration') readonly durationInput: ElementRef
@@ -166,6 +165,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
           this.onUpdate.emit({
             trackIndex: this.entry.get('trackIndex', null),
+            annotationStackIndex: this.entry.get('annotationStackIndex', null),
             annotationIndex: this.entry.get('annotationIndex', null),
             annotation
           })
@@ -188,11 +188,11 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   selectAnnotationHandler(ev: MouseEvent) {
     ev.stopPropagation()
     this.onSelectAnnotation.emit({
-      selection: new fromSelection.AnnotationSelectionFactory({
-        trackIndex: this.entry.get('trackIndex', null),
-        annotationIndex: this.entry.get('annotationIndex', null),
+      type: project.AnnotationSelectionType.Default,
+      selection: AnnotationSelectionRecordFactory({
+        track: this.entry.get('track', null),
         annotation: this.entry.get('annotation', null),
-        source: fromSelection.SelectionSource.Inspector
+        source: SelectionSource.Inspector
       })
     })
   }

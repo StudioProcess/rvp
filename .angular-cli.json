@@ -8,6 +8,7 @@
       "root": "src",
       "outDir": "dist",
       "assets": [
+        "sw.js",
         "assets",
         "favicon.ico",
         "apple-touch-icon.png"
@@ -26,7 +27,7 @@
       ],
       "scripts": [
         "../node_modules/pace-progress/pace.min.js",
-        "../node_modules/jquery/dist/jquery.slim.min.js",
+        "../node_modules/jquery/dist/jquery.min.js",
         "../node_modules/foundation-sites/dist/js/foundation.min.js"
       ],
       "stylePreprocessorOptions": {

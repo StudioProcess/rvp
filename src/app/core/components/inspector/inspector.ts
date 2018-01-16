@@ -1,24 +1,23 @@
 import {
-  Component, OnInit, OnDestroy, ViewChild,
+  Component, OnInit, OnDestroy, AfterViewInit,
   ChangeDetectionStrategy, ChangeDetectorRef,
-  ElementRef, AfterViewInit, ViewChildren,
-  QueryList
+ ElementRef, QueryList, ViewChild, ViewChildren
 } from '@angular/core'
 
-import {List, Record} from 'immutable'
+import {List, Record, Set} from 'immutable'
 
 import {Subscription} from 'rxjs/Subscription'
 import 'rxjs/add/operator/withLatestFrom'
 
 import {Store} from '@ngrx/store'
 
-import * as selection from '../../actions/selection'
 import * as project from '../../../persistence/actions/project'
-import * as fromRoot from '../../reducers'
 import * as fromProject from '../../../persistence/reducers'
 import * as fromPlayer from '../../../player/reducers'
-import * as fromSelection from '../../reducers/selection'
-import {AnnotationColorMap} from '../../../persistence/model'
+import {
+  AnnotationColorMap, Annotation,
+  SelectionSource, AnnotationSelection
+} from '../../../persistence/model'
 import {InspectorEntryComponent} from './inspectorEntry/inspectorEntry.component'
 
 @Component({
@@ -29,7 +28,7 @@ import {InspectorEntryComponent} from './inspectorEntry/inspectorEntry.component
       <rv-inspector-entry
         *ngFor="let annotation of annotations; trackBy: trackByFunc;"
         [entry]="annotation"
-        [isSelected]="annotation.annotation.id === selectedAnnotationId"
+        [isSelected]="isSelectedAnnotation(annotation.annotation)"
         (onUpdate)="updateAnnotation($event)"
         (onSelectAnnotation)="selectAnnotation($event)">
       </rv-inspector-entry>
@@ -47,7 +46,7 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
   private readonly _subs: Subscription[] = []
   annotations: List<Record<AnnotationColorMap>>
   height = this._playerStore.select(fromPlayer.getDimensions).map(({height}) => height)
-  selectedAnnotationId: number|null
+  selectedAnnotations: Set<Record<Annotation>>
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
@@ -61,33 +60,27 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     this._subs.push(
       this._store.select(fromProject.getSortedFlattenedAnnotations)
-        .filter(annotations => annotations.size > 0)
         .subscribe(annotations => {
           this.annotations = annotations
           this._cdr.markForCheck()
         }))
 
     this._subs.push(
-      this._store.select(fromRoot.getAnnotationSelection)
-        .subscribe(annotationSelection => {
-          if(annotationSelection !== undefined) {
-            this.selectedAnnotationId = annotationSelection.getIn(['annotation', 'id'])
-          } else {
-            this.selectedAnnotationId = null
-          }
+      this._store.select(fromProject.getSelectedAnnotations)
+        .subscribe(selAnnotations => {
+          this.selectedAnnotations = selAnnotations
           this._cdr.markForCheck()
         }))
   }
 
   ngAfterViewInit() {
-    type annotationSelectionWithEntries = [Record<fromSelection.AnnotationSelection>, QueryList<InspectorEntryComponent>]
+    type annotationSelectionWithEntries = [Record<AnnotationSelection>, QueryList<InspectorEntryComponent>]
 
     this._subs.push(
-      this._store.select(fromRoot.getAnnotationSelection)
+      this._store.select(fromProject.getProjectFocusAnnotationSelection)
         .filter(annotationSelection => {
-          if(annotationSelection !== undefined) {
-            return annotationSelection.getIn(['annotation', 'id']) !== null &&
-              annotationSelection.get('source', null) === fromSelection.SelectionSource.Timeline
+          if(annotationSelection !== null) {
+            return annotationSelection.get('source', null) === SelectionSource.Timeline
           } else {
             return false
           }
@@ -101,22 +94,30 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
           })
 
           if(entry) {
-            const wrapper = this.scrollWrapper.nativeElement
-            const e = entry.elem.nativeElement
+            setTimeout(() => {
+              const wrapper = this.scrollWrapper.nativeElement
+              const e = entry.elem.nativeElement
 
-            // Position centered
-            wrapper.scrollTop = e.offsetTop - ((wrapper.offsetHeight - e.offsetHeight)/2)
+              // Position centered
+              wrapper.scrollTop = e.offsetTop - ((wrapper.offsetHeight - e.offsetHeight)/2)
+              this._cdr.markForCheck()
+            })
           }
         }))
+  }
+
+  isSelectedAnnotation(annotation: Record<Annotation>) {
+    return this.selectedAnnotations ?
+      this.selectedAnnotations.find(sel => sel.get('id', null) === annotation.get('id', null)) !== undefined :
+      null
   }
 
   updateAnnotation(updateAnnotation: project.UpdateAnnotationPayload) {
     this._store.dispatch(new project.ProjectUpdateAnnotation(updateAnnotation))
   }
 
-  selectAnnotation(selectAnnotation: selection.SelectionAnnotationPayload) {
-    this._store.dispatch(new selection.SelectionResetAnnotation())
-    this._store.dispatch(new selection.SelectionSelectAnnotation(selectAnnotation))
+  selectAnnotation(selectAnnotation: project.SelectAnnotationPayload) {
+    this._store.dispatch(new project.ProjectSelectAnnotation(selectAnnotation))
   }
 
   ngOnDestroy() {

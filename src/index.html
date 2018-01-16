@@ -10,16 +10,30 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="apple-touch-icon" href="touch-icon-iphone.png">
     <script>paceOptions = {ajax:true, document:true, eventLag:true, restartOnRequestAfter:2000, maxProgressPerFrame:20, initialRate:0.01, ghostTime:1000, target:'.progress'}</script>
+    <style>
+      .loading-overlay {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: white;
+      }
+    </style>
   </head>
   <body>
     <!-- <rv-app></rv-app> -->
     <rv-main></rv-main>
 
-    <div class="loading-overlay">
+    <!-- <div class="loading-overlay">
       <img src="assets/img/rv_animation.gif" width="200px">
       <div class="text"><strong>Research Video</strong>&nbsp;Zürcher Hochschule der Künste</div>
       <div class="progress"></div>
-    </div>
+    </div> -->
     <!--<script>
       (function(i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;

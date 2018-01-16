@@ -4,8 +4,7 @@ import {Component} from '@angular/core'
   selector: 'rv-projectbtn',
   template: `
     <a>
-      <i class="ion-ios-folder" title="Project Settings"></i>
-      Project
+      <i class="ion-ios-folder" title="Project Settings"></i>Project
     </a>
   `,
   styleUrls: ['projectBtn.component.scss']
