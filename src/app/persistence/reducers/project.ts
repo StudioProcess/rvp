@@ -398,7 +398,6 @@ export function reducer(state: State = initialState, action: project.Actions): S
         const stacksWithEmbedded = embedAnnotations(annotationStacks, 0, newAnnotations, List([]))
 
         return state.withMutations(mState => {
-          mState.set('clipboard', Set())
           mState.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], stacksWithEmbedded)
         })
       } else {
