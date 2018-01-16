@@ -268,6 +268,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
 
   annotationClick(ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number) {
     ev.stopPropagation()
+    if(ev.button !== 0) {return}
     this.annotationMdSubj.next({ev, annotation, annotationIndex})
   }
 
