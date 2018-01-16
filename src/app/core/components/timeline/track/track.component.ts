@@ -260,6 +260,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
 
   deleteTrackHandler(ev: MouseEvent) {
     ev.stopPropagation()
+    if(ev.button !== 0) {return}
     if(window.confirm("Really delete track? All annotations will be deleted too.")){
       this.onDeleteTrack.emit({trackIndex: this.trackIndex})
     }
@@ -280,6 +281,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
 
   moveTrack($event: MouseEvent, trackIndex: number, direction: 'up'|'down') {
     $event.stopPropagation()
+    if($event.button !== 0) {return}
     this.onInsertAtTrack.emit({
       currentTrackIndex: trackIndex,
       insertAtIndex: direction === 'up' ? trackIndex-1 : trackIndex+1
@@ -288,6 +290,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
 
   duplicateTrack($event: MouseEvent, trackIndex: number) {
     $event.stopPropagation()
+    if($event.button !== 0) {return}
     this.onDuplicateTrack.emit({trackIndex})
   }
 
