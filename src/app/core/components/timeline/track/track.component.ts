@@ -13,6 +13,7 @@ import {Record, Set} from 'immutable'
 
 import {Observable} from 'rxjs/Observable'
 import {Subject} from 'rxjs/Subject'
+import {ReplaySubject} from 'rxjs/ReplaySubject'
 import {Subscription} from 'rxjs/Subscription'
 import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame'
 import 'rxjs/add/observable/fromEvent'
@@ -30,9 +31,10 @@ import {
 } from '../../../../persistence/model'
 import {_FORM_INPUT_DEBOUNCE_} from '../../../../config/form'
 import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
-import {coordTransform} from '../../../../lib/coords'
+// import {coordTransform} from '../../../../lib/coords'
 import {Handlebar} from '../handlebar/handlebar.component'
 import * as project from '../../../../persistence/actions/project'
+import {ScrollSettings} from '../timeline'
 
 interface EmitAnnotationSelectionArgs {
   readonly track: Record<Track>
@@ -52,9 +54,10 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   @Input() readonly numTracks: number
   @Input() readonly totalDuration: number
   @Input() readonly selectedAnnotations: Set<Record<Annotation>>
-  @Input() readonly containerRect: Observable<ClientRect>
+  @Input() readonly scrollSettings: Observable<ScrollSettings>
 
   form: FormGroup|null = null
+  readonly zoomContainerRect = new ReplaySubject<ClientRect>(1)
 
   @Output() readonly onUpdateTrack = new EventEmitter<project.UpdateTrackPayload>()
   @Output() readonly onUpdateAnnotation = new EventEmitter<project.UpdateAnnotationPayload>()
@@ -71,6 +74,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   private readonly annotationMdSubj = new Subject<{ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number}>()
 
   @ViewChild('title') private readonly titleInput: ElementRef
+  @ViewChild('zoomContainer') private readonly zoomContainerRef: ElementRef
 
   constructor(
     private readonly _elem: ElementRef,
@@ -144,22 +148,22 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
           this.onUpdateTrack.emit(updateTrackPayload)
         }))
 
-    this._subs.push(
-      this.addAnnotationClick
-        .withLatestFrom(this.containerRect, ({ev, annotationStackIndex}, rect) => {
-          const localX = coordTransform(ev.clientX, rect)
-          const perc = localX/rect.width*100
-          const tPerc = this.totalDuration/100
-          return {
-            trackIndex: this.trackIndex,
-            annotationStackIndex,
-            annotation: new AnnotationRecordFactory({
-              utc_timestamp: perc*tPerc,
-              duration: 2
-            })
-          }
-        })
-        .subscribe(this.onAddAnnotation))
+    // this._subs.push(
+    //   this.addAnnotationClick
+    //     .withLatestFrom(this.containerRect, ({ev, annotationStackIndex}, rect) => {
+    //       const localX = coordTransform(ev.clientX, rect)
+    //       const perc = localX/rect.width*100
+    //       const tPerc = this.totalDuration/100
+    //       return {
+    //         trackIndex: this.trackIndex,
+    //         annotationStackIndex,
+    //         annotation: new AnnotationRecordFactory({
+    //           utc_timestamp: perc*tPerc,
+    //           duration: 2
+    //         })
+    //       }
+    //     })
+    //     .subscribe(this.onAddAnnotation))
 
     this._subs.push(
       this.updateAnnotationSubj
@@ -207,6 +211,19 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
         track: this.data, annotation
       })
     })
+  }
+
+  ngAfterViewInit() {
+    const getZoomContainerRect = () => {
+      return this.zoomContainerRef.nativeElement.getBoundingClientRect()
+    }
+
+    const winResize = Observable.fromEvent(window, 'resize')
+
+    this._subs.push(
+      winResize.startWith(null).subscribe(() => {
+        this.zoomContainerRect.next(getZoomContainerRect())
+      }))
   }
 
   private emitSelectAnnotation({track, annotation, type}: EmitAnnotationSelectionArgs) {

@@ -2,16 +2,16 @@ import {
   Component, OnInit, OnDestroy,
   ChangeDetectionStrategy, ChangeDetectorRef,
   Renderer2, ViewChild, ElementRef,
-  AfterViewInit, Inject
+  AfterViewInit/*, Inject*/
 } from '@angular/core'
 
-import {DOCUMENT} from '@angular/platform-browser'
+// import {DOCUMENT} from '@angular/platform-browser'
 
 import {Store} from '@ngrx/store'
 
 import {Record, Set} from 'immutable'
 
-import {Observable} from 'rxjs/Observable'
+// import {Observable} from 'rxjs/Observable'
 import {ReplaySubject} from 'rxjs/ReplaySubject'
 import {Subscription} from 'rxjs/Subscription'
 // import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame'
@@ -27,13 +27,13 @@ import 'rxjs/add/operator/filter'
 import * as fromProject from '../../../persistence/reducers'
 import * as fromPlayer from '../../../player/reducers'
 import * as project from '../../../persistence/actions/project'
-import * as player from '../../../player/actions'
+// import * as player from '../../../player/actions'
 import {Timeline, Track, Annotation} from '../../../persistence/model'
 import {fromEventPattern} from '../../../lib/observable'
 import {HandlebarComponent} from '../../components/timeline/handlebar/handlebar.component'
 import {_SCROLLBAR_CAPTION_} from '../../../config/timeline/scrollbar'
 import {rndColor} from '../../../lib/color'
-import {coordTransform} from '../../../lib/coords'
+// import {coordTransform} from '../../../lib/coords'
 
 export interface ScrollSettings {
   readonly zoom: number
@@ -57,13 +57,14 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   readonly scrollbarCaption = _SCROLLBAR_CAPTION_
   readonly scrollbarRect = new ReplaySubject<ClientRect>(1)
   readonly scrollSettings = new ReplaySubject<ScrollSettings>(1)
-  readonly overflowContainerRect = new ReplaySubject<ClientRect>(1)
-  readonly zoomContainerRect = new ReplaySubject<ClientRect>(1)
+  // readonly overflowContainerRect = new ReplaySubject<ClientRect>(1)
+  // readonly zoomContainerRect = new ReplaySubject<ClientRect>(1)
 
   @ViewChild('scrollbar') private readonly scrollbarRef: ElementRef
   @ViewChild('handlebar') private readonly handlebarRef: HandlebarComponent
-  @ViewChild('timelineOverflow') private readonly timelineOverflowRef: ElementRef
-  @ViewChild('zoomContainer') private readonly zoomContainerRef: ElementRef
+  // @ViewChild('timelineWrapper') private readonly timelineWrapperRef: ElementRef
+  // @ViewChild('timelineOverflow') private readonly timelineOverflowRef: ElementRef
+  // @ViewChild('zoomContainer') private readonly zoomContainerRef: ElementRef
   private readonly _subs: Subscription[] = []
   private readonly timelineSubj = this._store.select(fromProject.getProjectTimeline)
     .filter(timeline => timeline !== null)
@@ -72,8 +73,8 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private readonly _renderer: Renderer2,
     private readonly _cdr: ChangeDetectorRef,
-    private readonly _store: Store<fromProject.State>,
-    @Inject(DOCUMENT) private readonly _document: any) {}
+    private readonly _store: Store<fromProject.State>/*,
+    @Inject(DOCUMENT) private readonly _document: any*/) {}
 
   ngOnInit() {
     this._subs.push(
@@ -109,13 +110,9 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       return this.scrollbarRef.nativeElement.getBoundingClientRect()
     }
 
-    const getOverflowContainerRect = () => {
-      return this.timelineOverflowRef.nativeElement.getBoundingClientRect()
-    }
-
-    const getZoomContainerRect = () => {
-      return this.zoomContainerRef.nativeElement.getBoundingClientRect()
-    }
+    // const getOverflowContainerRect = () => {
+    //   return this.timelineOverflowRef.nativeElement.getBoundingClientRect()
+    // }
 
     const winResize = fromEventPattern(this._renderer, window, 'resize')
 
@@ -132,81 +129,84 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       width: this.scrollbarWidth
     }
 
-    const scrollSetting = this.handlebarRef.onHandlebarUpdate.startWith(initHB)
+    this._subs.push(this.handlebarRef.onHandlebarUpdate.startWith(initHB)
       .map(hb => {
         const zoom = 100/hb.width
         return {zoom, scrollLeft: hb.left}
       })
+      .subscribe(scrollSettings => {
+        this.scrollSettings.next(scrollSettings)
+      }))
 
     this._subs.push(
       winResize.startWith(null).subscribe(() => {
         this.scrollbarRect.next(getScrollbarRect())
-        this.overflowContainerRect.next(getOverflowContainerRect())
-        this.zoomContainerRect.next(getZoomContainerRect())
+        // this.overflowContainerRect.next(getOverflowContainerRect())
+        // this.zoomContainerRect.next(getZoomContainerRect())
       }))
 
-    this._subs.push(
-      Observable.combineLatest(
-        this.overflowContainerRect, scrollSetting,
-        (rect, {zoom, scrollLeft}) => {
-          const zoomContainerWidth = zoom * rect.width
-          const maxLeft = zoomContainerWidth-rect.width
-          return {zoom, left: Math.min(zoomContainerWidth*scrollLeft/100, maxLeft)}
-        }).distinctUntilChanged((prev, cur) => {
-          return prev.left === cur.left && prev.zoom === cur.zoom
-        }).subscribe(({zoom, left}) => {
-          this.zoom = zoom
-          this.timelineOverflowRef.nativeElement.scrollLeft = left
-          this._cdr.markForCheck()
+    // this._subs.push(
+    //   Observable.combineLatest(
+    //     this.overflowContainerRect, scrollSetting,
+    //     (rect, {zoom, scrollLeft}) => {
+    //       const zoomContainerWidth = zoom * rect.width
+    //       const maxLeft = zoomContainerWidth-rect.width
+    //       return {zoom, left: Math.min(zoomContainerWidth*scrollLeft/100, maxLeft)}
+    //     }).distinctUntilChanged((prev, cur) => {
+    //       return prev.left === cur.left && prev.zoom === cur.zoom
+    //     }).subscribe(({zoom, left}) => {
+    //       this.zoom = zoom
+    //       this.timelineOverflowRef.nativeElement.scrollLeft = left
+    //       this._cdr.markForCheck()
 
-          setTimeout(() => {
-            this.timelineOverflowRef.nativeElement.scrollLeft = left
-            this._cdr.markForCheck()
-          })
+    //       setTimeout(() => {
+    //         this.timelineOverflowRef.nativeElement.scrollLeft = left
+    //         this._cdr.markForCheck()
+    //       })
 
-          setTimeout(() => {
-            // Emit zoom container rect
-            this.zoomContainerRect.next(getZoomContainerRect())
-          })
-        }))
+    //       setTimeout(() => {
+    //         // Emit zoom container rect
+    //         this.zoomContainerRect.next(getZoomContainerRect())
+    //       })
+    //     }))
 
-    const isLeftBtn = (ev: MouseEvent) => ev.button === 0
+    // const isLeftBtn = (ev: MouseEvent) => ev.button === 0
 
-    const mousemove: Observable<MouseEvent> = Observable.fromEvent(this._document, 'mousemove')
-    const mouseup: Observable<MouseEvent> = Observable.fromEvent(this._document, 'mouseup')
-    const placeHeadMd: Observable<MouseEvent> = Observable.fromEvent(this.timelineOverflowRef.nativeElement, 'mousedown').filter(isLeftBtn)
+    // const mousemove: Observable<MouseEvent> = Observable.fromEvent(this._document, 'mousemove')
+    // const mouseup: Observable<MouseEvent> = Observable.fromEvent(this._document, 'mouseup')
+    // const placeHeadMd: Observable<MouseEvent> = Observable.fromEvent(this.timelineWrapperRef.nativeElement, 'mousedown').filter(isLeftBtn)
 
-    this._subs.push(placeHeadMd
-      .switchMap(md => {
-        const init = {clientX: md.clientX}
-        return Observable.concat(
-          Observable.of(init),
-          mousemove.map(mmEvent => {
-            const {clientX} = mmEvent
-            return {clientX}
-          }).takeUntil(mouseup))
-      })
-      .withLatestFrom(this.zoomContainerRect, (ev: MouseEvent, rect) => {
-        const localX = coordTransform(ev.clientX, rect)
-        return localX / rect.width
-      })
-      .map(progress => {
-        return Math.max(0, Math.min(progress, 1))
-      })
-      .distinctUntilChanged()
-      .withLatestFrom(this.timelineSubj, (progress, tl) => {
-        const totalTime = tl!.get('duration', null)
-        return {
-          progress,
-          currentTime: progress*totalTime
-        }
-      })
-      .subscribe(({progress, currentTime}) => {
-        this.playerPos = progress
-        this.playerCurrentTime = currentTime
-        this._cdr.markForCheck()
-        this._store.dispatch(new player.PlayerRequestCurrentTime({currentTime}))
-      }))
+    // this._subs.push(placeHeadMd
+    //   .switchMap(md => {
+    //     const init = {clientX: md.clientX}
+    //     return Observable.concat(
+    //       Observable.of(init),
+    //       mousemove.map(mmEvent => {
+    //         const {clientX} = mmEvent
+    //         return {clientX}
+    //       }).takeUntil(mouseup))
+    //   })
+    //   .withLatestFrom(this.zoomContainerRect, (ev: MouseEvent, rect) => {
+    //     const localX = coordTransform(ev.clientX, rect)
+    //     return localX / rect.width
+    //   })
+    //   .map(progress => {
+    //     return Math.max(0, Math.min(progress, 1))
+    //   })
+    //   .distinctUntilChanged()
+    //   .withLatestFrom(this.timelineSubj, (progress, tl) => {
+    //     const totalTime = tl!.get('duration', null)
+    //     return {
+    //       progress,
+    //       currentTime: progress*totalTime
+    //     }
+    //   })
+    //   .subscribe(({progress, currentTime}) => {
+    //     this.playerPos = progress
+    //     this.playerCurrentTime = currentTime
+    //     this._cdr.markForCheck()
+    //     this._store.dispatch(new player.PlayerRequestCurrentTime({currentTime}))
+    //   }))
   }
 
   trackByFunc(_: number, track: Record<Track>) {
