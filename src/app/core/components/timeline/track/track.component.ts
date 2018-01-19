@@ -31,7 +31,7 @@ import {
 } from '../../../../persistence/model'
 import {_FORM_INPUT_DEBOUNCE_} from '../../../../config/form'
 import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
-// import {coordTransform} from '../../../../lib/coords'
+import {coordTransform} from '../../../../lib/coords'
 import {Handlebar} from '../handlebar/handlebar.component'
 import * as project from '../../../../persistence/actions/project'
 import {ScrollSettings} from '../timeline'
@@ -151,22 +151,22 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
           this.onUpdateTrack.emit(updateTrackPayload)
         }))
 
-    // this._subs.push(
-    //   this.addAnnotationClick
-    //     .withLatestFrom(this.containerRect, ({ev, annotationStackIndex}, rect) => {
-    //       const localX = coordTransform(ev.clientX, rect)
-    //       const perc = localX/rect.width*100
-    //       const tPerc = this.totalDuration/100
-    //       return {
-    //         trackIndex: this.trackIndex,
-    //         annotationStackIndex,
-    //         annotation: new AnnotationRecordFactory({
-    //           utc_timestamp: perc*tPerc,
-    //           duration: 2
-    //         })
-    //       }
-    //     })
-    //     .subscribe(this.onAddAnnotation))
+    this._subs.push(
+      this.addAnnotationClick
+        .withLatestFrom(this.zoomContainerRect, ({ev, annotationStackIndex}, rect) => {
+          const localX = coordTransform(ev.clientX, rect)
+          const perc = localX/rect.width*100
+          const tPerc = this.totalDuration/100
+          return {
+            trackIndex: this.trackIndex,
+            annotationStackIndex,
+            annotation: new AnnotationRecordFactory({
+              utc_timestamp: perc*tPerc,
+              duration: 2
+            })
+          }
+        })
+        .subscribe(this.onAddAnnotation))
 
     this._subs.push(
       this.updateAnnotationSubj
