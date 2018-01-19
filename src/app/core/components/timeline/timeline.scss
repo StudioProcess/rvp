@@ -36,15 +36,9 @@
     }
   }
 
-  .timeline-overflow {
-    position: relative;
-    overflow: hidden;
-    padding-top: $playhead-height;
-
-    .timeline-zoom {
-      position: relative;
-    }
-  }
+  // .timeline-wrapper {
+  //   padding-top: $playhead-height;
+  // }
 
   .add-track {
     cursor: pointer;

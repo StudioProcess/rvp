@@ -4,7 +4,7 @@
     [left]="scrollbarLeft" [width]="scrollbarWidth">
   </rv-handlebar>
 </div>
-<div #timelineWrapper>
+<div #timelineWrapper class="timeline-wrapper">
   <rv-track *ngFor="let track of timeline?.get('tracks', []); index as i; trackBy: trackByFunc;"
     [data]="track" [trackIndex]="i" [numTracks]="getNumTracks()" [totalDuration]="timeline.duration"
     [scrollSettings]="scrollSettings"
