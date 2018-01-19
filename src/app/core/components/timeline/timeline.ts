@@ -120,12 +120,6 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     const winResize = fromEventPattern(this._renderer, window, 'resize')
 
     this._subs.push(
-      winResize
-        .map(() => getScrollbarRect())
-        .startWith(getScrollbarRect())
-        .subscribe(this.scrollbarRect))
-
-    this._subs.push(
       this.handlebarRef.onHandlebarUpdate.subscribe(hb => {
         // Set new left and width
         this.scrollbarLeft = hb.left
@@ -146,6 +140,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
 
     this._subs.push(
       winResize.startWith(null).subscribe(() => {
+        this.scrollbarRect.next(getScrollbarRect())
         this.overflowContainerRect.next(getOverflowContainerRect())
         this.zoomContainerRect.next(getZoomContainerRect())
       }))
