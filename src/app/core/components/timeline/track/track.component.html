@@ -15,17 +15,17 @@
 <div>
   <div #zoomContainer>
     <div *ngFor="let stack of data.get('annotationStacks', []); index as stackIndex; trackBy: outerTrackByFunc;">
-        <div class="annotations-wrapper" (dblclick)="addAnnotation($event, stackIndex)">
-            <rv-handlebar *ngFor="let annotation of stack; index as i; trackBy: innerTrackByFunc;"
-              [containerRect]="zoomContainerRect"
-              [caption]="getAnnotationTitle(annotation)"
-              [left]="getAnnotationPosition(annotation)"
-              [width]="getAnnotationWidth(annotation)"
-              [isSelected]="isSelectedAnnotation(annotation)"
-              (onHandlebarUpdate)="updateHandlebar($event, i, stackIndex)"
-              (mousedown)="annotationClick($event, annotation, i)">
-            </rv-handlebar>
-        </div>
+      <div class="annotations-wrapper" (dblclick)="addAnnotation($event, stackIndex)">
+        <rv-handlebar *ngFor="let annotation of stack; index as i; trackBy: innerTrackByFunc;"
+          [containerRect]="zoomContainerRect"
+          [caption]="getAnnotationTitle(annotation)"
+          [left]="getAnnotationPosition(annotation)"
+          [width]="getAnnotationWidth(annotation)"
+          [isSelected]="isSelectedAnnotation(annotation)"
+          (onHandlebarUpdate)="updateHandlebar($event, i, stackIndex)"
+          (mousedown)="annotationClick($event, annotation, i)">
+        </rv-handlebar>
       </div>
+    </div>
   </div>
 </div>
