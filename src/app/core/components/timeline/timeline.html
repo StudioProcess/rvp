@@ -4,28 +4,22 @@
     [left]="scrollbarLeft" [width]="scrollbarWidth">
   </rv-handlebar>
 </div>
-
-<!--<div #timelineOverflow class="timeline-overflow">
-  <div #zoomContainer class="timeline-zoom" [style.width.%]="zoom*100">-->
-  <div #timelineWrapper>
-    <rv-track *ngFor="let track of timeline?.get('tracks', []); index as i; trackBy: trackByFunc;"
-      [data]="track" [trackIndex]="i" [numTracks]="getNumTracks()" [totalDuration]="timeline.duration"
-      [scrollSettings]="scrollSettings"
-      [selectedAnnotations]="selectedAnnotations"
-      (onUpdateTrack)="updateTrack($event)"
-      (onDeleteTrack)="deleteTrack($event)"
-      (onDuplicateTrack)="duplicateTrack($event)"
-      (onInsertAtTrack)="insertTrackAt($event)"
-      (onUpdateAnnotation)="updateAnnotation($event)"
-      (onSelectAnnotation)="selectAnnotation($event)"
-      (onAddAnnotation)="addAnnotation($event)"
-      (onPasteAnnotations)="pasteAnnotations($event)">
-    </rv-track>
-    <!-- <rv-playhead [style.left.%]="playerPos*100" [currentTime]="playerCurrentTime"></rv-playhead> -->
-  </div>
-  <!--</div>
-</div>-->
-
+<div #timelineWrapper>
+  <rv-track *ngFor="let track of timeline?.get('tracks', []); index as i; trackBy: trackByFunc;"
+    [data]="track" [trackIndex]="i" [numTracks]="getNumTracks()" [totalDuration]="timeline.duration"
+    [scrollSettings]="scrollSettings"
+    [selectedAnnotations]="selectedAnnotations"
+    (onUpdateTrack)="updateTrack($event)"
+    (onDeleteTrack)="deleteTrack($event)"
+    (onDuplicateTrack)="duplicateTrack($event)"
+    (onInsertAtTrack)="insertTrackAt($event)"
+    (onUpdateAnnotation)="updateAnnotation($event)"
+    (onSelectAnnotation)="selectAnnotation($event)"
+    (onAddAnnotation)="addAnnotation($event)"
+    (onPasteAnnotations)="pasteAnnotations($event)">
+  </rv-track>
+  <!-- <rv-playhead [style.left.%]="playerPos*100" [currentTime]="playerCurrentTime"></rv-playhead> -->
+</div>
 <button class="ion-plus add-track" title="Add new Track" alt="Add new Track" (click)="addTrack()"> Add Track</button>
 <!-- {{selectedAnnotationId}}-->
 <!-- <pre>{{timeline?.tracks|json}}</pre> -->
