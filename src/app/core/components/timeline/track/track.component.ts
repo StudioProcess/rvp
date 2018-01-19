@@ -59,7 +59,6 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   form: FormGroup|null = null
   zoom: number
   readonly zoomContainerRect = new ReplaySubject<ClientRect>(1)
-  readonly overflowContainerRect = new ReplaySubject<ClientRect>(1)
 
   @Output() readonly onUpdateTrack = new EventEmitter<project.UpdateTrackPayload>()
   @Output() readonly onUpdateAnnotation = new EventEmitter<project.UpdateAnnotationPayload>()
@@ -218,10 +217,6 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngAfterViewInit() {
-    const getOverflowContainerRect = () => {
-      return this.overflowContainerRef.nativeElement.getBoundingClientRect()
-    }
-
     const getZoomContainerRect = () => {
       return this.zoomContainerRef.nativeElement.getBoundingClientRect()
     }
@@ -231,38 +226,28 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
     this._subs.push(
       winResize.startWith(null).subscribe(() => {
         this.zoomContainerRect.next(getZoomContainerRect())
-        this.overflowContainerRect.next(getOverflowContainerRect())
       }))
 
     this._subs.push(
-      Observable.combineLatest(
-        this.overflowContainerRect, this.scrollSettings,
-        (rect, {zoom, scrollLeft}) => {
-          const zoomContainerWidth = zoom*rect.width
-          const maxLeft = zoomContainerWidth-rect.width
-          return {zoom, left: Math.min(zoomContainerWidth*scrollLeft/100, maxLeft)}
-        }).distinctUntilChanged((prev, cur) => {
-          return prev.left === cur.left && prev.zoom === cur.zoom
-        })
-        .subscribe(({zoom, left}) => {
-          this.zoom = zoom
-          this.overflowContainerRef.nativeElement.scrollLeft = left
+      this.scrollSettings.subscribe(({zoom, scrollLeft}) => {
+        this.zoom = zoom
+        this.overflowContainerRef.nativeElement.scrollLeft = scrollLeft
+
+        /*
+         * TODO: Research issue with scrollLeft!
+         * Using setTimeout fix for now.
+         */
+        setTimeout(() => {
+          this.overflowContainerRef.nativeElement.scrollLeft = scrollLeft
           this._cdr.markForCheck()
+        })
 
-          /*
-           * TODO: Research issue with scrollLeft!
-           * Using setTimeout fix for now.
-           */
-          setTimeout(() => {
-            this.overflowContainerRef.nativeElement.scrollLeft = left
-            this._cdr.markForCheck()
-          })
-
-          setTimeout(() => {
-            // Emit zoom container rect
-            this.zoomContainerRect.next(getZoomContainerRect())
-          })
-        }))
+        setTimeout(() => {
+          // Emit zoom container rect
+          this.zoomContainerRect.next(getZoomContainerRect())
+        })
+        this._cdr.markForCheck()
+      }))
   }
 
   private emitSelectAnnotation({track, annotation, type}: EmitAnnotationSelectionArgs) {
