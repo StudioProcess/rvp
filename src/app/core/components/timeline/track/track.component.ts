@@ -55,8 +55,6 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   @Input() readonly containerRect: Observable<ClientRect>
 
   form: FormGroup|null = null
-  zoom: number
-  scrollLeft: number
 
   @Output() readonly onUpdateTrack = new EventEmitter<project.UpdateTrackPayload>()
   @Output() readonly onUpdateAnnotation = new EventEmitter<project.UpdateAnnotationPayload>()
