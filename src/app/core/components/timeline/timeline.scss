@@ -10,7 +10,6 @@
     height: $handlebar-height;
     background-color: $process-light-gray;
     margin-top: $scrollbar-margintop;
-
     rv-handlebar {
       background-color: $process-gray3;
 
@@ -37,10 +36,22 @@
   }
 
   .timeline-wrapper {
-    position: relative;
     padding-top: $playhead-height;
-    .timeline {
-      position: relative;
+    position: relative;
+    overflow: hidden;
+
+    .playhead-wrapper {
+      padding-top: $playhead-height;
+      position: absolute;
+      top: 0px;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+
+      .playhead-zoom {
+        position: relative;
+        height: 100%;
+      }
     }
   }
 

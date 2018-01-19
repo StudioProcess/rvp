@@ -2,10 +2,10 @@ import {
   Component, OnInit, OnDestroy,
   ChangeDetectionStrategy, ChangeDetectorRef,
   Renderer2, ViewChild, ElementRef,
-  AfterViewInit/*, Inject*/
+  AfterViewInit, Inject
 } from '@angular/core'
 
-// import {DOCUMENT} from '@angular/platform-browser'
+import {DOCUMENT} from '@angular/platform-browser'
 
 import {Store} from '@ngrx/store'
 
@@ -27,7 +27,7 @@ import 'rxjs/add/operator/filter'
 import * as fromProject from '../../../persistence/reducers'
 import * as fromPlayer from '../../../player/reducers'
 import * as project from '../../../persistence/actions/project'
-// import * as player from '../../../player/actions'
+import * as player from '../../../player/actions'
 import {Timeline, Track, Annotation} from '../../../persistence/model'
 import {fromEventPattern} from '../../../lib/observable'
 import {HandlebarComponent} from '../../components/timeline/handlebar/handlebar.component'
@@ -48,6 +48,7 @@ export interface ScrollSettings {
 export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   timeline: Record<Timeline>
   selectedAnnotations: Set<Record<Annotation>>
+  pZoom = 0
   playerPos = 0
   playerCurrentTime = 0
   scrollbarLeft = 0
@@ -60,6 +61,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('scrollbar') private readonly scrollbarRef: ElementRef
   @ViewChild('handlebar') private readonly handlebarRef: HandlebarComponent
   @ViewChild('timelineWrapper') private readonly timelineWrapperRef: ElementRef
+  @ViewChild('playheadOverflow') private readonly playheadOverflowRef: ElementRef
   private readonly _subs: Subscription[] = []
   private readonly timelineSubj = this._store.select(fromProject.getProjectTimeline)
     .filter(timeline => timeline !== null)
@@ -68,8 +70,8 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private readonly _renderer: Renderer2,
     private readonly _cdr: ChangeDetectorRef,
-    private readonly _store: Store<fromProject.State>/*,
-  @Inject(DOCUMENT) private readonly _document: any*/) {}
+    private readonly _store: Store<fromProject.State>,
+    @Inject(DOCUMENT) private readonly _document: any) {}
 
   ngOnInit() {
     this._subs.push(
@@ -148,49 +150,61 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
         this.scrollSettings.next({zoom, scrollLeft: left})
       }))
 
-    // const isLeftBtn = (ev: MouseEvent) => ev.button === 0
+    this._subs.push(
+      this.scrollSettings.subscribe(({zoom, scrollLeft}) => {
+        this.pZoom = zoom
+        this.playheadOverflowRef.nativeElement.scrollLeft = scrollLeft
 
-    // const mousemove: Observable<MouseEvent> = Observable.fromEvent(this._document, 'mousemove')
-    // const mouseup: Observable<MouseEvent> = Observable.fromEvent(this._document, 'mouseup')
-    // const placeHeadMd: Observable<MouseEvent> = Observable.fromEvent(this.timelineWrapperRef.nativeElement, 'mousedown').filter(isLeftBtn)
+        setTimeout(() => {
+          this.playheadOverflowRef.nativeElement.scrollLeft = scrollLeft
+          this._cdr.markForCheck()
+        })
+        this._cdr.markForCheck()
+      }))
 
-    // const zoomRectWidth = Observable.combineLatest(
-    //   this.timelineWrapperRect, this.scrollSettings,
-    //   (rect, {zoom}) => {
-    //     return rect.width*zoom
-    //   })
+    const isLeftBtn = (ev: MouseEvent) => ev.button === 0
 
-    // this._subs.push(placeHeadMd
-    //   .switchMap(md => {
-    //     const init = {clientX: md.clientX}
-    //     return Observable.concat(
-    //       Observable.of(init),
-    //       mousemove.map(mmEvent => {
-    //         const {clientX} = mmEvent
-    //         return {clientX}
-    //       }).takeUntil(mouseup))
-    //   })
-    //   .withLatestFrom(zoomRectWidth, (ev: MouseEvent, zoomWidth) => {
-    //     const localX = ev.clientX - zoomWidth
-    //     return localX / zoomWidth
-    //   })
-    //   .map(progress => {
-    //     return Math.max(0, Math.min(progress, 1))
-    //   })
-    //   .distinctUntilChanged()
-    //   .withLatestFrom(this.timelineSubj, (progress, tl) => {
-    //     const totalTime = tl!.get('duration', null)
-    //     return {
-    //       progress,
-    //       currentTime: progress*totalTime
-    //     }
-    //   })
-    //   .subscribe(({progress, currentTime}) => {
-    //     this.playerPos = progress
-    //     this.playerCurrentTime = currentTime
-    //     this._cdr.markForCheck()
-    //     this._store.dispatch(new player.PlayerRequestCurrentTime({currentTime}))
-    //   }))
+    const mousemove: Observable<MouseEvent> = Observable.fromEvent(this._document, 'mousemove')
+    const mouseup: Observable<MouseEvent> = Observable.fromEvent(this._document, 'mouseup')
+    const placeHeadMd: Observable<MouseEvent> = Observable.fromEvent(this.timelineWrapperRef.nativeElement, 'mousedown').filter(isLeftBtn)
+
+    const zoomContainer = Observable.combineLatest(
+      this.timelineWrapperRect, this.scrollSettings,
+      (rect, {scrollLeft}) => {
+        return {x: rect.left+scrollLeft, y: rect.top, width: rect.width}
+      })
+
+    this._subs.push(placeHeadMd
+      .switchMap(md => {
+        const init = {clientX: md.clientX}
+        return Observable.concat(
+          Observable.of(init),
+          mousemove.map(mmEvent => {
+            const {clientX} = mmEvent
+            return {clientX}
+          }).takeUntil(mouseup))
+      })
+      .withLatestFrom(zoomContainer, (ev: MouseEvent, {x, width}) => {
+        const localX = ev.clientX - x
+        return localX / width
+      })
+      .map(progress => {
+        return Math.max(0, Math.min(progress, 1))
+      })
+      .distinctUntilChanged()
+      .withLatestFrom(this.timelineSubj, (progress, tl) => {
+        const totalTime = tl!.get('duration', null)
+        return {
+          progress,
+          currentTime: progress*totalTime
+        }
+      })
+      .subscribe(({progress, currentTime}) => {
+        this.playerPos = progress
+        this.playerCurrentTime = currentTime
+        this._cdr.markForCheck()
+        this._store.dispatch(new player.PlayerRequestCurrentTime({currentTime}))
+      }))
   }
 
   trackByFunc(_: number, track: Record<Track>) {
