@@ -110,10 +110,6 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       return this.scrollbarRef.nativeElement.getBoundingClientRect()
     }
 
-    // const getOverflowContainerRect = () => {
-    //   return this.timelineOverflowRef.nativeElement.getBoundingClientRect()
-    // }
-
     const winResize = fromEventPattern(this._renderer, window, 'resize')
 
     this._subs.push(

@@ -2,7 +2,7 @@ import {
   Component, Input, ChangeDetectionStrategy,
   OnInit, OnDestroy, EventEmitter, Output,
   OnChanges, SimpleChanges, ViewChild,
-  ElementRef
+  ElementRef, ChangeDetectorRef
 } from '@angular/core'
 
 import {FormGroup, FormBuilder, Validators} from '@angular/forms'
@@ -57,7 +57,9 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   @Input() readonly scrollSettings: Observable<ScrollSettings>
 
   form: FormGroup|null = null
+  zoom: number
   readonly zoomContainerRect = new ReplaySubject<ClientRect>(1)
+  readonly overflowContainerRect = new ReplaySubject<ClientRect>(1)
 
   @Output() readonly onUpdateTrack = new EventEmitter<project.UpdateTrackPayload>()
   @Output() readonly onUpdateAnnotation = new EventEmitter<project.UpdateAnnotationPayload>()
@@ -74,11 +76,13 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   private readonly annotationMdSubj = new Subject<{ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number}>()
 
   @ViewChild('title') private readonly titleInput: ElementRef
+  @ViewChild('trackOverflow') private readonly overflowContainerRef: ElementRef
   @ViewChild('zoomContainer') private readonly zoomContainerRef: ElementRef
 
   constructor(
     private readonly _elem: ElementRef,
-    private readonly _fb: FormBuilder) {}
+    private readonly _fb: FormBuilder,
+    private readonly _cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.form = this._fb.group({
@@ -214,6 +218,10 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngAfterViewInit() {
+    const getOverflowContainerRect = () => {
+      return this.overflowContainerRef.nativeElement.getBoundingClientRect()
+    }
+
     const getZoomContainerRect = () => {
       return this.zoomContainerRef.nativeElement.getBoundingClientRect()
     }
@@ -223,7 +231,38 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
     this._subs.push(
       winResize.startWith(null).subscribe(() => {
         this.zoomContainerRect.next(getZoomContainerRect())
+        this.overflowContainerRect.next(getOverflowContainerRect())
       }))
+
+    this._subs.push(
+      Observable.combineLatest(
+        this.overflowContainerRect, this.scrollSettings,
+        (rect, {zoom, scrollLeft}) => {
+          const zoomContainerWidth = zoom*rect.width
+          const maxLeft = zoomContainerWidth-rect.width
+          return {zoom, left: Math.min(zoomContainerWidth*scrollLeft/100, maxLeft)}
+        }).distinctUntilChanged((prev, cur) => {
+          return prev.left === cur.left && prev.zoom === cur.zoom
+        })
+        .subscribe(({zoom, left}) => {
+          this.zoom = zoom
+          this.overflowContainerRef.nativeElement.scrollLeft = left
+          this._cdr.markForCheck()
+
+          /*
+           * TODO: Research issue with scrollLeft!
+           * Using setTimeout fix for now.
+           */
+          setTimeout(() => {
+            this.overflowContainerRef.nativeElement.scrollLeft = left
+            this._cdr.markForCheck()
+          })
+
+          setTimeout(() => {
+            // Emit zoom container rect
+            this.zoomContainerRect.next(getZoomContainerRect())
+          })
+        }))
   }
 
   private emitSelectAnnotation({track, annotation, type}: EmitAnnotationSelectionArgs) {
