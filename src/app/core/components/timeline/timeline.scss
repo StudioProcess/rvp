@@ -37,7 +37,11 @@
   }
 
   .timeline-wrapper {
+    position: relative;
     padding-top: $playhead-height;
+    .timeline {
+      position: relative;
+    }
   }
 
   .add-track {
