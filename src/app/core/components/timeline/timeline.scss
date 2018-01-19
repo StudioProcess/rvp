@@ -41,6 +41,7 @@
     overflow: hidden;
 
     .playhead-wrapper {
+      pointer-events: none;
       padding-top: $playhead-height;
       position: absolute;
       top: 0px;
