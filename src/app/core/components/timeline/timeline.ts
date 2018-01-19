@@ -57,14 +57,10 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   readonly scrollbarCaption = _SCROLLBAR_CAPTION_
   readonly scrollbarRect = new ReplaySubject<ClientRect>(1)
   readonly scrollSettings = new ReplaySubject<ScrollSettings>(1)
-  // readonly overflowContainerRect = new ReplaySubject<ClientRect>(1)
-  // readonly zoomContainerRect = new ReplaySubject<ClientRect>(1)
 
   @ViewChild('scrollbar') private readonly scrollbarRef: ElementRef
   @ViewChild('handlebar') private readonly handlebarRef: HandlebarComponent
   // @ViewChild('timelineWrapper') private readonly timelineWrapperRef: ElementRef
-  // @ViewChild('timelineOverflow') private readonly timelineOverflowRef: ElementRef
-  // @ViewChild('zoomContainer') private readonly zoomContainerRef: ElementRef
   private readonly _subs: Subscription[] = []
   private readonly timelineSubj = this._store.select(fromProject.getProjectTimeline)
     .filter(timeline => timeline !== null)
@@ -137,34 +133,8 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     this._subs.push(
       winResize.startWith(null).subscribe(() => {
         this.scrollbarRect.next(getScrollbarRect())
-        // this.overflowContainerRect.next(getOverflowContainerRect())
-        // this.zoomContainerRect.next(getZoomContainerRect())
       }))
 
-    // this._subs.push(
-    //   Observable.combineLatest(
-    //     this.overflowContainerRect, scrollSetting,
-    //     (rect, {zoom, scrollLeft}) => {
-    //       const zoomContainerWidth = zoom * rect.width
-    //       const maxLeft = zoomContainerWidth-rect.width
-    //       return {zoom, left: Math.min(zoomContainerWidth*scrollLeft/100, maxLeft)}
-    //     }).distinctUntilChanged((prev, cur) => {
-    //       return prev.left === cur.left && prev.zoom === cur.zoom
-    //     }).subscribe(({zoom, left}) => {
-    //       this.zoom = zoom
-    //       this.timelineOverflowRef.nativeElement.scrollLeft = left
-    //       this._cdr.markForCheck()
-
-    //       setTimeout(() => {
-    //         this.timelineOverflowRef.nativeElement.scrollLeft = left
-    //         this._cdr.markForCheck()
-    //       })
-
-    //       setTimeout(() => {
-    //         // Emit zoom container rect
-    //         this.zoomContainerRect.next(getZoomContainerRect())
-    //       })
-    //     }))
 
     // const isLeftBtn = (ev: MouseEvent) => ev.button === 0
 
