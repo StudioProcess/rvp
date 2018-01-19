@@ -170,8 +170,8 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
 
     const zoomContainer = Observable.combineLatest(
       this.timelineWrapperRect, this.scrollSettings,
-      (rect, {scrollLeft}) => {
-        return {x: rect.left+scrollLeft, y: rect.top, width: rect.width}
+      (rect, {zoom, scrollLeft}) => {
+        return {x: rect.left-scrollLeft, width: zoom*rect.width}
       })
 
     this._subs.push(placeHeadMd
@@ -180,8 +180,8 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
         return Observable.concat(
           Observable.of(init),
           mousemove.map(mmEvent => {
-            const {clientX} = mmEvent
-            return {clientX}
+            const {clientX, clientY} = mmEvent
+            return {clientX, clientY}
           }).takeUntil(mouseup))
       })
       .withLatestFrom(zoomContainer, (ev: MouseEvent, {x, width}) => {
