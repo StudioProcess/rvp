@@ -24,7 +24,7 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ## Production Build
 
-Run `ng build:prod`.
+Run `npm run build:prod`.
 
 ## Further help
 
