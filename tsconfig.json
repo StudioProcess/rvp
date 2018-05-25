@@ -9,6 +9,7 @@
     "experimentalDecorators": true,
     "strict": true,
     "strictFunctionTypes": false,
+    "strictPropertyInitialization": false,
     "noUnusedLocals": true,
     "noUnusedParameters": false,
     "pretty": true,
