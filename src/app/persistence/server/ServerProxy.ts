@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core'
+import {Injectable, OnDestroy} from '@angular/core'
 
 import {Store} from '@ngrx/store'
 import {Effect, Actions} from '@ngrx/effects'
@@ -29,7 +29,7 @@ import {loadZip} from '../zip'
 import {ProjectSnapshotRecordFactory} from '../model'
 
 @Injectable()
-export class ServerProxy {
+export class ServerProxy implements OnDestroy {
   private readonly _subs: Subscription[] = []
 
   constructor(

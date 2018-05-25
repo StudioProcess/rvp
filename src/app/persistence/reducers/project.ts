@@ -73,10 +73,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
           timeline: TimelineRecordFactory({
             ...timeline,
             tracks: List(timeline.tracks.map((track: any) => {
-              const {title} = track.fields
+              const {title: trackTitle} = track.fields
               return new TrackRecordFactory({
                 ...track,
-                fields: TrackFieldsRecordFactory({title}),
+                fields: TrackFieldsRecordFactory({title: trackTitle}),
                 annotationStacks: List(track.annotationStacks.map((annotations: any) => {
                   return List(annotations.map((annotation: any) => {
                     const {title, description} = annotation.fields
@@ -137,7 +137,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
 
       const annotationId = annotation.get('id', null)!
       const singleSel: Record<AnnotationSelection> = state.getIn(['selection', 'annotation', 'selected'])
-      let inSelection = singleSel !== null && singleSel.getIn(['annotation', 'id']) === annotationId ? singleSel : null
+      const inSelection = singleSel !== null && singleSel.getIn(['annotation', 'id']) === annotationId ? singleSel : null
 
       let updatedState = state
       if(inSelection) {
@@ -196,7 +196,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       if(!allSelections.isEmpty()) {
         const fs = allSelections.first()!
         const trackWithSelections = fs.get('track', null)!
-        if(track.get('id',null) === trackWithSelections.get('id', null)) {
+        if(track.get('id', null) === trackWithSelections.get('id', null)) {
           return state.setIn(['selection', 'annotation', 'range'], Set())
             .setIn(['selection', 'annotation', 'pick'], Set())
             .setIn(['selection', 'annotation', 'selected'], null)
@@ -214,7 +214,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
         mutableTrack.set('id', nextTrackId(timeline))
         const oldTitle = track.getIn(['fields', 'title'])
         mutableTrack.setIn(['fields', 'title'], oldTitle !== '' ? `${oldTitle} Copy` : '')
-        let annotationCounter = 0;
+        let annotationCounter = 0
         mutableTrack.set('annotationStacks', mutableTrack.get('annotationStacks').map((stack: any) => {
           return stack.map((annotation: any) => {
             return annotation.set('id', nextAnnotationId(timeline)+(annotationCounter++))
@@ -297,8 +297,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
             return sel.getIn(['track', 'id']) === track.get('id', null)
           }
 
-          const rangeSelections: Set<Record<AnnotationSelection>> = state.getIn(['selection', 'annotation', 'range']).filter(filterByTrackFunc)
-          const pickSelections: Set<Record<AnnotationSelection>> = state.getIn(['selection', 'annotation', 'pick']).filter(filterByTrackFunc)
+          const rangeSelections: Set<Record<AnnotationSelection>> =
+            state.getIn(['selection', 'annotation', 'range']).filter(filterByTrackFunc)
+          const pickSelections: Set<Record<AnnotationSelection>> =
+            state.getIn(['selection', 'annotation', 'pick']).filter(filterByTrackFunc)
           const peekSelected: Record<AnnotationSelection>|null = state.getIn(['selection', 'annotation', 'selected'])
           const isAlreadyPicked = rangeSelections.has(selection) || pickSelections.has(selection)
 

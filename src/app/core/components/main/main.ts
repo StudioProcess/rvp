@@ -1,18 +1,19 @@
 import {
   Component, ChangeDetectionStrategy, OnInit,
-  OnDestroy, AfterViewInit, Renderer2,
-  //ChangeDetectorRef
+  OnDestroy, AfterViewInit,
+  // ChangeDetectorRef
 } from '@angular/core'
 
 import {Store} from '@ngrx/store'
 
+import {Observable} from 'rxjs/Observable'
 import {Subscription} from 'rxjs/Subscription'
-import 'rxjs/add/operator/withLatestFrom'
+import 'rxjs/add/observable/fromEvent'
+import 'rxjs/add/operator/filter'
 
 import * as fromRoot from '../../reducers'
 import * as project from '../../../persistence/actions/project'
 import * as player from '../../../player/actions'
-import {fromEventPattern} from '../../../lib/observable'
 import {rndColor} from '../../../lib/color'
 
 declare var $: any
@@ -27,15 +28,14 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   private readonly _subs: Subscription[] = []
 
   constructor(
-    //private readonly _cdr: ChangeDetectorRef,
-    private readonly _rootStore: Store<fromRoot.State>,
-    private readonly _renderer: Renderer2) {}
+    // private readonly _cdr: ChangeDetectorRef,
+    private readonly _rootStore: Store<fromRoot.State>) {}
 
   ngOnInit() {
     this._rootStore.dispatch(new project.ProjectLoad())
 
-    const windowMousedown = fromEventPattern(this._renderer, window, 'mousedown')
-    const windowKeydown = fromEventPattern(this._renderer, window, 'keydown')
+    const windowMousedown: Observable<MouseEvent> = Observable.fromEvent(window, 'mousedown')
+    const windowKeydown: Observable<KeyboardEvent> = Observable.fromEvent(window,  'keydown')
 
     const removeAnnotationHotkey = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 8)
     const togglePlayingHotkey = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 32)
@@ -83,7 +83,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
     this._subs.push(
       removeAnnotationHotkey
-        .subscribe(([_, sel]) => {
+        .subscribe(() => {
           this._rootStore.dispatch(new project.ProjectDeleteSelectedAnnotations())
         }))
 
@@ -124,13 +124,13 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   closeProjectModal() {
-    const modal = $('#settings-reveal') as any;
+    const modal = $('#settings-reveal') as any
     // $('body').removeClass('is-reveal-open')
-    modal.foundation('close');
+    modal.foundation('close')
   }
 
   ngAfterViewInit() {
-    $(document).foundation();
+    $(document).foundation()
   }
 
   ngOnDestroy() {

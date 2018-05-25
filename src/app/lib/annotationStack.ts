@@ -88,9 +88,9 @@ export function embedAnnotations(annotationStacks: List<List<Record<Annotation>>
   if(annotationStackIndex < 0 || annotationStackIndex >= annotationStacks.size) {
     return annotationStacks
   }
-  const stack = annotationStacks.get(annotationStackIndex)!
+  const selStack = annotationStacks.get(annotationStackIndex)!
 
-  const withRemovals = stack.filter(a => {
+  const withRemovals = selStack.filter(a => {
     return removeAnnotations.find(annotation => {
       return annotation.get('id', null) === a.get('id', null)
     }) === undefined
@@ -128,7 +128,7 @@ export function embedAnnotations(annotationStacks: List<List<Record<Annotation>>
     const stacksFitted = fitOptimized(stackInsertions, List(collisions.map(({annotation}) => annotation)))
     const maxSize = Math.max(stackInsertions.size, stacksFitted.size)
 
-    let tmp: List<List<Record<Annotation>>> = List()
+    const tmp: List<List<Record<Annotation>>> = List()
     const ret = tmp.withMutations(mRet => {
       for(let i = 0; i < maxSize; i++) {
         if(i < stackInsertions.size && i < stacksFitted.size) {
@@ -147,14 +147,14 @@ export function embedAnnotations(annotationStacks: List<List<Record<Annotation>>
 }
 
 function fitOptimized(annotationStacks: List<List<Record<Annotation>>>, annotations: List<Record<Annotation>>) {
-  let fittedStacks: Array<List<Record<Annotation>>> = []
+  const fittedStacks: Array<List<Record<Annotation>>> = []
   let rest = annotations
   let stackCounter = 0
   while(rest.size > 0) {
     const stack = stackCounter < annotationStacks.size ? annotationStacks.get(stackCounter)! : List([])
     let updatedStack = stack
     const collisions = []
-    let justFitted = []
+    const justFitted = []
     for(let j = 0; j < rest.size; j++) {
       const annotation = rest.get(j)!
       // TODO: instead of concat+sort+binarysearch, just insert sorted
@@ -172,7 +172,7 @@ function fitOptimized(annotationStacks: List<List<Record<Annotation>>>, annotati
     }
     fittedStacks.push(List(justFitted.sort(recordSort)))
     rest = List(collisions)
-    stackCounter++;
+    stackCounter++
   }
 
   return List(fittedStacks)

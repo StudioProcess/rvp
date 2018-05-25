@@ -1,7 +1,7 @@
 import {
   Component, OnInit, OnDestroy,
   ChangeDetectionStrategy, ChangeDetectorRef,
-  Renderer2, ViewChild, ElementRef,
+  ViewChild, ElementRef,
   AfterViewInit, Inject
 } from '@angular/core'
 
@@ -29,7 +29,6 @@ import * as fromPlayer from '../../../player/reducers'
 import * as project from '../../../persistence/actions/project'
 import * as player from '../../../player/actions'
 import {Timeline, Track, Annotation} from '../../../persistence/model'
-import {fromEventPattern} from '../../../lib/observable'
 import {HandlebarComponent} from '../../components/timeline/handlebar/handlebar.component'
 import {_SCROLLBAR_CAPTION_} from '../../../config/timeline/scrollbar'
 import {rndColor} from '../../../lib/color'
@@ -68,7 +67,6 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     .share()
 
   constructor(
-    private readonly _renderer: Renderer2,
     private readonly _cdr: ChangeDetectorRef,
     private readonly _store: Store<fromProject.State>,
     @Inject(DOCUMENT) private readonly _document: any) {}
@@ -130,7 +128,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
         return {zoom, scrollLeft: hb.left}
       })
 
-    const winResize = fromEventPattern(this._renderer, window, 'resize')
+    const winResize = Observable.fromEvent(window, 'resize')
 
     this._subs.push(
       winResize.startWith(null).subscribe(() => {

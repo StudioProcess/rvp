@@ -13,7 +13,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 import {Subject} from 'rxjs/Subject'
 import {Subscription} from 'rxjs/Subscription'
 import {JQueryStyleEventEmitter} from 'rxjs/observable/FromEventObservable'
-import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame';
+import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame'
 import 'rxjs/add/observable/fromEvent'
 import 'rxjs/add/operator/combineLatest'
 import 'rxjs/add/operator/withLatestFrom'
@@ -27,7 +27,7 @@ import {_PLAYER_TIMEUPDATE_DEBOUNCE_} from '../config/player'
 // https://github.com/videojs/video.js/blob/master/src/js/player.js
 @Injectable()
 export class Player implements OnDestroy {
-  private readonly _subs: Subscription[] = [];
+  private readonly _subs: Subscription[] = []
 
   constructor(
     private readonly _actions: Actions,
@@ -46,7 +46,7 @@ export class Player implements OnDestroy {
               playerSubj.next(playerInst)
             })
           },
-          error: err =>{
+          error: err => {
             this._store.dispatch(new player.PlayerCreateError(err))
           }
         }))

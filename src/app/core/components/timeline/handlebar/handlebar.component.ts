@@ -1,5 +1,5 @@
 import {
-  Component, AfterViewInit, Renderer2,
+  Component, AfterViewInit,
   ViewChild, ElementRef, Inject,
   ChangeDetectionStrategy, OnInit,
   OnDestroy, Input, HostBinding,
@@ -20,8 +20,6 @@ import 'rxjs/add/operator/switchMap'
 import 'rxjs/add/operator/distinctUntilChanged'
 import 'rxjs/add/operator/distinctUntilKeyChanged'
 import 'rxjs/add/operator/filter'
-
-import {fromEventPattern} from '../../../../lib/observable'
 
 import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 
@@ -69,7 +67,6 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   private isDragging = false
 
   constructor(
-    private readonly _renderer: Renderer2,
     private readonly _cdr: ChangeDetectorRef,
     @Inject(DOCUMENT) private readonly _document: any) {}
 
@@ -97,17 +94,23 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   ngAfterViewInit() {
     const isLeftBtn = (ev: MouseEvent) => ev.button === 0
 
-    const mousemove = fromEventPattern(this._renderer, this._document, 'mousemove')
-    const mouseup = fromEventPattern(this._renderer, this._document, 'mouseup')
-    const leftMouseDown = fromEventPattern(this._renderer, this.leftHandle.nativeElement, 'mousedown').filter(isLeftBtn)
-    const rightMouseDown = fromEventPattern(this._renderer, this.rightHandle.nativeElement, 'mousedown').filter(isLeftBtn)
-    const middleMouseDown = fromEventPattern(this._renderer, this.middleHandle.nativeElement, 'mousedown').filter(isLeftBtn)
+    const mousemove = Observable.fromEvent(this._document, 'mousemove')
+    const mouseup = Observable.fromEvent(this._document, 'mouseup')
+    const leftMouseDown = Observable.fromEvent(this.leftHandle.nativeElement, 'mousedown').filter(isLeftBtn)
+    const rightMouseDown = Observable.fromEvent(this.rightHandle.nativeElement, 'mousedown').filter(isLeftBtn)
+    const middleMouseDown = Observable.fromEvent(this.middleHandle.nativeElement, 'mousedown').filter(isLeftBtn)
 
     const clientPosWhileMouseMove = (args: any) => {
       return mousemove.map((mmEvent: MouseEvent) => {
         const {clientX, clientY} = mmEvent
         return {clientX, clientY, payload: args}
       }).takeUntil(mouseup)
+    }
+
+    const coordTransform = (clientX: number, hRect: ClientRect) => (clientX-hRect.left)
+    const mapToPercentage = (localX: number, hRect: ClientRect) => (localX/hRect.width*100)
+    const transformedToPercentage = (clientX: number, hRect: ClientRect) => {
+      return mapToPercentage(coordTransform(clientX, hRect), hRect)
     }
 
     const leftClientPos = leftMouseDown.switchMap(clientPosWhileMouseMove)
@@ -124,15 +127,9 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
       })
       .switchMap(clientPosWhileMouseMove)
 
-    const coordTransform = (clientX: number, hRect: ClientRect) => (clientX-hRect.left)
-    const mapToPercentage = (localX: number, hRect: ClientRect) => (localX/hRect.width*100)
-    const transformedToPercentage = (clientX: number, hRect: ClientRect) => {
-      return mapToPercentage(coordTransform(clientX, hRect), hRect)
-    }
-
     const minMax = (x: number) => Math.min(Math.max(0, x), 100)
 
-    const left = leftClientPos
+    const leftPos = leftClientPos
       .map(({clientX}) => clientX)
       .withLatestFrom(this.containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect)))
       .distinctUntilChanged()
@@ -145,7 +142,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
         return {left: newLeft, width: newWidth}
       })
 
-    const right = rightClientPos
+    const rightPos = rightClientPos
       .map(({clientX}) => clientX)
       .withLatestFrom(this.containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect)))
       .distinctUntilChanged()
@@ -154,7 +151,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
         return {left: prevHb.left, width: newRight-prevHb.left}
       })
 
-    const middle = middleClientPos
+    const middlePos = middleClientPos
       .map(({clientX, payload: {distLeft, distRight, hRect}}) => {
         return {
           distLeft, distRight,
@@ -178,7 +175,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
     }))
 
     this._subs.push(
-      Observable.merge(left, middle, right)
+      Observable.merge(leftPos, middlePos, rightPos)
         .subscribe(({left, width}) => {
           this.internLeft = left
           this.internWidth = width

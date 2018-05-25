@@ -9,7 +9,7 @@ import {Record} from 'immutable'
 
 import {Observable} from 'rxjs/Observable'
 import {Subscription} from 'rxjs/Subscription'
-import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame';
+import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame'
 import 'rxjs/add/observable/of'
 import 'rxjs/add/operator/filter'
 import 'rxjs/add/operator/startWith'
@@ -38,7 +38,7 @@ import {
   styles: [`:host {display: block;}`]
 })
 export class PlayerContainer implements AfterViewInit, OnDestroy {
-  @ViewChild('video') private readonly _videoElem: ElementRef;
+  @ViewChild('video') private readonly _videoElem: ElementRef
 
   private readonly _subs: Subscription[] = []
 
