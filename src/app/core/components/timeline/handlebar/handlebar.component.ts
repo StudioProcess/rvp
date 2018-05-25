@@ -1,5 +1,5 @@
 import {
-  Component, AfterViewInit, Renderer2,
+  Component, AfterViewInit,
   ViewChild, ElementRef, Inject,
   ChangeDetectionStrategy, OnInit,
   OnDestroy, Input, HostBinding,
@@ -67,7 +67,6 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   private isDragging = false
 
   constructor(
-    private readonly _renderer: Renderer2,
     private readonly _cdr: ChangeDetectorRef,
     @Inject(DOCUMENT) private readonly _document: any) {}
 
