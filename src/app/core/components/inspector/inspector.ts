@@ -7,7 +7,7 @@ import {
 import {List, Record, Set} from 'immutable'
 
 import {Subscription} from 'rxjs'
-import {filter, withLatestFrom} from 'rxjs/operators'
+import {filter, withLatestFrom, map} from 'rxjs/operators'
 
 import {Store} from '@ngrx/store'
 
@@ -45,7 +45,7 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren(InspectorEntryComponent) private readonly entries: QueryList<InspectorEntryComponent>
   private readonly _subs: Subscription[] = []
   annotations: List<Record<AnnotationColorMap>>
-  height = this._playerStore.select(fromPlayer.getDimensions).map(({height}) => height)
+  height = this._playerStore.select(fromPlayer.getDimensions).pipe(map(({height}) => height))
   selectedAnnotations: Set<Record<Annotation>>
 
   constructor(
