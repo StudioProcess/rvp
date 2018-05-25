@@ -28,8 +28,8 @@ export class BlobVideo {
 
 export class UrlVideo {
   type = VIDEO_TYPE_URL
-  source: VideoUrlSource|null
-  url: URL|null
+  source: VideoUrlSource|null=null
+  url: URL|null=null
 }
 
 export interface ProjectMeta {
