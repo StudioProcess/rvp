@@ -21,8 +21,6 @@ import 'rxjs/add/operator/distinctUntilChanged'
 import 'rxjs/add/operator/distinctUntilKeyChanged'
 import 'rxjs/add/operator/filter'
 
-import {fromEventPattern} from '../../../../lib/observable'
-
 import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 
 export interface Handlebar {
@@ -97,11 +95,11 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   ngAfterViewInit() {
     const isLeftBtn = (ev: MouseEvent) => ev.button === 0
 
-    const mousemove = fromEventPattern(this._renderer, this._document, 'mousemove')
-    const mouseup = fromEventPattern(this._renderer, this._document, 'mouseup')
-    const leftMouseDown = fromEventPattern(this._renderer, this.leftHandle.nativeElement, 'mousedown').filter(isLeftBtn)
-    const rightMouseDown = fromEventPattern(this._renderer, this.rightHandle.nativeElement, 'mousedown').filter(isLeftBtn)
-    const middleMouseDown = fromEventPattern(this._renderer, this.middleHandle.nativeElement, 'mousedown').filter(isLeftBtn)
+    const mousemove = Observable.fromEvent(this._document, 'mousemove')
+    const mouseup = Observable.fromEvent(this._document, 'mouseup')
+    const leftMouseDown = Observable.fromEvent(this.leftHandle.nativeElement, 'mousedown').filter(isLeftBtn)
+    const rightMouseDown = Observable.fromEvent(this.rightHandle.nativeElement, 'mousedown').filter(isLeftBtn)
+    const middleMouseDown = Observable.fromEvent(this.middleHandle.nativeElement, 'mousedown').filter(isLeftBtn)
 
     const clientPosWhileMouseMove = (args: any) => {
       return mousemove.map((mmEvent: MouseEvent) => {
