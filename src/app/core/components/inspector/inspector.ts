@@ -6,8 +6,8 @@ import {
 
 import {List, Record, Set} from 'immutable'
 
-import {Subscription} from 'rxjs/Subscription'
-import 'rxjs/add/operator/withLatestFrom'
+import {Subscription} from 'rxjs'
+import {filter, withLatestFrom} from 'rxjs/operators'
 
 import {Store} from '@ngrx/store'
 
@@ -78,14 +78,15 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
 
     this._subs.push(
       this._store.select(fromProject.getProjectFocusAnnotationSelection)
-        .filter(annotationSelection => {
-          if(annotationSelection !== null) {
-            return annotationSelection.get('source', null) === SelectionSource.Timeline
-          } else {
-            return false
-          }
-        })
-        .withLatestFrom(this.entries.changes)
+        .pipe(
+          filter(annotationSelection => {
+            if(annotationSelection !== null) {
+              return annotationSelection.get('source', null) === SelectionSource.Timeline
+            } else {
+              return false
+            }
+          }),
+          withLatestFrom(this.entries.changes))
         .subscribe(([annotationSelection, currentEntries]: annotationSelectionWithEntries) => {
           const selectedId = annotationSelection.getIn(['annotation', 'id'])
 
