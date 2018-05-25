@@ -83,7 +83,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
     this._subs.push(
       removeAnnotationHotkey
-        .subscribe(([_, sel]) => {
+        .subscribe(() => {
           this._rootStore.dispatch(new project.ProjectDeleteSelectedAnnotations())
         }))
 
