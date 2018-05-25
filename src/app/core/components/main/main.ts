@@ -6,10 +6,8 @@ import {
 
 import {Store} from '@ngrx/store'
 
-import {Observable} from 'rxjs/Observable'
-import {Subscription} from 'rxjs/Subscription'
-import 'rxjs/add/observable/fromEvent'
-import 'rxjs/add/operator/filter'
+import {Observable, Subscription, fromEvent} from 'rxjs'
+import {filter} from 'rxjs/operators'
 
 import * as fromRoot from '../../reducers'
 import * as project from '../../../persistence/actions/project'
@@ -34,28 +32,28 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     this._rootStore.dispatch(new project.ProjectLoad())
 
-    const windowMousedown: Observable<MouseEvent> = Observable.fromEvent(window, 'mousedown')
-    const windowKeydown: Observable<KeyboardEvent> = Observable.fromEvent(window,  'keydown')
+    const windowMousedown = fromEvent(window, 'mousedown') as  Observable<MouseEvent>
+    const windowKeydown = fromEvent(window,  'keydown') as Observable<KeyboardEvent>
 
-    const removeAnnotationHotkey = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 8)
-    const togglePlayingHotkey = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 32)
-    const addTrackHotkey = windowKeydown.filter((e: KeyboardEvent) => {
+    const removeAnnotationHotkey = windowKeydown.pipe(filter((e: KeyboardEvent) => e.keyCode === 8))
+    const togglePlayingHotkey = windowKeydown.pipe(filter((e: KeyboardEvent) => e.keyCode === 32))
+    const addTrackHotkey = windowKeydown.pipe(filter((e: KeyboardEvent) => {
       return e.keyCode === 187 || // +
         e.keyCode === 221 || // don't know
         e.keyCode === 171    // + (firefox)
-    })
+    }))
 
-    const undoHotkey = windowKeydown.filter((e: KeyboardEvent) => {
+    const undoHotkey = windowKeydown.pipe(filter((e: KeyboardEvent) => {
       return e.keyCode === 90 && e.metaKey && !e.shiftKey // cmd z (make sure shiftKey is not pressed)
-    })
+    }))
 
-    const redoHotkey = windowKeydown.filter((e: KeyboardEvent) => {
+    const redoHotkey = windowKeydown.pipe(filter((e: KeyboardEvent) => {
       return e.keyCode === 90 && e.metaKey && e.shiftKey // shift cmd z
-    })
+    }))
 
-    const copyToClipboardHotkey = windowKeydown.filter((e: KeyboardEvent) => {
+    const copyToClipboardHotkey = windowKeydown.pipe(filter((e: KeyboardEvent) => {
       return e.keyCode === 67 && e.metaKey // cmd c
-    })
+    }))
 
     this._subs.push(
       copyToClipboardHotkey.subscribe((ev: KeyboardEvent) => {
