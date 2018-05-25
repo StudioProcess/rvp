@@ -7,17 +7,18 @@ import * as videojs from 'video.js'
 import 'videojs-vimeo'
 import 'videojs-youtube'
 
-import {Observable} from 'rxjs/Observable'
-import {ReplaySubject} from 'rxjs/ReplaySubject'
-import {BehaviorSubject} from 'rxjs/BehaviorSubject'
-import {Subject} from 'rxjs/Subject'
-import {Subscription} from 'rxjs/Subscription'
-import {JQueryStyleEventEmitter} from 'rxjs/observable/FromEventObservable'
-import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame'
-import 'rxjs/add/observable/fromEvent'
-import 'rxjs/add/operator/combineLatest'
-import 'rxjs/add/operator/withLatestFrom'
-import 'rxjs/add/operator/debounceTime'
+import {
+  ReplaySubject, BehaviorSubject,
+  Subject, Subscription, fromEvent,
+  animationFrameScheduler as animationScheduler
+} from 'rxjs'
+
+import {
+  combineLatest, withLatestFrom,
+  debounceTime, filter
+} from 'rxjs/operators'
+
+import {JQueryStyleEventEmitter} from 'rxjs/internal/observable/fromEvent'
 
 import * as fromPlayer from './reducers'
 import * as player from './actions'
@@ -60,16 +61,17 @@ export class Player implements OnDestroy {
             const playerEventEmitter = playerInst as JQueryStyleEventEmitter
             const playerInstSubs: Subscription[] = []
             playerInstSubs.push(
-              Observable.fromEvent(playerEventEmitter, 'timeupdate')
-                .withLatestFrom(playerPendingSubj)
-                .filter(([_, isPending]) => !isPending)
-                .subscribe(() => {
+              fromEvent(playerEventEmitter, 'timeupdate')
+                .pipe(
+                  withLatestFrom(playerPendingSubj),
+                  filter(([_, isPending]) => !isPending)
+                ).subscribe(() => {
                   const currentTime = playerInst.currentTime()
                   this._store.dispatch(new player.PlayerSetCurrentTime({currentTime}))
                 }))
 
             playerInstSubs.push(
-              Observable.fromEvent(playerEventEmitter, 'durationchange').subscribe(() => {
+              fromEvent(playerEventEmitter, 'durationchange').subscribe(() => {
                 const duration = playerInst.duration()
                 this._store.dispatch(new project.ProjectSetTimelineDuration({duration}))
               }))
@@ -81,7 +83,7 @@ export class Player implements OnDestroy {
             //   }))
 
             playerInstSubs.push(
-              Observable.fromEvent(playerEventEmitter, 'dispose').subscribe(() => {
+              fromEvent(playerEventEmitter, 'dispose').subscribe(() => {
                 // On dispose clear all subs
                 playerInstSubs.forEach(sub => sub.unsubscribe())
                 this._store.dispatch(new player.PlayerDestroySuccess())
@@ -98,15 +100,15 @@ export class Player implements OnDestroy {
 
       this._subs.push(
         this.setSource
-          .withLatestFrom(playerSubj)
+          .pipe(withLatestFrom(playerSubj))
           .subscribe(([{payload}, playerInst]) => {
             playerInst.src(payload)
           }))
 
       this._subs.push(
-        this.setDimensions
-          .combineLatest(playerSubj)
-          .subscribe({
+        this.setDimensions.pipe(
+            combineLatest(playerSubj)
+          ).subscribe({
             next: ([{payload:{width, height}}, playerInst]) => {
               playerInst.width(width)
               playerInst.height(height)
@@ -126,28 +128,30 @@ export class Player implements OnDestroy {
           }))
 
       this._subs.push(
-        setCurrentTimeSubj
-          .debounceTime(_PLAYER_TIMEUPDATE_DEBOUNCE_, animationScheduler)
-          .withLatestFrom(playerSubj)
-          .subscribe(([currentTime, playerInst]) => {
+        setCurrentTimeSubj.pipe(
+            debounceTime(_PLAYER_TIMEUPDATE_DEBOUNCE_, animationScheduler),
+            withLatestFrom(playerSubj)
+          ).subscribe(([currentTime, playerInst]) => {
             playerPendingSubj.next(false)
             playerInst.currentTime(currentTime)
           }))
 
       this._subs.push(
-        this.destroyPlayer.withLatestFrom(playerSubj).subscribe({
-          next: ([, playerInst]) => {
-            playerInst.dispose()
-            this._store.dispatch(new player.PlayerDestroySuccess())
-          },
-          error: err => {
-            this._store.dispatch(new player.PlayerDestroyError(err))
-          }
-        }))
+        this.destroyPlayer
+          .pipe(withLatestFrom(playerSubj))
+          .subscribe({
+            next: ([, playerInst]) => {
+              playerInst.dispose()
+              this._store.dispatch(new player.PlayerDestroySuccess())
+            },
+            error: err => {
+              this._store.dispatch(new player.PlayerDestroyError(err))
+            }
+          }))
 
       this._subs.push(
-        this.togglePlaying
-          .withLatestFrom(playerSubj)
+       this.togglePlaying
+          .pipe(withLatestFrom(playerSubj))
           .subscribe(([, playerInst]) => {
             if(playerInst.paused()) {
               playerInst.play()
