@@ -11,18 +11,16 @@ const _VALID_ = 'VALID' // not exported by @angular/forms
 
 import {Record, Set} from 'immutable'
 
-import {Observable} from 'rxjs/Observable'
-import {Subject} from 'rxjs/Subject'
-import {ReplaySubject} from 'rxjs/ReplaySubject'
-import {Subscription} from 'rxjs/Subscription'
-import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame'
-import 'rxjs/add/observable/fromEvent'
-import 'rxjs/add/observable/combineLatest'
-import 'rxjs/add/operator/withLatestFrom'
-import 'rxjs/add/operator/debounceTime'
-import 'rxjs/add/operator/map'
-import 'rxjs/add/operator/filter'
-import 'rxjs/add/operator/distinctUntilChanged'
+import {
+  Observable, Subject, ReplaySubject,
+  Subscription, fromEvent, combineLatest,
+  animationFrameScheduler as animationScheduler
+} from 'rxjs'
+
+import {
+  withLatestFrom, debounceTime,
+  map, filter, distinctUntilChanged, startWith
+} from 'rxjs/operators'
 
 import {
   Track, Annotation, AnnotationRecordFactory,
@@ -88,25 +86,25 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
       title: [this.data.getIn(['fields', 'title']), Validators.required]
     })
 
-    const titleInputMd = Observable.fromEvent(this.titleInput.nativeElement, 'mousedown')
-    const titleInputKeydown = Observable.fromEvent(this.titleInput.nativeElement, 'keydown')
-    const formBlur = Observable.fromEvent(this.titleInput.nativeElement, 'blur')
+    const titleInputMd = fromEvent(this.titleInput.nativeElement, 'mousedown')
+    const titleInputKeydown = fromEvent(this.titleInput.nativeElement, 'keydown')
+    const formBlur = fromEvent(this.titleInput.nativeElement, 'blur')
 
-    const hostMouseEnterTs = Observable.fromEvent(this._elem.nativeElement, 'mouseenter').map(() => Date.now())
-    const hostMouseLeaveTs = Observable.fromEvent(this._elem.nativeElement, 'mouseleave').map(() => Date.now()).startWith(Date.now())
+    const hostMouseEnterTs = fromEvent(this._elem.nativeElement, 'mouseenter').pipe(map(() => Date.now()))
+    const hostMouseLeaveTs = fromEvent(this._elem.nativeElement, 'mouseleave').pipe(map(() => Date.now()), startWith(Date.now()))
 
-    const hostHover = hostMouseEnterTs
-      .combineLatest(hostMouseLeaveTs, (enterTs, leaveTs) => {
-        return enterTs > leaveTs
-      })
+    const hostHover = combineLatest(hostMouseEnterTs, hostMouseLeaveTs, (enterTs, leaveTs) => {
+      return enterTs > leaveTs
+    })
 
-    const pasteHotkey: Observable<KeyboardEvent> = Observable.fromEvent(window, 'keydown')
-      .filter((ev: KeyboardEvent) => {
-        return ev.keyCode === 86 && ev.metaKey // cmd v
-      })
+    const pasteHotkey: Observable<KeyboardEvent> = fromEvent(window, 'keydown')
+      .pipe(
+        filter((ev: KeyboardEvent) => {
+          return ev.keyCode === 86 && ev.metaKey // cmd v
+        }))
 
     this._subs.push(
-      pasteHotkey.withLatestFrom(hostHover).filter(([, hover]) => hover)
+      pasteHotkey.pipe(withLatestFrom(hostHover), filter(([, hover]) => hover))
         .subscribe(() => {
           this.onPasteAnnotations.next({trackIndex: this.trackIndex})
         }))
@@ -123,22 +121,22 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
 
     this._subs.push(
       titleInputKeydown
-        .filter((ev: KeyboardEvent) => ev.keyCode === 13)
+        .pipe(filter((ev: KeyboardEvent) => ev.keyCode === 13))
         .subscribe((ev: any) => {
           ev.target.blur()
         }))
 
     this._subs.push(
-      formBlur
-        .withLatestFrom(Observable.combineLatest(this.form.valueChanges, this.form.statusChanges), (_, [form, status]) => {
-          return [form, status]
-        })
-        .filter(([_, status]) => status === _VALID_)
-        .map(([formData, _]) => formData)
-        .distinctUntilChanged((prev, cur) => {
-          return prev.title === cur.title
-        })
-        .subscribe(({title}) => {
+      formBlur.pipe(
+          withLatestFrom(combineLatest(this.form.valueChanges, this.form.statusChanges), (_, [form, status]) => {
+            return [form, status]
+          }),
+          filter(([_, status]) => status === _VALID_),
+          map(([formData, _]) => formData),
+          distinctUntilChanged((prev, cur) => {
+            return prev.title === cur.title
+          })
+        ).subscribe(({title}) => {
           const updateTrackPayload = {
             trackIndex: this.trackIndex,
             track: new TrackRecordFactory({
@@ -153,24 +151,25 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
 
     this._subs.push(
       this.addAnnotationClick
-        .withLatestFrom(this.zoomContainerRect, ({ev, annotationStackIndex}, rect) => {
-          const localX = coordTransform(ev.clientX, rect)
-          const perc = localX/rect.width*100
-          const tPerc = this.totalDuration/100
-          return {
-            trackIndex: this.trackIndex,
-            annotationStackIndex,
-            annotation: new AnnotationRecordFactory({
-              utc_timestamp: perc*tPerc,
-              duration: 2
-            })
-          }
-        })
+        .pipe(
+          withLatestFrom(this.zoomContainerRect, ({ev, annotationStackIndex}, rect) => {
+            const localX = coordTransform(ev.clientX, rect)
+            const perc = localX/rect.width*100
+            const tPerc = this.totalDuration/100
+            return {
+              trackIndex: this.trackIndex,
+              annotationStackIndex,
+              annotation: new AnnotationRecordFactory({
+                utc_timestamp: perc*tPerc,
+                duration: 2
+              })
+            }
+          }))
         .subscribe(this.onAddAnnotation))
 
     this._subs.push(
       this.updateAnnotationSubj
-        .debounceTime(_FORM_INPUT_DEBOUNCE_, animationScheduler)
+        .pipe(debounceTime(_FORM_INPUT_DEBOUNCE_, animationScheduler))
         .subscribe(({hb, annotationIndex, annotationStackIndex}) => {
           const oldAnnotation = this.data.getIn(['annotationStacks', annotationStackIndex, annotationIndex])
           const tPerc = this.totalDuration/100
@@ -190,9 +189,9 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
           })
         }))
 
-    const defaultClick = this.annotationMdSubj.filter(({ev}) => !ev.shiftKey && !ev.metaKey)
-    const rangeClick = this.annotationMdSubj.filter(({ev}) => ev.shiftKey && !ev.metaKey)
-    const pickClick = this.annotationMdSubj.filter(({ev}) => !ev.shiftKey && ev.metaKey)
+    const defaultClick = this.annotationMdSubj.pipe(filter(({ev}) => !ev.shiftKey && !ev.metaKey))
+    const rangeClick = this.annotationMdSubj.pipe(filter(({ev}) => ev.shiftKey && !ev.metaKey))
+    const pickClick = this.annotationMdSubj.pipe(filter(({ev}) => !ev.shiftKey && ev.metaKey))
 
     defaultClick.subscribe(({annotationIndex, annotation}) => {
       this.emitSelectAnnotation({
@@ -221,10 +220,10 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
       return this.zoomContainerRef.nativeElement.getBoundingClientRect()
     }
 
-    const winResize = Observable.fromEvent(window, 'resize')
+    const winResize: Observable<Event|null> = fromEvent(window, 'resize')
 
     this._subs.push(
-      winResize.startWith(null).subscribe(() => {
+      winResize.pipe(startWith(null)).subscribe(() => {
         this.zoomContainerRect.next(getZoomContainerRect())
       }))
 
