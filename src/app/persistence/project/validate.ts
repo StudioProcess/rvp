@@ -12,11 +12,11 @@ function hasLegacyVideoMeta(projectData: any) {
 function hasLegacyAnnotations(projectData: any) {
   const tracks = projectData.meta.timeline.tracks
 
-  const hasLegacyAnnotations = tracks.find((track: any) => {
+  const hasLegacyAnnos = tracks.find((track: any) => {
     return !Array.isArray(track.annotationStacks)
   })
 
-  return hasLegacyAnnotations !== undefined
+  return hasLegacyAnnos !== undefined
 }
 
 function isNil<T>(data: T) {

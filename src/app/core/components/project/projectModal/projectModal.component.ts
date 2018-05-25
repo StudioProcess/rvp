@@ -29,9 +29,9 @@ export class ProjectModalComponent implements OnDestroy {
   @Output() readonly onExportProject = new EventEmitter()
   @Output() readonly onResetProject = new EventEmitter()
 
-  youtubeURL: string = ''
-  vimeoURL: string = ''
-  customURL: string = ''
+  youtubeURL = ''
+  vimeoURL = ''
+  customURL = ''
 
   importProject(e: any) {
     const file = extractFile(e)

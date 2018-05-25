@@ -1,6 +1,6 @@
 import {
   ActionReducerMap, MetaReducer
-  //createSelector, createFeatureSelector
+  // createSelector, createFeatureSelector
 } from '@ngrx/store'
 
 // // import {storeFreeze} from 'ngrx-store-freeze'

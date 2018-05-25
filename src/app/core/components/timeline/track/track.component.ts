@@ -2,7 +2,7 @@ import {
   Component, Input, ChangeDetectionStrategy,
   OnInit, OnDestroy, EventEmitter, Output,
   OnChanges, SimpleChanges, ViewChild,
-  ElementRef, ChangeDetectorRef
+  ElementRef, ChangeDetectorRef, AfterViewInit
 } from '@angular/core'
 
 import {FormGroup, FormBuilder, Validators} from '@angular/forms'
@@ -48,7 +48,7 @@ interface EmitAnnotationSelectionArgs {
   templateUrl: 'track.component.html',
   styleUrls: ['track.component.scss']
 })
-export class TrackComponent implements OnInit, OnChanges, OnDestroy {
+export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy {
   @Input() readonly data: Record<Track>
   @Input() readonly trackIndex: number
   @Input() readonly numTracks: number
@@ -300,7 +300,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   deleteTrackHandler(ev: MouseEvent) {
     ev.stopPropagation()
     if(ev.button !== 0) {return}
-    if(window.confirm("Really delete track? All annotations will be deleted too.")){
+    if(window.confirm('Really delete track? All annotations will be deleted too.')) {
       this.onDeleteTrack.emit({trackIndex: this.trackIndex})
     }
   }

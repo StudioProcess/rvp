@@ -40,7 +40,7 @@ function durationValidatorFactory(): ValidatorFn {
 
   return (control: AbstractControl): ValidationErrors|null => {
     const valid = durationRegex.test(control.value)
-    return !valid ? {'duration': {value: control.value}} : null;
+    return !valid ? {'duration': {value: control.value}} : null
   }
 }
 

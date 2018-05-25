@@ -1,7 +1,7 @@
 import {
   Component, ChangeDetectionStrategy, OnInit,
   OnDestroy, AfterViewInit,
-  //ChangeDetectorRef
+  // ChangeDetectorRef
 } from '@angular/core'
 
 import {Store} from '@ngrx/store'
@@ -28,7 +28,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   private readonly _subs: Subscription[] = []
 
   constructor(
-    //private readonly _cdr: ChangeDetectorRef,
+    // private readonly _cdr: ChangeDetectorRef,
     private readonly _rootStore: Store<fromRoot.State>) {}
 
   ngOnInit() {
@@ -124,13 +124,13 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   closeProjectModal() {
-    const modal = $('#settings-reveal') as any;
+    const modal = $('#settings-reveal') as any
     // $('body').removeClass('is-reveal-open')
-    modal.foundation('close');
+    modal.foundation('close')
   }
 
   ngAfterViewInit() {
-    $(document).foundation();
+    $(document).foundation()
   }
 
   ngOnDestroy() {
