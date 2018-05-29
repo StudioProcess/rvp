@@ -3,7 +3,7 @@ import {environment} from '../../../../environments/environment'
 
 @Component({
   selector: 'rv-version',
-  template: '<span class="rv-version">rv v{{version}}</span>',
+  template: '<span class="rv-version">rv v{{version}} {{commit}}</span>',
   styles: [`
     .rv-version {
       font-size: 9px;
@@ -13,4 +13,5 @@ import {environment} from '../../../../environments/environment'
 })
 export class VersionComponent {
   version=environment.version
+  commit=environment.commit
 }
