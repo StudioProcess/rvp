@@ -44,3 +44,7 @@ Thumbs.db
 # migration to Angular 4
 src.old/
 src.tmplt/
+
+# gen files
+src/environments/environment.ts
+src/environments/environment.prod.ts
