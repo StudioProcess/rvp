@@ -32,7 +32,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     this._rootStore.dispatch(new project.ProjectLoad())
 
-    const windowMousedown = fromEvent(window, 'mousedown') as  Observable<MouseEvent>
+    const windowMousedown = fromEvent(window, 'mousedown') as Observable<MouseEvent>
     const windowKeydown = fromEvent(window,  'keydown') as Observable<KeyboardEvent>
 
     const removeAnnotationHotkey = windowKeydown.pipe(filter(e => e.keyCode === 8))
