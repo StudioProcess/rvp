@@ -35,40 +35,40 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     const windowMousedown = fromEvent(window, 'mousedown') as  Observable<MouseEvent>
     const windowKeydown = fromEvent(window,  'keydown') as Observable<KeyboardEvent>
 
-    const removeAnnotationHotkey = windowKeydown.pipe(filter((e: KeyboardEvent) => e.keyCode === 8))
-    const togglePlayingHotkey = windowKeydown.pipe(filter((e: KeyboardEvent) => e.keyCode === 32))
-    const addTrackHotkey = windowKeydown.pipe(filter((e: KeyboardEvent) => {
+    const removeAnnotationHotkey = windowKeydown.pipe(filter(e => e.keyCode === 8))
+    const togglePlayingHotkey = windowKeydown.pipe(filter(e => e.keyCode === 32))
+    const addTrackHotkey = windowKeydown.pipe(filter(e => {
       return e.keyCode === 187 || // +
         e.keyCode === 221 || // don't know
         e.keyCode === 171    // + (firefox)
     }))
 
-    const undoHotkey = windowKeydown.pipe(filter((e: KeyboardEvent) => {
+    const undoHotkey = windowKeydown.pipe(filter(e => {
       return e.keyCode === 90 && e.metaKey && !e.shiftKey // cmd z (make sure shiftKey is not pressed)
     }))
 
-    const redoHotkey = windowKeydown.pipe(filter((e: KeyboardEvent) => {
+    const redoHotkey = windowKeydown.pipe(filter(e => {
       return e.keyCode === 90 && e.metaKey && e.shiftKey // shift cmd z
     }))
 
-    const copyToClipboardHotkey = windowKeydown.pipe(filter((e: KeyboardEvent) => {
+    const copyToClipboardHotkey = windowKeydown.pipe(filter(e => {
       return e.keyCode === 67 && e.metaKey // cmd c
     }))
 
     this._subs.push(
-      copyToClipboardHotkey.subscribe((ev: KeyboardEvent) => {
+      copyToClipboardHotkey.subscribe(() => {
         this._rootStore.dispatch(new project.ProjectCopyAnnotationSelectionToClipboard())
       }))
 
     this._subs.push(
-      togglePlayingHotkey.subscribe((ev: KeyboardEvent) => {
+      togglePlayingHotkey.subscribe(ev => {
         ev.preventDefault()
         ev.stopPropagation()
         this._rootStore.dispatch(new player.PlayerTogglePlaying())
       }))
 
     this._subs.push(
-      addTrackHotkey.subscribe((ev: KeyboardEvent) => {
+      addTrackHotkey.subscribe(ev => {
         ev.preventDefault()
         ev.stopPropagation()
         this._rootStore.dispatch(new project.ProjectAddTrack({color: rndColor()}))
@@ -86,13 +86,13 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
         }))
 
     this._subs.push(
-      undoHotkey.subscribe((e: KeyboardEvent) => {
+      undoHotkey.subscribe(e => {
         e.preventDefault()
         this._rootStore.dispatch(new project.ProjectUndo())
       }))
 
     this._subs.push(
-      redoHotkey.subscribe((e: KeyboardEvent) => {
+      redoHotkey.subscribe(e => {
         e.preventDefault()
         this._rootStore.dispatch(new project.ProjectRedo())
       }))
