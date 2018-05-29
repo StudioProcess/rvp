@@ -6,5 +6,5 @@
 export const environment = {
   production: false,
   version: require('../../package.json').version,
-  commit: '2fd2de5'
+  commit: '%COMMIT%'
 }
