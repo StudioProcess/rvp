@@ -1,6 +1,6 @@
 # Changelog
 
-# 0.2.0 (2017-12-07) Undo/Redo, Offline, Manage tracks, Select/Copy/Paste Annotations, Stacking Annotations
+# 0.2.0 (2017-12-07) Undo/Redo, Offline, Manage tracks, Select/Copy/Paste Annotations, Stacking Annotations, Video Sources
 
 * Stacking annotations
 * Select/copy/paste annotations

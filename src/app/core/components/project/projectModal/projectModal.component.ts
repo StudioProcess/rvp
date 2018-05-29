@@ -60,27 +60,27 @@ export class ProjectModalComponent implements OnDestroy {
     this.onResetProject.emit()
   }
 
-  openURL(src: string, url: URL) {
+  openURL(src: string, url: string) {
     switch(src) {
       case VIDEO_URL_SOURCE_CUSTOM:
       this.onImportVideo.emit({
         type: VIDEO_TYPE_URL,
         source: VIDEO_URL_SOURCE_CUSTOM,
-        data: url
+        data: new URL(url)
       })
       break
       case VIDEO_URL_SOURCE_YT:
       this.onImportVideo.emit({
         type: VIDEO_TYPE_URL,
         source: VIDEO_URL_SOURCE_YT,
-        data: url
+        data: new URL(url)
       })
       break
       case VIDEO_URL_SOURCE_VIMEO:
       this.onImportVideo.emit({
         type: VIDEO_TYPE_URL,
         source: VIDEO_URL_SOURCE_VIMEO,
-        data: url
+        data: new URL(url)
       })
       break
     }

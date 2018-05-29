@@ -80,4 +80,12 @@
     height: $handlebar-height;
     margin-bottom: $track-annotationwrapper-marginbottom;
   }
+
+  .track-overflow {
+    overflow: hidden;
+
+    .track-zoom {
+      position: relative;
+    }
+  }
 }

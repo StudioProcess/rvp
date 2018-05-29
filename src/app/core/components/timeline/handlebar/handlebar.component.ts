@@ -95,11 +95,13 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   }
 
   ngAfterViewInit() {
+    const isLeftBtn = (ev: MouseEvent) => ev.button === 0
+
     const mousemove = fromEventPattern(this._renderer, this._document, 'mousemove')
     const mouseup = fromEventPattern(this._renderer, this._document, 'mouseup')
-    const leftMouseDown = fromEventPattern(this._renderer, this.leftHandle.nativeElement, 'mousedown')
-    const rightMouseDown = fromEventPattern(this._renderer, this.rightHandle.nativeElement, 'mousedown')
-    const middleMouseDown = fromEventPattern(this._renderer, this.middleHandle.nativeElement, 'mousedown')
+    const leftMouseDown = fromEventPattern(this._renderer, this.leftHandle.nativeElement, 'mousedown').filter(isLeftBtn)
+    const rightMouseDown = fromEventPattern(this._renderer, this.rightHandle.nativeElement, 'mousedown').filter(isLeftBtn)
+    const middleMouseDown = fromEventPattern(this._renderer, this.middleHandle.nativeElement, 'mousedown').filter(isLeftBtn)
 
     const clientPosWhileMouseMove = (args: any) => {
       return mousemove.map((mmEvent: MouseEvent) => {

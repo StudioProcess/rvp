@@ -1,5 +1,5 @@
 # Research Video
-Research Video is a tool developed by [Studio Process](http://process.studio).
+Research Video is a tool developed by [Studio Process](http://process.studio) and [contributors](https://github.com/StudioProcess/rvp#Contributors).
 
 
 For updates follow Studio Process on [Twitter](http://twitter.com/studioprocess), [Instagram](https://www.instagram.com/process.studio/) and [Facebook](https://www.facebook.com/studioprocess).
@@ -22,6 +22,14 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
 
+## Production Build
+
+Run `npm run build:prod`.
+
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+## Contributors
+
+[Onur Dogangönül](https://github.com/dinony)

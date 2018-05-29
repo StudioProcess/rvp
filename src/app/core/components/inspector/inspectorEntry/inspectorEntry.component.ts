@@ -187,6 +187,10 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   selectAnnotationHandler(ev: MouseEvent) {
     ev.stopPropagation()
+    // Only consider left clicks
+    if(ev.button !== 0) {
+      return
+    }
     this.onSelectAnnotation.emit({
       type: project.AnnotationSelectionType.Default,
       selection: AnnotationSelectionRecordFactory({

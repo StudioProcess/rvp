@@ -2,7 +2,7 @@ import {
   Component, Input, ChangeDetectionStrategy,
   OnInit, OnDestroy, EventEmitter, Output,
   OnChanges, SimpleChanges, ViewChild,
-  ElementRef
+  ElementRef, ChangeDetectorRef
 } from '@angular/core'
 
 import {FormGroup, FormBuilder, Validators} from '@angular/forms'
@@ -13,6 +13,7 @@ import {Record, Set} from 'immutable'
 
 import {Observable} from 'rxjs/Observable'
 import {Subject} from 'rxjs/Subject'
+import {ReplaySubject} from 'rxjs/ReplaySubject'
 import {Subscription} from 'rxjs/Subscription'
 import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame'
 import 'rxjs/add/observable/fromEvent'
@@ -33,6 +34,7 @@ import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 import {coordTransform} from '../../../../lib/coords'
 import {Handlebar} from '../handlebar/handlebar.component'
 import * as project from '../../../../persistence/actions/project'
+import {ScrollSettings} from '../timeline'
 
 interface EmitAnnotationSelectionArgs {
   readonly track: Record<Track>
@@ -52,11 +54,11 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   @Input() readonly numTracks: number
   @Input() readonly totalDuration: number
   @Input() readonly selectedAnnotations: Set<Record<Annotation>>
-  @Input() readonly containerRect: Observable<ClientRect>
+  @Input() readonly scrollSettings: Observable<ScrollSettings>
 
   form: FormGroup|null = null
   zoom: number
-  scrollLeft: number
+  readonly zoomContainerRect = new ReplaySubject<ClientRect>(1)
 
   @Output() readonly onUpdateTrack = new EventEmitter<project.UpdateTrackPayload>()
   @Output() readonly onUpdateAnnotation = new EventEmitter<project.UpdateAnnotationPayload>()
@@ -73,10 +75,13 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
   private readonly annotationMdSubj = new Subject<{ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number}>()
 
   @ViewChild('title') private readonly titleInput: ElementRef
+  @ViewChild('trackOverflow') private readonly overflowContainerRef: ElementRef
+  @ViewChild('zoomContainer') private readonly zoomContainerRef: ElementRef
 
   constructor(
     private readonly _elem: ElementRef,
-    private readonly _fb: FormBuilder) {}
+    private readonly _fb: FormBuilder,
+    private readonly _cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.form = this._fb.group({
@@ -148,7 +153,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
 
     this._subs.push(
       this.addAnnotationClick
-        .withLatestFrom(this.containerRect, ({ev, annotationStackIndex}, rect) => {
+        .withLatestFrom(this.zoomContainerRect, ({ev, annotationStackIndex}, rect) => {
           const localX = coordTransform(ev.clientX, rect)
           const perc = localX/rect.width*100
           const tPerc = this.totalDuration/100
@@ -211,6 +216,40 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
     })
   }
 
+  ngAfterViewInit() {
+    const getZoomContainerRect = () => {
+      return this.zoomContainerRef.nativeElement.getBoundingClientRect()
+    }
+
+    const winResize = Observable.fromEvent(window, 'resize')
+
+    this._subs.push(
+      winResize.startWith(null).subscribe(() => {
+        this.zoomContainerRect.next(getZoomContainerRect())
+      }))
+
+    this._subs.push(
+      this.scrollSettings.subscribe(({zoom, scrollLeft}) => {
+        this.zoom = zoom
+        this.overflowContainerRef.nativeElement.scrollLeft = scrollLeft
+
+        /*
+         * TODO: Research issue with scrollLeft!
+         * Using setTimeout fix for now.
+         */
+        setTimeout(() => {
+          this.overflowContainerRef.nativeElement.scrollLeft = scrollLeft
+          this._cdr.markForCheck()
+        })
+
+        setTimeout(() => {
+          // Emit zoom container rect
+          this.zoomContainerRect.next(getZoomContainerRect())
+        })
+        this._cdr.markForCheck()
+      }))
+  }
+
   private emitSelectAnnotation({track, annotation, type}: EmitAnnotationSelectionArgs) {
     this.onSelectAnnotation.emit({
       type,
@@ -260,6 +299,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
 
   deleteTrackHandler(ev: MouseEvent) {
     ev.stopPropagation()
+    if(ev.button !== 0) {return}
     if(window.confirm("Really delete track? All annotations will be deleted too.")){
       this.onDeleteTrack.emit({trackIndex: this.trackIndex})
     }
@@ -267,6 +307,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
 
   annotationClick(ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number) {
     ev.stopPropagation()
+    if(ev.button !== 0) {return}
     this.annotationMdSubj.next({ev, annotation, annotationIndex})
   }
 
@@ -280,6 +321,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
 
   moveTrack($event: MouseEvent, trackIndex: number, direction: 'up'|'down') {
     $event.stopPropagation()
+    if($event.button !== 0) {return}
     this.onInsertAtTrack.emit({
       currentTrackIndex: trackIndex,
       insertAtIndex: direction === 'up' ? trackIndex-1 : trackIndex+1
@@ -288,6 +330,7 @@ export class TrackComponent implements OnInit, OnChanges, OnDestroy {
 
   duplicateTrack($event: MouseEvent, trackIndex: number) {
     $event.stopPropagation()
+    if($event.button !== 0) {return}
     this.onDuplicateTrack.emit({trackIndex})
   }
 

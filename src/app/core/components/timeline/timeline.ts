@@ -22,6 +22,7 @@ import 'rxjs/add/observable/of'
 import 'rxjs/add/observable/fromEvent'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/startWith'
+import 'rxjs/add/operator/filter'
 
 import * as fromProject from '../../../persistence/reducers'
 import * as fromPlayer from '../../../player/reducers'
@@ -32,7 +33,6 @@ import {fromEventPattern} from '../../../lib/observable'
 import {HandlebarComponent} from '../../components/timeline/handlebar/handlebar.component'
 import {_SCROLLBAR_CAPTION_} from '../../../config/timeline/scrollbar'
 import {rndColor} from '../../../lib/color'
-import {coordTransform} from '../../../lib/coords'
 
 export interface ScrollSettings {
   readonly zoom: number
@@ -48,21 +48,20 @@ export interface ScrollSettings {
 export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   timeline: Record<Timeline>
   selectedAnnotations: Set<Record<Annotation>>
-  zoom = 1
+  pZoom = 0
   playerPos = 0
   playerCurrentTime = 0
   scrollbarLeft = 0
   scrollbarWidth = 100
   readonly scrollbarCaption = _SCROLLBAR_CAPTION_
   readonly scrollbarRect = new ReplaySubject<ClientRect>(1)
+  readonly timelineWrapperRect = new ReplaySubject<ClientRect>(1)
   readonly scrollSettings = new ReplaySubject<ScrollSettings>(1)
-  readonly overflowContainerRect = new ReplaySubject<ClientRect>(1)
-  readonly zoomContainerRect = new ReplaySubject<ClientRect>(1)
 
   @ViewChild('scrollbar') private readonly scrollbarRef: ElementRef
   @ViewChild('handlebar') private readonly handlebarRef: HandlebarComponent
-  @ViewChild('timelineOverflow') private readonly timelineOverflowRef: ElementRef
-  @ViewChild('zoomContainer') private readonly zoomContainerRef: ElementRef
+  @ViewChild('timelineWrapper') private readonly timelineWrapperRef: ElementRef
+  @ViewChild('playheadOverflow') private readonly playheadOverflowRef: ElementRef
   private readonly _subs: Subscription[] = []
   private readonly timelineSubj = this._store.select(fromProject.getProjectTimeline)
     .filter(timeline => timeline !== null)
@@ -108,21 +107,9 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       return this.scrollbarRef.nativeElement.getBoundingClientRect()
     }
 
-    const getOverflowContainerRect = () => {
-      return this.timelineOverflowRef.nativeElement.getBoundingClientRect()
+    const getTimelineWrapperRect = () => {
+      return this.timelineWrapperRef.nativeElement.getBoundingClientRect()
     }
-
-    const getZoomContainerRect = () => {
-      return this.zoomContainerRef.nativeElement.getBoundingClientRect()
-    }
-
-    const winResize = fromEventPattern(this._renderer, window, 'resize')
-
-    this._subs.push(
-      winResize
-        .map(() => getScrollbarRect())
-        .startWith(getScrollbarRect())
-        .subscribe(this.scrollbarRect))
 
     this._subs.push(
       this.handlebarRef.onHandlebarUpdate.subscribe(hb => {
@@ -137,46 +124,55 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       width: this.scrollbarWidth
     }
 
-    const scrollSetting = this.handlebarRef.onHandlebarUpdate.startWith(initHB)
+    const handlebarSettings = this.handlebarRef.onHandlebarUpdate.startWith(initHB)
       .map(hb => {
         const zoom = 100/hb.width
         return {zoom, scrollLeft: hb.left}
       })
 
+    const winResize = fromEventPattern(this._renderer, window, 'resize')
+
     this._subs.push(
       winResize.startWith(null).subscribe(() => {
-        this.overflowContainerRect.next(getOverflowContainerRect())
-        this.zoomContainerRect.next(getZoomContainerRect())
+        this.scrollbarRect.next(getScrollbarRect())
+        this.timelineWrapperRect.next(getTimelineWrapperRect())
+      }))
+
+    this._subs.push(Observable.combineLatest(
+      this.timelineWrapperRect, handlebarSettings,
+      (rect, {zoom, scrollLeft}) => {
+        const zoomContainerWidth = zoom*rect.width
+        const maxLeft = zoomContainerWidth-rect.width
+        return {zoom, left: Math.max(0, Math.min(zoomContainerWidth*scrollLeft/100, maxLeft))}
+      }).distinctUntilChanged((prev, cur) => {
+        return prev.left === cur.left && prev.zoom === cur.zoom
+      }).subscribe(({zoom, left}) => {
+        this.scrollSettings.next({zoom, scrollLeft: left})
       }))
 
     this._subs.push(
-      Observable.combineLatest(
-        this.overflowContainerRect, scrollSetting,
-        (rect, {zoom, scrollLeft}) => {
-          const zoomContainerWidth = zoom * rect.width
-          const maxLeft = zoomContainerWidth-rect.width
-          return {zoom, left: Math.min(zoomContainerWidth*scrollLeft/100, maxLeft)}
-        }).distinctUntilChanged((prev, cur) => {
-          return prev.left === cur.left && prev.zoom === cur.zoom
-        }).subscribe(({zoom, left}) => {
-          this.zoom = zoom
-          this.timelineOverflowRef.nativeElement.scrollLeft = left
+      this.scrollSettings.subscribe(({zoom, scrollLeft}) => {
+        this.pZoom = zoom
+        this.playheadOverflowRef.nativeElement.scrollLeft = scrollLeft
+
+        setTimeout(() => {
+          this.playheadOverflowRef.nativeElement.scrollLeft = scrollLeft
           this._cdr.markForCheck()
+        })
+        this._cdr.markForCheck()
+      }))
 
-          setTimeout(() => {
-            this.timelineOverflowRef.nativeElement.scrollLeft = left
-            this._cdr.markForCheck()
-          })
-
-          setTimeout(() => {
-            // Emit zoom container rect
-            this.zoomContainerRect.next(getZoomContainerRect())
-          })
-        }))
+    const isLeftBtn = (ev: MouseEvent) => ev.button === 0
 
     const mousemove: Observable<MouseEvent> = Observable.fromEvent(this._document, 'mousemove')
     const mouseup: Observable<MouseEvent> = Observable.fromEvent(this._document, 'mouseup')
-    const placeHeadMd: Observable<MouseEvent> = Observable.fromEvent(this.timelineOverflowRef.nativeElement, 'mousedown')
+    const placeHeadMd: Observable<MouseEvent> = Observable.fromEvent(this.timelineWrapperRef.nativeElement, 'mousedown').filter(isLeftBtn)
+
+    const zoomContainer = Observable.combineLatest(
+      this.timelineWrapperRect, this.scrollSettings,
+      (rect, {zoom, scrollLeft}) => {
+        return {x: rect.left-scrollLeft, width: zoom*rect.width}
+      })
 
     this._subs.push(placeHeadMd
       .switchMap(md => {
@@ -184,13 +180,13 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
         return Observable.concat(
           Observable.of(init),
           mousemove.map(mmEvent => {
-            const {clientX} = mmEvent
-            return {clientX}
+            const {clientX, clientY} = mmEvent
+            return {clientX, clientY}
           }).takeUntil(mouseup))
       })
-      .withLatestFrom(this.zoomContainerRect, (ev: MouseEvent, rect) => {
-        const localX = coordTransform(ev.clientX, rect)
-        return localX / rect.width
+      .withLatestFrom(zoomContainer, (ev: MouseEvent, {x, width}) => {
+        const localX = ev.clientX - x
+        return localX / width
       })
       .map(progress => {
         return Math.max(0, Math.min(progress, 1))
