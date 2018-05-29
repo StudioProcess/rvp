@@ -35,22 +35,30 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     const windowMousedown = fromEvent(window, 'mousedown') as Observable<MouseEvent>
     const windowKeydown = fromEvent(window,  'keydown') as Observable<KeyboardEvent>
 
+    // backspace key
     const removeAnnotationHotkey = windowKeydown.pipe(filter(e => e.keyCode === 8))
+
+    // space key
     const togglePlayingHotkey = windowKeydown.pipe(filter(e => e.keyCode === 32))
+
+    // + key
     const addTrackHotkey = windowKeydown.pipe(filter(e => {
       return e.keyCode === 187 || // +
         e.keyCode === 221 || // don't know
         e.keyCode === 171    // + (firefox)
     }))
 
+    // cmd z
     const undoHotkey = windowKeydown.pipe(filter(e => {
       return e.keyCode === 90 && e.metaKey && !e.shiftKey // cmd z (make sure shiftKey is not pressed)
     }))
 
+    // shift cmd z
     const redoHotkey = windowKeydown.pipe(filter(e => {
       return e.keyCode === 90 && e.metaKey && e.shiftKey // shift cmd z
     }))
 
+    // cmd c
     const copyToClipboardHotkey = windowKeydown.pipe(filter(e => {
       return e.keyCode === 67 && e.metaKey // cmd c
     }))
