@@ -1,8 +1,3 @@
-const exec = require('child_process').exec
+const execSync = require('child_process').execSync
 
-module.exports.commitHash = new Promise((resolve, reject) => {
-  exec('git rev-parse --short HEAD', (error, stdout, stderr) => {
-    if (error !== null) { reject(stderr) }
-    else { resolve(stdout) }
-  })
-})
+module.exports.commitHash = execSync('git rev-parse --short HEAD', {encoding: 'utf8'}).trim()
