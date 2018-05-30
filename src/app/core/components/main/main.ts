@@ -1,18 +1,17 @@
 import {
   Component, ChangeDetectionStrategy, OnInit,
-  OnDestroy, AfterViewInit, Renderer2,
-  //ChangeDetectorRef
+  OnDestroy, AfterViewInit,
+  // ChangeDetectorRef
 } from '@angular/core'
 
 import {Store} from '@ngrx/store'
 
-import {Subscription} from 'rxjs/Subscription'
-import 'rxjs/add/operator/withLatestFrom'
+import {Observable, Subscription, fromEvent} from 'rxjs'
+import {filter} from 'rxjs/operators'
 
 import * as fromRoot from '../../reducers'
 import * as project from '../../../persistence/actions/project'
 import * as player from '../../../player/actions'
-import {fromEventPattern} from '../../../lib/observable'
 import {rndColor} from '../../../lib/color'
 
 declare var $: any
@@ -27,35 +26,34 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   private readonly _subs: Subscription[] = []
 
   constructor(
-    //private readonly _cdr: ChangeDetectorRef,
-    private readonly _rootStore: Store<fromRoot.State>,
-    private readonly _renderer: Renderer2) {}
+    // private readonly _cdr: ChangeDetectorRef,
+    private readonly _rootStore: Store<fromRoot.State>) {}
 
   ngOnInit() {
     this._rootStore.dispatch(new project.ProjectLoad())
 
-    const windowMousedown = fromEventPattern(this._renderer, window, 'mousedown')
-    const windowKeydown = fromEventPattern(this._renderer, window, 'keydown')
+    const windowMousedown = fromEvent(window, 'mousedown') as  Observable<MouseEvent>
+    const windowKeydown = fromEvent(window,  'keydown') as Observable<KeyboardEvent>
 
-    const removeAnnotationHotkey = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 8)
-    const togglePlayingHotkey = windowKeydown.filter((e: KeyboardEvent) => e.keyCode === 32)
-    const addTrackHotkey = windowKeydown.filter((e: KeyboardEvent) => {
+    const removeAnnotationHotkey = windowKeydown.pipe(filter((e: KeyboardEvent) => e.keyCode === 8))
+    const togglePlayingHotkey = windowKeydown.pipe(filter((e: KeyboardEvent) => e.keyCode === 32))
+    const addTrackHotkey = windowKeydown.pipe(filter((e: KeyboardEvent) => {
       return e.keyCode === 187 || // +
         e.keyCode === 221 || // don't know
         e.keyCode === 171    // + (firefox)
-    })
+    }))
 
-    const undoHotkey = windowKeydown.filter((e: KeyboardEvent) => {
+    const undoHotkey = windowKeydown.pipe(filter((e: KeyboardEvent) => {
       return e.keyCode === 90 && e.metaKey && !e.shiftKey // cmd z (make sure shiftKey is not pressed)
-    })
+    }))
 
-    const redoHotkey = windowKeydown.filter((e: KeyboardEvent) => {
+    const redoHotkey = windowKeydown.pipe(filter((e: KeyboardEvent) => {
       return e.keyCode === 90 && e.metaKey && e.shiftKey // shift cmd z
-    })
+    }))
 
-    const copyToClipboardHotkey = windowKeydown.filter((e: KeyboardEvent) => {
+    const copyToClipboardHotkey = windowKeydown.pipe(filter((e: KeyboardEvent) => {
       return e.keyCode === 67 && e.metaKey // cmd c
-    })
+    }))
 
     this._subs.push(
       copyToClipboardHotkey.subscribe((ev: KeyboardEvent) => {
@@ -83,7 +81,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
     this._subs.push(
       removeAnnotationHotkey
-        .subscribe(([_, sel]) => {
+        .subscribe(() => {
           this._rootStore.dispatch(new project.ProjectDeleteSelectedAnnotations())
         }))
 
@@ -124,13 +122,13 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   closeProjectModal() {
-    const modal = $('#settings-reveal') as any;
+    const modal = $('#settings-reveal') as any
     // $('body').removeClass('is-reveal-open')
-    modal.foundation('close');
+    modal.foundation('close')
   }
 
   ngAfterViewInit() {
-    $(document).foundation();
+    $(document).foundation()
   }
 
   ngOnDestroy() {

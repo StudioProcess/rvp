@@ -15,14 +15,15 @@ const _VALID_ = 'VALID' // not exported by @angular/forms
 
 import {Record} from 'immutable'
 
-import {Observable} from 'rxjs/Observable'
-import {Subscription} from 'rxjs/Subscription'
-import 'rxjs/add/observable/combineLatest'
-import 'rxjs/add/operator/withLatestFrom'
-import 'rxjs/add/operator/debounceTime'
-import 'rxjs/add/operator/map'
-import 'rxjs/add/operator/filter'
-import 'rxjs/add/operator/distinctUntilChanged'
+import {
+  Subscription, combineLatest,
+  merge, fromEvent
+} from 'rxjs'
+
+import {
+  withLatestFrom, map, filter,
+  distinctUntilChanged
+} from 'rxjs/operators'
 
 import {formatDuration} from '../../../../lib/time'
 
@@ -40,7 +41,7 @@ function durationValidatorFactory(): ValidatorFn {
 
   return (control: AbstractControl): ValidationErrors|null => {
     const valid = durationRegex.test(control.value)
-    return !valid ? {'duration': {value: control.value}} : null;
+    return !valid ? {'duration': {value: control.value}} : null
   }
 }
 
@@ -97,22 +98,22 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   }
 
   ngAfterViewInit() {
-    const durationKeydown = Observable.merge(
-      Observable.fromEvent(this.startInput.nativeElement, 'keydown'),
-      Observable.fromEvent(this.durationInput.nativeElement, 'keydown'))
+    const durationKeydown = merge(
+      fromEvent(this.startInput.nativeElement, 'keydown'),
+      fromEvent(this.durationInput.nativeElement, 'keydown'))
 
-    const formKeydown = Observable.merge(
+    const formKeydown = merge(
       durationKeydown,
-      Observable.fromEvent(this.titleInput.nativeElement, 'keydown'),
-      Observable.fromEvent(this.descrInput.nativeElement, 'keydown'))
+      fromEvent(this.titleInput.nativeElement, 'keydown'),
+      fromEvent(this.descrInput.nativeElement, 'keydown'))
 
-    const enterHotKey = formKeydown.filter((ev: KeyboardEvent) => ev.keyCode === 13)
+    const enterHotKey = formKeydown.pipe(filter((ev: KeyboardEvent) => ev.keyCode === 13))
 
-    const formBlur = Observable.merge(
-      Observable.fromEvent(this.startInput.nativeElement, 'blur'),
-      Observable.fromEvent(this.durationInput.nativeElement, 'blur'),
-      Observable.fromEvent(this.titleInput.nativeElement, 'blur'),
-      Observable.fromEvent(this.descrInput.nativeElement, 'blur'))
+    const formBlur = merge(
+      fromEvent(this.startInput.nativeElement, 'blur'),
+      fromEvent(this.durationInput.nativeElement, 'blur'),
+      fromEvent(this.titleInput.nativeElement, 'blur'),
+      fromEvent(this.descrInput.nativeElement, 'blur'))
 
     this._subs.push(
       formKeydown.subscribe((ev: KeyboardEvent) => {
@@ -129,8 +130,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     }
 
     this._subs.push(
-      durationKeydown
-        .filter((ev: KeyboardEvent) => !validDurationInputKey(ev.keyCode))
+      durationKeydown.pipe(filter((ev: KeyboardEvent) => !validDurationInputKey(ev.keyCode)))
         .subscribe((ev: KeyboardEvent) => {
           ev.preventDefault()
         }))
@@ -144,15 +144,16 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
     this._subs.push(
       formBlur
-        .withLatestFrom(Observable.combineLatest(this.form!.valueChanges, this.form!.statusChanges), (_, [form, status]) => {
-          return [form, status]
-        })
-        .filter(([_, status]) => status === _VALID_)
-        .map(([form]) => form)
-        .distinctUntilChanged((prev, cur) => {
-          return prev.title === cur.title && prev.description === cur.description &&
-            prev.utc_timestamp === cur.utc_timestamp && prev.duration === cur.duration
-        })
+        .pipe(
+          withLatestFrom(combineLatest(this.form!.valueChanges, this.form!.statusChanges), (_, [form, status]) => {
+            return [form, status]
+          }),
+          filter(([_, status]) => status === _VALID_),
+          map(([form]) => form),
+          distinctUntilChanged((prev, cur) => {
+            return prev.title === cur.title && prev.description === cur.description &&
+              prev.utc_timestamp === cur.utc_timestamp && prev.duration === cur.duration
+          }))
         .subscribe(({title, description, utc_timestamp, duration}) => {
           const annotation = new AnnotationRecordFactory({
             id: this.entry.getIn(['annotation', 'id']),

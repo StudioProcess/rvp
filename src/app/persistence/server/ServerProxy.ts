@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core'
+import {Injectable, OnDestroy} from '@angular/core'
 
 import {Store} from '@ngrx/store'
 import {Effect, Actions} from '@ngrx/effects'
@@ -6,11 +6,11 @@ import {Effect, Actions} from '@ngrx/effects'
 import * as JSZip from 'jszip'
 import {saveAs} from 'file-saver'
 
-import {Subscription} from 'rxjs/Subscription'
-import 'rxjs/add/operator/withLatestFrom'
-import 'rxjs/add/operator/map'
-import 'rxjs/add/operator/share'
-import 'rxjs/add/operator/pairwise'
+import {Subscription} from 'rxjs'
+import {
+  withLatestFrom, map, share,
+  pairwise, filter, debounceTime
+} from 'rxjs/operators'
 
 import * as project from '../actions/project'
 import * as fromProject from '../reducers'
@@ -29,7 +29,7 @@ import {loadZip} from '../zip'
 import {ProjectSnapshotRecordFactory} from '../model'
 
 @Injectable()
-export class ServerProxy {
+export class ServerProxy implements OnDestroy {
   private readonly _subs: Subscription[] = []
 
   constructor(
@@ -37,15 +37,18 @@ export class ServerProxy {
     private readonly _cache: LFCache,
     private readonly _store: Store<fromProject.State>) {
       const projectState = this._store.select(fromProject.getProjectState)
-        .filter(proj => proj.get('meta', null) !== null)
-        .share()
+        .pipe(
+          filter(proj => proj.get('meta', null) !== null),
+          share())
 
-      const mutableProjectState = projectState.map(proj => {
-        return {
-          meta: proj.get('meta', null)!.toJS(),
-          video: proj.get('videoBlob', null)
-        }
-      })
+      const mutableProjectState = projectState
+        .pipe(
+          map(proj => {
+            return {
+              meta: proj.get('meta', null)!.toJS(),
+              video: proj.get('videoBlob', null)
+            }
+          }))
 
       this._subs.push(
         this.loadProject.subscribe({
@@ -137,7 +140,7 @@ export class ServerProxy {
 
       this._subs.push(
         this.exportProject
-          .withLatestFrom(mutableProjectState, (_, proj) => proj)
+          .pipe(withLatestFrom(mutableProjectState, (_, proj) => proj))
           .subscribe({
             next: async ({meta, video}) => {
               try {
@@ -168,7 +171,7 @@ export class ServerProxy {
         }))
 
       const projectUpdate =
-        this._actions.filter(action => {
+        this._actions.pipe(filter(action => {
           return action.type === project.PROJECT_UPDATE_ANNOTATION ||
             action.type === project.PROJECT_ADD_ANNOTATION ||
             action.type === project.PROJECT_DELETE_SELECTED_ANNOTATIONS ||
@@ -182,13 +185,14 @@ export class ServerProxy {
             action.type === project.PROJECT_UNDO ||
             action.type === project.PROJECT_REDO ||
             action.type === project.PROJECT_IMPORT_VIDEO_SUCCESS
-        })
+        }))
 
       this._subs.push(
         projectUpdate
-          .debounceTime(_PROJECT_AUTOSAVE_DEBOUNCE_)
-          .withLatestFrom(mutableProjectState)
-          .subscribe(([, projectData]) => {
+          .pipe(
+            debounceTime(_PROJECT_AUTOSAVE_DEBOUNCE_),
+            withLatestFrom(mutableProjectState)
+          ).subscribe(([, projectData]) => {
             // autosave
             ensureValidProjectData(projectData)
             this._cache.cache('meta', projectData.meta)
@@ -196,13 +200,14 @@ export class ServerProxy {
 
       this._subs.push(
         projectUpdate
-          .filter(action => {
-            return action.type !== project.PROJECT_SET_TIMELINE_DURATION &&
-              action.type !== project.PROJECT_UNDO &&
-              action.type !== project.PROJECT_REDO
-          })
-          .withLatestFrom(projectState.pairwise())
-          .subscribe(([_, [prevState, __]]) => {
+          .pipe(
+            filter(action => {
+              return action.type !== project.PROJECT_SET_TIMELINE_DURATION &&
+                action.type !== project.PROJECT_UNDO &&
+                action.type !== project.PROJECT_REDO
+            }),
+            withLatestFrom(projectState.pipe(pairwise()))
+          ).subscribe(([_, [prevState, __]]) => {
             // push snapshot
             const projState = prevState.get('meta', null)!
             const snapshot = new ProjectSnapshotRecordFactory({

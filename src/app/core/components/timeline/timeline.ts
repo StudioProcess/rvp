@@ -1,7 +1,7 @@
 import {
   Component, OnInit, OnDestroy,
   ChangeDetectionStrategy, ChangeDetectorRef,
-  Renderer2, ViewChild, ElementRef,
+  ViewChild, ElementRef,
   AfterViewInit, Inject
 } from '@angular/core'
 
@@ -11,25 +11,22 @@ import {Store} from '@ngrx/store'
 
 import {Record, Set} from 'immutable'
 
-import {Observable} from 'rxjs/Observable'
-import {ReplaySubject} from 'rxjs/ReplaySubject'
-import {Subscription} from 'rxjs/Subscription'
-// import {animationFrame as animationScheduler} from 'rxjs/scheduler/animationFrame'
-import 'rxjs/add/observable/combineLatest'
-import 'rxjs/add/observable/merge'
-import 'rxjs/add/observable/concat'
-import 'rxjs/add/observable/of'
-import 'rxjs/add/observable/fromEvent'
-import 'rxjs/add/operator/map'
-import 'rxjs/add/operator/startWith'
-import 'rxjs/add/operator/filter'
+import {
+  Observable, ReplaySubject, Subscription, combineLatest,
+  fromEvent, concat, of
+} from 'rxjs'
+
+import {
+  switchMap, filter, map, takeUntil,
+  withLatestFrom, startWith, distinctUntilChanged,
+  share
+} from 'rxjs/operators'
 
 import * as fromProject from '../../../persistence/reducers'
 import * as fromPlayer from '../../../player/reducers'
 import * as project from '../../../persistence/actions/project'
 import * as player from '../../../player/actions'
 import {Timeline, Track, Annotation} from '../../../persistence/model'
-import {fromEventPattern} from '../../../lib/observable'
 import {HandlebarComponent} from '../../components/timeline/handlebar/handlebar.component'
 import {_SCROLLBAR_CAPTION_} from '../../../config/timeline/scrollbar'
 import {rndColor} from '../../../lib/color'
@@ -64,11 +61,9 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('playheadOverflow') private readonly playheadOverflowRef: ElementRef
   private readonly _subs: Subscription[] = []
   private readonly timelineSubj = this._store.select(fromProject.getProjectTimeline)
-    .filter(timeline => timeline !== null)
-    .share()
+    .pipe(filter(timeline => timeline !== null), share())
 
   constructor(
-    private readonly _renderer: Renderer2,
     private readonly _cdr: ChangeDetectorRef,
     private readonly _store: Store<fromProject.State>,
     @Inject(DOCUMENT) private readonly _document: any) {}
@@ -89,12 +84,13 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
 
     this._subs.push(
       this._store.select(fromPlayer.getCurrentTime)
-        .withLatestFrom(this.timelineSubj, (currentTime, timeline) => {
-          return {
-            currentTime,
-            progress: currentTime / timeline!.get('duration', null)
-          }
-        })
+        .pipe(
+          withLatestFrom(this.timelineSubj, (currentTime, timeline) => {
+            return {
+              currentTime,
+              progress: currentTime / timeline!.get('duration', null)
+            }
+          }))
         .subscribe(({currentTime, progress}) => {
           this.playerPos = progress
           this.playerCurrentTime = currentTime
@@ -124,29 +120,30 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       width: this.scrollbarWidth
     }
 
-    const handlebarSettings = this.handlebarRef.onHandlebarUpdate.startWith(initHB)
-      .map(hb => {
+    const handlebarSettings = this.handlebarRef.onHandlebarUpdate.pipe(
+      startWith(initHB),
+      map(hb => {
         const zoom = 100/hb.width
         return {zoom, scrollLeft: hb.left}
-      })
+      }))
 
-    const winResize = fromEventPattern(this._renderer, window, 'resize')
+    const winResize: Observable<Event|null> = fromEvent(window, 'resize')
 
     this._subs.push(
-      winResize.startWith(null).subscribe(() => {
+      winResize.pipe(startWith(null)).subscribe(() => {
         this.scrollbarRect.next(getScrollbarRect())
         this.timelineWrapperRect.next(getTimelineWrapperRect())
       }))
 
-    this._subs.push(Observable.combineLatest(
+    this._subs.push(combineLatest(
       this.timelineWrapperRect, handlebarSettings,
       (rect, {zoom, scrollLeft}) => {
         const zoomContainerWidth = zoom*rect.width
         const maxLeft = zoomContainerWidth-rect.width
         return {zoom, left: Math.max(0, Math.min(zoomContainerWidth*scrollLeft/100, maxLeft))}
-      }).distinctUntilChanged((prev, cur) => {
+      }).pipe(distinctUntilChanged((prev, cur) => {
         return prev.left === cur.left && prev.zoom === cur.zoom
-      }).subscribe(({zoom, left}) => {
+      })).subscribe(({zoom, left}) => {
         this.scrollSettings.next({zoom, scrollLeft: left})
       }))
 
@@ -164,41 +161,44 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
 
     const isLeftBtn = (ev: MouseEvent) => ev.button === 0
 
-    const mousemove: Observable<MouseEvent> = Observable.fromEvent(this._document, 'mousemove')
-    const mouseup: Observable<MouseEvent> = Observable.fromEvent(this._document, 'mouseup')
-    const placeHeadMd: Observable<MouseEvent> = Observable.fromEvent(this.timelineWrapperRef.nativeElement, 'mousedown').filter(isLeftBtn)
+    const mousemove: Observable<MouseEvent> = fromEvent(this._document, 'mousemove')
+    const mouseup: Observable<MouseEvent> = fromEvent(this._document, 'mouseup')
+    const placeHeadMd: Observable<MouseEvent> = fromEvent(this.timelineWrapperRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
 
-    const zoomContainer = Observable.combineLatest(
+    const zoomContainer = combineLatest(
       this.timelineWrapperRect, this.scrollSettings,
       (rect, {zoom, scrollLeft}) => {
         return {x: rect.left-scrollLeft, width: zoom*rect.width}
       })
 
     this._subs.push(placeHeadMd
-      .switchMap(md => {
-        const init = {clientX: md.clientX}
-        return Observable.concat(
-          Observable.of(init),
-          mousemove.map(mmEvent => {
-            const {clientX, clientY} = mmEvent
-            return {clientX, clientY}
-          }).takeUntil(mouseup))
-      })
-      .withLatestFrom(zoomContainer, (ev: MouseEvent, {x, width}) => {
-        const localX = ev.clientX - x
-        return localX / width
-      })
-      .map(progress => {
-        return Math.max(0, Math.min(progress, 1))
-      })
-      .distinctUntilChanged()
-      .withLatestFrom(this.timelineSubj, (progress, tl) => {
-        const totalTime = tl!.get('duration', null)
-        return {
-          progress,
-          currentTime: progress*totalTime
-        }
-      })
+      .pipe(
+        switchMap(md => {
+          const init = {clientX: md.clientX}
+          return concat(
+            of(init),
+            mousemove.pipe(
+              map(mmEvent => {
+                const {clientX, clientY} = mmEvent
+                return {clientX, clientY}
+              }),
+              takeUntil(mouseup)))
+        }),
+        withLatestFrom(zoomContainer, (ev: MouseEvent, {x, width}) => {
+          const localX = ev.clientX - x
+          return localX / width
+        }),
+        map(progress => {
+          return Math.max(0, Math.min(progress, 1))
+        }),
+        distinctUntilChanged(),
+        withLatestFrom(this.timelineSubj, (progress, tl) => {
+          const totalTime = tl!.get('duration', null)
+          return {
+            progress,
+            currentTime: progress*totalTime
+          }
+        }))
       .subscribe(({progress, currentTime}) => {
         this.playerPos = progress
         this.playerCurrentTime = currentTime

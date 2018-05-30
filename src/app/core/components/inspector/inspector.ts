@@ -6,8 +6,8 @@ import {
 
 import {List, Record, Set} from 'immutable'
 
-import {Subscription} from 'rxjs/Subscription'
-import 'rxjs/add/operator/withLatestFrom'
+import {Subscription} from 'rxjs'
+import {filter, withLatestFrom, map} from 'rxjs/operators'
 
 import {Store} from '@ngrx/store'
 
@@ -45,7 +45,7 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren(InspectorEntryComponent) private readonly entries: QueryList<InspectorEntryComponent>
   private readonly _subs: Subscription[] = []
   annotations: List<Record<AnnotationColorMap>>
-  height = this._playerStore.select(fromPlayer.getDimensions).map(({height}) => height)
+  height = this._playerStore.select(fromPlayer.getDimensions).pipe(map(({height}) => height))
   selectedAnnotations: Set<Record<Annotation>>
 
   constructor(
@@ -78,14 +78,15 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
 
     this._subs.push(
       this._store.select(fromProject.getProjectFocusAnnotationSelection)
-        .filter(annotationSelection => {
-          if(annotationSelection !== null) {
-            return annotationSelection.get('source', null) === SelectionSource.Timeline
-          } else {
-            return false
-          }
-        })
-        .withLatestFrom(this.entries.changes)
+        .pipe(
+          filter(annotationSelection => {
+            if(annotationSelection !== null) {
+              return annotationSelection.get('source', null) === SelectionSource.Timeline
+            } else {
+              return false
+            }
+          }),
+          withLatestFrom(this.entries.changes))
         .subscribe(([annotationSelection, currentEntries]: annotationSelectionWithEntries) => {
           const selectedId = annotationSelection.getIn(['annotation', 'id'])
 

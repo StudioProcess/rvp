@@ -76,7 +76,7 @@ export class ProjectExport implements Action {
 
 export class ProjectExportError implements Action {
   readonly type = PROJECT_EXPORT_ERROR
-  constructor(readonly payload: any){}
+  constructor(readonly payload: any) {}
 }
 
 export interface ImportVideoPayload {
@@ -149,7 +149,7 @@ export interface SelectAnnotationPayload {
 
 export class ProjectSelectAnnotation implements Action {
   readonly type = PROJECT_SELECT_ANNOTATION
-  constructor(readonly payload: SelectAnnotationPayload){}
+  constructor(readonly payload: SelectAnnotationPayload) {}
 }
 
 export class ProjectResetAnnotationSelection implements Action {
@@ -192,7 +192,7 @@ export interface DeleteTrackPlayload {
 
 export class ProjectDeleteTrack implements Action {
   readonly type = PROJECT_DELETE_TRACK
-  constructor(readonly payload: DeleteTrackPlayload){}
+  constructor(readonly payload: DeleteTrackPlayload) {}
 }
 
 export interface DuplicateTrackPayload {
@@ -221,7 +221,7 @@ export class ProjectSetTimelineDuration implements Action {
 
 export class ProjectPushUndo implements Action {
   readonly type = PROJECT_PUSH_UNDO
-  constructor(readonly payload: Record<ProjectSnapshot>){}
+  constructor(readonly payload: Record<ProjectSnapshot>) {}
 }
 
 export class ProjectUndo implements Action {

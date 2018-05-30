@@ -6,7 +6,7 @@ export function computeStacks(annotations: any[]): any[] {
   if(annotations.length > 1) {
     const stack = []
     const colliding = []
-    let rest = annotations
+    const rest = annotations
     let n = 1
 
     while(rest.length > 0) {

@@ -1,4 +1,4 @@
-export function sortFactory<T,S>(getter: (t:T) => S) {
+export function sortFactory<T, S>(getter: (t: T) => S) {
   return (t1: T, t2: T) => {
     const t1Val = getter(t1)
     const t2Val = getter(t2)
