@@ -60,30 +60,30 @@ export class PlayerContainer implements AfterViewInit, OnDestroy {
       .pipe(
         filter(videoMeta => videoMeta !== null),
         concatMap(videoMeta => {
-        switch(videoMeta!.get('type', null)) {
-          case VIDEO_TYPE_BLOB:
-            return this._projectStore.select(fromProject.getProjectVideoBlob)
-              .pipe(
-                filter(blob => blob !== null),
-                take(1),
-                map(videoBlob => {
-                  const objectURL = URL.createObjectURL(videoBlob)
-                  return {type: 'video/mp4', src: objectURL}
-                }))
-          case VIDEO_TYPE_URL: {
-            const urlVideo = videoMeta as Record<UrlVideo>
-            switch(urlVideo.get('source', null)) {
-              case VIDEO_URL_SOURCE_CUSTOM:
-                return of({type: 'video/mp4', src: urlVideo.get('url', null)!.toString()})
-              case VIDEO_URL_SOURCE_YT:
-                return of({type: 'video/youtube', src: urlVideo.get('url', null)!.toString()})
-              case VIDEO_URL_SOURCE_VIMEO:
-                return of({type: 'video/vimeo', src: urlVideo.get('url', null)!.toString()})
+          switch(videoMeta!.get('type', null)) {
+            case VIDEO_TYPE_BLOB:
+              return this._projectStore.select(fromProject.getProjectVideoBlob)
+                .pipe(
+                  filter(blob => blob !== null),
+                  take(1),
+                  map(videoBlob => {
+                    const objectURL = URL.createObjectURL(videoBlob)
+                    return {type: 'video/mp4', src: objectURL}
+                  }))
+            case VIDEO_TYPE_URL: {
+              const urlVideo = videoMeta as Record<UrlVideo>
+              switch(urlVideo.get('source', null)) {
+                case VIDEO_URL_SOURCE_CUSTOM:
+                  return of({type: 'video/mp4', src: urlVideo.get('url', null)!.toString()})
+                case VIDEO_URL_SOURCE_YT:
+                  return of({type: 'video/youtube', src: urlVideo.get('url', null)!.toString()})
+                case VIDEO_URL_SOURCE_VIMEO:
+                  return of({type: 'video/vimeo', src: urlVideo.get('url', null)!.toString()})
+              }
             }
           }
-        }
 
-        return of(null)
+          return of(null)
       }))
 
 
@@ -106,8 +106,6 @@ export class PlayerContainer implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._store.dispatch(new player.PlayerDestroy())
-
     this._subs.forEach(s => s.unsubscribe())
 
     this._store.dispatch(new player.PlayerDestroy())
