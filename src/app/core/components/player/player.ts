@@ -25,7 +25,7 @@ import {
   _DEFAULT_PLAYER_OPTIONS_,
   _PLAYER_ASPECT_RATIO_,
   _PLAYER_RESIZE_DEBOUNCE_
-} from '../../../config'
+} from '../../../config/player'
 
 import {
   VIDEO_TYPE_BLOB, VIDEO_TYPE_URL,

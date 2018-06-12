@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core'
 
 import * as localForage from 'localforage'
 
-import {_DEFAULT_STORAGE_CONFIG_} from '../../config'
+import {_DEFAULT_STORAGE_CONFIG_} from '../../config/storage'
 
 import ICache from './ICache'
 

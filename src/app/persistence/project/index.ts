@@ -1,6 +1,6 @@
 import * as JSZip from 'jszip'
 
-import {_ZIP_META_} from '../../config'
+import {_ZIP_META_} from '../../config/project'
 
 import loadBinary from '../binary'
 import {loadZip} from '../zip'

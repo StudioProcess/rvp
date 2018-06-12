@@ -1,6 +1,6 @@
 import {PlayerOptions} from 'video.js'
 
-import {_DEFAULT_PLAYER_OPTIONS_} from '../../config'
+import {_DEFAULT_PLAYER_OPTIONS_} from '../../config/player'
 
 export type State = PlayerOptions
 
