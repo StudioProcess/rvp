@@ -60,7 +60,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('timelineWrapper') private readonly _timelineWrapperRef: ElementRef
   @ViewChild('playheadOverflow') private readonly _playheadOverflowRef: ElementRef
   private readonly _subs: Subscription[] = []
-  private readonly timelineSubj = this._store.select(fromProject.getProjectTimeline)
+  private readonly _timelineSubj = this._store.select(fromProject.getProjectTimeline)
     .pipe(filter(timeline => timeline !== null), share())
 
   constructor(
@@ -70,7 +70,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this._subs.push(
-      this.timelineSubj.subscribe(timeline => {
+      this._timelineSubj.subscribe(timeline => {
         this.timeline = timeline as Record<Timeline> // use identifer! syntax?
         this._cdr.markForCheck()
       }))
@@ -85,7 +85,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     this._subs.push(
       this._store.select(fromPlayer.getCurrentTime)
         .pipe(
-          withLatestFrom(this.timelineSubj, (currentTime, timeline) => {
+          withLatestFrom(this._timelineSubj, (currentTime, timeline) => {
             return {
               currentTime,
               progress: currentTime / timeline!.get('duration', null)
@@ -192,7 +192,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
           return Math.max(0, Math.min(progress, 1))
         }),
         distinctUntilChanged(),
-        withLatestFrom(this.timelineSubj, (progress, tl) => {
+        withLatestFrom(this._timelineSubj, (progress, tl) => {
           const totalTime = tl!.get('duration', null)
           return {
             progress,

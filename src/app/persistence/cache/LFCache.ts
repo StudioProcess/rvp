@@ -11,23 +11,23 @@ import ICache from './ICache'
  */
 @Injectable()
 export class LFCache implements ICache {
-  private readonly storage: LocalForage =
+  private readonly _storage: LocalForage =
     localForage.createInstance(_DEFAULT_STORAGE_CONFIG_)
 
   cache<T>(key: string, data: T): Promise<T> {
-    return this.storage.setItem(key, data)
+    return this._storage.setItem(key, data)
   }
 
   clearAll(): Promise<void> {
-    return this.storage.clear()
+    return this._storage.clear()
   }
 
   clear(key: string): Promise<void> {
-    return this.storage.removeItem(key)
+    return this._storage.removeItem(key)
   }
 
   async isCached(keys: string[]): Promise<boolean> {
-    const cachedKeys = await this.storage.keys()
+    const cachedKeys = await this._storage.keys()
 
     const missingKey = keys.find(k => {
       return !cachedKeys.includes(k)
@@ -37,6 +37,6 @@ export class LFCache implements ICache {
   }
 
   getCached<T>(key: string): Promise<T> {
-    return this.storage.getItem<T>(key)
+    return this._storage.getItem<T>(key)
   }
 }

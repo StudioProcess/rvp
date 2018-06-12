@@ -42,7 +42,7 @@ import {InspectorEntryComponent} from './inspectorEntry/inspectorEntry.component
 })
 export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('wrapper') private readonly _scrollWrapperRef: ElementRef
-  @ViewChildren(InspectorEntryComponent) private readonly entries: QueryList<InspectorEntryComponent>
+  @ViewChildren(InspectorEntryComponent) private readonly _entries: QueryList<InspectorEntryComponent>
   private readonly _subs: Subscription[] = []
   annotations: List<Record<AnnotationColorMap>>
   height = this._playerStore.select(fromPlayer.getDimensions).pipe(map(({height}) => height))
@@ -86,7 +86,7 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
               return false
             }
           }),
-          withLatestFrom(this.entries.changes))
+          withLatestFrom(this._entries.changes))
         .subscribe(([annotationSelection, currentEntries]: annotationSelectionWithEntries) => {
           const selectedId = annotationSelection.getIn(['annotation', 'id'])
 
