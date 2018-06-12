@@ -1,12 +1,12 @@
 import * as JSZip from 'jszip'
 
-import {_ZIP_META_} from '../../config/project'
+import {_PROJECT_ZIP_META_} from '../../config/project'
 
 import loadBinary from '../binary'
 import {loadZip} from '../zip'
 
 export async function extractProject(zip: JSZip): Promise<any> {
-  const extractPromises = _ZIP_META_.map(meta => {
+  const extractPromises = _PROJECT_ZIP_META_.map(meta => {
     return zip.file(meta.file)
       .async(meta.type)
       .then((f:any) => [meta.middleware.postLoad(f), meta])

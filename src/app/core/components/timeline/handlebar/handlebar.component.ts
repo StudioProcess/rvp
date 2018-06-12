@@ -20,7 +20,7 @@ import {
   distinctUntilKeyChanged
 } from 'rxjs/operators'
 
-import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
+import {_HANDLEBAR_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 
 export interface Handlebar {
   readonly left: number
@@ -136,7 +136,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
       withLatestFrom(this._handlebarSubj, (l, prevHb) => {
         const oldRight = prevHb.left+prevHb.width
         // ensure handlebar min width
-        const newLeft = Math.min(l, oldRight-_MIN_WIDTH_)
+        const newLeft = Math.min(l, oldRight-_HANDLEBAR_MIN_WIDTH_)
         const deltaLeft = newLeft-prevHb.left
         const newWidth = prevHb.width-deltaLeft
         return {left: newLeft, width: newWidth}
@@ -147,7 +147,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
       withLatestFrom(this.containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect))),
       distinctUntilChanged(),
       withLatestFrom(this._handlebarSubj, (r, prevHb) => {
-        const newRight = Math.max(prevHb.left+_MIN_WIDTH_, r)
+        const newRight = Math.max(prevHb.left+_HANDLEBAR_MIN_WIDTH_, r)
         return {left: prevHb.left, width: newRight-prevHb.left}
       }))
 

@@ -28,7 +28,7 @@ import {
   AnnotationSelectionRecordFactory, SelectionSource
 } from '../../../../persistence/model'
 import {_FORM_INPUT_DEBOUNCE_} from '../../../../config/form'
-import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
+import {_HANDLEBAR_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 import {coordTransform} from '../../../../lib/coords'
 import {Handlebar} from '../handlebar/handlebar.component'
 import * as project from '../../../../persistence/actions/project'
@@ -279,7 +279,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   }
 
   getAnnotationWidth(annotation: Annotation) {
-    return Math.min(Math.max(_MIN_WIDTH_, annotation.duration / this.totalDuration * 100), 100)
+    return Math.min(Math.max(_HANDLEBAR_MIN_WIDTH_, annotation.duration / this.totalDuration * 100), 100)
   }
 
   isSelectedAnnotation(annotation: Record<Annotation>) {

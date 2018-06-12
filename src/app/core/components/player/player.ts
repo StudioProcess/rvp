@@ -22,7 +22,7 @@ import * as fromPlayer from '../../../player/reducers'
 import * as player from '../../../player/actions'
 
 import {
-  _DEFAULT_PLAYER_OPTIONS_,
+  _PLAYER_OPTIONS_,
   _PLAYER_ASPECT_RATIO_,
   _PLAYER_RESIZE_DEBOUNCE_
 } from '../../../config/player'
@@ -53,7 +53,7 @@ export class PlayerContainer implements AfterViewInit, OnDestroy {
 
     this._store.dispatch(new player.PlayerCreate({
       elemRef: this._videoElemRef,
-      playerOptions: _DEFAULT_PLAYER_OPTIONS_
+      playerOptions: _PLAYER_OPTIONS_
     }))
 
     const setSource: Observable<{type: string, src: string}|null> = this._projectStore.select(fromProject.getProjectVideoMeta)

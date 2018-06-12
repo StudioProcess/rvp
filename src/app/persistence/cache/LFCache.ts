@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core'
 
 import * as localForage from 'localforage'
 
-import {_DEFAULT_STORAGE_CONFIG_} from '../../config/storage'
+import {_STORAGE_DEFAULT_CONFIG_} from '../../config/storage'
 
 import ICache from './ICache'
 
@@ -12,7 +12,7 @@ import ICache from './ICache'
 @Injectable()
 export class LFCache implements ICache {
   private readonly _storage: LocalForage =
-    localForage.createInstance(_DEFAULT_STORAGE_CONFIG_)
+    localForage.createInstance(_STORAGE_DEFAULT_CONFIG_)
 
   cache<T>(key: string, data: T): Promise<T> {
     return this._storage.setItem(key, data)

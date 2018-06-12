@@ -3,11 +3,11 @@ import {id} from '../lib/fp'
 
 export const _PROJECT_AUTOSAVE_DEBOUNCE_ = 1000
 
-export const _DEFAULT_PROJECT_PATH_ = 'assets/projects/default.rv'
+export const _PROJECT_DEFAULT_PATH_ = 'assets/projects/default.rv'
 
-export const _METADATA_PATH_ = 'project.json'
-export const _VIDEODATA_PATH_ = 'video.m4v'
-export const _EXPORT_PROJECT_NAME_ = 'project.rv'
+export const _PROJECT_METADATA_PATH_ = 'project.json'
+export const _PROJECT_VIDEODATA_PATH_ = 'video.m4v'
+export const _PROJECT_EXPORT_NAME_ = 'project.rv'
 
 export interface FileMiddleware {
   postLoad(res: any): any
@@ -22,9 +22,9 @@ export interface ZipFileMeta {
   readonly middleware: FileMiddleware
 }
 
-export const _ZIP_META_: ZipFileMeta[] = [
+export const _PROJECT_ZIP_META_: ZipFileMeta[] = [
   {
-    file: _METADATA_PATH_,
+    file: _PROJECT_METADATA_PATH_,
     type: 'text',
     map: 'meta',
     middleware: {
@@ -32,7 +32,7 @@ export const _ZIP_META_: ZipFileMeta[] = [
     }
   },
   {
-    file: _VIDEODATA_PATH_,
+    file: _PROJECT_VIDEODATA_PATH_,
     type: 'blob',
     map: 'video',
     middleware: defaultFileMW
