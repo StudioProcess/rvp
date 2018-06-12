@@ -72,9 +72,9 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   private readonly updateAnnotationSubj = new Subject<{hb: Handlebar, annotationIndex: number, annotationStackIndex: number}>()
   private readonly annotationMdSubj = new Subject<{ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number}>()
 
-  @ViewChild('title') private readonly titleInputRef: ElementRef
-  @ViewChild('trackOverflow') private readonly overflowContainerRef: ElementRef
-  @ViewChild('zoomContainer') private readonly zoomContainerRef: ElementRef
+  @ViewChild('title') private readonly _titleInputRef: ElementRef
+  @ViewChild('trackOverflow') private readonly _overflowContainerRef: ElementRef
+  @ViewChild('zoomContainer') private readonly _zoomContainerRef: ElementRef
 
   constructor(
     private readonly _elem: ElementRef,
@@ -86,9 +86,9 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
       title: [this.data.getIn(['fields', 'title']), Validators.required]
     })
 
-    const titleInputMd = fromEvent(this.titleInputRef.nativeElement, 'mousedown')
-    const titleInputKeydown = fromEvent(this.titleInputRef.nativeElement, 'keydown')
-    const formBlur = fromEvent(this.titleInputRef.nativeElement, 'blur')
+    const titleInputMd = fromEvent(this._titleInputRef.nativeElement, 'mousedown')
+    const titleInputKeydown = fromEvent(this._titleInputRef.nativeElement, 'keydown')
+    const formBlur = fromEvent(this._titleInputRef.nativeElement, 'blur')
 
     const hostMouseEnterTs = fromEvent(this._elem.nativeElement, 'mouseenter').pipe(map(() => Date.now()))
     const hostMouseLeaveTs = fromEvent(this._elem.nativeElement, 'mouseleave').pipe(map(() => Date.now()), startWith(Date.now()))
@@ -217,7 +217,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
 
   ngAfterViewInit() {
     const getZoomContainerRect = () => {
-      return this.zoomContainerRef.nativeElement.getBoundingClientRect()
+      return this._zoomContainerRef.nativeElement.getBoundingClientRect()
     }
 
     const winResize: Observable<Event|null> = fromEvent(window, 'resize')
@@ -230,14 +230,14 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     this._subs.push(
       this.scrollSettings.subscribe(({zoom, scrollLeft}) => {
         this.zoom = zoom
-        this.overflowContainerRef.nativeElement.scrollLeft = scrollLeft
+        this._overflowContainerRef.nativeElement.scrollLeft = scrollLeft
 
         /*
          * TODO: Research issue with scrollLeft!
          * Using setTimeout fix for now.
          */
         setTimeout(() => {
-          this.overflowContainerRef.nativeElement.scrollLeft = scrollLeft
+          this._overflowContainerRef.nativeElement.scrollLeft = scrollLeft
           this._cdr.markForCheck()
         })
 

@@ -60,10 +60,10 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   @Output() readonly onUpdate = new EventEmitter<project.UpdateAnnotationPayload>()
   @Output() readonly onSelectAnnotation = new EventEmitter<project.SelectAnnotationPayload>()
 
-  @ViewChild('start') readonly startInputRef: ElementRef
-  @ViewChild('duration') readonly durationInputRef: ElementRef
-  @ViewChild('title') readonly titleInputRef: ElementRef
-  @ViewChild('descr') readonly descrInputRef: ElementRef
+  @ViewChild('start') private readonly _startInputRef: ElementRef
+  @ViewChild('duration') private readonly _durationInputRef: ElementRef
+  @ViewChild('title') private readonly _titleInputRef: ElementRef
+  @ViewChild('descr') private readonly _descrInputRef: ElementRef
 
   form: FormGroup|null = null
 
@@ -99,21 +99,21 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   ngAfterViewInit() {
     const durationKeydown = merge(
-      fromEvent(this.startInputRef.nativeElement, 'keydown'),
-      fromEvent(this.durationInputRef.nativeElement, 'keydown'))
+      fromEvent(this._startInputRef.nativeElement, 'keydown'),
+      fromEvent(this._durationInputRef.nativeElement, 'keydown'))
 
     const formKeydown = merge(
       durationKeydown,
-      fromEvent(this.titleInputRef.nativeElement, 'keydown'),
-      fromEvent(this.descrInputRef.nativeElement, 'keydown'))
+      fromEvent(this._titleInputRef.nativeElement, 'keydown'),
+      fromEvent(this._descrInputRef.nativeElement, 'keydown'))
 
     const enterHotKey = formKeydown.pipe(filter((ev: KeyboardEvent) => ev.keyCode === 13))
 
     const formBlur = merge(
-      fromEvent(this.startInputRef.nativeElement, 'blur'),
-      fromEvent(this.durationInputRef.nativeElement, 'blur'),
-      fromEvent(this.titleInputRef.nativeElement, 'blur'),
-      fromEvent(this.descrInputRef.nativeElement, 'blur'))
+      fromEvent(this._startInputRef.nativeElement, 'blur'),
+      fromEvent(this._durationInputRef.nativeElement, 'blur'),
+      fromEvent(this._titleInputRef.nativeElement, 'blur'),
+      fromEvent(this._descrInputRef.nativeElement, 'blur'))
 
     this._subs.push(
       formKeydown.subscribe((ev: KeyboardEvent) => {

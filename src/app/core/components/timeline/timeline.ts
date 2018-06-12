@@ -55,10 +55,10 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   readonly timelineWrapperRect = new ReplaySubject<ClientRect>(1)
   readonly scrollSettings = new ReplaySubject<ScrollSettings>(1)
 
-  @ViewChild('scrollbar') private readonly scrollbarRef: ElementRef
-  @ViewChild('handlebar') private readonly handlebarRef: HandlebarComponent
-  @ViewChild('timelineWrapper') private readonly timelineWrapperRef: ElementRef
-  @ViewChild('playheadOverflow') private readonly playheadOverflowRef: ElementRef
+  @ViewChild('scrollbar') private readonly _scrollbarRef: ElementRef
+  @ViewChild('handlebar') private readonly _handlebarRef: HandlebarComponent
+  @ViewChild('timelineWrapper') private readonly _timelineWrapperRef: ElementRef
+  @ViewChild('playheadOverflow') private readonly _playheadOverflowRef: ElementRef
   private readonly _subs: Subscription[] = []
   private readonly timelineSubj = this._store.select(fromProject.getProjectTimeline)
     .pipe(filter(timeline => timeline !== null), share())
@@ -100,15 +100,15 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     const getScrollbarRect = () => {
-      return this.scrollbarRef.nativeElement.getBoundingClientRect()
+      return this._scrollbarRef.nativeElement.getBoundingClientRect()
     }
 
     const getTimelineWrapperRect = () => {
-      return this.timelineWrapperRef.nativeElement.getBoundingClientRect()
+      return this._timelineWrapperRef.nativeElement.getBoundingClientRect()
     }
 
     this._subs.push(
-      this.handlebarRef.onHandlebarUpdate.subscribe(hb => {
+      this._handlebarRef.onHandlebarUpdate.subscribe(hb => {
         // Set new left and width
         this.scrollbarLeft = hb.left
         this.scrollbarWidth = hb.width
@@ -120,7 +120,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
       width: this.scrollbarWidth
     }
 
-    const handlebarSettings = this.handlebarRef.onHandlebarUpdate.pipe(
+    const handlebarSettings = this._handlebarRef.onHandlebarUpdate.pipe(
       startWith(initHB),
       map(hb => {
         const zoom = 100/hb.width
@@ -150,10 +150,10 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     this._subs.push(
       this.scrollSettings.subscribe(({zoom, scrollLeft}) => {
         this.pZoom = zoom
-        this.playheadOverflowRef.nativeElement.scrollLeft = scrollLeft
+        this._playheadOverflowRef.nativeElement.scrollLeft = scrollLeft
 
         setTimeout(() => {
-          this.playheadOverflowRef.nativeElement.scrollLeft = scrollLeft
+          this._playheadOverflowRef.nativeElement.scrollLeft = scrollLeft
           this._cdr.markForCheck()
         })
         this._cdr.markForCheck()
@@ -163,7 +163,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
 
     const mousemove: Observable<MouseEvent> = fromEvent(this._document, 'mousemove')
     const mouseup: Observable<MouseEvent> = fromEvent(this._document, 'mouseup')
-    const placeHeadMd: Observable<MouseEvent> = fromEvent(this.timelineWrapperRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
+    const placeHeadMd: Observable<MouseEvent> = fromEvent(this._timelineWrapperRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
 
     const zoomContainer = combineLatest(
       this.timelineWrapperRect, this.scrollSettings,
