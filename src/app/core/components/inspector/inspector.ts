@@ -41,7 +41,7 @@ import {InspectorEntryComponent} from './inspectorEntry/inspectorEntry.component
   `]
 })
 export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('wrapper') private readonly scrollWrapper: ElementRef
+  @ViewChild('wrapper') private readonly scrollWrapperRef: ElementRef
   @ViewChildren(InspectorEntryComponent) private readonly entries: QueryList<InspectorEntryComponent>
   private readonly _subs: Subscription[] = []
   annotations: List<Record<AnnotationColorMap>>
@@ -96,7 +96,7 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
 
           if(entry) {
             setTimeout(() => {
-              const wrapper = this.scrollWrapper.nativeElement
+              const wrapper = this.scrollWrapperRef.nativeElement
               const e = entry.elem.nativeElement
 
               // Position centered

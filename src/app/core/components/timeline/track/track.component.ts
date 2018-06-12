@@ -72,7 +72,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   private readonly updateAnnotationSubj = new Subject<{hb: Handlebar, annotationIndex: number, annotationStackIndex: number}>()
   private readonly annotationMdSubj = new Subject<{ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number}>()
 
-  @ViewChild('title') private readonly titleInput: ElementRef
+  @ViewChild('title') private readonly titleInputRef: ElementRef
   @ViewChild('trackOverflow') private readonly overflowContainerRef: ElementRef
   @ViewChild('zoomContainer') private readonly zoomContainerRef: ElementRef
 
@@ -86,9 +86,9 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
       title: [this.data.getIn(['fields', 'title']), Validators.required]
     })
 
-    const titleInputMd = fromEvent(this.titleInput.nativeElement, 'mousedown')
-    const titleInputKeydown = fromEvent(this.titleInput.nativeElement, 'keydown')
-    const formBlur = fromEvent(this.titleInput.nativeElement, 'blur')
+    const titleInputMd = fromEvent(this.titleInputRef.nativeElement, 'mousedown')
+    const titleInputKeydown = fromEvent(this.titleInputRef.nativeElement, 'keydown')
+    const formBlur = fromEvent(this.titleInputRef.nativeElement, 'blur')
 
     const hostMouseEnterTs = fromEvent(this._elem.nativeElement, 'mouseenter').pipe(map(() => Date.now()))
     const hostMouseLeaveTs = fromEvent(this._elem.nativeElement, 'mouseleave').pipe(map(() => Date.now()), startWith(Date.now()))

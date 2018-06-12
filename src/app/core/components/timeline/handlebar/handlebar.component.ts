@@ -53,9 +53,9 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   @HostBinding('style.left.%') internLeft: number
   @HostBinding('style.width.%') internWidth: number
 
-  @ViewChild('leftHandle') private readonly leftHandle: ElementRef
-  @ViewChild('middleHandle') private readonly middleHandle: ElementRef
-  @ViewChild('rightHandle') private readonly rightHandle: ElementRef
+  @ViewChild('leftHandle') private readonly leftHandleRef: ElementRef
+  @ViewChild('middleHandle') private readonly middleHandleRef: ElementRef
+  @ViewChild('rightHandle') private readonly rightHandleRef: ElementRef
 
   private readonly syncValueSubj = new Subject<Handlebar>()
   private readonly handlebarSubj = new ReplaySubject<Handlebar>(1)
@@ -94,9 +94,9 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
 
     const mousemove = fromEvent(this._document, 'mousemove')
     const mouseup = fromEvent(this._document, 'mouseup')
-    const leftMouseDown = fromEvent(this.leftHandle.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
-    const rightMouseDown = fromEvent(this.rightHandle.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
-    const middleMouseDown = fromEvent(this.middleHandle.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
+    const leftMouseDown = fromEvent(this.leftHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
+    const rightMouseDown = fromEvent(this.rightHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
+    const middleMouseDown = fromEvent(this.middleHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
 
     const clientPosWhileMouseMove = (args: any) => {
       return mousemove.pipe(

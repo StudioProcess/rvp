@@ -39,7 +39,7 @@ import {
   styles: [`:host {display: block;}`]
 })
 export class PlayerContainer implements AfterViewInit, OnDestroy {
-  @ViewChild('video') private readonly _videoElem: ElementRef
+  @ViewChild('video') private readonly _videoElemRef: ElementRef
 
   private readonly _subs: Subscription[] = []
 
@@ -52,7 +52,7 @@ export class PlayerContainer implements AfterViewInit, OnDestroy {
     const getClientRect = () => this._hostElem.nativeElement.getBoundingClientRect()
 
     this._store.dispatch(new player.PlayerCreate({
-      elemRef: this._videoElem,
+      elemRef: this._videoElemRef,
       playerOptions: _DEFAULT_PLAYER_OPTIONS_
     }))
 
