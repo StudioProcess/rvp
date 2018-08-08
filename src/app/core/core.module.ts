@@ -12,6 +12,7 @@ import {LogoComponent} from './components/logo.component'
 import {ProjectBtnComponent} from './components/project/projectBtn/projectBtn.component'
 import {ProjectModalComponent} from './components/project/projectModal/projectModal.component'
 import {FooterComponent} from './components/footer/footer.component'
+import {VersionComponent} from './components/version/version.component'
 
 // Inspector components
 import {InspectorEntryComponent} from './components/inspector/inspectorEntry/inspectorEntry.component'
@@ -26,7 +27,7 @@ const _DECLS_ = [
   MainContainer, PlayerContainer, InspectorContainer,
   TimelineContainer,
   // Components
-  NotFoundComponent, LogoComponent,
+  NotFoundComponent, LogoComponent, VersionComponent,
   ProjectBtnComponent, ProjectModalComponent, FooterComponent,
   // Inspector
   InspectorEntryComponent,
