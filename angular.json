@@ -26,7 +26,8 @@
               "src/sw.js",
               "src/assets",
               "src/favicon.ico",
-              "src/apple-touch-icon.png"
+              "src/apple-touch-icon.png",
+              "src/.htaccess"
             ],
             "styles": [
               "node_modules/video.js/dist/video-js.min.css",

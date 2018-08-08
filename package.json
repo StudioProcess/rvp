@@ -16,7 +16,7 @@
   "license": "GPL-3.0",
   "engines": {
     "node": ">=8.0.0",
-    "npm": ">=5.0.0"
+    "npm": ">=5.7.0"
   },
   "scripts": {
     "ng": "ng",
@@ -28,7 +28,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "reinstall": "rm -rf node_modules dist tmp && npm install",
+    "reinstall": "rm -rf dist tmp; npm ci",
     "chrome": "open -a 'google chrome' http://localhost:4200",
     "tslint:app": "tslint -c tslint.json -p src/tsconfig.app.json --format stylish",
     "tsc:app": "tsc -p src/tsconfig.app.json"
@@ -55,7 +55,7 @@
     "pace-progress": "^1.0.2",
     "rxjs": "^6.0.0",
     "video.js": "^5.20.5",
-    "videojs-vimeo": "git+ssh://git@github.com/dinony/videojs-vimeo.git#patch-1",
+    "videojs-vimeo": "github:dinony/videojs-vimeo#patch-1",
     "videojs-youtube": "^2.5.0",
     "zone.js": "^0.8.26"
   },
