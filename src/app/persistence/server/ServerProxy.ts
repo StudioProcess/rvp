@@ -17,11 +17,11 @@ import * as fromProject from '../reducers'
 import {VIDEO_TYPE_BLOB} from '../../persistence/model'
 
 import {
-  _DEFAULT_PROJECT_PATH_, _METADATA_PATH_,
-  _VIDEODATA_PATH_, _EXPORT_PROJECT_NAME_,
+  _PROJECT_DEFAULT_PATH_, _PROJECT_METADATA_PATH_,
+  _PROJECT_VIDEODATA_PATH_, _PROJECT_EXPORT_NAME_,
   _PROJECT_AUTOSAVE_DEBOUNCE_
 } from '../../config/project'
-import {_DEFZIPOTPIONS_} from '../../config/zip'
+import {_ZIP_DEFAULT_OTPIONS_} from '../../config/zip'
 import {LFCache} from '../cache/LFCache'
 import {loadProject, extractProject} from '../project'
 import {ensureValidProjectData} from '../project/validate'
@@ -69,7 +69,7 @@ export class ServerProxy implements OnDestroy {
 
                 this._store.dispatch(new project.ProjectLoadSuccess({meta, video}))
               } else {
-                const projectData = await loadProject(_DEFAULT_PROJECT_PATH_)
+                const projectData = await loadProject(_PROJECT_DEFAULT_PATH_)
 
                 // mutates project data
                 ensureValidProjectData(projectData)
@@ -145,11 +145,11 @@ export class ServerProxy implements OnDestroy {
             next: async ({meta, video}) => {
               try {
                 const zip = new JSZip()
-                zip.file(`${_METADATA_PATH_}`, JSON.stringify(meta))
-                zip.file(`${_VIDEODATA_PATH_}`, video as Blob)
+                zip.file(`${_PROJECT_METADATA_PATH_}`, JSON.stringify(meta))
+                zip.file(`${_PROJECT_VIDEODATA_PATH_}`, video as Blob)
 
-                const zipBlob = await zip.generateAsync(_DEFZIPOTPIONS_) as Blob
-                saveAs(zipBlob, _EXPORT_PROJECT_NAME_)
+                const zipBlob = await zip.generateAsync(_ZIP_DEFAULT_OTPIONS_) as Blob
+                saveAs(zipBlob, _PROJECT_EXPORT_NAME_)
               } catch(err) {
                 this._store.dispatch(new project.ProjectExportError(err))
               }

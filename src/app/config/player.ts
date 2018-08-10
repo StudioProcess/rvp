@@ -1,6 +1,6 @@
 import {PlayerOptions} from 'video.js'
 
-export const _DEFAULT_PLAYER_OPTIONS_: PlayerOptions = {
+export const _PLAYER_OPTIONS_: PlayerOptions = {
   controls: true,
   techOrder: ['html5', 'vimeo', 'youtube'],
   preload: 'metadata'

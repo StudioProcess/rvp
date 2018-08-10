@@ -20,7 +20,7 @@ import {
   distinctUntilKeyChanged
 } from 'rxjs/operators'
 
-import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
+import {_HANDLEBAR_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 
 export interface Handlebar {
   readonly left: number
@@ -53,17 +53,17 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   @HostBinding('style.left.%') internLeft: number
   @HostBinding('style.width.%') internWidth: number
 
-  @ViewChild('leftHandle') private readonly leftHandle: ElementRef
-  @ViewChild('middleHandle') private readonly middleHandle: ElementRef
-  @ViewChild('rightHandle') private readonly rightHandle: ElementRef
+  @ViewChild('leftHandle') private readonly _leftHandleRef: ElementRef
+  @ViewChild('middleHandle') private readonly _middleHandleRef: ElementRef
+  @ViewChild('rightHandle') private readonly _rightHandleRef: ElementRef
 
-  private readonly syncValueSubj = new Subject<Handlebar>()
-  private readonly handlebarSubj = new ReplaySubject<Handlebar>(1)
+  private readonly _syncValueSubj = new Subject<Handlebar>()
+  private readonly _handlebarSubj = new ReplaySubject<Handlebar>(1)
   @Output() readonly onHandlebarUpdate = new ReplaySubject<Handlebar>(1)
 
   private readonly _subs: Subscription[] = []
 
-  private isDragging = false
+  private _isDragging = false
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
@@ -80,12 +80,12 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
     this.internLeft = this.inLeft
     this.internWidth = this.inWidth
     // Used intern
-    this.handlebarSubj.next(_initRect)
+    this._handlebarSubj.next(_initRect)
 
     // No need to inform the outer world of the first handlebar update
     // since it's provided as @Input values
     this._subs.push(
-      this.handlebarSubj.pipe(filter(hb => hb.source !== 'extern'))
+      this._handlebarSubj.pipe(filter(hb => hb.source !== 'extern'))
         .subscribe(this.onHandlebarUpdate))
   }
 
@@ -94,9 +94,9 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
 
     const mousemove = fromEvent(this._document, 'mousemove')
     const mouseup = fromEvent(this._document, 'mouseup')
-    const leftMouseDown = fromEvent(this.leftHandle.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
-    const rightMouseDown = fromEvent(this.rightHandle.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
-    const middleMouseDown = fromEvent(this.middleHandle.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
+    const leftMouseDown = fromEvent(this._leftHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
+    const rightMouseDown = fromEvent(this._rightHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
+    const middleMouseDown = fromEvent(this._middleHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
 
     const clientPosWhileMouseMove = (args: any) => {
       return mousemove.pipe(
@@ -116,7 +116,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
     const leftClientPos = leftMouseDown.pipe(switchMap(clientPosWhileMouseMove))
     const rightClientPos = rightMouseDown.pipe(switchMap(clientPosWhileMouseMove))
     const middleClientPos = middleMouseDown.pipe(
-      withLatestFrom(this.handlebarSubj, this.containerRect, (mdEvent: MouseEvent, prevHb: Handlebar, hRect: ClientRect) => {
+      withLatestFrom(this._handlebarSubj, this.containerRect, (mdEvent: MouseEvent, prevHb: Handlebar, hRect: ClientRect) => {
         const m = transformedToPercentage(mdEvent.clientX, hRect)
         const hbRight = prevHb.left+prevHb.width
         return {
@@ -133,10 +133,10 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
       map(({clientX}) => clientX),
       withLatestFrom(this.containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect))),
       distinctUntilChanged(),
-      withLatestFrom(this.handlebarSubj, (l, prevHb) => {
+      withLatestFrom(this._handlebarSubj, (l, prevHb) => {
         const oldRight = prevHb.left+prevHb.width
         // ensure handlebar min width
-        const newLeft = Math.min(l, oldRight-_MIN_WIDTH_)
+        const newLeft = Math.min(l, oldRight-_HANDLEBAR_MIN_WIDTH_)
         const deltaLeft = newLeft-prevHb.left
         const newWidth = prevHb.width-deltaLeft
         return {left: newLeft, width: newWidth}
@@ -146,8 +146,8 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
       map(({clientX}) => clientX),
       withLatestFrom(this.containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect))),
       distinctUntilChanged(),
-      withLatestFrom(this.handlebarSubj, (r, prevHb) => {
-        const newRight = Math.max(prevHb.left+_MIN_WIDTH_, r)
+      withLatestFrom(this._handlebarSubj, (r, prevHb) => {
+        const newRight = Math.max(prevHb.left+_HANDLEBAR_MIN_WIDTH_, r)
         return {left: prevHb.left, width: newRight-prevHb.left}
       }))
 
@@ -159,7 +159,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
         }
       }),
       distinctUntilKeyChanged('m'),
-      withLatestFrom(this.handlebarSubj, ({distLeft, m}, prevHb) => {
+      withLatestFrom(this._handlebarSubj, ({distLeft, m}, prevHb) => {
         const newLeft = Math.min(Math.max(0, m-distLeft), 100-prevHb.width)
         return {left: newLeft, width: prevHb.width}
       }))
@@ -167,11 +167,11 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
     this._subs.push(
       merge(leftMouseDown, rightMouseDown, middleMouseDown)
         .subscribe(() => {
-          this.isDragging = true
+          this._isDragging = true
         }))
 
     this._subs.push(mouseup.subscribe(() => {
-      this.isDragging = false
+      this._isDragging = false
     }))
 
     this._subs.push(
@@ -179,35 +179,35 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
         .subscribe(({left, width}) => {
           this.internLeft = left
           this.internWidth = width
-          this.handlebarSubj.next({source: 'intern', left, width})
+          this._handlebarSubj.next({source: 'intern', left, width})
           this._cdr.markForCheck()
         }))
 
     this._subs.push(
-      this.syncValueSubj
+      this._syncValueSubj
         .subscribe(({left, width}) => {
           this.internLeft = left
           this.internWidth = width
-          this.handlebarSubj.next({source: 'extern', left, width})
+          this._handlebarSubj.next({source: 'extern', left, width})
           this._cdr.markForCheck()
         }))
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(!this.isDragging) {
+    if(!this._isDragging) {
       const hasLeftChanges = changes.inLeft
       const hasWidthChanges = changes.inWidth
 
       if(hasLeftChanges && hasWidthChanges) {
         const newLeft = changes.inLeft.currentValue
         const newWidth = changes.inWidth.currentValue
-        this.syncValueSubj.next({source: 'extern', left: newLeft, width: newWidth})
+        this._syncValueSubj.next({source: 'extern', left: newLeft, width: newWidth})
       } else if(hasLeftChanges) {
         const newLeft = changes.inLeft.currentValue
-        this.syncValueSubj.next({source: 'extern', left: newLeft, width: this.internWidth})
+        this._syncValueSubj.next({source: 'extern', left: newLeft, width: this.internWidth})
       } else if(hasWidthChanges) {
         const newWidth = changes.inWidth.currentValue
-        this.syncValueSubj.next({source: 'extern', left: this.internLeft, width: newWidth})
+        this._syncValueSubj.next({source: 'extern', left: this.internLeft, width: newWidth})
       }
     }
   }

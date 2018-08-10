@@ -1,4 +1,4 @@
-export const _DEFAULT_STORAGE_CONFIG_ = {
+export const _STORAGE_DEFAULT_CONFIG_ = {
   name: 'Research Video',
   storeName: 'project'
 }

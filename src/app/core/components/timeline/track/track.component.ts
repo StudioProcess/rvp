@@ -28,7 +28,7 @@ import {
   AnnotationSelectionRecordFactory, SelectionSource
 } from '../../../../persistence/model'
 import {_FORM_INPUT_DEBOUNCE_} from '../../../../config/form'
-import {_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
+import {_HANDLEBAR_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 import {coordTransform} from '../../../../lib/coords'
 import {Handlebar} from '../handlebar/handlebar.component'
 import * as project from '../../../../persistence/actions/project'
@@ -68,13 +68,13 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   @Output() readonly onPasteAnnotations = new EventEmitter<project.PasteClipboardPayload>()
 
   private readonly _subs: Subscription[] = []
-  private readonly addAnnotationClick = new Subject<{ev: MouseEvent, annotationStackIndex: number}>()
-  private readonly updateAnnotationSubj = new Subject<{hb: Handlebar, annotationIndex: number, annotationStackIndex: number}>()
-  private readonly annotationMdSubj = new Subject<{ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number}>()
+  private readonly _addAnnotationClick = new Subject<{ev: MouseEvent, annotationStackIndex: number}>()
+  private readonly _updateAnnotationSubj = new Subject<{hb: Handlebar, annotationIndex: number, annotationStackIndex: number}>()
+  private readonly _annotationMdSubj = new Subject<{ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number}>()
 
-  @ViewChild('title') private readonly titleInput: ElementRef
-  @ViewChild('trackOverflow') private readonly overflowContainerRef: ElementRef
-  @ViewChild('zoomContainer') private readonly zoomContainerRef: ElementRef
+  @ViewChild('title') private readonly _titleInputRef: ElementRef
+  @ViewChild('trackOverflow') private readonly _overflowContainerRef: ElementRef
+  @ViewChild('zoomContainer') private readonly _zoomContainerRef: ElementRef
 
   constructor(
     private readonly _elem: ElementRef,
@@ -86,9 +86,9 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
       title: [this.data.getIn(['fields', 'title']), Validators.required]
     })
 
-    const titleInputMd = fromEvent(this.titleInput.nativeElement, 'mousedown')
-    const titleInputKeydown = fromEvent(this.titleInput.nativeElement, 'keydown')
-    const formBlur = fromEvent(this.titleInput.nativeElement, 'blur')
+    const titleInputMd = fromEvent(this._titleInputRef.nativeElement, 'mousedown')
+    const titleInputKeydown = fromEvent(this._titleInputRef.nativeElement, 'keydown')
+    const formBlur = fromEvent(this._titleInputRef.nativeElement, 'blur')
 
     const hostMouseEnterTs = fromEvent(this._elem.nativeElement, 'mouseenter').pipe(map(() => Date.now()))
     const hostMouseLeaveTs = fromEvent(this._elem.nativeElement, 'mouseleave').pipe(map(() => Date.now()), startWith(Date.now()))
@@ -150,7 +150,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
         }))
 
     this._subs.push(
-      this.addAnnotationClick
+      this._addAnnotationClick
         .pipe(
           withLatestFrom(this.zoomContainerRect, ({ev, annotationStackIndex}, rect) => {
             const localX = coordTransform(ev.clientX, rect)
@@ -168,7 +168,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
         .subscribe(this.onAddAnnotation))
 
     this._subs.push(
-      this.updateAnnotationSubj
+      this._updateAnnotationSubj
         .pipe(debounceTime(_FORM_INPUT_DEBOUNCE_, animationScheduler))
         .subscribe(({hb, annotationIndex, annotationStackIndex}) => {
           const oldAnnotation = this.data.getIn(['annotationStacks', annotationStackIndex, annotationIndex])
@@ -189,26 +189,26 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
           })
         }))
 
-    const defaultClick = this.annotationMdSubj.pipe(filter(({ev}) => !ev.shiftKey && !ev.metaKey))
-    const rangeClick = this.annotationMdSubj.pipe(filter(({ev}) => ev.shiftKey && !ev.metaKey))
-    const pickClick = this.annotationMdSubj.pipe(filter(({ev}) => !ev.shiftKey && ev.metaKey))
+    const defaultClick = this._annotationMdSubj.pipe(filter(({ev}) => !ev.shiftKey && !ev.metaKey))
+    const rangeClick = this._annotationMdSubj.pipe(filter(({ev}) => ev.shiftKey && !ev.metaKey))
+    const pickClick = this._annotationMdSubj.pipe(filter(({ev}) => !ev.shiftKey && ev.metaKey))
 
     defaultClick.subscribe(({annotationIndex, annotation}) => {
-      this.emitSelectAnnotation({
+      this._emitSelectAnnotation({
         type: project.AnnotationSelectionType.Default,
         track: this.data, annotation
       })
     })
 
     rangeClick.subscribe(({annotationIndex, annotation}) => {
-      this.emitSelectAnnotation({
+      this._emitSelectAnnotation({
         type: project.AnnotationSelectionType.Range,
         track: this.data, annotation
       })
     })
 
     pickClick.subscribe(({annotationIndex, annotation}) => {
-      this.emitSelectAnnotation({
+      this._emitSelectAnnotation({
         type: project.AnnotationSelectionType.Pick,
         track: this.data, annotation
       })
@@ -217,7 +217,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
 
   ngAfterViewInit() {
     const getZoomContainerRect = () => {
-      return this.zoomContainerRef.nativeElement.getBoundingClientRect()
+      return this._zoomContainerRef.nativeElement.getBoundingClientRect()
     }
 
     const winResize: Observable<Event|null> = fromEvent(window, 'resize')
@@ -230,14 +230,14 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     this._subs.push(
       this.scrollSettings.subscribe(({zoom, scrollLeft}) => {
         this.zoom = zoom
-        this.overflowContainerRef.nativeElement.scrollLeft = scrollLeft
+        this._overflowContainerRef.nativeElement.scrollLeft = scrollLeft
 
         /*
          * TODO: Research issue with scrollLeft!
          * Using setTimeout fix for now.
          */
         setTimeout(() => {
-          this.overflowContainerRef.nativeElement.scrollLeft = scrollLeft
+          this._overflowContainerRef.nativeElement.scrollLeft = scrollLeft
           this._cdr.markForCheck()
         })
 
@@ -249,7 +249,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
       }))
   }
 
-  private emitSelectAnnotation({track, annotation, type}: EmitAnnotationSelectionArgs) {
+  private _emitSelectAnnotation({track, annotation, type}: EmitAnnotationSelectionArgs) {
     this.onSelectAnnotation.emit({
       type,
       selection: AnnotationSelectionRecordFactory({
@@ -279,7 +279,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   }
 
   getAnnotationWidth(annotation: Annotation) {
-    return Math.min(Math.max(_MIN_WIDTH_, annotation.duration / this.totalDuration * 100), 100)
+    return Math.min(Math.max(_HANDLEBAR_MIN_WIDTH_, annotation.duration / this.totalDuration * 100), 100)
   }
 
   isSelectedAnnotation(annotation: Record<Annotation>) {
@@ -307,15 +307,15 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   annotationClick(ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number) {
     ev.stopPropagation()
     if(ev.button !== 0) {return}
-    this.annotationMdSubj.next({ev, annotation, annotationIndex})
+    this._annotationMdSubj.next({ev, annotation, annotationIndex})
   }
 
   addAnnotation(ev: MouseEvent, annotationStackIndex: number) {
-    this.addAnnotationClick.next({ev, annotationStackIndex})
+    this._addAnnotationClick.next({ev, annotationStackIndex})
   }
 
   updateHandlebar(hb: Handlebar, annotationIndex: number, annotationStackIndex: number) {
-    this.updateAnnotationSubj.next({hb, annotationIndex, annotationStackIndex})
+    this._updateAnnotationSubj.next({hb, annotationIndex, annotationStackIndex})
   }
 
   moveTrack($event: MouseEvent, trackIndex: number, direction: 'up'|'down') {
@@ -334,7 +334,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   }
 
   ngOnDestroy() {
-    this.addAnnotationClick.complete()
+    this._addAnnotationClick.complete()
 
     this._subs.forEach(sub => sub.unsubscribe())
   }
