@@ -4,14 +4,14 @@ self.addEventListener('install', function(e) {
       return cache.addAll([
         '/',
         '/index.html',
-        // '/inline.js',
+        '/runtime.js',
         '/polyfills.js',
         '/scripts.js',
         '/styles.css',
-        // '/vendor.js',
         '/main.js',
         '/assets/img/rv_animation.gif',
-        '/ionicons.ttf',
+        '/ionicons.ttf?v=2.0.0',
+        '/ionicons.woff?v=2.0.0',
         '/assets/img/rv-logo_1000px.png',
         '/assets/projects/default.rv'
       ]);
