@@ -153,7 +153,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       })
 
       if(!all.isEmpty()) {
-        const firstSelAnnotation = all.first()!
+        const firstSelAnnotation = all.first() as Record<AnnotationSelection>
         const selectedTrack = firstSelAnnotation.get('track', null)!
         const tracks: List<Record<Track>> = state.getIn(['meta', 'timeline', 'tracks'])
         const trackIndex = tracks.findIndex(t => t.get('id', null) === selectedTrack.get('id', null))!
@@ -194,7 +194,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
 
       // Deleted track is track with selections? If so, clear selection
       if(!allSelections.isEmpty()) {
-        const fs = allSelections.first()!
+        const fs = allSelections.first() as Record<AnnotationSelection>
         const trackWithSelections = fs.get('track', null)!
         if(track.get('id', null) === trackWithSelections.get('id', null)) {
           return state.setIn(['selection', 'annotation', 'range'], Set())
@@ -255,7 +255,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const undoList: List<Record<ProjectSnapshot>> = state.getIn(['snapshots', 'undo'])
       const redoList: List<Record<ProjectSnapshot>> = state.getIn(['snapshots', 'redo'])
       if(undoList.size > 0) {
-        const undoSnapshot = undoList.first()!
+        const undoSnapshot = undoList.first() as Record<ProjectSnapshot>
         const currentSnapshot = new ProjectSnapshotRecordFactory({
           timestamp: Date.now(),
           state: state.get('meta', null)!
@@ -270,7 +270,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const undoList: List<Record<ProjectSnapshot>> = state.getIn(['snapshots', 'undo'])
       const redoList: List<Record<ProjectSnapshot>> = state.getIn(['snapshots', 'redo'])
       if(redoList.size > 0) {
-        const redoSnapshot = redoList.first()!
+        const redoSnapshot = redoList.first() as Record<ProjectSnapshot>
         const currentSnapshot = new ProjectSnapshotRecordFactory({
           timestamp: Date.now(),
           state: state.get('meta', null)!
@@ -338,7 +338,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
           }
           const sortedAnnotations = annotations.sort(sortFunc)
           const peekSelected: Record<AnnotationSelection>|null = state.getIn(['selection', 'annotation', 'selected'])
-          const fa: Record<Annotation> = sortedAnnotations.first()! // fa ~ first annotation in current track
+          const fa: Record<Annotation> = sortedAnnotations.first() as Record<Annotation> // fa ~ first annotation in current track
 
           const pivot: Record<Annotation> = peekSelected && peekSelected.getIn(['track', 'id']) === track.get('id', null) ?
             peekSelected.get('annotation', null)! : fa
