@@ -65,7 +65,7 @@ function findVerticalCollisions(stacks: List<List<Record<Annotation>>>, stackSta
     const hCollisions = findHorizontalCollisions(withInsertions, insertionIndices, true)
     spread = spread.union(hCollisions.map(({annotation}) => annotation))
     // Get actual indices of horiz. collisions
-    stack.forEach((annotation, annotationIndex)  => {
+    stack.forEach((annotation, annotationIndex) => {
       const isCollision = hCollisions.find(hColl => {
         return hColl.annotation.get('id', null) === annotation.get('id', null)
       }) !== undefined
