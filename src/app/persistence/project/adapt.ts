@@ -3,9 +3,9 @@ import {VIDEO_TYPE_BLOB} from '../../persistence/model'
 
 function ensureAnnotationStacks(projectData: any) {
   const tracks = projectData.meta.timeline.tracks
-
+  const timelineDuration = projectData.meta.timeline.duration
   projectData.meta.timeline.tracks = tracks.map((track: any) => {
-    const annotationStacks = computeStacks(track.annotations)
+    const annotationStacks = computeStacks(timelineDuration, track.annotations)
     return {
       id: track.id,
       color: track.color,
