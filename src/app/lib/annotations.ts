@@ -1,8 +1,13 @@
 import {hasCollisionFactory} from '../lib/collision'
+import {_HANDLEBAR_MIN_WIDTH_} from '../config/timeline/handlebar'
 
-const defaultHasCollision = hasCollisionFactory((a: any) => a.utc_timestamp, (a: any) => (a.utc_timestamp + a.duration))
+const defaultHasCollision = hasCollisionFactory(
+  (a: any) => a.utc_timestamp,
+  (a: any, timelineDuration) => {
+    return a.utc_timestamp + Math.max(timelineDuration/100*_HANDLEBAR_MIN_WIDTH_, a.duration)
+  })
 
-export function computeStacks(annotations: any[]): any[] {
+export function computeStacks(timelineDuration: number, annotations: any[]): any[] {
   if(annotations.length > 1) {
     const stack = []
     const colliding = []
@@ -10,7 +15,7 @@ export function computeStacks(annotations: any[]): any[] {
     let n = 1
 
     while(rest.length > 0) {
-      while(n < rest.length && defaultHasCollision(rest[0], rest[n])) {
+      while(n < rest.length && defaultHasCollision(rest[0], rest[n], timelineDuration)) {
         colliding.push(rest[n++])
       }
 
@@ -19,7 +24,7 @@ export function computeStacks(annotations: any[]): any[] {
       n = 1
     }
     const stacks = [stack]
-    return colliding.length > 0 ? stacks.concat(computeStacks(colliding)) : stacks
+    return colliding.length > 0 ? stacks.concat(computeStacks(timelineDuration, colliding)) : stacks
   } else {
     return [annotations]
   }
