@@ -13,6 +13,7 @@ import {ProjectBtnComponent} from './components/project/projectBtn/projectBtn.co
 import {ProjectModalComponent} from './components/project/projectModal/projectModal.component'
 import {FooterComponent} from './components/footer/footer.component'
 import {VersionComponent} from './components/version/version.component'
+import {ToolbarComponent} from './components/toolbar/toolbar.component'
 
 // Inspector components
 import {InspectorEntryComponent} from './components/inspector/inspectorEntry/inspectorEntry.component'
@@ -29,6 +30,7 @@ const _DECLS_ = [
   // Components
   NotFoundComponent, LogoComponent, VersionComponent,
   ProjectBtnComponent, ProjectModalComponent, FooterComponent,
+  ToolbarComponent,
   // Inspector
   InspectorEntryComponent,
   // Timeline

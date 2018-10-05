@@ -9,6 +9,7 @@ import {Component} from '@angular/core'
   `,
   styles: [`
     .logo {
+      display: inline-block;
       font-size: 15px;
       font-weight: 500;
     }
