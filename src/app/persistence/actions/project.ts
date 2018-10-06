@@ -45,6 +45,8 @@ export const PROJECT_PUSH_UNDO = '[Project] Push Undo'
 export const PROJECT_UNDO = '[Project] Undo'
 export const PROJECT_REDO = '[Project] Redo'
 
+export const PROJECT_SET_SHOW_CURRENT_ANNOTATIONS_ONLY = '[PROJECT] Set Current Annotations Only'
+
 export class ProjectLoad implements Action {
   readonly type = PROJECT_LOAD
 }
@@ -232,6 +234,11 @@ export class ProjectRedo implements Action {
   readonly type = PROJECT_REDO
 }
 
+export class ProjectSetCurrentAnnotationsOnly implements Action {
+  readonly type = PROJECT_SET_SHOW_CURRENT_ANNOTATIONS_ONLY
+  constructor(readonly payload: boolean) {}
+}
+
 export type Actions =
   ProjectLoad|ProjectLoadSuccess|ProjectLoadError|
   ProjectImport|
@@ -243,4 +250,5 @@ export type Actions =
   ProjectDeleteSelectedAnnotations|ProjectSelectAnnotation|
   ProjectResetAnnotationSelection|ProjectCopyAnnotationSelectionToClipboard|ProjectPasteClipBoard|
   ProjectSetTimelineDuration|
-  ProjectPushUndo|ProjectUndo|ProjectRedo
+  ProjectPushUndo|ProjectUndo|ProjectRedo|
+  ProjectSetCurrentAnnotationsOnly

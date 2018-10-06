@@ -23,7 +23,7 @@ declare var $: any
   styleUrls: ['main.scss']
 })
 export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
-  inspectorMode: boolean = true // show current annotations only
+  inspectorMode: boolean = false // show current annotations only
   private readonly _subs: Subscription[] = []
 
   constructor(
@@ -137,7 +137,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   modeChange(showCurrentAnnotationsOnly: boolean) {
-    console.log('dispatch', showCurrentAnnotationsOnly)
+    this._rootStore.dispatch(new project.ProjectSetCurrentAnnotationsOnly(showCurrentAnnotationsOnly))
   }
 
   ngAfterViewInit() {

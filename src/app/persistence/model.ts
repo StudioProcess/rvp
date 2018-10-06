@@ -4,6 +4,7 @@ import {List, Record, Set} from 'immutable'
 
 export interface Project {
   readonly meta: Record<ProjectMeta>|null
+  readonly settings: Record<ProjectSettings>
   readonly videoBlob: Blob|null
   readonly selection: Record<ProjectSelection>
   readonly snapshots: ProjectSnapshots
@@ -36,6 +37,10 @@ export interface ProjectMeta {
   readonly id: number|null
   readonly video: Record<ProjectVideo>|null,
   readonly timeline: Record<Timeline>|null
+}
+
+export interface ProjectSettings {
+  readonly showCurrentAnnotationsOnly: boolean
 }
 
 export interface ProjectSelection {
@@ -131,6 +136,10 @@ export const ProjectMetaRecordFactory = Record<ProjectMeta>({
   timeline: null,
 })
 
+export const ProjectSettingsRecordFactory = Record<ProjectSettings>({
+  showCurrentAnnotationsOnly: false
+})
+
 export const ProjectSnapshotRecordFactory = Record<ProjectSnapshot>({
   timestamp: -1,
   state: new ProjectMetaRecordFactory()
@@ -153,6 +162,7 @@ export const ProjectSelectionRecordFactory = Record<ProjectSelection>({
 
 export const ProjectRecordFactory = Record<Project>({
   meta: null,
+  settings: new ProjectSettingsRecordFactory(),
   videoBlob: null,
   selection: new ProjectSelectionRecordFactory(),
   snapshots: new ProjectSnapshotsRecordFactory(),
