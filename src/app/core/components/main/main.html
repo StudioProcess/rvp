@@ -9,7 +9,10 @@
         (onExportProject)="exportProject()"
         (onResetProject)="resetProject()">
       </rv-projectmodal>
-      <rv-toolbar [inspectorMode]="inspectorMode" (onInspectorModeChange)="modeChange($event)"></rv-toolbar>
+      <rv-toolbar
+        [inspectorMode]="inspectorMode" (onInspectorModeChange)="modeChange($event)"
+        [search]="search" (onSearchChange)="searchChange($event)"
+        [applyToTimeline]="applyToTimeline" (onApplyToTimelineChange)="applyToTimelineChange($event)"></rv-toolbar>
     </div>
   </div>
 </div>

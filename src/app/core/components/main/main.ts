@@ -25,6 +25,8 @@ declare var $: any
 })
 export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   inspectorMode: boolean = false // show current annotations only
+  search: string|null = null
+  applyToTimeline: boolean = false
   private readonly _subs: Subscription[] = []
 
   constructor(
@@ -34,8 +36,16 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     this._rootStore.dispatch(new project.ProjectLoad())
 
-    this._subs.push(this._rootStore.select(fromProject.getProjectSettings).subscribe((projectSettings) => {
-      this.inspectorMode = projectSettings.get('showCurrentAnnotationsOnly', false)
+    this._subs.push(this._rootStore.select(fromProject.getProjectSettingsShowCurrentAnnotationsOnly).subscribe(showCurrentAnnotationsOnly => {
+      this.inspectorMode = showCurrentAnnotationsOnly
+    }))
+
+    this._subs.push(this._rootStore.select(fromProject.getProjectSettingsSearch).subscribe(search => {
+      this.search = search
+    }))
+
+    this._subs.push(this._rootStore.select(fromProject.getProjectSettingsApplyToTimeline).subscribe(applyToTimeline => {
+      this.applyToTimeline = applyToTimeline
     }))
 
     const windowMousedown = fromEvent(window, 'mousedown') as Observable<MouseEvent>
@@ -142,7 +152,16 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   modeChange(showCurrentAnnotationsOnly: boolean) {
-    this._rootStore.dispatch(new project.ProjectSetCurrentAnnotationsOnly(showCurrentAnnotationsOnly))
+    this._rootStore.dispatch(new project.ProjectSettingsSetCurrentAnnotationsOnly(showCurrentAnnotationsOnly))
+  }
+
+  searchChange(search: string|null) {
+    this._rootStore.dispatch(new project.ProjectSettingsSetSearch(search))
+  }
+
+  applyToTimelineChange(applyToTimeline: boolean) {
+    console.log('dispatch')
+    this._rootStore.dispatch(new project.ProjectSettingsSetApplyToTimeline(applyToTimeline))
   }
 
   ngAfterViewInit() {
