@@ -410,8 +410,14 @@ export function reducer(state: State = initialState, action: project.Actions): S
         return state
       }
     }
-    case project.PROJECT_SET_SHOW_CURRENT_ANNOTATIONS_ONLY: {
+    case project.PROJECT_SETTINGS_SET_SHOW_CURRENT_ANNOTATIONS_ONLY: {
       return state.setIn(['settings', 'showCurrentAnnotationsOnly'], action.payload)
+    }
+    case project.PROJECT_SETTINGS_SET_SEARCH: {
+      return state.setIn(['settings', 'search'], action.payload)
+    }
+    case project.PROJECT_SETTINGS_SET_APPLY_TO_TIMELINE: {
+      return state.setIn(['settings', 'applyToTimeline'], action.payload)
     }
     default: {
       return state
