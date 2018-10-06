@@ -3,8 +3,15 @@ import {List, Record, Set} from 'immutable'
 import {ActionReducerMap, createSelector, createFeatureSelector} from '@ngrx/store'
 
 import * as fromProject from './project'
+import * as fromPlayer from '../../player/reducers'
 
-import {AnnotationColorMapRecordFactory, AnnotationSelection} from '../model'
+import {findVerticalCollisionsWithCursor} from '../../lib/annotationStack'
+
+import {
+  AnnotationColorMapRecordFactory, AnnotationSelection,
+  AnnotationColorMap, Timeline, AnnotationRecordFactory,
+  Annotation
+} from '../model'
 
 export interface State {
   readonly project: fromProject.State,
@@ -37,7 +44,7 @@ export const getProjectTimeline = createSelector(getProjectMeta, meta => {
   return meta ? meta.get('timeline', null): null
 })
 
-export const getFlattenedAnnotations = createSelector(getProjectTimeline, timeline => {
+function flattenAnnotations(timeline: Record<Timeline>|null) {
   if(timeline !== null) {
     return timeline.get('tracks', null).flatMap((track, trackIndex) => {
       const color = track.get('color', null)
@@ -52,10 +59,15 @@ export const getFlattenedAnnotations = createSelector(getProjectTimeline, timeli
   } else {
     return List([])
   }
+}
+
+export const getFlattenedAnnotations = createSelector(getProjectTimeline, timeline => {
+  return flattenAnnotations(timeline)
 })
 
-const path = ['annotation', 'utc_timestamp']
-export const getSortedFlattenedAnnotations = createSelector(getFlattenedAnnotations, annotations => {
+const sortAnnotations = (annotations: List<Record<AnnotationColorMap>>) => {
+  const path = ['annotation', 'utc_timestamp']
+
   return annotations.sort((a1, a2) => {
     const a1Start = a1.getIn(path)
     const a2Start = a2.getIn(path)
@@ -67,7 +79,38 @@ export const getSortedFlattenedAnnotations = createSelector(getFlattenedAnnotati
       return 0
     }
   })
-})
+}
+
+export const getSortedFlattenedAnnotations = createSelector(getFlattenedAnnotations, sortAnnotations)
+
+
+export const getCurrentFlattenedAnnotations = createSelector(
+  getProjectSettings, getProjectTimeline, fromPlayer.getCurrentTime,
+  (settings, timeline, currentTime) => {
+    if(settings.get('showCurrentAnnotationsOnly', false)) {
+      const duration = timeline!.get('duration', null)
+
+      const tracks = timeline!.get('tracks', null)
+      const res: Record<AnnotationColorMap>[] = []
+      tracks.forEach((track, trackIndex) => {
+        const color = track.get('color', null)
+        const stacks = track.get('annotationStacks', null)
+        const collisions = findVerticalCollisionsWithCursor(duration, stacks, currentTime)
+        const mapped = collisions.map(({annotation, annotationIndex, annotationStackIndex}) => {
+          return new AnnotationColorMapRecordFactory({
+            track, trackIndex, color, annotation, annotationIndex, annotationStackIndex
+          })
+        })
+        res.push(...mapped)
+      })
+
+      return List(res)
+    } else {
+      return flattenAnnotations(timeline)
+    }
+  })
+
+export const getCurrentSortedFlattenedAnnotations = createSelector(getCurrentFlattenedAnnotations, sortAnnotations)
 
 // Project video
 
