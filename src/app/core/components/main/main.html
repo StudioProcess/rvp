@@ -4,7 +4,7 @@
       <div class="row">
         <div class="column">
           <rv-logo></rv-logo>
-          <rv-toolbar></rv-toolbar>
+          <rv-toolbar [inspectorMode]="inspectorMode" (onInspectorModeChange)="modeChange($event)"></rv-toolbar>
         </div>
       </div>
     </div>

@@ -23,6 +23,7 @@ declare var $: any
   styleUrls: ['main.scss']
 })
 export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
+  inspectorMode: boolean = true // show current annotations only
   private readonly _subs: Subscription[] = []
 
   constructor(
@@ -133,6 +134,10 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     const modal = $('#settings-reveal') as any
     // $('body').removeClass('is-reveal-open')
     modal.foundation('close')
+  }
+
+  modeChange(showCurrentAnnotationsOnly: boolean) {
+    console.log('dispatch', showCurrentAnnotationsOnly)
   }
 
   ngAfterViewInit() {
