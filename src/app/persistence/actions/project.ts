@@ -45,7 +45,9 @@ export const PROJECT_PUSH_UNDO = '[Project] Push Undo'
 export const PROJECT_UNDO = '[Project] Undo'
 export const PROJECT_REDO = '[Project] Redo'
 
-export const PROJECT_SET_SHOW_CURRENT_ANNOTATIONS_ONLY = '[PROJECT] Set Current Annotations Only'
+export const PROJECT_SETTINGS_SET_SHOW_CURRENT_ANNOTATIONS_ONLY = '[PROJECT] Set Current Annotations Only Setting'
+export const PROJECT_SETTINGS_SET_SEARCH = '[PROJECT] Set Search Setting'
+export const PROJECT_SETTINGS_SET_APPLY_TO_TIMELINE = '[PROJECT] Apply To Timeline Setting'
 
 export class ProjectLoad implements Action {
   readonly type = PROJECT_LOAD
@@ -234,8 +236,18 @@ export class ProjectRedo implements Action {
   readonly type = PROJECT_REDO
 }
 
-export class ProjectSetCurrentAnnotationsOnly implements Action {
-  readonly type = PROJECT_SET_SHOW_CURRENT_ANNOTATIONS_ONLY
+export class ProjectSettingsSetCurrentAnnotationsOnly implements Action {
+  readonly type = PROJECT_SETTINGS_SET_SHOW_CURRENT_ANNOTATIONS_ONLY
+  constructor(readonly payload: boolean) {}
+}
+
+export class ProjectSettingsSetSearch implements Action {
+  readonly type = PROJECT_SETTINGS_SET_SEARCH
+  constructor(readonly payload: string|null) {}
+}
+
+export class ProjectSettingsSetApplyToTimeline implements Action {
+  readonly type = PROJECT_SETTINGS_SET_APPLY_TO_TIMELINE
   constructor(readonly payload: boolean) {}
 }
 
@@ -251,4 +263,4 @@ export type Actions =
   ProjectResetAnnotationSelection|ProjectCopyAnnotationSelectionToClipboard|ProjectPasteClipBoard|
   ProjectSetTimelineDuration|
   ProjectPushUndo|ProjectUndo|ProjectRedo|
-  ProjectSetCurrentAnnotationsOnly
+  ProjectSettingsSetCurrentAnnotationsOnly|ProjectSettingsSetSearch|ProjectSettingsSetApplyToTimeline
