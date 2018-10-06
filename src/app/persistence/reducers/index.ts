@@ -19,6 +19,8 @@ const getPersistenceState = createFeatureSelector<State>('persistence')
 
 export const getProjectState = createSelector(getPersistenceState, (state: State) => state.project)
 
+export const getProjectSettings = createSelector(getProjectState, fromProject.getProjectSettings)
+
 // Project meta
 
 export const getProjectMeta = createSelector(getProjectState, fromProject.getProjectMeta)

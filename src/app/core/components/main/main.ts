@@ -11,6 +11,7 @@ import {filter} from 'rxjs/operators'
 
 import * as fromRoot from '../../reducers'
 import * as project from '../../../persistence/actions/project'
+import * as fromProject from '../../../persistence/reducers'
 import * as player from '../../../player/actions'
 import {rndColor} from '../../../lib/color'
 
@@ -32,6 +33,10 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     this._rootStore.dispatch(new project.ProjectLoad())
+
+    this._subs.push(this._rootStore.select(fromProject.getProjectSettings).subscribe((projectSettings) => {
+      this.inspectorMode = projectSettings.get('showCurrentAnnotationsOnly', false)
+    }))
 
     const windowMousedown = fromEvent(window, 'mousedown') as Observable<MouseEvent>
     const windowKeydown = fromEvent(window,  'keydown') as Observable<KeyboardEvent>

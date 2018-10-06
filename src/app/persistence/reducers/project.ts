@@ -419,6 +419,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
   }
 }
 
+export const getProjectSettings = (state: State) => {
+  return state.get('settings', null)
+}
+
 export const getProjectMeta = (state: State) => {
   return state.get('meta', null)
 }
