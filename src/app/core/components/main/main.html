@@ -1,14 +1,7 @@
 <div class="nav-wrapper">
   <div class="row">
-    <div class="small-10 column">
-      <div class="row">
-        <div class="column">
-          <rv-logo></rv-logo>
-          <rv-toolbar [inspectorMode]="inspectorMode" (onInspectorModeChange)="modeChange($event)"></rv-toolbar>
-        </div>
-      </div>
-    </div>
-    <div class="small-2 column text-right">
+    <div class="column">
+      <rv-logo></rv-logo>
       <rv-projectbtn data-open="settings-reveal"></rv-projectbtn>
       <rv-projectmodal class="reveal" id="settings-reveal" data-reveal
         (onImportProject)="importProject($event)"
@@ -16,6 +9,7 @@
         (onExportProject)="exportProject()"
         (onResetProject)="resetProject()">
       </rv-projectmodal>
+      <rv-toolbar [inspectorMode]="inspectorMode" (onInspectorModeChange)="modeChange($event)"></rv-toolbar>
     </div>
   </div>
 </div>
