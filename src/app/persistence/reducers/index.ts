@@ -9,8 +9,7 @@ import {findVerticalCollisionsWithCursor} from '../../lib/annotationStack'
 
 import {
   AnnotationColorMapRecordFactory, AnnotationSelection,
-  AnnotationColorMap, Timeline, AnnotationRecordFactory,
-  Annotation
+  AnnotationColorMap, Timeline
 } from '../model'
 
 export interface State {
@@ -28,6 +27,9 @@ export const getProjectState = createSelector(getPersistenceState, (state: State
 
 export const getProjectSettings = createSelector(getProjectState, fromProject.getProjectSettings)
 
+export const getProjectSettingsShowCurrentAnnotationsOnly = createSelector(getProjectSettings, settings => settings.get('showCurrentAnnotationsOnly', false))
+export const getProjectSettingsSearch = createSelector(getProjectSettings, settings => settings.get('search', null))
+export const getProjectSettingsApplyToTimeline = createSelector(getProjectSettings, settings => settings.get('applyToTimeline', false))
 // Project meta
 
 export const getProjectMeta = createSelector(getProjectState, fromProject.getProjectMeta)
