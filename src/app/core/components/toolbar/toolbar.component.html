@@ -1,5 +1,7 @@
 <div class="toolbar-wrapper">
-  <input [formControl]="inspectorMode" type="checkbox"> Current Annotations only
-  <input [formControl]="search" type="text">
-  <input [formControl]="applyToTimeline" type="checkbox"> Apply to timline
+  <form [formGroup]="form" novalidate>
+    <input formControlName="inspectorMode" type="checkbox"/> Current Annotations only
+    <input #search formControlName="search" type="text"/>
+    <input formControlName="applyToTimeline" type="checkbox"/> Apply to timline
+  </form>
 </div>
