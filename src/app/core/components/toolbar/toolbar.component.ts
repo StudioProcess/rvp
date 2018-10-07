@@ -43,7 +43,6 @@ export class ToolbarComponent implements OnInit, OnChanges {
     if(changes.applyToTimelineIn !== undefined && !changes.applyToTimelineIn.firstChange) {
       const {previousValue, currentValue} = changes.applyToTimelineIn
       if(previousValue === undefined || previousValue !== currentValue) {
-        console.log('set')
         this.applyToTimeline.setValue(currentValue)
       }
     }
