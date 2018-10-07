@@ -111,6 +111,7 @@ export interface TrackFields {
 
 export interface Annotation {
   readonly id: number|null
+  readonly isShown: boolean
   readonly utc_timestamp: number
   readonly duration: number
   readonly fields: Record<AnnotationFields>
@@ -200,6 +201,7 @@ export const AnnotationFieldsRecordFactory = Record<AnnotationFields>({
 
 export const AnnotationRecordFactory = Record<Annotation>({
   id: null,
+  isShown: true,
   utc_timestamp: -1,
   duration: -1,
   fields: new AnnotationFieldsRecordFactory()
