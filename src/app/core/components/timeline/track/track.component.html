@@ -17,6 +17,7 @@
     <div *ngFor="let stack of data.get('annotationStacks', []); index as stackIndex; trackBy: outerTrackByFunc;">
       <div class="annotations-wrapper" (dblclick)="addAnnotation($event, stackIndex)">
         <rv-handlebar *ngFor="let annotation of stack; index as i; trackBy: innerTrackByFunc;"
+          [opacity]="getAnnotationOpacity(annotation)"
           [containerRect]="zoomContainerRect"
           [caption]="getAnnotationTitle(annotation)"
           [left]="getAnnotationPosition(annotation)"

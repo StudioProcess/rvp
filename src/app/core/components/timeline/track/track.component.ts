@@ -282,6 +282,10 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     return Math.min(Math.max(_HANDLEBAR_MIN_WIDTH_, annotation.duration / this.totalDuration * 100), 100)
   }
 
+  getAnnotationOpacity(annotation: Record<Annotation>) {
+    return annotation.get('isQueried', true) ? '1': '0.2'
+  }
+
   isSelectedAnnotation(annotation: Record<Annotation>) {
     return this.selectedAnnotations ?
       this.selectedAnnotations.find(sel => sel.get('id', null) === annotation.get('id', null)) !== undefined :
