@@ -414,7 +414,9 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state.setIn(['settings', 'showCurrentAnnotationsOnly'], action.payload)
     }
     case project.PROJECT_SETTINGS_SET_SEARCH: {
-      return state.setIn(['settings', 'search'], action.payload)
+      return action.payload !== '' ?
+        state.setIn(['settings', 'search'], action.payload):
+        state.setIn(['settings', 'search'], null)
     }
     case project.PROJECT_SETTINGS_SET_APPLY_TO_TIMELINE: {
       return state.setIn(['settings', 'applyToTimeline'], action.payload)
