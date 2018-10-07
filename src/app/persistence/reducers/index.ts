@@ -2,10 +2,14 @@ import {List, Record, Set} from 'immutable'
 
 import {ActionReducerMap, createSelector, createFeatureSelector} from '@ngrx/store'
 
+import * as Fuse from 'fuse.js'
+
 import * as fromProject from './project'
 import * as fromPlayer from '../../player/reducers'
 
 import {findVerticalCollisionsWithCursor} from '../../lib/annotationStack'
+
+import {_FUSE_OPTIONS_} from '../../config/search'
 
 import {
   AnnotationColorMapRecordFactory, AnnotationSelection,
@@ -112,7 +116,24 @@ export const getCurrentFlattenedAnnotations = createSelector(
     }
   })
 
-export const getCurrentSortedFlattenedAnnotations = createSelector(getCurrentFlattenedAnnotations, sortAnnotations)
+export const getCurrentQueriedFlattenedAnnotations = createSelector(
+  getProjectSettings, getCurrentFlattenedAnnotations,
+  (settings, annotations) => {
+    const search = settings.get('search', null)
+    if(search !== null) {
+      const jsAnnotations = annotations.toJS()
+      const fuse = new Fuse(jsAnnotations, _FUSE_OPTIONS_)
+      const res: string[] = fuse.search(search)
+      return annotations.filter(ann => {
+        const aId = ann.getIn(['annotation', 'id'])
+        return res.find(id => parseInt(id) === aId)
+      })
+    } else {
+      return annotations
+    }
+  })
+
+export const getCurrentQueriedSortedFlattenedAnnotations = createSelector(getCurrentQueriedFlattenedAnnotations, sortAnnotations)
 
 // Project video
 
