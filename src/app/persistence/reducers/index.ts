@@ -135,6 +135,37 @@ export const getCurrentQueriedFlattenedAnnotations = createSelector(
 
 export const getCurrentQueriedSortedFlattenedAnnotations = createSelector(getCurrentQueriedFlattenedAnnotations, sortAnnotations)
 
+export const getProjectQueriedTimeline = createSelector(
+  getProjectTimeline, getProjectSettings, getCurrentQueriedFlattenedAnnotations,
+  (timeline, settings, queried) => {
+  const applyToTimeline = settings.get('applyToTimeline', false)
+  if(timeline !== null && applyToTimeline) {
+    const tracks = timeline.get('tracks', null)
+    let resTracks = tracks
+    tracks.forEach((track, trackIndex) => {
+      const stacks = track.get('annotationStacks', null)
+      stacks.forEach((stack, stackIndex) => {
+        stack.forEach((annotation, annotationIndex) => {
+          const aId = annotation.get('id', null)
+          const isShown = queried.find(annotationColorMap => {
+            const id = annotationColorMap.getIn(['annotation', 'id'])
+            return parseInt(id) === aId
+          }) !== undefined
+
+          if(!isShown) {
+            resTracks = resTracks.updateIn([trackIndex, 'annotationStacks', stackIndex, annotationIndex], annotation => {
+              return annotation.set('isShown', false)
+            })
+          }
+        })
+      })
+    })
+    return timeline.set('tracks', resTracks)
+  } else {
+    return timeline
+  }
+})
+
 // Project video
 
 export const getProjectVideoBlob = createSelector(getProjectState, fromProject.getProjectVideoBlob)
