@@ -283,7 +283,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   }
 
   getAnnotationOpacity(annotation: Record<Annotation>) {
-    return annotation.get('isQueried', true) ? '1': '0.2'
+    return annotation.get('isShown', true) ? '1': '0.2'
   }
 
   isSelectedAnnotation(annotation: Record<Annotation>) {
