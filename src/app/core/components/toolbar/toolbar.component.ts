@@ -5,7 +5,9 @@ import {
 } from '@angular/core'
 import {FormControl} from '@angular/forms'
 
-import {skip} from 'rxjs/operators'
+import {skip, debounceTime} from 'rxjs/operators'
+
+import {_FORM_INPUT_DEBOUNCE_} from '../../../config/form'
 
 @Component({
   selector: 'rv-toolbar',
@@ -23,7 +25,7 @@ export class ToolbarComponent implements OnInit, OnChanges {
   applyToTimeline = new FormControl(false)
 
   @Output() readonly onInspectorModeChange = this.inspectorMode.valueChanges.pipe(skip(1))
-  @Output() readonly onSearchChange = this.search.valueChanges.pipe(skip(1))
+  @Output() readonly onSearchChange = this.search.valueChanges.pipe(skip(1), debounceTime(_FORM_INPUT_DEBOUNCE_))
   @Output() readonly onApplyToTimelineChange = this.applyToTimeline.valueChanges.pipe(skip(1))
 
   ngOnInit() {
