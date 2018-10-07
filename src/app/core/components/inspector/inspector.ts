@@ -66,7 +66,7 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
         }))
 
     this._subs.push(
-      this._store.select(fromProject.getCurrentSortedFlattenedAnnotations)
+      this._store.select(fromProject.getCurrentQueriedSortedFlattenedAnnotations)
         .subscribe(annotations => {
           this.annotations = annotations
           this._cdr.markForCheck()
