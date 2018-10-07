@@ -160,7 +160,6 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   applyToTimelineChange(applyToTimeline: boolean) {
-    console.log('dispatch')
     this._rootStore.dispatch(new project.ProjectSettingsSetApplyToTimeline(applyToTimeline))
   }
 
