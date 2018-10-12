@@ -32,6 +32,15 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
 
   private readonly _subs: Subscription[] = []
 
+  actionBtns = [
+    {cls: 'ion-md-add-circle-outline', label: 'Add', title: 'Add Annotation'},
+    {cls: 'ion-md-remove-circle-outline', label: 'Delete', title: 'Delete Annotation'},
+    {cls: 'ion-md-copy', label: 'Copy', title: 'Copy Annotation'},
+    {cls: 'ion-md-clipboard', label: 'Paste', title: 'Paste Annotation'},
+    {cls: 'ion-md-undo', label: 'Undo', title: 'Undo Action'},
+    {cls: 'ion-md-redo', label: 'Redo', title: 'Redo Action'}
+  ]
+
   constructor(private readonly _fb: FormBuilder) {}
 
   private _mapModel() {

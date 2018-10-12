@@ -1,11 +1,6 @@
 <div class="toolbar-wrapper">
   <div>
-    <i class="ion-md-add-circle-outline" title="Add Annotation"></i> Add
-    <i class="ion-md-remove-circle-outline" title="Delete Annotation"></i> Delete
-    <i class="ion-md-copy" title="Copy Annotation"></i> Copy
-    <i class="ion-md-clipboard" title="Paste Annotation"></i> Paste
-    <i class="ion-md-undo" title="Undo Action"></i> Undo
-    <i class="ion-md-redo" title="Redo Action"></i> Redo
+    <rv-actionbtn *ngFor="let btn of actionBtns" [label]="btn.label" [cls]="btn.cls" [title]="btn.title"></rv-actionbtn>
   </div>
   <form [formGroup]="form" novalidate>
     <input formControlName="currentAnnotationsOnly" type="checkbox"/> Current Annotations only
