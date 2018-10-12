@@ -89,7 +89,6 @@ const sortAnnotations = (annotations: List<Record<AnnotationColorMap>>) => {
 
 export const getSortedFlattenedAnnotations = createSelector(getFlattenedAnnotations, sortAnnotations)
 
-
 export const getCurrentFlattenedAnnotations = createSelector(
   getProjectSettings, getProjectTimeline, fromPlayer.getCurrentTime,
   (settings, timeline, currentTime) => {
@@ -116,27 +115,39 @@ export const getCurrentFlattenedAnnotations = createSelector(
     }
   })
 
+
+function searchAnnotations(search: string|null, annotations: List<Record<AnnotationColorMap>>) {
+  if(search !== null) {
+    const jsAnnotations = annotations.toJS()
+    const fuse = new Fuse(jsAnnotations, _FUSE_OPTIONS_)
+    const res: string[] = fuse.search(search)
+    return annotations.filter(ann => {
+      const aId = ann.getIn(['annotation', 'id'])
+      return res.find(id => parseInt(id) === aId)
+    })
+  } else {
+    return annotations
+  }
+}
+
+export const getQueriedFlattenedAnnotations = createSelector(
+  getProjectSettings, getFlattenedAnnotations,
+  (settings, annotations) => {
+    const search = settings.get('search', null)
+    return searchAnnotations(search, annotations)
+  })
+
 export const getCurrentQueriedFlattenedAnnotations = createSelector(
   getProjectSettings, getCurrentFlattenedAnnotations,
   (settings, annotations) => {
     const search = settings.get('search', null)
-    if(search !== null) {
-      const jsAnnotations = annotations.toJS()
-      const fuse = new Fuse(jsAnnotations, _FUSE_OPTIONS_)
-      const res: string[] = fuse.search(search)
-      return annotations.filter(ann => {
-        const aId = ann.getIn(['annotation', 'id'])
-        return res.find(id => parseInt(id) === aId)
-      })
-    } else {
-      return annotations
-    }
+    return searchAnnotations(search, annotations)
   })
 
 export const getCurrentQueriedSortedFlattenedAnnotations = createSelector(getCurrentQueriedFlattenedAnnotations, sortAnnotations)
 
 export const getProjectQueriedTimeline = createSelector(
-  getProjectTimeline, getProjectSettings, getCurrentQueriedFlattenedAnnotations,
+  getProjectTimeline, getProjectSettings, getQueriedFlattenedAnnotations,
   (timeline, settings, queried) => {
   const applyToTimeline = settings.get('applyToTimeline', false)
   if(timeline !== null && applyToTimeline) {
