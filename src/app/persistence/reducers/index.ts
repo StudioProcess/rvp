@@ -9,8 +9,7 @@ import {findVerticalCollisionsWithCursor} from '../../lib/annotationStack'
 
 import {
   AnnotationColorMapRecordFactory, AnnotationSelection,
-  AnnotationColorMap, Timeline, AnnotationRecordFactory,
-  Annotation
+  AnnotationColorMap, Timeline
 } from '../model'
 
 export interface State {
