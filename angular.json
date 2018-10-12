@@ -33,7 +33,7 @@
               "node_modules/video.js/dist/video-js.min.css",
               "src/assets/fonts/space_mono/SpaceMono.css",
               "src/assets/fonts/roboto/Roboto.css",
-              "src/assets/fonts/ionicons/ionicons.css",
+              "node_modules/ionicons/dist/css/ionicons.min.css",
               "src/styles.scss"
             ],
             "scripts": [
