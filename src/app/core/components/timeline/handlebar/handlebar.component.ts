@@ -33,9 +33,9 @@ export interface Handlebar {
   selector: 'rv-handlebar',
   template: `
     <div class="handlebar">
-      <div #leftHandle class="left-handle"><i class="ion-arrow-right-b"></i></div>
+      <div #leftHandle class="left-handle"><i class="ion-md-arrow-dropright"></i></div>
       <div #middleHandle class="content">{{caption}}</div>
-      <div #rightHandle class="right-handle"><i class="ion-arrow-left-b"></i></div>
+      <div #rightHandle class="right-handle"><i class="ion-md-arrow-dropleft"></i></div>
     </div>
   `,
   styleUrls: ['handlebar.component.scss']
