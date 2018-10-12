@@ -1,4 +1,12 @@
 <div class="toolbar-wrapper">
+  <div>
+    <i class="ion-md-add-circle-outline" title="Add Annotation"></i> Add
+    <i class="ion-md-remove-circle-outline" title="Delete Annotation"></i> Delete
+    <i class="ion-md-copy" title="Copy Annotation"></i> Copy
+    <i class="ion-md-clipboard" title="Paste Annotation"></i> Paste
+    <i class="ion-md-undo" title="Undo Action"></i> Undo
+    <i class="ion-md-redo" title="Redo Action"></i> Redo
+  </div>
   <form [formGroup]="form" novalidate>
     <input formControlName="currentAnnotationsOnly" type="checkbox"/> Current Annotations only
     <input #search formControlName="search" type="text"/>
