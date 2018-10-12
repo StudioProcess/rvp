@@ -31,7 +31,7 @@ export const getProjectState = createSelector(getPersistenceState, (state: State
 
 export const getProjectSettings = createSelector(getProjectState, fromProject.getProjectSettings)
 
-export const getProjectSettingsShowCurrentAnnotationsOnly = createSelector(getProjectSettings, settings => settings.get('showCurrentAnnotationsOnly', false))
+export const getProjectSettingsShowCurrentAnnotationsOnly = createSelector(getProjectSettings, settings => settings.get('currentAnnotationsOnly', false))
 export const getProjectSettingsSearch = createSelector(getProjectSettings, settings => settings.get('search', null))
 export const getProjectSettingsApplyToTimeline = createSelector(getProjectSettings, settings => settings.get('applyToTimeline', false))
 // Project meta
@@ -92,7 +92,7 @@ export const getSortedFlattenedAnnotations = createSelector(getFlattenedAnnotati
 export const getCurrentFlattenedAnnotations = createSelector(
   getProjectSettings, getProjectTimeline, fromPlayer.getCurrentTime,
   (settings, timeline, currentTime) => {
-    if(settings.get('showCurrentAnnotationsOnly', false)) {
+    if(settings.get('currentAnnotationsOnly', false)) {
       const duration = timeline!.get('duration', null)
 
       const tracks = timeline!.get('tracks', null)

@@ -40,7 +40,7 @@ export interface ProjectMeta {
 }
 
 export interface ProjectSettings {
-  readonly showCurrentAnnotationsOnly: boolean,
+  readonly currentAnnotationsOnly: boolean,
   readonly search: string|null,
   readonly applyToTimeline: boolean
 }
@@ -140,7 +140,7 @@ export const ProjectMetaRecordFactory = Record<ProjectMeta>({
 })
 
 export const ProjectSettingsRecordFactory = Record<ProjectSettings>({
-  showCurrentAnnotationsOnly: false,
+  currentAnnotationsOnly: false,
   search: null,
   applyToTimeline: false
 })

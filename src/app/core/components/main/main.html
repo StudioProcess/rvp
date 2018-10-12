@@ -10,7 +10,7 @@
         (onResetProject)="resetProject()">
       </rv-projectmodal>
       <rv-toolbar
-        [inspectorMode]="inspectorMode" (onInspectorModeChange)="modeChange($event)"
+        [currentAnnotationsOnly]="currentAnnotationsOnly" (onCurrentAnnotationsOnlyChange)="currentAnnotationsOnlyChange($event)"
         [search]="search" (onSearchChange)="searchChange($event)"
         [applyToTimeline]="applyToTimeline" (onApplyToTimelineChange)="applyToTimelineChange($event)"></rv-toolbar>
     </div>

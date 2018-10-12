@@ -24,7 +24,7 @@ declare var $: any
   styleUrls: ['main.scss']
 })
 export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
-  inspectorMode: boolean = false // show current annotations only
+  currentAnnotationsOnly: boolean = false // show current annotations only
   search: string|null = null
   applyToTimeline: boolean = false
   private readonly _subs: Subscription[] = []
@@ -36,8 +36,8 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     this._rootStore.dispatch(new project.ProjectLoad())
 
-    this._subs.push(this._rootStore.select(fromProject.getProjectSettingsShowCurrentAnnotationsOnly).subscribe(showCurrentAnnotationsOnly => {
-      this.inspectorMode = showCurrentAnnotationsOnly
+    this._subs.push(this._rootStore.select(fromProject.getProjectSettingsShowCurrentAnnotationsOnly).subscribe(currentAnnotationsOnly => {
+      this.currentAnnotationsOnly = currentAnnotationsOnly
     }))
 
     this._subs.push(this._rootStore.select(fromProject.getProjectSettingsSearch).subscribe(search => {
@@ -151,8 +151,8 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     modal.foundation('close')
   }
 
-  modeChange(showCurrentAnnotationsOnly: boolean) {
-    this._rootStore.dispatch(new project.ProjectSettingsSetCurrentAnnotationsOnly(showCurrentAnnotationsOnly))
+  currentAnnotationsOnlyChange(currentAnnotationsOnly: boolean) {
+    this._rootStore.dispatch(new project.ProjectSettingsSetCurrentAnnotationsOnly(currentAnnotationsOnly))
   }
 
   searchChange(search: string|null) {

@@ -411,7 +411,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       }
     }
     case project.PROJECT_SETTINGS_SET_SHOW_CURRENT_ANNOTATIONS_ONLY: {
-      return state.setIn(['settings', 'showCurrentAnnotationsOnly'], action.payload)
+      return state.setIn(['settings', 'currentAnnotationsOnly'], action.payload)
     }
     case project.PROJECT_SETTINGS_SET_SEARCH: {
       return action.payload !== '' ?

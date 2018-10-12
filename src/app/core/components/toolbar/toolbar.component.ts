@@ -18,13 +18,13 @@ import {_FORM_INPUT_DEBOUNCE_} from '../../../config/form'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToolbarComponent implements OnInit, OnChanges, AfterViewInit {
-  @Input('inspectorMode') readonly inspectorModeIn: boolean
+  @Input('currentAnnotationsOnly') readonly currentAnnotationsOnlyIn: boolean
   @Input('search') readonly searchIn: string
   @Input('applyToTimeline') readonly applyToTimelineIn: boolean
 
   form: FormGroup|null = null
 
-  @Output() readonly onInspectorModeChange = new EventEmitter<boolean>()
+  @Output() readonly onCurrentAnnotationsOnlyChange = new EventEmitter<boolean>()
   @Output() readonly onSearchChange = new EventEmitter<string>()
   @Output() readonly onApplyToTimelineChange = new EventEmitter<boolean>()
 
@@ -36,7 +36,7 @@ export class ToolbarComponent implements OnInit, OnChanges, AfterViewInit {
 
   private _mapModel() {
     return {
-      inspectorMode: this.inspectorModeIn,
+      currentAnnotationsOnly: this.currentAnnotationsOnlyIn,
       search: this.searchIn,
       applyToTimeline: this.applyToTimelineIn
     }
@@ -48,9 +48,9 @@ export class ToolbarComponent implements OnInit, OnChanges, AfterViewInit {
     this._subs.push(
       this.form.valueChanges
       .pipe(
-        pluck('inspectorMode'), skip(1))
+        pluck('currentAnnotationsOnly'), skip(1))
       .subscribe((value: boolean) => {
-        this.onInspectorModeChange.emit(value)
+        this.onCurrentAnnotationsOnlyChange.emit(value)
       }))
 
     this._subs.push(
@@ -76,8 +76,8 @@ export class ToolbarComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(this.form !== null && changes.inspectorModeIn !== undefined && !changes.inspectorModeIn.firstChange) {
-      const {previousValue, currentValue} = changes.inspectorModeIn
+    if(this.form !== null && changes.currentAnnotationsOnlyIn !== undefined && !changes.currentAnnotationsOnlyIn.firstChange) {
+      const {previousValue, currentValue} = changes.currentAnnotationsOnlyIn
       if(previousValue === undefined || previousValue !== currentValue) {
         this.form.setValue(this._mapModel())
       }
