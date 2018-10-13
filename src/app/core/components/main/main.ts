@@ -14,6 +14,7 @@ import * as project from '../../../persistence/actions/project'
 import * as fromProject from '../../../persistence/reducers'
 import * as player from '../../../player/actions'
 import {rndColor} from '../../../lib/color'
+import {AnnotationRecordFactory, AnnotationFieldsRecordFactory} from '../../../persistence/model'
 
 declare var $: any
 
@@ -152,7 +153,15 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   addAnnotation() {
-    console.log('ADD', ':D')
+    this._rootStore.dispatch(new project.ProjectAddAnnotation({
+      trackIndex: 0,
+      annotationStackIndex: 0,
+      annotation: AnnotationRecordFactory({
+        utc_timestamp: 0,
+        duration: 30,
+        fields: AnnotationFieldsRecordFactory({title: '* NEW *'})
+      })
+    }))
   }
 
   currentAnnotationsOnlyChange(currentAnnotationsOnly: boolean) {
