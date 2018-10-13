@@ -69,7 +69,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
         videoBlob: video,
         meta: ProjectMetaRecordFactory({
           id,
-          video: videoMeta.type === VIDEO_TYPE_BLOB ? BlobVideoRecordFactory(videoMeta) : UrlVideoRecordFactory(videoMeta),
+          video: videoMeta === null ? null : (videoMeta.type === VIDEO_TYPE_BLOB ? BlobVideoRecordFactory(videoMeta) : UrlVideoRecordFactory(videoMeta)),
           timeline: TimelineRecordFactory({
             ...timeline,
             tracks: List(timeline.tracks.map((track: any) => {
