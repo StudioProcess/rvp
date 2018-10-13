@@ -59,7 +59,6 @@ export const _EMPTY_PROJECT_ = {
       ]
     },
     "video": null
-    }
   },
   video: null
 }
