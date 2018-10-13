@@ -25,7 +25,8 @@
       (onImportProject)="importProject($event)"
       (onImportVideo)="importVideo($event)"
       (onExportProject)="exportProject()"
-      (onResetProject)="resetProject()">
+      (onResetProject)="resetProject()"
+      (onNewProject)="newProject()">
     </rv-projectmodal>
     <form class="leftForm" [formGroup]="leftForm" novalidate>
       <input formControlName="currentAnnotationsOnly" type="checkbox"/> Current <span class="show-for-large">Annotations</span> only
