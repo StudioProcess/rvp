@@ -27,6 +27,8 @@ declare var $: any
 export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   hasSelectedAnnotations: boolean = false
   hasClipboardAnnotations: boolean = false
+  hasRedo: boolean = false
+  hasUndo: boolean = false
   currentAnnotationsOnly: boolean = false // show current annotations only
   search: string|null = null
   applyToTimeline: boolean = false
@@ -46,6 +48,11 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     this._subs.push(this._rootStore.select(fromProject.getProjectClipboard).subscribe(clipboard => {
       this.hasClipboardAnnotations = clipboard.size > 0
       this._cdr.markForCheck()
+    }))
+
+    this._subs.push(this._rootStore.select(fromProject.getProjectSnapshots).subscribe(snapshots => {
+      this.hasRedo = snapshots.redo.size > 0
+      this.hasUndo = snapshots.undo.size > 0
     }))
 
     this._subs.push(this._rootStore.select(fromProject.getProjectSettingsShowCurrentAnnotationsOnly).subscribe(currentAnnotationsOnly => {
