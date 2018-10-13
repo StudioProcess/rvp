@@ -4,7 +4,7 @@ import {Component, Input, EventEmitter, Output} from '@angular/core'
   selector: 'rv-actionbtn',
   template: `
     <button (click)="btnClick($event)">
-      <i [class]="cls" [title]="title"></i><span class="show-for-large"> {{label}}</span>
+      <i [class]="cls" [title]="title"></i><span class="show-for-medium"> {{label}}</span>
     </button>
   `,
   styleUrls: ['actionBtn.component.scss']
