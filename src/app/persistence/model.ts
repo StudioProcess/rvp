@@ -118,7 +118,6 @@ export interface Annotation {
 }
 
 export interface AnnotationFields {
-  readonly title: string
   readonly description: string
 }
 
@@ -195,7 +194,6 @@ export const TrackRecordFactory = Record<Track>({
 })
 
 export const AnnotationFieldsRecordFactory = Record<AnnotationFields>({
-  title: '',
   description: ''
 })
 
