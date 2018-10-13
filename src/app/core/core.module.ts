@@ -31,7 +31,7 @@ const _DECLS_ = [
   // Components
   NotFoundComponent, LogoComponent, VersionComponent,
   ProjectBtnComponent, ProjectModalComponent, FooterComponent,
-  ToolbarComponent, ActionBtnComponent
+  ToolbarComponent, ActionBtnComponent,
   // Inspector
   InspectorEntryComponent,
   // Timeline

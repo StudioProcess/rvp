@@ -1,0 +1,10 @@
+@import 'colors';
+
+button {
+  padding: 10px;
+  cursor: pointer;
+}
+
+button:hover, button:focus {
+  color: $process-gray !important;
+}
