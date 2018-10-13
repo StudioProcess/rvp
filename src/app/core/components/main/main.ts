@@ -29,6 +29,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   hasClipboardAnnotations: boolean = false
   hasRedo: boolean = false
   hasUndo: boolean = false
+  hasTracks: boolean = false
   currentAnnotationsOnly: boolean = false // show current annotations only
   search: string|null = null
   applyToTimeline: boolean = false
@@ -48,6 +49,15 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     this._subs.push(this._rootStore.select(fromProject.getProjectClipboard).subscribe(clipboard => {
       this.hasClipboardAnnotations = clipboard.size > 0
       this._cdr.markForCheck()
+    }))
+
+    this._subs.push(this._rootStore.select(fromProject.getProjectTimeline).subscribe(timeline => {
+      if(timeline !== null) {
+        const tracks = timeline.get('tracks', null)
+        this.hasTracks = tracks.size > 0
+      } else {
+        this.hasTracks = false
+      }
     }))
 
     this._subs.push(this._rootStore.select(fromProject.getProjectSnapshots).subscribe(snapshots => {
@@ -176,7 +186,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       annotationStackIndex: 0,
       annotation: AnnotationRecordFactory({
         utc_timestamp: 0,
-        duration: 30,
+        duration: 1,
         fields: AnnotationFieldsRecordFactory({title: '* NEW *'})
       })
     }))
