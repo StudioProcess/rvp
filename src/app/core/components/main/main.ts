@@ -1,7 +1,7 @@
 import {
   Component, ChangeDetectionStrategy, OnInit,
   OnDestroy, AfterViewInit,
-  // ChangeDetectorRef
+  ChangeDetectorRef
 } from '@angular/core'
 
 import {Store} from '@ngrx/store'
@@ -25,17 +25,28 @@ declare var $: any
   styleUrls: ['main.scss']
 })
 export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
+  hasSelectedAnnotations: boolean = false
+  hasClipboardAnnotations: boolean = false
   currentAnnotationsOnly: boolean = false // show current annotations only
   search: string|null = null
   applyToTimeline: boolean = false
   private readonly _subs: Subscription[] = []
 
   constructor(
-    // private readonly _cdr: ChangeDetectorRef,
+    private readonly _cdr: ChangeDetectorRef,
     private readonly _rootStore: Store<fromRoot.State>) {}
 
   ngOnInit() {
     this._rootStore.dispatch(new project.ProjectLoad())
+
+    this._subs.push(this._rootStore.select(fromProject.getProjectFocusAnnotationSelection).subscribe(selected => {
+      this.hasSelectedAnnotations = selected !== null
+    }))
+
+    this._subs.push(this._rootStore.select(fromProject.getProjectClipboard).subscribe(clipboard => {
+      this.hasClipboardAnnotations = clipboard.size > 0
+      this._cdr.markForCheck()
+    }))
 
     this._subs.push(this._rootStore.select(fromProject.getProjectSettingsShowCurrentAnnotationsOnly).subscribe(currentAnnotationsOnly => {
       this.currentAnnotationsOnly = currentAnnotationsOnly

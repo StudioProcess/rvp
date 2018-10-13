@@ -31,6 +31,8 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
   @Input('currentAnnotationsOnly') readonly currentAnnotationsOnlyIn: boolean
   @Input('search') readonly searchIn: string
   @Input('applyToTimeline') readonly applyToTimelineIn: boolean
+  @Input() readonly hasSelectedAnnotations: boolean
+  @Input() readonly hasClipboardAnnotations: boolean
 
   leftForm: FormGroup|null = null
   rightForm: FormGroup|null = null
@@ -51,10 +53,6 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
   private readonly _subs: Subscription[] = []
 
   actionBtns: ActionBtnMeta[] = [
-    {id: 'add_annotation', cls: 'ion-md-add-circle-outline', label: 'Add', title: 'Add Annotation'},
-    {id: 'delete_annotation', cls: 'ion-md-remove-circle-outline', label: 'Delete', title: 'Delete Annotation'},
-    {id: 'copy_annotation', cls: 'ion-md-copy', label: 'Copy', title: 'Copy Annotation'},
-    {id: 'paste_annotation', cls: 'ion-md-clipboard', label: 'Paste', title: 'Paste Annotation'},
     {id: 'undo_action', cls: 'ion-md-undo', label: 'Undo', title: 'Undo Action'},
     {id: 'redo_action', cls: 'ion-md-redo', label: 'Redo', title: 'Redo Action'}
   ]
@@ -106,8 +104,8 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
     }))
   }
 
-  actionBtnClick($event: MouseEvent, btn: ActionBtnMeta) {
-    switch(btn.id) {
+  actionBtnClick($event: MouseEvent, btnId: string) {
+    switch(btnId) {
       case 'add_annotation':
         this.onAddAnnotation.emit()
       break;

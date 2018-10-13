@@ -1,7 +1,19 @@
 <div class="row">
   <div class="small-12 medium-12 large-8 column">
     <rv-logo></rv-logo>
-    <rv-actionbtn *ngFor="let btn of actionBtns" [label]="btn.label" [cls]="btn.cls" [title]="btn.title" (onClick)="actionBtnClick($event, btn)"></rv-actionbtn>
+    <button (click)="btnClick($event, 'add_annotation')">
+      <i class="ion-md-add-circle-outline" title="Add Annotation"></i><span class="show-for-medium"> Add</span>
+    </button>
+    <button (click)="btnClick($event, 'delete_annotation')" [disabled]="!hasSelectedAnnotations">
+      <i class="ion-md-remove-circle-outline" title="Delete Annotation"></i><span class="show-for-medium"> Delete</span>
+    </button>
+    <button (click)="btnClick($event, 'copy_annotation')" [disabled]="!hasSelectedAnnotations">
+      <i class="ion-md-copy" title="Copy Annotation"></i><span class="show-for-medium"> Copy</span>
+    </button>
+    <button (click)="btnClick($event, 'paste_annotation')" [disabled]="!hasClipboardAnnotations">
+      <i class="ion-md-clipboard" title="Paste Annotation"></i><span class="show-for-medium"> Paste</span>
+    </button>
+
     <rv-projectbtn data-open="settings-reveal"></rv-projectbtn>
     <rv-projectmodal class="reveal" id="settings-reveal" data-reveal
       (onImportProject)="importProject($event)"
