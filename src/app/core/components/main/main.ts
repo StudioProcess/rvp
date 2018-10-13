@@ -110,7 +110,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
     this._subs.push(
       copyToClipboardHotkey.subscribe(() => {
-        this._rootStore.dispatch(new project.ProjectCopyAnnotationSelectionToClipboard())
+        this.dispatchCopyAnnotation()
       }))
 
     this._subs.push(
@@ -135,19 +135,19 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     this._subs.push(
       removeAnnotationHotkey
         .subscribe(() => {
-          this._rootStore.dispatch(new project.ProjectDeleteSelectedAnnotations())
+          this.dispatchDeleteAnnotation()
         }))
 
     this._subs.push(
       undoHotkey.subscribe(e => {
         e.preventDefault()
-        this._rootStore.dispatch(new project.ProjectUndo())
+        this.dispatchUndoAction()
       }))
 
     this._subs.push(
       redoHotkey.subscribe(e => {
         e.preventDefault()
-        this._rootStore.dispatch(new project.ProjectRedo())
+        this.dispatchRedoAction()
       }))
   }
 
@@ -192,12 +192,28 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     }))
   }
 
-  deleteAnnotation() {
+  private dispatchDeleteAnnotation() {
     this._rootStore.dispatch(new project.ProjectDeleteSelectedAnnotations())
   }
 
-  copyAnnotation() {
+  private dispatchCopyAnnotation() {
     this._rootStore.dispatch(new project.ProjectCopyAnnotationSelectionToClipboard())
+  }
+
+  private dispatchUndoAction() {
+    this._rootStore.dispatch(new project.ProjectUndo())
+  }
+
+  private dispatchRedoAction() {
+    this._rootStore.dispatch(new project.ProjectRedo())
+  }
+
+  deleteAnnotation() {
+    this.dispatchDeleteAnnotation()
+  }
+
+  copyAnnotation() {
+    this.dispatchCopyAnnotation()
   }
 
   pasteAnnotation() {
@@ -205,11 +221,11 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   undoAction() {
-    this._rootStore.dispatch(new project.ProjectUndo())
+    this.dispatchUndoAction()
   }
 
   redoAction() {
-    this._rootStore.dispatch(new project.ProjectRedo())
+    this.dispatchRedoAction()
   }
 
   currentAnnotationsOnlyChange(currentAnnotationsOnly: boolean) {
