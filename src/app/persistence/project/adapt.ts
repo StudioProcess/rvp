@@ -27,3 +27,33 @@ export function adaptLegacyVideoMeta(projectData: any) {
 
   return projectData
 }
+
+export function adaptLegacyAnnotationFields(projectData: any) {
+  const tracks = projectData.meta.timeline.tracks
+  tracks.forEach((track: any, trackIndex: number) => {
+    const stacks = track.annotationStacks
+    return stacks.forEach((stack: any, stackIndex: number) => {
+      projectData.meta.timeline.tracks[trackIndex].annotationStacks[stackIndex] = stack.map((annotation: any) => {
+        if(annotation.fields.title !== undefined) {
+          if(annotation.fields.description !== '') {
+            return {
+              ...annotation,
+              fields: {
+                description: `${annotation.fields.title}\n${annotation.fields.description}`
+              }
+            }
+          } else {
+            return {
+              ...annotation,
+              fields: {
+                description: annotation.fields.title
+              }
+            }
+          }
+        } else {
+          return annotation
+        }
+      })
+    })
+  })
+}
