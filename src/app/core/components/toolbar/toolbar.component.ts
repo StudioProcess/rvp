@@ -11,6 +11,13 @@ import {debounceTime, pluck} from 'rxjs/operators'
 
 import {_FORM_INPUT_DEBOUNCE_} from '../../../config/form'
 
+interface ActionBtnMeta {
+  id: string
+  cls: string
+  label: string
+  title: string
+}
+
 @Component({
   selector: 'rv-toolbar',
   templateUrl: 'toolbar.component.html',
@@ -22,7 +29,8 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
   @Input('search') readonly searchIn: string
   @Input('applyToTimeline') readonly applyToTimelineIn: boolean
 
-  form: FormGroup|null = null
+  leftForm: FormGroup|null = null
+  rightForm: FormGroup|null = null
 
   @Output() readonly onCurrentAnnotationsOnlyChange = new EventEmitter<boolean>()
   @Output() readonly onSearchChange = new EventEmitter<string>()
@@ -32,30 +40,34 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
 
   private readonly _subs: Subscription[] = []
 
-  actionBtns = [
-    {cls: 'ion-md-add-circle-outline', label: 'Add', title: 'Add Annotation'},
-    {cls: 'ion-md-remove-circle-outline', label: 'Delete', title: 'Delete Annotation'},
-    {cls: 'ion-md-copy', label: 'Copy', title: 'Copy Annotation'},
-    {cls: 'ion-md-clipboard', label: 'Paste', title: 'Paste Annotation'},
-    {cls: 'ion-md-undo', label: 'Undo', title: 'Undo Action'},
-    {cls: 'ion-md-redo', label: 'Redo', title: 'Redo Action'}
+  actionBtns: ActionBtnMeta[] = [
+    {id: 'add_annotation', cls: 'ion-md-add-circle-outline', label: 'Add', title: 'Add Annotation'},
+    {id: 'delete_annotation', cls: 'ion-md-remove-circle-outline', label: 'Delete', title: 'Delete Annotation'},
+    {id: 'copy_annotation', cls: 'ion-md-copy', label: 'Copy', title: 'Copy Annotation'},
+    {id: 'paste_annotation', cls: 'ion-md-clipboard', label: 'Paste', title: 'Paste Annotation'},
+    {id: 'undo_action', cls: 'ion-md-undo', label: 'Undo', title: 'Undo Action'},
+    {id: 'redo_action', cls: 'ion-md-redo', label: 'Redo', title: 'Redo Action'}
   ]
 
   constructor(private readonly _fb: FormBuilder) {}
 
-  private _mapModel() {
+  private _mapLeftModel() {
+    return {currentAnnotationsOnly: this.currentAnnotationsOnlyIn}
+  }
+
+  private _mapRightModel() {
     return {
-      currentAnnotationsOnly: this.currentAnnotationsOnlyIn,
       search: this.searchIn,
       applyToTimeline: this.applyToTimelineIn
     }
   }
 
   ngOnInit() {
-    this.form = this._fb.group(this._mapModel())
+    this.leftForm = this._fb.group(this._mapLeftModel())
+    this.rightForm = this._fb.group(this._mapRightModel())
 
     this._subs.push(
-      this.form.valueChanges
+      this.leftForm.valueChanges
       .pipe(
         pluck('currentAnnotationsOnly'))
       .subscribe((value: boolean) => {
@@ -63,7 +75,7 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
       }))
 
     this._subs.push(
-      this.form.valueChanges
+      this.rightForm.valueChanges
       .pipe(
         pluck('search'), debounceTime(_FORM_INPUT_DEBOUNCE_))
       .subscribe((value: string) => {
@@ -71,7 +83,7 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
       }))
 
     this._subs.push(
-      this.form.valueChanges
+      this.rightForm.valueChanges
         .pipe(pluck('applyToTimeline'))
         .subscribe((value: boolean) => {
           this.onApplyToTimelineChange.emit(value)
@@ -82,6 +94,10 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
     this._subs.push(fromEvent(this._searchRef.nativeElement, 'keydown').subscribe((ev: KeyboardEvent) => {
       ev.stopPropagation()
     }))
+  }
+
+  actionBtnClick($event: MouseEvent, btn: ActionBtnMeta) {
+    console.log('yeah')
   }
 
   ngOnDestroy() {

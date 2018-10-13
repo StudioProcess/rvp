@@ -1,10 +1,22 @@
-<div class="toolbar-wrapper">
-  <div>
-    <rv-actionbtn *ngFor="let btn of actionBtns" [label]="btn.label" [cls]="btn.cls" [title]="btn.title"></rv-actionbtn>
+<div class="row">
+  <div class="small-12 medium-12 large-8 column">
+    <rv-logo></rv-logo>
+    <rv-actionbtn *ngFor="let btn of actionBtns" [label]="btn.label" [cls]="btn.cls" [title]="btn.title" (onClick)="actionBtnClick($event, btn)"></rv-actionbtn>
+    <rv-projectbtn data-open="settings-reveal"></rv-projectbtn>
+    <rv-projectmodal class="reveal" id="settings-reveal" data-reveal
+      (onImportProject)="importProject($event)"
+      (onImportVideo)="importVideo($event)"
+      (onExportProject)="exportProject()"
+      (onResetProject)="resetProject()">
+    </rv-projectmodal>
+    <form class="leftForm" [formGroup]="leftForm" novalidate>
+      <input formControlName="currentAnnotationsOnly" type="checkbox"/> Current <span class="show-for-large">Annotations</span> only
+    </form>
   </div>
-  <form [formGroup]="form" novalidate>
-    <input formControlName="currentAnnotationsOnly" type="checkbox"/> Current Annotations only
-    <input #search formControlName="search" type="text"/>
-    <input formControlName="applyToTimeline" type="checkbox"/> Apply to timline
-  </form>
+  <div class="small-12 medium-12 large-4 column">
+    <form [formGroup]="rightForm" novalidate>
+      <input #search formControlName="search" type="text"/>
+      <input formControlName="applyToTimeline" type="checkbox"/> Apply to timline
+    </form>
+  </div>
 </div>
