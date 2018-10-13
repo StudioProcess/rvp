@@ -36,6 +36,7 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
   @Output() readonly onAddAnnotation = new EventEmitter()
   @Output() readonly onDeleteAnnotation = new EventEmitter()
   @Output() readonly onCopyAnnotation = new EventEmitter()
+  @Output() readonly onPasteAnnotation = new EventEmitter()
 
   @Output() readonly onCurrentAnnotationsOnlyChange = new EventEmitter<boolean>()
   @Output() readonly onSearchChange = new EventEmitter<string>()
@@ -109,6 +110,9 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
       break;
       case 'copy_annotation':
         this.onCopyAnnotation.emit()
+      break;
+      case 'paste_annotation':
+        this.onPasteAnnotation.emit()
       break;
     }
   }

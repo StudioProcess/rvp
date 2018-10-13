@@ -10,7 +10,7 @@
     <button (mousedown)="actionBtnClick($event, 'copy_annotation')" [disabled]="!hasSelectedAnnotations">
       <i class="ion-md-copy" title="Copy Annotation"></i><span class="show-for-medium"> Copy</span>
     </button>
-    <button (click)="actionBtnClick($event, 'paste_annotation')" [disabled]="!hasClipboardAnnotations">
+    <button (mousedown)="actionBtnClick($event, 'paste_annotation')" [disabled]="!hasClipboardAnnotations">
       <i class="ion-md-clipboard" title="Paste Annotation"></i><span class="show-for-medium"> Paste</span>
     </button>
     <button (click)="actionBtnClick($event, 'undo_action')" [disabled]="!hasUndo">

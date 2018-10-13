@@ -200,6 +200,10 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     this._rootStore.dispatch(new project.ProjectCopyAnnotationSelectionToClipboard())
   }
 
+  pasteAnnotation() {
+    this._rootStore.dispatch(new project.ProjectPasteClipBoard({trackIndex: 0}))
+  }
+
   currentAnnotationsOnlyChange(currentAnnotationsOnly: boolean) {
     this._rootStore.dispatch(new project.ProjectSettingsSetCurrentAnnotationsOnly(currentAnnotationsOnly))
   }
