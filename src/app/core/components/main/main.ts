@@ -15,6 +15,7 @@ import * as fromProject from '../../../persistence/reducers'
 import * as player from '../../../player/actions'
 import {rndColor} from '../../../lib/color'
 import {AnnotationRecordFactory, AnnotationFieldsRecordFactory} from '../../../persistence/model'
+import {_EMPTY_PROJECT_} from '../../../config/project'
 
 declare var $: any
 
@@ -170,6 +171,13 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   resetProject() {
     if(window.confirm('Reset the whole project? All data will be lost.')) {
       this._rootStore.dispatch(new project.ProjectReset())
+      this.closeProjectModal()
+    }
+  }
+
+  newProject() {
+    if(window.confirm('Create a new (empty) project? All data will be lost.')) {
+      this._rootStore.dispatch(new project.ProjectLoadSuccess(_EMPTY_PROJECT_))
       this.closeProjectModal()
     }
   }
