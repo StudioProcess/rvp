@@ -13,6 +13,7 @@ button {
   padding: 10px;
   cursor: pointer;
   font-size: 12px;
+  outline: none;
 }
 
 @media only screen and (max-width: 639px) {
@@ -21,7 +22,7 @@ button {
   }
 }
 
-button:hover, button:focus {
+button:hover {
   color: $process-gray !important;
 }
 
