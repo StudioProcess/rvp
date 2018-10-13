@@ -35,6 +35,8 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
   leftForm: FormGroup|null = null
   rightForm: FormGroup|null = null
 
+  @Output() readonly onAddAnnotation = new EventEmitter()
+
   @Output() readonly onCurrentAnnotationsOnlyChange = new EventEmitter<boolean>()
   @Output() readonly onSearchChange = new EventEmitter<string>()
   @Output() readonly onApplyToTimelineChange = new EventEmitter<boolean>()
@@ -105,7 +107,11 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
   }
 
   actionBtnClick($event: MouseEvent, btn: ActionBtnMeta) {
-    console.log('yeah')
+    switch(btn.id) {
+      case 'add_annotation':
+        this.onAddAnnotation.emit()
+      break;
+    }
   }
 
   importProject(projectFile: File) {
