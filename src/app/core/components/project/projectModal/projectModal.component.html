@@ -6,6 +6,12 @@
 </div>
 <div class="row">
   <div class="column">
+    <h3 class="title-settings">New project</h3>
+    <a class="button-new" href="#" (click)="newProject()">New</a>
+  </div>
+</div>
+<div class="row">
+  <div class="column">
     <h3 class="title-settings">Open Project</h3>
     <input type="file" name="projectFile" id="projectFile" class="inputfile" accept=".rv" (change)="importProject($event)">
     <label for="projectFile">Open...</label>

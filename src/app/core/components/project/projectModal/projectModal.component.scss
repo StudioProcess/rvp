@@ -68,7 +68,7 @@
 }
 
 :host {
-  .button-reset {
+  .button-new, .button-reset {
     @include button(red, white)
   }
 }

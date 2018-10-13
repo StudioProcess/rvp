@@ -28,6 +28,7 @@ export class ProjectModalComponent implements OnDestroy {
   @Output() readonly onImportVideo = new EventEmitter<ImportVideoPayload>()
   @Output() readonly onExportProject = new EventEmitter()
   @Output() readonly onResetProject = new EventEmitter()
+  @Output() readonly onNewProject = new EventEmitter()
 
   youtubeURL = ''
   vimeoURL = ''
@@ -54,6 +55,10 @@ export class ProjectModalComponent implements OnDestroy {
 
   exportProject() {
     this.onExportProject.emit()
+  }
+
+  newProject() {
+    this.onNewProject.emit()
   }
 
   resetProject() {
