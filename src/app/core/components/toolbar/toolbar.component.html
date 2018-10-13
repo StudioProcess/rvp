@@ -7,7 +7,7 @@
     <button (mousedown)="actionBtnClick($event, 'delete_annotation')" [disabled]="!hasSelectedAnnotations">
       <i class="ion-md-remove-circle-outline" title="Delete Annotation"></i><span class="show-for-medium"> Delete</span>
     </button>
-    <button (click)="actionBtnClick($event, 'copy_annotation')" [disabled]="!hasSelectedAnnotations">
+    <button (mousedown)="actionBtnClick($event, 'copy_annotation')" [disabled]="!hasSelectedAnnotations">
       <i class="ion-md-copy" title="Copy Annotation"></i><span class="show-for-medium"> Copy</span>
     </button>
     <button (click)="actionBtnClick($event, 'paste_annotation')" [disabled]="!hasClipboardAnnotations">
