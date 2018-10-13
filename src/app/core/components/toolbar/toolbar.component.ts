@@ -34,6 +34,7 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
   rightForm: FormGroup|null = null
 
   @Output() readonly onAddAnnotation = new EventEmitter()
+  @Output() readonly onDeleteAnnotation = new EventEmitter()
 
   @Output() readonly onCurrentAnnotationsOnlyChange = new EventEmitter<boolean>()
   @Output() readonly onSearchChange = new EventEmitter<string>()
@@ -96,9 +97,14 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
   }
 
   actionBtnClick($event: MouseEvent, btnId: string) {
+    // $event.preventDefault()
+    // $event.stopPropagation()
     switch(btnId) {
       case 'add_annotation':
         this.onAddAnnotation.emit()
+      break;
+      case 'delete_annotation':
+        this.onDeleteAnnotation.emit()
       break;
     }
   }

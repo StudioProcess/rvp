@@ -192,6 +192,10 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     }))
   }
 
+  deleteAnnotation() {
+    this._rootStore.dispatch(new project.ProjectDeleteSelectedAnnotations())
+  }
+
   currentAnnotationsOnlyChange(currentAnnotationsOnly: boolean) {
     this._rootStore.dispatch(new project.ProjectSettingsSetCurrentAnnotationsOnly(currentAnnotationsOnly))
   }

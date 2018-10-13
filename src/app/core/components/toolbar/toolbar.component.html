@@ -4,7 +4,7 @@
     <button (click)="actionBtnClick($event, 'add_annotation')" [disabled]="!hasTracks">
       <i class="ion-md-add-circle-outline" title="Add Annotation"></i><span class="show-for-medium"> Add</span>
     </button>
-    <button (click)="actionBtnClick($event, 'delete_annotation')" [disabled]="!hasSelectedAnnotations">
+    <button (mousedown)="actionBtnClick($event, 'delete_annotation')" [disabled]="!hasSelectedAnnotations">
       <i class="ion-md-remove-circle-outline" title="Delete Annotation"></i><span class="show-for-medium"> Delete</span>
     </button>
     <button (click)="actionBtnClick($event, 'copy_annotation')" [disabled]="!hasSelectedAnnotations">
