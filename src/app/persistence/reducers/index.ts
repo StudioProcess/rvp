@@ -209,3 +209,8 @@ export const getSelectedAnnotations = createSelector(getAnnotationsSelections, a
     return elem.get('annotation', null)!
   })
 })
+
+
+// Clipboard
+
+export const getProjectClipboard = createSelector(getProjectState, fromProject.getProjectClipboard)

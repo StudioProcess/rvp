@@ -439,3 +439,7 @@ export const getProjectVideoBlob = (state: State) => state.get('videoBlob', null
 export const getProjectSelection = (state: State) => {
   return state.get('selection', null)
 }
+
+export const getProjectClipboard = (state: State) => {
+  return state.get('clipboard', null)
+}
