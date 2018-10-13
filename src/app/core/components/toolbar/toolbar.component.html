@@ -33,7 +33,11 @@
   </div>
   <div class="small-12 medium-12 large-4 column">
     <form [formGroup]="rightForm" novalidate>
-      <input #search formControlName="search" type="text"/>
+      <div class="searchBox-wrapper">
+        <input class="searchBox" #search formControlName="search" type="text" placeholder="Search..." (focus)="search.placeholder=''" (blur)="search.placeholder='Search...'"/>
+        <i class="search-icon ion-md-search"></i>
+        <i class="close-icon ion-md-close" [hidden]="!(search.value.length > 0)" (click)="clearSearch()"></i>
+      </div>
       <input formControlName="applyToTimeline" type="checkbox"/> Apply to timline
     </form>
   </div>

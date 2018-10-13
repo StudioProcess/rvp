@@ -118,6 +118,10 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
     this.onResetProject.emit()
   }
 
+  clearSearch() {
+    this.rightForm!.patchValue({search: null})
+  }
+
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
   }

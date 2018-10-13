@@ -24,3 +24,43 @@ button {
 button:hover, button:focus {
   color: $process-gray !important;
 }
+
+.searchBox-wrapper {
+  display: inline-block;
+  position: relative;
+  margin-right: 5px;
+
+  i {
+    font-size: 15px;
+  }
+
+  .search-icon {
+    position: absolute;
+    top: 4px;
+    left: 10px;
+  }
+
+  input:focus + .search-icon {
+    opacity: 0;
+  }
+
+  .close-icon {
+    position: absolute;
+    position: absolute;
+    top: 4px;
+    right: 10px;
+  }
+
+  .searchBox {
+    border: none;
+    background-color: $process-super-light-gray4;
+    padding: 8px 30px;
+    outline: none;
+    min-width: 225px;
+  }
+
+  .searchBox::placeholder {
+    color: black;
+    opacity: 1;
+  }
+}
