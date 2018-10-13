@@ -271,7 +271,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   }
 
   getAnnotationTitle(annotation: Record<Annotation>) {
-    return annotation.getIn(['fields', 'title'])
+    return annotation.getIn(['fields', 'description']).split('\n')[0]
   }
 
   getAnnotationPosition(annotation: Annotation) {
