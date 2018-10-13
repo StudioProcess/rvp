@@ -210,7 +210,10 @@ export const getSelectedAnnotations = createSelector(getAnnotationsSelections, a
   })
 })
 
-
 // Clipboard
 
 export const getProjectClipboard = createSelector(getProjectState, fromProject.getProjectClipboard)
+
+// Snapshots
+
+export const getProjectSnapshots = createSelector(getProjectState, fromProject.getProjectSnapshots)

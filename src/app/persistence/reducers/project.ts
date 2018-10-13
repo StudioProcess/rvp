@@ -443,3 +443,7 @@ export const getProjectSelection = (state: State) => {
 export const getProjectClipboard = (state: State) => {
   return state.get('clipboard', null)
 }
+
+export const getProjectSnapshots = (state: State) => {
+  return state.get('snapshots', null)
+}
