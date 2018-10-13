@@ -14,13 +14,6 @@ import {_FORM_INPUT_DEBOUNCE_} from '../../../config/form'
 import * as project from '../../../persistence/actions/project'
 import {ImportVideoPayload} from '../../../persistence/actions/project'
 
-interface ActionBtnMeta {
-  id: string
-  cls: string
-  label: string
-  title: string
-}
-
 @Component({
   selector: 'rv-toolbar',
   templateUrl: 'toolbar.component.html',
@@ -33,6 +26,8 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
   @Input('applyToTimeline') readonly applyToTimelineIn: boolean
   @Input() readonly hasSelectedAnnotations: boolean
   @Input() readonly hasClipboardAnnotations: boolean
+  @Input() readonly hasRedo: boolean
+  @Input() readonly hasUndo: boolean
 
   leftForm: FormGroup|null = null
   rightForm: FormGroup|null = null
@@ -51,11 +46,6 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
   @ViewChild('search') private readonly _searchRef: ElementRef
 
   private readonly _subs: Subscription[] = []
-
-  actionBtns: ActionBtnMeta[] = [
-    {id: 'undo_action', cls: 'ion-md-undo', label: 'Undo', title: 'Undo Action'},
-    {id: 'redo_action', cls: 'ion-md-redo', label: 'Redo', title: 'Redo Action'}
-  ]
 
   constructor(private readonly _fb: FormBuilder) {}
 

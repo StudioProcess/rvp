@@ -1,17 +1,23 @@
 <div class="row">
   <div class="small-12 medium-12 large-8 column">
     <rv-logo></rv-logo>
-    <button (click)="btnClick($event, 'add_annotation')">
+    <button (click)="actionBtnClick($event, 'add_annotation')">
       <i class="ion-md-add-circle-outline" title="Add Annotation"></i><span class="show-for-medium"> Add</span>
     </button>
-    <button (click)="btnClick($event, 'delete_annotation')" [disabled]="!hasSelectedAnnotations">
+    <button (click)="actionBtnClick($event, 'delete_annotation')" [disabled]="!hasSelectedAnnotations">
       <i class="ion-md-remove-circle-outline" title="Delete Annotation"></i><span class="show-for-medium"> Delete</span>
     </button>
-    <button (click)="btnClick($event, 'copy_annotation')" [disabled]="!hasSelectedAnnotations">
+    <button (click)="actionBtnClick($event, 'copy_annotation')" [disabled]="!hasSelectedAnnotations">
       <i class="ion-md-copy" title="Copy Annotation"></i><span class="show-for-medium"> Copy</span>
     </button>
-    <button (click)="btnClick($event, 'paste_annotation')" [disabled]="!hasClipboardAnnotations">
+    <button (click)="actionBtnClick($event, 'paste_annotation')" [disabled]="!hasClipboardAnnotations">
       <i class="ion-md-clipboard" title="Paste Annotation"></i><span class="show-for-medium"> Paste</span>
+    </button>
+    <button (click)="actionBtnClick($event, 'undo_action')" [disabled]="!hasUndo">
+      <i class="ion-md-undo" title="Undo Action"></i><span class="show-for-medium"> Undo</span>
+    </button>
+    <button (click)="actionBtnClick($event, 'redo_action')" [disabled]="!hasRedo">
+      <i class="ion-md-redo" title="Redo Action"></i><span class="show-for-medium"> Redo</span>
     </button>
 
     <rv-projectbtn data-open="settings-reveal"></rv-projectbtn>
