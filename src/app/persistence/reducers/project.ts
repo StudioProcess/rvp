@@ -79,10 +79,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
                 fields: TrackFieldsRecordFactory({title: trackTitle}),
                 annotationStacks: List(track.annotationStacks.map((annotations: any) => {
                   return List(annotations.map((annotation: any) => {
-                    const {title, description} = annotation.fields
+                    const {description} = annotation.fields
                     return new AnnotationRecordFactory({
                       ...annotation,
-                      fields: new AnnotationFieldsRecordFactory({title, description}),
+                      fields: new AnnotationFieldsRecordFactory({description}),
                     })
                   }))
                 }))
