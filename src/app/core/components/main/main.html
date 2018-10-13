@@ -1,18 +1,12 @@
 <div class="nav-wrapper">
   <div class="row">
     <div class="column">
-      <rv-logo></rv-logo>
-      <rv-projectbtn data-open="settings-reveal"></rv-projectbtn>
-      <rv-projectmodal class="reveal" id="settings-reveal" data-reveal
-        (onImportProject)="importProject($event)"
-        (onImportVideo)="importVideo($event)"
-        (onExportProject)="exportProject()"
-        (onResetProject)="resetProject()">
-      </rv-projectmodal>
       <rv-toolbar
+        (onAddAnnotation)="addAnnotation"
         [currentAnnotationsOnly]="currentAnnotationsOnly" (onCurrentAnnotationsOnlyChange)="currentAnnotationsOnlyChange($event)"
         [search]="search" (onSearchChange)="searchChange($event)"
-        [applyToTimeline]="applyToTimeline" (onApplyToTimelineChange)="applyToTimelineChange($event)"></rv-toolbar>
+        [applyToTimeline]="applyToTimeline" (onApplyToTimelineChange)="applyToTimelineChange($event)">
+      </rv-toolbar>
     </div>
   </div>
 </div>

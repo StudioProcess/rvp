@@ -151,6 +151,10 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     modal.foundation('close')
   }
 
+  addAnnotation() {
+    console.log('ADD', ':D')
+  }
+
   currentAnnotationsOnlyChange(currentAnnotationsOnly: boolean) {
     this._rootStore.dispatch(new project.ProjectSettingsSetCurrentAnnotationsOnly(currentAnnotationsOnly))
   }
