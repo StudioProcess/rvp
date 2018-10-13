@@ -11,6 +11,9 @@ import {debounceTime, pluck} from 'rxjs/operators'
 
 import {_FORM_INPUT_DEBOUNCE_} from '../../../config/form'
 
+import * as project from '../../../persistence/actions/project'
+import {ImportVideoPayload} from '../../../persistence/actions/project'
+
 interface ActionBtnMeta {
   id: string
   cls: string
@@ -35,6 +38,11 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
   @Output() readonly onCurrentAnnotationsOnlyChange = new EventEmitter<boolean>()
   @Output() readonly onSearchChange = new EventEmitter<string>()
   @Output() readonly onApplyToTimelineChange = new EventEmitter<boolean>()
+
+  @Output() readonly onImportProject = new EventEmitter()
+  @Output() readonly onImportVideo = new EventEmitter<ImportVideoPayload>()
+  @Output() readonly onExportProject = new EventEmitter()
+  @Output() readonly onResetProject = new EventEmitter()
 
   @ViewChild('search') private readonly _searchRef: ElementRef
 
@@ -98,6 +106,22 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
 
   actionBtnClick($event: MouseEvent, btn: ActionBtnMeta) {
     console.log('yeah')
+  }
+
+  importProject(projectFile: File) {
+    this.onImportProject.emit(projectFile)
+  }
+
+  importVideo(videoImport: project.ImportVideoPayload) {
+    this.onImportVideo.emit(videoImport)
+  }
+
+  exportProject() {
+    this.onExportProject.emit()
+  }
+
+  resetProject() {
+    this.onResetProject.emit()
   }
 
   ngOnDestroy() {

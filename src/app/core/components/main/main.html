@@ -3,6 +3,10 @@
     <div class="column">
       <rv-toolbar
         (onAddAnnotation)="addAnnotation"
+        (onImportProject)="importProject($event)"
+        (onImportVideo)="importVideo($event)"
+        (onExportProject)="exportProject()"
+        (onResetProject)="resetProject()"
         [currentAnnotationsOnly]="currentAnnotationsOnly" (onCurrentAnnotationsOnlyChange)="currentAnnotationsOnlyChange($event)"
         [search]="search" (onSearchChange)="searchChange($event)"
         [applyToTimeline]="applyToTimeline" (onApplyToTimelineChange)="applyToTimelineChange($event)">
