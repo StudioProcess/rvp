@@ -58,8 +58,7 @@ export const _EMPTY_PROJECT_ = {
         }
       ]
     },
-    "video": {
-      "type": "blob"
+    "video": null
     }
   },
   video: null
