@@ -43,21 +43,21 @@
   .annotation-color {
     height: 100%;
     width: $inspector-annotation-color-width;
-    margin-right: 30px;
+    margin-right: 0.5em;
   }
 
   .annotation-info {
     // padding: 5px 5px 5px 10px;
 
     .time-row {
-      padding-top: 1.0em;
+      padding-top: 0.3em;
       padding-right: 1.0em;
-      padding-bottom: 0.5em;
+      padding-bottom: 0.1em;
     }
 
     .text-row {
-      padding-right: 1.0em;
-      padding-bottom: 1.0em;
+      padding-right: 0.5em;
+      padding-bottom: 0;
     }
 
     .title {
