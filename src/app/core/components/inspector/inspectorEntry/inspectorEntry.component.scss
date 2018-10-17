@@ -53,11 +53,18 @@
       padding-top: 0.3em;
       padding-right: 1.0em;
       padding-bottom: 0.1em;
+      color: $process-dark-gray;
     }
 
     .text-row {
       padding-right: 0.5em;
       padding-bottom: 0;
+    }
+
+    .ion-ios-time, .ion-md-time {
+      font-size: 14px;
+      padding-left: 0.3em;
+      padding-right: 0.1em;
     }
 
     .title {
@@ -91,10 +98,11 @@
 
     .duration {
       font-size: 14px; // TODO: 14px needed to be set explicitly
-      font-weight: 500;
+      font-weight: 400;
       width: 88px;
       border: 1px solid transparent;
       background-color: inherit;
+      color: $process-dark-gray;
 
       &:hover {
         color: $process-dark-gray2;
