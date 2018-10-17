@@ -16,6 +16,7 @@
   .title-row {
     padding-bottom: $track-title-paddingbottom;
     justify-content: space-between;
+    font-size: $track-title-fontsize;
 
     .track-color {
       width: $track-color-width;
