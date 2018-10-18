@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row toolbar-color">
   <div class="small-12 medium-12 large-8 column">
     <rv-logo></rv-logo>
     <button (click)="actionBtnClick($event, 'add_annotation')" [disabled]="!hasTracks">
@@ -29,7 +29,7 @@
       (onNewProject)="newProject()">
     </rv-projectmodal>
     <form class="leftForm" [formGroup]="leftForm" novalidate>
-      <input formControlName="currentAnnotationsOnly" type="checkbox"/> Current <span class="show-for-large">Annotations</span> only
+      <input formControlName="currentAnnotationsOnly" type="checkbox"/> Current <span class="show-for-large">annotations</span> only
     </form>
   </div>
   <div class="small-12 medium-12 large-4 column">
