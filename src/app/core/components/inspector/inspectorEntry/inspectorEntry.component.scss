@@ -35,6 +35,10 @@
   }
 }
 
+.ion-md-time, .ion-ios-time {
+  margin-left: 20px;
+}
+
 .entry-container {
   .column {
     padding: 0px;
@@ -50,6 +54,7 @@
     // padding: 5px 5px 5px 10px;
 
     .time-row {
+      text-align: right;
       padding-top: 0.3em;
       padding-right: 1.0em;
       padding-bottom: 0.1em;
@@ -62,7 +67,7 @@
     }
 
     .ion-ios-time, .ion-md-time {
-      font-size: 14px;
+      font-size: 13px;
       padding-left: 0.3em;
       padding-right: 0.1em;
     }
@@ -97,7 +102,7 @@
     }
 
     .duration {
-      font-size: 14px; // TODO: 14px needed to be set explicitly
+      font-size: 13px; // TODO: 14px needed to be set explicitly
       font-weight: 400;
       width: 88px;
       border: 1px solid transparent;
