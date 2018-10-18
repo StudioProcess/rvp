@@ -47,7 +47,7 @@
   .annotation-color {
     height: 100%;
     width: $inspector-annotation-color-width;
-    margin-right: 0.5em;
+    margin-right: 0.2em;
   }
 
   .annotation-info {
@@ -62,7 +62,7 @@
     }
 
     .text-row {
-      padding-right: 0.5em;
+      padding-right: 0.3em;
       padding-bottom: 0;
     }
 
@@ -87,9 +87,9 @@
     .description {
       font-size: 14px;
       line-height: 15px;
-      resize: none;
+      resize: vertical;
       margin: 0;
-      padding: 0.2em;
+      padding: 0.1em;
       outline: none;
       border-color: transparent;
       box-shadow: 0 0 0 $white;
@@ -132,8 +132,8 @@
     }
 
     textarea {
-      min-height: 5px !important;
-      max-height: 20px;
+      min-height: 18px !important;
+      //max-height: 20px;
     }
   }
 }
