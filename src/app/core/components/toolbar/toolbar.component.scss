@@ -10,6 +10,10 @@ form {
   padding: 5px;
 }
 
+.modalButton:focus {
+  outline: none;
+}
+
 button {
   padding: 10px;
   cursor: pointer;
