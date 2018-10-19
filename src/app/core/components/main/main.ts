@@ -195,7 +195,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       annotation: AnnotationRecordFactory({
         utc_timestamp: 0,
         duration: 1,
-        fields: AnnotationFieldsRecordFactory({description: '* NEW *'})
+        fields: AnnotationFieldsRecordFactory({description: ''})
       })
     }))
   }
