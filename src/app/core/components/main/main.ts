@@ -1,7 +1,7 @@
 import {
   Component, ChangeDetectionStrategy, OnInit,
   OnDestroy, AfterViewInit,
-  // ChangeDetectorRef
+  ChangeDetectorRef
 } from '@angular/core'
 
 import {Store} from '@ngrx/store'
@@ -11,8 +11,10 @@ import {filter} from 'rxjs/operators'
 
 import * as fromRoot from '../../reducers'
 import * as project from '../../../persistence/actions/project'
+import * as fromProject from '../../../persistence/reducers'
 import * as player from '../../../player/actions'
 import {rndColor} from '../../../lib/color'
+import {AnnotationRecordFactory, AnnotationFieldsRecordFactory} from '../../../persistence/model'
 
 declare var $: any
 
@@ -23,14 +25,57 @@ declare var $: any
   styleUrls: ['main.scss']
 })
 export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
+  hasSelectedAnnotations: boolean = false
+  hasClipboardAnnotations: boolean = false
+  hasRedo: boolean = false
+  hasUndo: boolean = false
+  hasTracks: boolean = false
+  currentAnnotationsOnly: boolean = false // show current annotations only
+  search: string|null = null
+  applyToTimeline: boolean = false
   private readonly _subs: Subscription[] = []
 
   constructor(
-    // private readonly _cdr: ChangeDetectorRef,
+    private readonly _cdr: ChangeDetectorRef,
     private readonly _rootStore: Store<fromRoot.State>) {}
 
   ngOnInit() {
     this._rootStore.dispatch(new project.ProjectLoad())
+
+    this._subs.push(this._rootStore.select(fromProject.getProjectFocusAnnotationSelection).subscribe(selected => {
+      this.hasSelectedAnnotations = selected !== null
+    }))
+
+    this._subs.push(this._rootStore.select(fromProject.getProjectClipboard).subscribe(clipboard => {
+      this.hasClipboardAnnotations = clipboard.size > 0
+      this._cdr.markForCheck()
+    }))
+
+    this._subs.push(this._rootStore.select(fromProject.getProjectTimeline).subscribe(timeline => {
+      if(timeline !== null) {
+        const tracks = timeline.get('tracks', null)
+        this.hasTracks = tracks.size > 0
+      } else {
+        this.hasTracks = false
+      }
+    }))
+
+    this._subs.push(this._rootStore.select(fromProject.getProjectSnapshots).subscribe(snapshots => {
+      this.hasRedo = snapshots.redo.size > 0
+      this.hasUndo = snapshots.undo.size > 0
+    }))
+
+    this._subs.push(this._rootStore.select(fromProject.getProjectSettingsShowCurrentAnnotationsOnly).subscribe(currentAnnotationsOnly => {
+      this.currentAnnotationsOnly = currentAnnotationsOnly
+    }))
+
+    this._subs.push(this._rootStore.select(fromProject.getProjectSettingsSearch).subscribe(search => {
+      this.search = search
+    }))
+
+    this._subs.push(this._rootStore.select(fromProject.getProjectSettingsApplyToTimeline).subscribe(applyToTimeline => {
+      this.applyToTimeline = applyToTimeline
+    }))
 
     const windowMousedown = fromEvent(window, 'mousedown') as Observable<MouseEvent>
     const windowKeydown = fromEvent(window,  'keydown') as Observable<KeyboardEvent>
@@ -65,7 +110,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
     this._subs.push(
       copyToClipboardHotkey.subscribe(() => {
-        this._rootStore.dispatch(new project.ProjectCopyAnnotationSelectionToClipboard())
+        this.dispatchCopyAnnotation()
       }))
 
     this._subs.push(
@@ -90,19 +135,19 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     this._subs.push(
       removeAnnotationHotkey
         .subscribe(() => {
-          this._rootStore.dispatch(new project.ProjectDeleteSelectedAnnotations())
+          this.dispatchDeleteAnnotation()
         }))
 
     this._subs.push(
       undoHotkey.subscribe(e => {
         e.preventDefault()
-        this._rootStore.dispatch(new project.ProjectUndo())
+        this.dispatchUndoAction()
       }))
 
     this._subs.push(
       redoHotkey.subscribe(e => {
         e.preventDefault()
-        this._rootStore.dispatch(new project.ProjectRedo())
+        this.dispatchRedoAction()
       }))
   }
 
@@ -133,6 +178,66 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     const modal = $('#settings-reveal') as any
     // $('body').removeClass('is-reveal-open')
     modal.foundation('close')
+  }
+
+  addAnnotation() {
+    this._rootStore.dispatch(new project.ProjectAddAnnotation({
+      trackIndex: 0,
+      annotationStackIndex: 0,
+      annotation: AnnotationRecordFactory({
+        utc_timestamp: 0,
+        duration: 1,
+        fields: AnnotationFieldsRecordFactory({description: '* NEW *'})
+      })
+    }))
+  }
+
+  private dispatchDeleteAnnotation() {
+    this._rootStore.dispatch(new project.ProjectDeleteSelectedAnnotations())
+  }
+
+  private dispatchCopyAnnotation() {
+    this._rootStore.dispatch(new project.ProjectCopyAnnotationSelectionToClipboard())
+  }
+
+  private dispatchUndoAction() {
+    this._rootStore.dispatch(new project.ProjectUndo())
+  }
+
+  private dispatchRedoAction() {
+    this._rootStore.dispatch(new project.ProjectRedo())
+  }
+
+  deleteAnnotation() {
+    this.dispatchDeleteAnnotation()
+  }
+
+  copyAnnotation() {
+    this.dispatchCopyAnnotation()
+  }
+
+  pasteAnnotation() {
+    this._rootStore.dispatch(new project.ProjectPasteClipBoard({trackIndex: 0}))
+  }
+
+  undoAction() {
+    this.dispatchUndoAction()
+  }
+
+  redoAction() {
+    this.dispatchRedoAction()
+  }
+
+  currentAnnotationsOnlyChange(currentAnnotationsOnly: boolean) {
+    this._rootStore.dispatch(new project.ProjectSettingsSetCurrentAnnotationsOnly(currentAnnotationsOnly))
+  }
+
+  searchChange(search: string|null) {
+    this._rootStore.dispatch(new project.ProjectSettingsSetSearch(search))
+  }
+
+  applyToTimelineChange(applyToTimeline: boolean) {
+    this._rootStore.dispatch(new project.ProjectSettingsSetApplyToTimeline(applyToTimeline))
   }
 
   ngAfterViewInit() {

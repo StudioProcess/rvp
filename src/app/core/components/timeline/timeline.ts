@@ -60,7 +60,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('timelineWrapper') private readonly _timelineWrapperRef: ElementRef
   @ViewChild('playheadOverflow') private readonly _playheadOverflowRef: ElementRef
   private readonly _subs: Subscription[] = []
-  private readonly _timelineSubj = this._store.select(fromProject.getProjectTimeline)
+  private readonly _timelineSubj = this._store.select(fromProject.getProjectQueriedTimeline)
     .pipe(filter(timeline => timeline !== null), share())
 
   constructor(

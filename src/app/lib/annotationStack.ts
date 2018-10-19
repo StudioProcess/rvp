@@ -14,6 +14,12 @@ const recordHasCollision = hasCollisionFactory<Record<Annotation>, number>(
     return a.get('utc_timestamp', null)+Math.max(timelineDuration/100*_HANDLEBAR_MIN_WIDTH_, a.get('duration', null))
   })
 
+const recordHasCollisionWithCursor = (timelineDuration: number, annotation: Record<Annotation>, currentTime: number) => {
+  const left = annotation.get('utc_timestamp', null)
+  const right = left+Math.max(timelineDuration/100*_HANDLEBAR_MIN_WIDTH_, annotation.get('duration', null))
+  return left <= currentTime && right >= currentTime
+}
+
 function findHorizontalCollisions(timelineDuration: number, list: List<Record<Annotation>>, indices: List<number>, checkSelf: boolean=false) {
   const collisions: {annotation: Record<Annotation>, index: number}[] = []
   const isInIndices = (k: number) => {
@@ -52,6 +58,19 @@ function findHorizontalCollisions(timelineDuration: number, list: List<Record<An
     }
   })
 }
+
+export function findVerticalCollisionsWithCursor(timelineDuration: number, stacks: List<List<Record<Annotation>>>, currentTime: number) {
+  const res: {annotation: Record<Annotation>, annotationIndex: number, annotationStackIndex: number}[] = []
+  stacks.forEach((stack, annotationStackIndex) => {
+    stack.forEach((annotation, annotationIndex) => {
+      if(recordHasCollisionWithCursor(timelineDuration, annotation, currentTime)) {
+        res.push({annotation, annotationIndex, annotationStackIndex})
+      }
+    })
+  })
+  return res
+}
+
 
 function findVerticalCollisions(timelineDuration: number, stacks: List<List<Record<Annotation>>>, stackStartIndex: number, annotations: List<Record<Annotation>>) {
   const collisions: {annotation: Record<Annotation>, index: number, annotationStackIndex: number}[] = []

@@ -2,9 +2,19 @@ import {List, Record, Set} from 'immutable'
 
 import {ActionReducerMap, createSelector, createFeatureSelector} from '@ngrx/store'
 
-import * as fromProject from './project'
+import * as Fuse from 'fuse.js'
 
-import {AnnotationColorMapRecordFactory, AnnotationSelection} from '../model'
+import * as fromProject from './project'
+import * as fromPlayer from '../../player/reducers'
+
+import {findVerticalCollisionsWithCursor} from '../../lib/annotationStack'
+
+import {_FUSE_OPTIONS_} from '../../config/search'
+
+import {
+  AnnotationColorMapRecordFactory, AnnotationSelection,
+  AnnotationColorMap, Timeline
+} from '../model'
 
 export interface State {
   readonly project: fromProject.State,
@@ -19,6 +29,11 @@ const getPersistenceState = createFeatureSelector<State>('persistence')
 
 export const getProjectState = createSelector(getPersistenceState, (state: State) => state.project)
 
+export const getProjectSettings = createSelector(getProjectState, fromProject.getProjectSettings)
+
+export const getProjectSettingsShowCurrentAnnotationsOnly = createSelector(getProjectSettings, settings => settings.get('currentAnnotationsOnly', false))
+export const getProjectSettingsSearch = createSelector(getProjectSettings, settings => settings.get('search', null))
+export const getProjectSettingsApplyToTimeline = createSelector(getProjectSettings, settings => settings.get('applyToTimeline', false))
 // Project meta
 
 export const getProjectMeta = createSelector(getProjectState, fromProject.getProjectMeta)
@@ -35,7 +50,7 @@ export const getProjectTimeline = createSelector(getProjectMeta, meta => {
   return meta ? meta.get('timeline', null): null
 })
 
-export const getFlattenedAnnotations = createSelector(getProjectTimeline, timeline => {
+function flattenAnnotations(timeline: Record<Timeline>|null) {
   if(timeline !== null) {
     return timeline.get('tracks', null).flatMap((track, trackIndex) => {
       const color = track.get('color', null)
@@ -50,10 +65,15 @@ export const getFlattenedAnnotations = createSelector(getProjectTimeline, timeli
   } else {
     return List([])
   }
+}
+
+export const getFlattenedAnnotations = createSelector(getProjectTimeline, timeline => {
+  return flattenAnnotations(timeline)
 })
 
-const path = ['annotation', 'utc_timestamp']
-export const getSortedFlattenedAnnotations = createSelector(getFlattenedAnnotations, annotations => {
+const sortAnnotations = (annotations: List<Record<AnnotationColorMap>>) => {
+  const path = ['annotation', 'utc_timestamp']
+
   return annotations.sort((a1, a2) => {
     const a1Start = a1.getIn(path)
     const a2Start = a2.getIn(path)
@@ -65,6 +85,96 @@ export const getSortedFlattenedAnnotations = createSelector(getFlattenedAnnotati
       return 0
     }
   })
+}
+
+export const getSortedFlattenedAnnotations = createSelector(getFlattenedAnnotations, sortAnnotations)
+
+export const getCurrentFlattenedAnnotations = createSelector(
+  getProjectSettings, getProjectTimeline, fromPlayer.getCurrentTime,
+  (settings, timeline, currentTime) => {
+    if(settings.get('currentAnnotationsOnly', false)) {
+      const duration = timeline!.get('duration', null)
+
+      const tracks = timeline!.get('tracks', null)
+      const res: Record<AnnotationColorMap>[] = []
+      tracks.forEach((track, trackIndex) => {
+        const color = track.get('color', null)
+        const stacks = track.get('annotationStacks', null)
+        const collisions = findVerticalCollisionsWithCursor(duration, stacks, currentTime)
+        const mapped = collisions.map(({annotation, annotationIndex, annotationStackIndex}) => {
+          return new AnnotationColorMapRecordFactory({
+            track, trackIndex, color, annotation, annotationIndex, annotationStackIndex
+          })
+        })
+        res.push(...mapped)
+      })
+
+      return List(res)
+    } else {
+      return flattenAnnotations(timeline)
+    }
+  })
+
+
+function searchAnnotations(search: string|null, annotations: List<Record<AnnotationColorMap>>) {
+  if(search !== null) {
+    const jsAnnotations = annotations.toJS()
+    const fuse = new Fuse(jsAnnotations, _FUSE_OPTIONS_)
+    const res: string[] = fuse.search(search)
+    return annotations.filter(ann => {
+      const aId = ann.getIn(['annotation', 'id'])
+      return res.find(id => parseInt(id) === aId)
+    })
+  } else {
+    return annotations
+  }
+}
+
+export const getQueriedFlattenedAnnotations = createSelector(
+  getProjectSettings, getFlattenedAnnotations,
+  (settings, annotations) => {
+    const search = settings.get('search', null)
+    return searchAnnotations(search, annotations)
+  })
+
+export const getCurrentQueriedFlattenedAnnotations = createSelector(
+  getProjectSettings, getCurrentFlattenedAnnotations,
+  (settings, annotations) => {
+    const search = settings.get('search', null)
+    return searchAnnotations(search, annotations)
+  })
+
+export const getCurrentQueriedSortedFlattenedAnnotations = createSelector(getCurrentQueriedFlattenedAnnotations, sortAnnotations)
+
+export const getProjectQueriedTimeline = createSelector(
+  getProjectTimeline, getProjectSettings, getQueriedFlattenedAnnotations,
+  (timeline, settings, queried) => {
+  const applyToTimeline = settings.get('applyToTimeline', false)
+  if(timeline !== null && applyToTimeline) {
+    const tracks = timeline.get('tracks', null)
+    let resTracks = tracks
+    tracks.forEach((track, trackIndex) => {
+      const stacks = track.get('annotationStacks', null)
+      stacks.forEach((stack, stackIndex) => {
+        stack.forEach((annotation, annotationIndex) => {
+          const aId = annotation.get('id', null)
+          const isShown = queried.find(annotationColorMap => {
+            const id = annotationColorMap.getIn(['annotation', 'id'])
+            return parseInt(id) === aId
+          }) !== undefined
+
+          if(!isShown) {
+            resTracks = resTracks.updateIn([trackIndex, 'annotationStacks', stackIndex, annotationIndex], annotation => {
+              return annotation.set('isShown', false)
+            })
+          }
+        })
+      })
+    })
+    return timeline.set('tracks', resTracks)
+  } else {
+    return timeline
+  }
 })
 
 // Project video
@@ -99,3 +209,11 @@ export const getSelectedAnnotations = createSelector(getAnnotationsSelections, a
     return elem.get('annotation', null)!
   })
 })
+
+// Clipboard
+
+export const getProjectClipboard = createSelector(getProjectState, fromProject.getProjectClipboard)
+
+// Snapshots
+
+export const getProjectSnapshots = createSelector(getProjectState, fromProject.getProjectSnapshots)

@@ -271,7 +271,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   }
 
   getAnnotationTitle(annotation: Record<Annotation>) {
-    return annotation.getIn(['fields', 'title'])
+    return annotation.getIn(['fields', 'description']).split('\n')[0]
   }
 
   getAnnotationPosition(annotation: Annotation) {
@@ -280,6 +280,10 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
 
   getAnnotationWidth(annotation: Annotation) {
     return Math.min(Math.max(_HANDLEBAR_MIN_WIDTH_, annotation.duration / this.totalDuration * 100), 100)
+  }
+
+  getAnnotationOpacity(annotation: Record<Annotation>) {
+    return annotation.get('isShown', true) ? '1': '0.2'
   }
 
   isSelectedAnnotation(annotation: Record<Annotation>) {

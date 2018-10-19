@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="small-12 medium-12 large-8 column">
+    <rv-logo></rv-logo>
+    <button (click)="actionBtnClick($event, 'add_annotation')" [disabled]="!hasTracks">
+      <i class="ion-md-add-circle-outline" title="Add Annotation"></i><span class="show-for-medium"> Add</span>
+    </button>
+    <button (mousedown)="actionBtnClick($event, 'delete_annotation')" [disabled]="!hasSelectedAnnotations">
+      <i class="ion-md-remove-circle-outline" title="Delete Annotation"></i><span class="show-for-medium"> Delete</span>
+    </button>
+    <button (mousedown)="actionBtnClick($event, 'copy_annotation')" [disabled]="!hasSelectedAnnotations">
+      <i class="ion-md-copy" title="Copy Annotation"></i><span class="show-for-medium"> Copy</span>
+    </button>
+    <button (mousedown)="actionBtnClick($event, 'paste_annotation')" [disabled]="!hasClipboardAnnotations">
+      <i class="ion-md-clipboard" title="Paste Annotation"></i><span class="show-for-medium"> Paste</span>
+    </button>
+    <button (click)="actionBtnClick($event, 'undo_action')" [disabled]="!hasUndo">
+      <i class="ion-md-undo" title="Undo Action"></i><span class="show-for-medium"> Undo</span>
+    </button>
+    <button (click)="actionBtnClick($event, 'redo_action')" [disabled]="!hasRedo">
+      <i class="ion-md-redo" title="Redo Action"></i><span class="show-for-medium"> Redo</span>
+    </button>
+
+    <rv-projectbtn data-open="settings-reveal"></rv-projectbtn>
+    <rv-projectmodal class="reveal" id="settings-reveal" data-reveal
+      (onImportProject)="importProject($event)"
+      (onImportVideo)="importVideo($event)"
+      (onExportProject)="exportProject()"
+      (onResetProject)="resetProject()">
+    </rv-projectmodal>
+    <form class="leftForm" [formGroup]="leftForm" novalidate>
+      <input formControlName="currentAnnotationsOnly" type="checkbox"/> Current <span class="show-for-large">Annotations</span> only
+    </form>
+  </div>
+  <div class="small-12 medium-12 large-4 column">
+    <form [formGroup]="rightForm" novalidate>
+      <div class="searchBox-wrapper">
+        <input class="searchBox" #search formControlName="search" type="text" placeholder="Search..." (focus)="search.placeholder=''" (blur)="search.placeholder='Search...'"/>
+        <i class="search-icon ion-md-search"></i>
+        <i class="close-icon ion-md-close" [hidden]="!(search.value.length > 0)" (click)="clearSearch()"></i>
+      </div>
+      <input formControlName="applyToTimeline" type="checkbox"/> Apply to timline
+    </form>
+  </div>
+</div>

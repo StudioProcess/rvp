@@ -4,6 +4,7 @@ import {List, Record, Set} from 'immutable'
 
 export interface Project {
   readonly meta: Record<ProjectMeta>|null
+  readonly settings: Record<ProjectSettings>
   readonly videoBlob: Blob|null
   readonly selection: Record<ProjectSelection>
   readonly snapshots: ProjectSnapshots
@@ -36,6 +37,12 @@ export interface ProjectMeta {
   readonly id: number|null
   readonly video: Record<ProjectVideo>|null,
   readonly timeline: Record<Timeline>|null
+}
+
+export interface ProjectSettings {
+  readonly currentAnnotationsOnly: boolean,
+  readonly search: string|null,
+  readonly applyToTimeline: boolean
 }
 
 export interface ProjectSelection {
@@ -104,13 +111,13 @@ export interface TrackFields {
 
 export interface Annotation {
   readonly id: number|null
+  readonly isShown: boolean
   readonly utc_timestamp: number
   readonly duration: number
   readonly fields: Record<AnnotationFields>
 }
 
 export interface AnnotationFields {
-  readonly title: string
   readonly description: string
 }
 
@@ -129,6 +136,12 @@ export const ProjectMetaRecordFactory = Record<ProjectMeta>({
   id: null,
   video: null,
   timeline: null,
+})
+
+export const ProjectSettingsRecordFactory = Record<ProjectSettings>({
+  currentAnnotationsOnly: false,
+  search: null,
+  applyToTimeline: false
 })
 
 export const ProjectSnapshotRecordFactory = Record<ProjectSnapshot>({
@@ -153,6 +166,7 @@ export const ProjectSelectionRecordFactory = Record<ProjectSelection>({
 
 export const ProjectRecordFactory = Record<Project>({
   meta: null,
+  settings: new ProjectSettingsRecordFactory(),
   videoBlob: null,
   selection: new ProjectSelectionRecordFactory(),
   snapshots: new ProjectSnapshotsRecordFactory(),
@@ -180,12 +194,12 @@ export const TrackRecordFactory = Record<Track>({
 })
 
 export const AnnotationFieldsRecordFactory = Record<AnnotationFields>({
-  title: '',
   description: ''
 })
 
 export const AnnotationRecordFactory = Record<Annotation>({
   id: null,
+  isShown: true,
   utc_timestamp: -1,
   duration: -1,
   fields: new AnnotationFieldsRecordFactory()

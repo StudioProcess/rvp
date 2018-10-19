@@ -1,0 +1,67 @@
+@import 'colors';
+
+form {
+  display: inline-block;
+  font-size: 12px;
+}
+
+.leftForm {
+  padding: 5px;
+}
+
+button {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 12px;
+  outline: none;
+}
+
+@media only screen and (max-width: 639px) {
+  button {
+    font-size: 16px;
+  }
+}
+
+button:hover {
+  color: $process-gray !important;
+}
+
+.searchBox-wrapper {
+  display: inline-block;
+  position: relative;
+  margin-right: 5px;
+
+  i {
+    font-size: 15px;
+  }
+
+  .search-icon {
+    position: absolute;
+    top: 4px;
+    left: 10px;
+  }
+
+  input:focus + .search-icon {
+    opacity: 0;
+  }
+
+  .close-icon {
+    position: absolute;
+    position: absolute;
+    top: 4px;
+    right: 10px;
+  }
+
+  .searchBox {
+    border: none;
+    background-color: $process-super-light-gray4;
+    padding: 8px 30px;
+    outline: none;
+    min-width: 225px;
+  }
+
+  .searchBox::placeholder {
+    color: black;
+    opacity: 1;
+  }
+}

@@ -79,10 +79,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
                 fields: TrackFieldsRecordFactory({title: trackTitle}),
                 annotationStacks: List(track.annotationStacks.map((annotations: any) => {
                   return List(annotations.map((annotation: any) => {
-                    const {title, description} = annotation.fields
+                    const {description} = annotation.fields
                     return new AnnotationRecordFactory({
                       ...annotation,
-                      fields: new AnnotationFieldsRecordFactory({title, description}),
+                      fields: new AnnotationFieldsRecordFactory({description}),
                     })
                   }))
                 }))
@@ -410,10 +410,25 @@ export function reducer(state: State = initialState, action: project.Actions): S
         return state
       }
     }
+    case project.PROJECT_SETTINGS_SET_SHOW_CURRENT_ANNOTATIONS_ONLY: {
+      return state.setIn(['settings', 'currentAnnotationsOnly'], action.payload)
+    }
+    case project.PROJECT_SETTINGS_SET_SEARCH: {
+      return action.payload !== '' ?
+        state.setIn(['settings', 'search'], action.payload):
+        state.setIn(['settings', 'search'], null)
+    }
+    case project.PROJECT_SETTINGS_SET_APPLY_TO_TIMELINE: {
+      return state.setIn(['settings', 'applyToTimeline'], action.payload)
+    }
     default: {
       return state
     }
   }
+}
+
+export const getProjectSettings = (state: State) => {
+  return state.get('settings', null)
 }
 
 export const getProjectMeta = (state: State) => {
@@ -423,4 +438,12 @@ export const getProjectVideoBlob = (state: State) => state.get('videoBlob', null
 
 export const getProjectSelection = (state: State) => {
   return state.get('selection', null)
+}
+
+export const getProjectClipboard = (state: State) => {
+  return state.get('clipboard', null)
+}
+
+export const getProjectSnapshots = (state: State) => {
+  return state.get('snapshots', null)
 }

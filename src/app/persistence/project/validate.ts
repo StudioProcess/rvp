@@ -1,4 +1,8 @@
-import {adaptLegacyAnnotations, adaptLegacyVideoMeta} from './adapt'
+import {
+  adaptLegacyAnnotations,
+  adaptLegacyVideoMeta,
+  adaptLegacyAnnotationFields
+} from './adapt'
 import {sortFactory} from '../../lib/sort'
 
 const defaultSortFunc = sortFactory((a: any) => a.utc_timestamp)
@@ -17,6 +21,19 @@ function hasLegacyAnnotations(projectData: any) {
   })
 
   return hasLegacyAnnos !== undefined
+}
+
+function hasLegacyAnnotationFields(projectData: any) {
+  const tracks = projectData.meta.timeline.tracks
+  const hasLegacyFields = tracks.find((track: any) => {
+    const stacks = track.annotationStacks
+    return stacks.find((stack: any) => {
+      return stack.find((annotation: any) => {
+        return annotation.fields.title !== undefined
+      }) !== undefined
+    }) !== undefined
+  })
+  return hasLegacyFields
 }
 
 function isNil<T>(data: T) {
@@ -109,6 +126,10 @@ export function ensureValidProjectData(projectData: any) {
     adaptLegacyAnnotations(projectData)
   } else {
     ensureSortedAnnotationStacks(projectData)
+  }
+
+  if(hasLegacyAnnotationFields(projectData)) {
+    adaptLegacyAnnotationFields(projectData)
   }
 
   if(hasLegacyVideoMeta(projectData)) {

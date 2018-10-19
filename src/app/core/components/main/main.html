@@ -1,16 +1,26 @@
 <div class="nav-wrapper">
   <div class="row">
-    <div class="small-6 column">
-      <rv-logo></rv-logo>
-    </div>
-    <div class="small-6 column text-right">
-      <rv-projectbtn data-open="settings-reveal"></rv-projectbtn>
-      <rv-projectmodal class="reveal" id="settings-reveal" data-reveal
+    <div class="column">
+      <rv-toolbar
+        [hasSelectedAnnotations]="hasSelectedAnnotations"
+        [hasClipboardAnnotations]="hasClipboardAnnotations"
+        [hasRedo]="hasRedo"
+        [hasUndo]="hasUndo"
+        [hasTracks]="hasTracks"
+        (onAddAnnotation)="addAnnotation()"
+        (onDeleteAnnotation)="deleteAnnotation()"
+        (onCopyAnnotation)="copyAnnotation()"
+        (onPasteAnnotation)="pasteAnnotation()"
+        (onUndoAction)="undoAction()"
+        (onRedoAction)="redoAction()"
         (onImportProject)="importProject($event)"
         (onImportVideo)="importVideo($event)"
         (onExportProject)="exportProject()"
-        (onResetProject)="resetProject()">
-      </rv-projectmodal>
+        (onResetProject)="resetProject()"
+        [currentAnnotationsOnly]="currentAnnotationsOnly" (onCurrentAnnotationsOnlyChange)="currentAnnotationsOnlyChange($event)"
+        [search]="search" (onSearchChange)="searchChange($event)"
+        [applyToTimeline]="applyToTimeline" (onApplyToTimelineChange)="applyToTimelineChange($event)">
+      </rv-toolbar>
     </div>
   </div>
 </div>

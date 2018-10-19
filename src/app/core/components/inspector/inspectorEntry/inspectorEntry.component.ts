@@ -62,7 +62,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   @ViewChild('start') private readonly _startInputRef: ElementRef
   @ViewChild('duration') private readonly _durationInputRef: ElementRef
-  @ViewChild('title') private readonly _titleInputRef: ElementRef
   @ViewChild('descr') private readonly _descrInputRef: ElementRef
 
   form: FormGroup|null = null
@@ -74,26 +73,25 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   private _mapModel(entry: Record<AnnotationColorMap>) {
     const utc_timestamp = entry.getIn(['annotation', 'utc_timestamp'])
     const duration = entry.getIn(['annotation', 'duration'])
-    const title = entry.getIn(['annotation', 'fields', 'title'])
     const description = entry.getIn(['annotation', 'fields', 'description'])
 
     return {
       utc_timestamp: formatDuration(utc_timestamp),
       duration: formatDuration(duration),
-      title, description
+      description
     }
   }
 
   ngOnInit() {
     const {
       utc_timestamp, duration,
-      title, description
+      description
     } = this._mapModel(this.entry)
 
     this.form = this._fb.group({
       utc_timestamp: [utc_timestamp, durationValidator],
       duration: [duration, durationValidator],
-      title, description
+      description
     })
   }
 
@@ -104,7 +102,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
     const formKeydown = merge(
       durationKeydown,
-      fromEvent(this._titleInputRef.nativeElement, 'keydown'),
       fromEvent(this._descrInputRef.nativeElement, 'keydown'))
 
     const enterHotKey = formKeydown.pipe(filter((ev: KeyboardEvent) => ev.keyCode === 13))
@@ -112,7 +109,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     const formBlur = merge(
       fromEvent(this._startInputRef.nativeElement, 'blur'),
       fromEvent(this._durationInputRef.nativeElement, 'blur'),
-      fromEvent(this._titleInputRef.nativeElement, 'blur'),
       fromEvent(this._descrInputRef.nativeElement, 'blur'))
 
     this._subs.push(
@@ -154,14 +150,12 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
             return prev.title === cur.title && prev.description === cur.description &&
               prev.utc_timestamp === cur.utc_timestamp && prev.duration === cur.duration
           }))
-        .subscribe(({title, description, utc_timestamp, duration}) => {
+        .subscribe(({description, utc_timestamp, duration}) => {
           const annotation = new AnnotationRecordFactory({
             id: this.entry.getIn(['annotation', 'id']),
             utc_timestamp: parseDuration(utc_timestamp),
             duration: parseDuration(duration),
-            fields: new AnnotationFieldsRecordFactory({
-              title, description
-            })
+            fields: new AnnotationFieldsRecordFactory({description})
           })
 
           this.onUpdate.emit({

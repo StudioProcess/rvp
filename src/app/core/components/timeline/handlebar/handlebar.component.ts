@@ -33,9 +33,9 @@ export interface Handlebar {
   selector: 'rv-handlebar',
   template: `
     <div class="handlebar">
-      <div #leftHandle class="left-handle"><i class="ion-arrow-right-b"></i></div>
+      <div #leftHandle class="left-handle"><i class="ion-md-arrow-dropright"></i></div>
       <div #middleHandle class="content">{{caption}}</div>
-      <div #rightHandle class="right-handle"><i class="ion-arrow-left-b"></i></div>
+      <div #rightHandle class="right-handle"><i class="ion-md-arrow-dropleft"></i></div>
     </div>
   `,
   styleUrls: ['handlebar.component.scss']
@@ -44,6 +44,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   @Input() readonly caption: string
   @Input() readonly containerRect: Observable<ClientRect>
   @Input() @HostBinding('class.selected') readonly isSelected = false
+  @Input() @HostBinding('style.opacity') readonly opacity: string = '1'
 
   // Input left and width
   @Input('left') readonly inLeft: number

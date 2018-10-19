@@ -4,6 +4,16 @@ a:hover {
   color: $process-gray !important;
 }
 
-.ion-ios-folder {
-  padding-right: 0.5em;
+a {
+  font-size: 12px;
+}
+
+@media only screen and (max-width: 639px) {
+  a {
+    font-size: 16px;
+  }
+}
+
+a {
+  padding: 5px;
 }
