@@ -76,6 +76,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
       if(videoMeta === null) {
         timeline.duration = prevDuration
       }
+
+      if(videoMeta.type === VIDEO_TYPE_URL) {
+        videoMeta.url = new URL(videoMeta.url)
+      }
       // Create immutable representation
       return new ProjectRecordFactory({
         videoBlob: video === null ? prevVideoBlob: video,
