@@ -24,7 +24,7 @@
     "start": "ng serve",
     "prebuild": "gulp prep:env",
     "build": "ng build",
-    "build:prod": "ng build --prod --output-hashing none --source-map",
+    "build:prod": "ng build --prod --output-hashing none",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
