@@ -63,13 +63,25 @@ function getAllSelections(state: State): Set<Record<AnnotationSelection>> {
 export function reducer(state: State = initialState, action: project.Actions): State {
   switch(action.type) {
     case project.PROJECT_LOAD_SUCCESS: {
+      /* Handle new project:
+       * For `new project` there is no defined video, therefore
+       * the video data from the previous state is used.
+       */
+      const prevDuration = state.getIn(['meta', 'timeline', 'duration'])
+      const prevVideoMeta = state.getIn(['meta', 'video'])
+      const prevVideoBlob = state.get('videoBlob', null)
+
       const {meta: {id, timeline, video:videoMeta}, video} = action.payload
+
+      if(videoMeta === null) {
+        timeline.duration = prevDuration
+      }
       // Create immutable representation
       return new ProjectRecordFactory({
-        videoBlob: video,
+        videoBlob: video === null ? prevVideoBlob: video,
         meta: ProjectMetaRecordFactory({
           id,
-          video: videoMeta === null ? null : (videoMeta.type === VIDEO_TYPE_BLOB ? BlobVideoRecordFactory(videoMeta) : UrlVideoRecordFactory(videoMeta)),
+          video: videoMeta === null ? prevVideoMeta : (videoMeta.type === VIDEO_TYPE_BLOB ? BlobVideoRecordFactory(videoMeta) : UrlVideoRecordFactory(videoMeta)),
           timeline: TimelineRecordFactory({
             ...timeline,
             tracks: List(timeline.tracks.map((track: any) => {
