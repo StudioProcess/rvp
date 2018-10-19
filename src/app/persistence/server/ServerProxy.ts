@@ -196,6 +196,9 @@ export class ServerProxy implements OnDestroy {
           ).subscribe(([, projectData]) => {
             // autosave
             ensureValidProjectData(projectData)
+            if(projectData.meta.video.type === 'url') {
+              projectData.meta.video.url = projectData.meta.video.url.href
+            }
             this._cache.cache('meta', projectData.meta)
           }))
 
