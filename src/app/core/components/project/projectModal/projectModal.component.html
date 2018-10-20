@@ -9,6 +9,10 @@
     <h3 class="title-settings">New project</h3>
     <a class="button-new" href="#" (click)="newProject()">New</a>
   </div>
+  <div class="column">
+    <h3 class="title-settings">Reset to sample project</h3>
+    <a class="button-reset" href="#" (click)="resetProject()">Reset</a>
+  </div>
 </div>
 <div class="row">
   <div class="column">
@@ -29,26 +33,22 @@
       <label for="videoChooser">Choose a file...</label>
     </div>
 
-    <div>
+    <div style="display: none;">
       <h3 class="title-settings">HTTP URL</h3>
       <input type="text" [(ngModel)]="customURL">
       <button class="button-importurl" (click)="openURL('customurl', customURL)">Open</button>
     </div>
-    <div>
+    <div style="display: none;">
       <h3 class="title-settings">YouTube</h3>
       <input type="text" [(ngModel)]="youtubeURL">
       <button class="button-importurl" (click)="openURL('youtube', youtubeURL)">Open</button>
     </div>
-    <div>
+    <div style="display: none;">
       <h3 class="title-settings">Vimeo</h3>
       <input type="text" [(ngModel)]="vimeoURL">
       <button class="button-importurl" (click)="openURL('vimeo', vimeoURL)">Open</button>
     </div>
 
-  </div>
-  <div class="column">
-    <h3 class="title-settings">Reset to sample project</h3>
-    <a class="button-reset" href="#" (click)="resetProject()">Reset</a>
   </div>
 </div>
 <div class="row">
