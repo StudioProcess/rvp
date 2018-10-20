@@ -15,6 +15,7 @@ import * as fromProject from '../../../persistence/reducers'
 import * as player from '../../../player/actions'
 import {rndColor} from '../../../lib/color'
 import {AnnotationRecordFactory, AnnotationFieldsRecordFactory} from '../../../persistence/model'
+import {_EMPTY_PROJECT_} from '../../../config/project'
 
 declare var $: any
 
@@ -174,6 +175,13 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  newProject() {
+    if(window.confirm('Create a new (empty) project? All data will be lost.')) {
+      this._rootStore.dispatch(new project.ProjectLoadSuccess(_EMPTY_PROJECT_))
+      this.closeProjectModal()
+    }
+  }
+
   closeProjectModal() {
     const modal = $('#settings-reveal') as any
     // $('body').removeClass('is-reveal-open')
@@ -187,7 +195,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       annotation: AnnotationRecordFactory({
         utc_timestamp: 0,
         duration: 1,
-        fields: AnnotationFieldsRecordFactory({description: '* NEW *'})
+        fields: AnnotationFieldsRecordFactory({description: ''})
       })
     }))
   }

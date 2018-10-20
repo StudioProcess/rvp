@@ -1,11 +1,7 @@
 @import 'colors';
 
-a:hover {
-  color: $process-gray !important;
-}
-
 a {
-  font-size: 12px;
+  font-size: 14px;
 }
 
 @media only screen and (max-width: 639px) {

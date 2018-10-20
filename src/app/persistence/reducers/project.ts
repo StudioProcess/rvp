@@ -63,13 +63,29 @@ function getAllSelections(state: State): Set<Record<AnnotationSelection>> {
 export function reducer(state: State = initialState, action: project.Actions): State {
   switch(action.type) {
     case project.PROJECT_LOAD_SUCCESS: {
+      /* Handle new project:
+       * For `new project` there is no defined video, therefore
+       * the video data from the previous state is used.
+       */
+      const prevDuration = state.getIn(['meta', 'timeline', 'duration'])
+      const prevVideoMeta = state.getIn(['meta', 'video'])
+      const prevVideoBlob = state.get('videoBlob', null)
+
       const {meta: {id, timeline, video:videoMeta}, video} = action.payload
+
+      if(videoMeta === null) {
+        timeline.duration = prevDuration
+      }
+
+      if(videoMeta.type === VIDEO_TYPE_URL) {
+        videoMeta.url = new URL(videoMeta.url)
+      }
       // Create immutable representation
       return new ProjectRecordFactory({
-        videoBlob: video,
+        videoBlob: video === null ? prevVideoBlob: video,
         meta: ProjectMetaRecordFactory({
           id,
-          video: videoMeta.type === VIDEO_TYPE_BLOB ? BlobVideoRecordFactory(videoMeta) : UrlVideoRecordFactory(videoMeta),
+          video: videoMeta === null ? prevVideoMeta : (videoMeta.type === VIDEO_TYPE_BLOB ? BlobVideoRecordFactory(videoMeta) : UrlVideoRecordFactory(videoMeta)),
           timeline: TimelineRecordFactory({
             ...timeline,
             tracks: List(timeline.tracks.map((track: any) => {
@@ -168,7 +184,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
           })
         })
 
-        return state.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], updatedStacks)
+        // remove stacks without annotations
+        const cleanedStacks = updatedStacks.size > 1 ? updatedStacks.filter(stack => stack.size > 0): updatedStacks
+
+        return state.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], cleanedStacks)
           .setIn(['selection', 'annotation', 'range'], Set())
           .setIn(['selection', 'annotation', 'pick'], Set())
           .setIn(['selection', 'annotation', 'selected'], null)

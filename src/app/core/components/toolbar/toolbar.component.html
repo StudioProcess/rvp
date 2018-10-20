@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row toolbar-color">
   <div class="small-12 medium-12 large-8 column">
     <rv-logo></rv-logo>
     <button (click)="actionBtnClick($event, 'add_annotation')" [disabled]="!hasTracks">
@@ -20,15 +20,16 @@
       <i class="ion-md-redo" title="Redo Action"></i><span class="show-for-medium"> Redo</span>
     </button>
 
-    <rv-projectbtn data-open="settings-reveal"></rv-projectbtn>
+    <rv-projectbtn data-open="settings-reveal" class="modalButton"></rv-projectbtn>
     <rv-projectmodal class="reveal" id="settings-reveal" data-reveal
       (onImportProject)="importProject($event)"
       (onImportVideo)="importVideo($event)"
       (onExportProject)="exportProject()"
-      (onResetProject)="resetProject()">
+      (onResetProject)="resetProject()"
+      (onNewProject)="newProject()">
     </rv-projectmodal>
     <form class="leftForm" [formGroup]="leftForm" novalidate>
-      <input formControlName="currentAnnotationsOnly" type="checkbox"/> Current <span class="show-for-large">Annotations</span> only
+      <input formControlName="currentAnnotationsOnly" type="checkbox"/> Current <span class="show-for-large">annotations</span> only
     </form>
   </div>
   <div class="small-12 medium-12 large-4 column">
@@ -38,7 +39,7 @@
         <i class="search-icon ion-md-search"></i>
         <i class="close-icon ion-md-close" [hidden]="!(search.value.length > 0)" (click)="clearSearch()"></i>
       </div>
-      <input formControlName="applyToTimeline" type="checkbox"/> Apply to timline
+      <input formControlName="applyToTimeline" type="checkbox"/> Apply to timeline
     </form>
   </div>
 </div>

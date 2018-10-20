@@ -48,6 +48,7 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
   @Output() readonly onImportVideo = new EventEmitter<ImportVideoPayload>()
   @Output() readonly onExportProject = new EventEmitter()
   @Output() readonly onResetProject = new EventEmitter()
+  @Output() readonly onNewProject = new EventEmitter()
 
   @ViewChild('search') private readonly _searchRef: ElementRef
 
@@ -139,6 +140,10 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
 
   resetProject() {
     this.onResetProject.emit()
+  }
+
+  newProject() {
+    this.onNewProject.emit()
   }
 
   clearSearch() {

@@ -184,7 +184,8 @@ export class ServerProxy implements OnDestroy {
             action.type === project.PROJECT_SET_TIMELINE_DURATION ||
             action.type === project.PROJECT_UNDO ||
             action.type === project.PROJECT_REDO ||
-            action.type === project.PROJECT_IMPORT_VIDEO_SUCCESS
+            action.type === project.PROJECT_IMPORT_VIDEO_SUCCESS ||
+            action.type === project.PROJECT_LOAD_SUCCESS
         }))
 
       this._subs.push(
@@ -195,6 +196,9 @@ export class ServerProxy implements OnDestroy {
           ).subscribe(([, projectData]) => {
             // autosave
             ensureValidProjectData(projectData)
+            if(projectData.meta.video.type === 'url') {
+              projectData.meta.video.url = projectData.meta.video.url.href
+            }
             this._cache.cache('meta', projectData.meta)
           }))
 

@@ -38,3 +38,27 @@ export const _PROJECT_ZIP_META_: ZipFileMeta[] = [
     middleware: defaultFileMW
   }
 ]
+
+export const _EMPTY_PROJECT_ = {
+  meta: {
+    "id": 0,
+    "timeline": {
+      "id": 0,
+      "duration": 60,
+      "tracks": [
+        {
+          "id": 0,
+          "color": "#ff0000",
+          "fields": {
+            "title": "Track 1"
+          },
+          "annotationStacks": [
+            []
+          ]
+        }
+      ]
+    },
+    "video": null
+  },
+  video: null
+}

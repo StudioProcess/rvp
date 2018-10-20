@@ -171,10 +171,18 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
       this._updateAnnotationSubj
         .pipe(debounceTime(_FORM_INPUT_DEBOUNCE_, animationScheduler))
         .subscribe(({hb, annotationIndex, annotationStackIndex}) => {
-          const oldAnnotation = this.data.getIn(['annotationStacks', annotationStackIndex, annotationIndex])
+          const oldAnnotation: Record<Annotation> = this.data.getIn(['annotationStacks', annotationStackIndex, annotationIndex])
+
           const tPerc = this.totalDuration/100
           const newStart = tPerc*hb.left
-          const newDuration = tPerc*hb.width
+
+          let newDuration = null
+          if(hb.move === 'middleMove') {
+            // Keep duration for translation
+            newDuration = oldAnnotation.get('duration', null)
+          } else {
+            newDuration = tPerc*hb.width
+          }
 
           this.onUpdateAnnotation.emit({
             trackIndex: this.trackIndex,

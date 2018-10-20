@@ -1,14 +1,22 @@
 :host {
   display: block;
-  padding: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 0;
+  padding-top: 0px;
 }
 
 .nav-wrapper {
-  margin-top: 1.4em;
-  margin-bottom: 0.5em;
+  margin-bottom: 0px;
   position: sticky;
   top: 0;
   z-index: 100;
   background-color: white;
   padding-top: 5px;
+  padding-bottom: 5px;
+  margin-bottom: 0;
+}
+
+.player-inspector-row {
+  padding-top: 4px;
 }

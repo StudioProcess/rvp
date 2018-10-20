@@ -22,10 +22,13 @@ import {
 
 import {_HANDLEBAR_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
 
+type MoveTypes = 'noopMove'|'leftMove'|'middleMove'|'rightMove'
+
 export interface Handlebar {
   readonly left: number
   readonly width: number
-  readonly source: 'intern' | 'extern'
+  readonly source: 'intern'|'extern'
+  readonly move: MoveTypes
 }
 
 @Component({
@@ -74,7 +77,8 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
     const _initRect: Handlebar = {
       left: this.inLeft,
       width: this.inWidth,
-      source: 'extern'
+      source: 'extern',
+      move: 'noopMove'
     }
 
     // Init sync
@@ -140,7 +144,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
         const newLeft = Math.min(l, oldRight-_HANDLEBAR_MIN_WIDTH_)
         const deltaLeft = newLeft-prevHb.left
         const newWidth = prevHb.width-deltaLeft
-        return {left: newLeft, width: newWidth}
+        return {left: newLeft, width: newWidth, move: 'leftMove'}
       }))
 
     const rightPos = rightClientPos.pipe(
@@ -149,7 +153,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
       distinctUntilChanged(),
       withLatestFrom(this._handlebarSubj, (r, prevHb) => {
         const newRight = Math.max(prevHb.left+_HANDLEBAR_MIN_WIDTH_, r)
-        return {left: prevHb.left, width: newRight-prevHb.left}
+        return {left: prevHb.left, width: newRight-prevHb.left, move: 'rightMove'}
       }))
 
     const middlePos = middleClientPos.pipe(
@@ -162,7 +166,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
       distinctUntilKeyChanged('m'),
       withLatestFrom(this._handlebarSubj, ({distLeft, m}, prevHb) => {
         const newLeft = Math.min(Math.max(0, m-distLeft), 100-prevHb.width)
-        return {left: newLeft, width: prevHb.width}
+        return {left: newLeft, width: prevHb.width, move: 'middleMove'}
       }))
 
     this._subs.push(
@@ -177,19 +181,19 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
 
     this._subs.push(
       merge(leftPos, middlePos, rightPos)
-        .subscribe(({left, width}) => {
+        .subscribe(({left, width, move}: {left: number, width: number, move: MoveTypes}) => {
           this.internLeft = left
           this.internWidth = width
-          this._handlebarSubj.next({source: 'intern', left, width})
+          this._handlebarSubj.next({source: 'intern', left, width, move})
           this._cdr.markForCheck()
         }))
 
     this._subs.push(
       this._syncValueSubj
-        .subscribe(({left, width}) => {
+        .subscribe(({left, width, move}) => {
           this.internLeft = left
           this.internWidth = width
-          this._handlebarSubj.next({source: 'extern', left, width})
+          this._handlebarSubj.next({source: 'extern', left, width, move})
           this._cdr.markForCheck()
         }))
   }
@@ -202,13 +206,13 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
       if(hasLeftChanges && hasWidthChanges) {
         const newLeft = changes.inLeft.currentValue
         const newWidth = changes.inWidth.currentValue
-        this._syncValueSubj.next({source: 'extern', left: newLeft, width: newWidth})
+        this._syncValueSubj.next({source: 'extern', left: newLeft, width: newWidth, move: 'noopMove'})
       } else if(hasLeftChanges) {
         const newLeft = changes.inLeft.currentValue
-        this._syncValueSubj.next({source: 'extern', left: newLeft, width: this.internWidth})
+        this._syncValueSubj.next({source: 'extern', left: newLeft, width: this.internWidth, move: 'noopMove'})
       } else if(hasWidthChanges) {
         const newWidth = changes.inWidth.currentValue
-        this._syncValueSubj.next({source: 'extern', left: this.internLeft, width: newWidth})
+        this._syncValueSubj.next({source: 'extern', left: this.internLeft, width: newWidth, move: 'noopMove'})
       }
     }
   }

@@ -35,6 +35,10 @@
   }
 }
 
+.ion-md-time, .ion-ios-time {
+  margin-left: 20px;
+}
+
 .entry-container {
   .column {
     padding: 0px;
@@ -43,21 +47,29 @@
   .annotation-color {
     height: 100%;
     width: $inspector-annotation-color-width;
-    margin-right: 30px;
+    margin-right: 0.2em;
   }
 
   .annotation-info {
     // padding: 5px 5px 5px 10px;
 
     .time-row {
-      padding-top: 1.0em;
+      text-align: right;
+      padding-top: 0.3em;
       padding-right: 1.0em;
-      padding-bottom: 0.5em;
+      padding-bottom: 0.1em;
+      color: $process-dark-gray;
     }
 
     .text-row {
-      padding-right: 1.0em;
-      padding-bottom: 1.0em;
+      padding-right: 0.3em;
+      padding-bottom: 0;
+    }
+
+    .ion-ios-time, .ion-md-time {
+      font-size: 13px;
+      padding-left: 0.3em;
+      padding-right: 0.1em;
     }
 
     .title {
@@ -75,9 +87,9 @@
     .description {
       font-size: 14px;
       line-height: 15px;
-      resize: none;
+      resize: vertical;
       margin: 0;
-      padding: 0.2em;
+      padding: 0.1em;
       outline: none;
       border-color: transparent;
       box-shadow: 0 0 0 $white;
@@ -90,11 +102,12 @@
     }
 
     .duration {
-      font-size: 14px; // TODO: 14px needed to be set explicitly
-      font-weight: 500;
+      font-size: 13px; // TODO: 14px needed to be set explicitly
+      font-weight: 400;
       width: 88px;
       border: 1px solid transparent;
       background-color: inherit;
+      color: $process-dark-gray;
 
       &:hover {
         color: $process-dark-gray2;
@@ -119,7 +132,8 @@
     }
 
     textarea {
-      min-height: 5px !important;
+      min-height: 18px !important;
+      //max-height: 20px;
     }
   }
 }
