@@ -294,6 +294,10 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     return annotation.get('isShown', true) ? '1': '0.2'
   }
 
+  getAnnotationPointerEvents(annotation: Record<Annotation>) {
+    return annotation.get('isShown', true) ? 'auto': 'none'
+  }
+
   isSelectedAnnotation(annotation: Record<Annotation>) {
     return this.selectedAnnotations ?
       this.selectedAnnotations.find(sel => sel.get('id', null) === annotation.get('id', null)) !== undefined :

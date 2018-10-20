@@ -48,6 +48,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   @Input() readonly containerRect: Observable<ClientRect>
   @Input() @HostBinding('class.selected') readonly isSelected = false
   @Input() @HostBinding('style.opacity') readonly opacity: string = '1'
+  @Input() @HostBinding('style.pointerEvents') readonly pointerEvents: string = 'auto'
 
   // Input left and width
   @Input('left') readonly inLeft: number
