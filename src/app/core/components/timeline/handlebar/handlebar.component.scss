@@ -7,7 +7,6 @@ $text-color: $black;
   cursor: ew-resize;
   padding-left: $handlebar-handle-padding;
   padding-right: $handlebar-handle-padding;
-  margin-top: -2px;
 
   &:hover {
     color: $text-color;
@@ -39,6 +38,11 @@ $text-color: $black;
     .left-handle {
       @include handle;
       text-align: left;
+
+      i {
+        display: block;
+        margin-top: -2px;
+      }
     }
 
     .content {
@@ -55,6 +59,11 @@ $text-color: $black;
     .right-handle {
       @include handle;
       text-align: right;
+
+      i {
+        display: block;
+        margin-top: -2px;
+      }
     }
   }
 }
