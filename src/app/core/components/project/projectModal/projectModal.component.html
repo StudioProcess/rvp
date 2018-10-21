@@ -53,6 +53,16 @@
 </div>
 <div class="row">
   <div class="column">
+    <h3 class="title-settings">Export Annotation Text</h3>
+    <div class="row">
+      <div class="column"><a class="button-export" href="#" (click)="exportProjectAsText('txt')">Plain Text (.txt)</a> </div>
+      <div class="column"><a class="button-export" href="#" (click)="exportProjectAsText('csv')">Table (.csv)</a> </div>
+      <div class="column"><a class="button-export" href="#" (click)="exportProjectAsText('srt')">Subtitle File (.srt)</a></div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="column">
     <h3 class="title-information">Information</h3>
     <p>Preferred Video Formats: H.264 and AAC in MP4 Container.</p>
     <p>Research Video is auto-saving, no need to save manually. If you want to send the project to somebody or preserve it for later use, simply export it as an archive.</p>

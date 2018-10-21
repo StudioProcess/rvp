@@ -168,6 +168,10 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  exportProjectAsText(type: string) {
+    this._rootStore.dispatch(new project.ProjectExportAsText(type))
+  }
+
   resetProject() {
     if(window.confirm('Reset the whole project? All data will be lost.')) {
       this._rootStore.dispatch(new project.ProjectReset())

@@ -27,6 +27,7 @@ export class ProjectModalComponent implements OnDestroy {
   @Output() readonly onImportProject = new EventEmitter()
   @Output() readonly onImportVideo = new EventEmitter<ImportVideoPayload>()
   @Output() readonly onExportProject = new EventEmitter()
+  @Output() readonly onExportProjectAsText = new EventEmitter()
   @Output() readonly onResetProject = new EventEmitter()
   @Output() readonly onNewProject = new EventEmitter()
 
@@ -55,6 +56,10 @@ export class ProjectModalComponent implements OnDestroy {
 
   exportProject() {
     this.onExportProject.emit()
+  }
+
+  exportProjectAsText(type:string) {
+    this.onExportProjectAsText.emit(type)
   }
 
   newProject() {

@@ -47,6 +47,7 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
   @Output() readonly onImportProject = new EventEmitter()
   @Output() readonly onImportVideo = new EventEmitter<ImportVideoPayload>()
   @Output() readonly onExportProject = new EventEmitter()
+  @Output() readonly onExportProjectAsText = new EventEmitter()
   @Output() readonly onResetProject = new EventEmitter()
   @Output() readonly onNewProject = new EventEmitter()
 
@@ -136,6 +137,10 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
 
   exportProject() {
     this.onExportProject.emit()
+  }
+
+  exportProjectAsText(type: string) {
+    this.onExportProjectAsText.emit(type)
   }
 
   resetProject() {

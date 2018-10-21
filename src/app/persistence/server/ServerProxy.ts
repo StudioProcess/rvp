@@ -27,6 +27,7 @@ import {loadProject, extractProject} from '../project'
 import {ensureValidProjectData} from '../project/validate'
 import {loadZip} from '../zip'
 import {ProjectSnapshotRecordFactory} from '../model'
+import {formatDuration} from '../../lib/time'
 
 @Injectable()
 export class ServerProxy implements OnDestroy {
@@ -159,6 +160,69 @@ export class ServerProxy implements OnDestroy {
             }
           }))
 
+          this._subs.push(
+            this.exportProjectAsText
+              .pipe(withLatestFrom(mutableProjectState, ({payload}, proj) => ({type:payload, proj})))
+              .subscribe({
+                next: async ({type, proj}) => {
+                  try {
+                    const annotations = []
+                    for (const track of proj.meta.timeline.tracks) {
+                      for (const stack of track.annotationStacks) {
+                        for (const annotation of stack) {
+                          annotations.push(annotation)
+                        }
+                      }
+                    }
+                    annotations.sort((a, b) => {
+                      if (a.utc_timestamp === b.utc_timestamp) {
+                        return a.duration - b.duration
+                      } else {
+                        return a.utc_timestamp - b.utc_timestamp
+                      }
+                    })
+                    let text = ''
+                    switch (type) {
+                      case 'csv':
+                        text = '"Start","End","Text"\n'
+                        text +=  annotations.reduce((acc, a, idx) => {
+                          acc += '"' + formatDuration(a.utc_timestamp) + '",'
+                          acc += '"' + formatDuration(a.utc_timestamp + a.duration) + '",'
+                          acc += '"' + a.fields.description.replace(/"/, '""') + '"\n'
+                          return acc
+                        }, '')
+                        break
+                      case 'srt':
+                        text = annotations.reduce((acc, a, idx) => {
+                          acc += (idx+1) + '\n'
+                          acc += formatDuration(a.utc_timestamp).replace('.', ',') + ' --> '
+                          acc += formatDuration(a.utc_timestamp + a.duration).replace('.', ',') + '\n'
+                          if (a.fields.description) { acc += a.fields.description + '\n' }
+                          else { acc += '*\n'}
+                          acc += '\n'
+                          return acc
+                        }, '').trim()
+                        break
+                      default:
+                        text = annotations.reduce((acc, a) => {
+                          acc += formatDuration(a.utc_timestamp) + ' — ' + formatDuration(a.utc_timestamp + a.duration) + '\n'
+                          if (a.fields.description) { acc += a.fields.description + '\n' }
+                          acc += '\n'
+                          return acc
+                        }, '')
+                        break
+                    }
+                    const textBlob = new Blob([text], {type: 'text/plain'})
+                    saveAs(textBlob, 'annotations.' + type)
+                  } catch(err) {
+                    this._store.dispatch(new project.ProjectExportError(err))
+                  }
+                },
+                error: err => {
+                  this._store.dispatch(new project.ProjectExportError(err))
+                }
+              }))
+
       this._subs.push(
         this.resetProject.subscribe({
           next: async () => {
@@ -233,6 +297,9 @@ export class ServerProxy implements OnDestroy {
 
   @Effect({dispatch: false})
   readonly exportProject = this._actions.ofType<project.ProjectExport>(project.PROJECT_EXPORT)
+  
+  @Effect({dispatch: false})
+  readonly exportProjectAsText = this._actions.ofType<project.ProjectExportAsText>(project.PROJECT_EXPORT_AS_TEXT)
 
   @Effect({dispatch: false})
   readonly resetProject = this._actions.ofType<project.ProjectReset>(project.PROJECT_RESET)
@@ -241,5 +308,3 @@ export class ServerProxy implements OnDestroy {
     this._subs.forEach(sub => sub.unsubscribe())
   }
 }
-
-
