@@ -1,3 +1,5 @@
+@import 'colors';
+
 :host {
   display: block;
   padding-left: 5px;
@@ -15,6 +17,7 @@
   padding-top: 5px;
   padding-bottom: 5px;
   margin-bottom: 0;
+  border-bottom: 1px solid $process-super-light-gray4;
 }
 
 .player-inspector-row {
