@@ -188,7 +188,7 @@ export class ServerProxy implements OnDestroy {
                         text +=  annotations.reduce((acc, a, idx) => {
                           acc += '"' + formatDuration(a.utc_timestamp) + '",'
                           acc += '"' + formatDuration(a.utc_timestamp + a.duration) + '",'
-                          acc += '"' + a.fields.description.replace(/"/, '""') + '"\n'
+                          acc += '"' + a.fields.description.replace(/"/g, '""') + '"\n'
                           return acc
                         }, '')
                         break
