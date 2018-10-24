@@ -169,7 +169,8 @@ export class ServerProxy implements OnDestroy {
                     const annotations = []
                     for (const track of proj.meta.timeline.tracks) {
                       for (const stack of track.annotationStacks) {
-                        for (const annotation of stack) {
+                        for (let annotation of stack) {
+                          annotation = Object.assign({}, annotation, {track}) // add track information
                           annotations.push(annotation)
                         }
                       }
@@ -184,11 +185,12 @@ export class ServerProxy implements OnDestroy {
                     let text = ''
                     switch (type) {
                       case 'csv':
-                        text = '"Start","End","Text"\n'
+                        text = '"Start","End","Track","Text"\n'
                         text +=  annotations.reduce((acc, a, idx) => {
-                          acc += '"' + formatDuration(a.utc_timestamp) + '",'
-                          acc += '"' + formatDuration(a.utc_timestamp + a.duration) + '",'
-                          acc += '"' + a.fields.description.replace(/"/g, '""') + '"\n'
+                          acc += `"${formatDuration(a.utc_timestamp)}",`
+                          acc += `"${formatDuration(a.utc_timestamp + a.duration)}",`
+                          acc += `"${a.track.fields.title.replace(/"/g, '""')}",`
+                          acc += `"${a.fields.description.replace(/"/g, '""')}"\n`
                           return acc
                         }, '')
                         break
@@ -197,8 +199,13 @@ export class ServerProxy implements OnDestroy {
                           acc += (idx+1) + '\n'
                           acc += formatDuration(a.utc_timestamp).replace('.', ',') + ' --> '
                           acc += formatDuration(a.utc_timestamp + a.duration).replace('.', ',') + '\n'
-                          if (a.fields.description) { acc += a.fields.description + '\n' }
-                          else { acc += '*\n'}
+                          const track = a.track.fields.title, atext = a.fields.description
+                          if (track) {
+                            acc += track
+                            if (atext) { acc += ': ' + atext + '\n' } else { acc += '\n' }
+                          } else {
+                            acc += atext + '\n'
+                          }
                           acc += '\n'
                           return acc
                         }, '').trim()
@@ -206,7 +213,13 @@ export class ServerProxy implements OnDestroy {
                       default:
                         text = annotations.reduce((acc, a) => {
                           acc += formatDuration(a.utc_timestamp) + ' — ' + formatDuration(a.utc_timestamp + a.duration) + '\n'
-                          if (a.fields.description) { acc += a.fields.description + '\n' }
+                          const track = a.track.fields.title, atext = a.fields.description
+                          if (track) {
+                            acc += track
+                            if (atext) { acc += ': ' + atext + '\n' } else { acc += '\n' }
+                          } else {
+                            acc += atext + '\n'
+                          }
                           acc += '\n'
                           return acc
                         }, '')
@@ -297,7 +310,7 @@ export class ServerProxy implements OnDestroy {
 
   @Effect({dispatch: false})
   readonly exportProject = this._actions.ofType<project.ProjectExport>(project.PROJECT_EXPORT)
-  
+
   @Effect({dispatch: false})
   readonly exportProjectAsText = this._actions.ofType<project.ProjectExportAsText>(project.PROJECT_EXPORT_AS_TEXT)
 
