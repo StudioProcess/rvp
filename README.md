@@ -1,5 +1,5 @@
 # Research Video
-![Research Video running in Google Chrome](https://process.studio/external/rv/rv_2018-10-24.jpg)
+![Research Video running in Google Chrome](https://process.studio/external/rv/rv_2018-10-24_1.jpg)
 
 Research Video is a tool developed by [Process Studio](http://process.studio) and [contributors](https://github.com/StudioProcess/rvp#Contributors).
 
