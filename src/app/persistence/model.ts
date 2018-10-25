@@ -100,6 +100,7 @@ export interface Timeline {
 
 export interface Track {
   readonly id: number|null
+  readonly isActive: boolean
   readonly color: string
   readonly fields: Record<TrackFields>
   readonly annotationStacks: List<List<Record<Annotation>>>
@@ -188,6 +189,7 @@ export const TrackFieldsRecordFactory = Record<TrackFields>({
 
 export const TrackRecordFactory = Record<Track>({
   id: null,
+  isActive: false,
   color: '#000',
   fields: new TrackFieldsRecordFactory(),
   annotationStacks: List([List([])])
