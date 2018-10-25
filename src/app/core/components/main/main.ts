@@ -199,6 +199,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
   addAnnotation() {
     this._rootStore.dispatch(new project.ProjectAddAnnotation({
+      source: 'toolbar',
       trackIndex: 0,
       annotationStackIndex: 0,
       annotation: AnnotationRecordFactory({

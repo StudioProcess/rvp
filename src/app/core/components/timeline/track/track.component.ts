@@ -165,13 +165,14 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
             const perc = localX/rect.width*100
             const tPerc = this.totalDuration/100
             return {
+              source: 'timeline',
               trackIndex: this.trackIndex,
               annotationStackIndex,
               annotation: new AnnotationRecordFactory({
                 utc_timestamp: perc*tPerc,
                 duration: 2
               })
-            }
+            } as project.AddAnnotationPayload
           }))
         .subscribe(this.onAddAnnotation))
 

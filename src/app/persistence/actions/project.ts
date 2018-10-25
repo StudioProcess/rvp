@@ -126,6 +126,7 @@ export interface AddAnnotationPayload {
   readonly trackIndex: number
   readonly annotationStackIndex: number
   readonly annotation: Record<Annotation>
+  readonly source: 'toolbar'|'timeline'
 }
 
 export class ProjectAddAnnotation implements Action {
