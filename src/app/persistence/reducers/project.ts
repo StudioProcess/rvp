@@ -416,11 +416,19 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state.set('clipboard', all)
     }
     case project.PROJECT_PASTE_CLIPBOARD: {
-      const {trackIndex} = action.payload
+      const {trackIndex, source} = action.payload
       const all = state.get('clipboard', null)!
       if(!all.isEmpty()) {
         const timeline = state.getIn(['meta', 'timeline'])
         const annotationStacks: List<List<Record<Annotation>>> = state.getIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'])
+
+        let placedTrackIndex = trackIndex
+        let placedAnnotationStacks = annotationStacks
+        if(source === 'toolbar') {
+          const tracks = state.getIn(['meta', 'timeline', 'tracks']) as List<Record<Track>>
+          placedTrackIndex = tracks.findIndex(track => track.get('isActive', false))
+          placedAnnotationStacks = state.getIn(['meta', 'timeline', 'tracks', placedTrackIndex, 'annotationStacks'])
+        }
 
         const idOffset = nextAnnotationId(timeline)
         const newAnnotations = all.toList().map((annotationSelection, i) => {
@@ -429,10 +437,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
         })
         const timelineDuration = state.getIn(['meta', 'timeline', 'duration'])
 
-        const stacksWithEmbedded = embedAnnotations(timelineDuration, annotationStacks, 0, newAnnotations, List([]))
+        const stacksWithEmbedded = embedAnnotations(timelineDuration, placedAnnotationStacks, 0, newAnnotations, List([]))
 
         return state.withMutations(mState => {
-          mState.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], stacksWithEmbedded)
+          mState.setIn(['meta', 'timeline', 'tracks', placedTrackIndex, 'annotationStacks'], stacksWithEmbedded)
         })
       } else {
         return state
