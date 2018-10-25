@@ -440,6 +440,17 @@ export function reducer(state: State = initialState, action: project.Actions): S
     case project.PROJECT_SETTINGS_SET_APPLY_TO_TIMELINE: {
       return state.setIn(['settings', 'applyToTimeline'], action.payload)
     }
+    case project.PROJECT_SET_ACTIVE_TRACK: {
+      const activeTrackIndex = action.payload.trackIndex
+      const tracks = state.getIn(['meta', 'timeline', 'tracks']) as List<Record<Track>>
+      const numTracks = tracks.size
+
+      return state.withMutations(mState => {
+        for(let i = 0; i < numTracks; i++) {
+          mState.setIn(['meta', 'timeline', 'tracks', i, 'isActive'], i === activeTrackIndex)
+        }
+      })
+    }
     default: {
       return state
     }
