@@ -6,6 +6,7 @@ export interface Project {
   readonly meta: Record<ProjectMeta>|null
   readonly settings: Record<ProjectSettings>
   readonly videoBlob: Blob|null
+  readonly player: Record<ProjectPlayerState>
   readonly selection: Record<ProjectSelection>
   readonly snapshots: ProjectSnapshots
   readonly clipboard: Set<Record<AnnotationSelection>>
@@ -43,6 +44,12 @@ export interface ProjectSettings {
   readonly currentAnnotationsOnly: boolean,
   readonly search: string|null,
   readonly applyToTimeline: boolean
+}
+
+export interface ProjectPlayerState {
+  readonly currentTime: number
+  readonly width: number
+  readonly height: number
 }
 
 export interface ProjectSelection {
@@ -165,9 +172,16 @@ export const ProjectSelectionRecordFactory = Record<ProjectSelection>({
   annotation: new ProjectAnnotationSelectionRecordFactory()
 })
 
+export const ProjectPlayerStateRecordFactory = Record<ProjectPlayerState>({
+  currentTime: 0,
+  width: 0,
+  height: 0
+})
+
 export const ProjectRecordFactory = Record<Project>({
   meta: null,
   settings: new ProjectSettingsRecordFactory(),
+  player: new ProjectPlayerStateRecordFactory(),
   videoBlob: null,
   selection: new ProjectSelectionRecordFactory(),
   snapshots: new ProjectSnapshotsRecordFactory(),
