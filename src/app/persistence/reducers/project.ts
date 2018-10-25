@@ -137,18 +137,21 @@ export function reducer(state: State = initialState, action: project.Actions): S
     case project.PROJECT_ADD_ANNOTATION: {
       const {trackIndex, annotationStackIndex, annotation, source} = action.payload
 
+      let placedTrackIndex = trackIndex
       let placedAnnotation = annotation
       if(source === 'toolbar') {
+        const tracks = state.getIn(['meta', 'timeline', 'tracks']) as List<Record<Track>>
+        placedTrackIndex = tracks.findIndex(track => track.get('isActive', false))
         placedAnnotation = annotation.set('utc_timestamp', state.getIn(['player', 'currentTime']))
       }
 
-      const annotationStacks = state.getIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'])
+      const annotationStacks = state.getIn(['meta', 'timeline', 'tracks', placedTrackIndex, 'annotationStacks'])
       const newId = nextAnnotationId(state.getIn(['meta', 'timeline']))
       const newAnnotation = placedAnnotation.set('id', newId)
       const timelineDuration = state.getIn(['meta', 'timeline', 'duration'])
 
       const stacksWithEmbedded = embedAnnotations(timelineDuration, annotationStacks, annotationStackIndex, List([newAnnotation]), List([]))
-      return state.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], stacksWithEmbedded)
+      return state.setIn(['meta', 'timeline', 'tracks', placedTrackIndex, 'annotationStacks'], stacksWithEmbedded)
     }
     case project.PROJECT_UPDATE_ANNOTATION: {
       const {trackIndex, annotationIndex, annotationStackIndex, annotation} = action.payload
