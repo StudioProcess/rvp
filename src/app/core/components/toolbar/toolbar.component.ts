@@ -29,6 +29,7 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
   @Input() readonly hasRedo: boolean
   @Input() readonly hasUndo: boolean
   @Input() readonly hasTracks: boolean
+  @Input() readonly hasActiveTrack: boolean
 
   leftForm: FormGroup|null = null
   rightForm: FormGroup|null = null

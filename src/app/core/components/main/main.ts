@@ -31,6 +31,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   hasRedo: boolean = false
   hasUndo: boolean = false
   hasTracks: boolean = false
+  hasActiveTrack: boolean = false
   currentAnnotationsOnly: boolean = false // show current annotations only
   search: string|null = null
   applyToTimeline: boolean = false
@@ -59,6 +60,10 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       } else {
         this.hasTracks = false
       }
+    }))
+
+    this._subs.push(this._rootStore.select(fromProject.getProjectHasActiveTrack).subscribe(hasActiveTrack => {
+      this.hasActiveTrack = hasActiveTrack
     }))
 
     this._subs.push(this._rootStore.select(fromProject.getProjectSnapshots).subscribe(snapshots => {
