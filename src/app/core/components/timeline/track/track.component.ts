@@ -113,7 +113,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     this._subs.push(
       pasteHotkey.pipe(withLatestFrom(hostHover), filter(([, hover]) => hover))
         .subscribe(() => {
-          this.onPasteAnnotations.next({trackIndex: this.trackIndex})
+          this.onPasteAnnotations.next({source: 'timeline', trackIndex: this.trackIndex})
         }))
 
     this._subs.push(

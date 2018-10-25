@@ -177,6 +177,7 @@ export class ProjectCopyAnnotationSelectionToClipboard implements Action {
 }
 
 export interface PasteClipboardPayload {
+  readonly source: 'toolbar'|'timeline'
   readonly trackIndex: number
 }
 
