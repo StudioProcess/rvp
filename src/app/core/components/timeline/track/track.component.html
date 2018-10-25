@@ -1,3 +1,4 @@
+<div class="active-track" *ngIf="data.get('isActive', null)"></div>
 <div class="row title-row">
   <div class="column shrink" [formGroup]="form">
     <div class="track-color" [style.color]="data.get('color', null)">
