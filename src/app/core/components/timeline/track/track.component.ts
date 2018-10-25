@@ -119,6 +119,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     this._subs.push(
       titleInputMd.subscribe((ev: KeyboardEvent) => {
         ev.stopPropagation()
+        this.onSetActiveTrack.emit({trackIndex: this.trackIndex})
       }))
 
     this._subs.push(
@@ -330,6 +331,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   annotationClick(ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number) {
     ev.stopPropagation()
     if(ev.button !== 0) {return}
+    this.onSetActiveTrack.emit({trackIndex: this.trackIndex})
     this._annotationMdSubj.next({ev, annotation, annotationIndex})
   }
 
