@@ -51,6 +51,8 @@ export const PROJECT_SETTINGS_SET_SHOW_CURRENT_ANNOTATIONS_ONLY = '[PROJECT] Set
 export const PROJECT_SETTINGS_SET_SEARCH = '[PROJECT] Set Search Setting'
 export const PROJECT_SETTINGS_SET_APPLY_TO_TIMELINE = '[PROJECT] Apply To Timeline Setting'
 
+export const PROJECT_SET_ACTIVE_TRACK = '[PROJECT] Set Active Track'
+
 export class ProjectLoad implements Action {
   readonly type = PROJECT_LOAD
 }
@@ -258,6 +260,15 @@ export class ProjectSettingsSetApplyToTimeline implements Action {
   constructor(readonly payload: boolean) {}
 }
 
+export interface ProjectSetActiveTrackPayload {
+  readonly trackIndex: number
+}
+
+export class ProjectSetActiveTrack implements Action {
+  readonly type = PROJECT_SET_ACTIVE_TRACK
+  constructor(readonly payload: ProjectSetActiveTrackPayload) {}
+}
+
 export type Actions =
   ProjectLoad|ProjectLoadSuccess|ProjectLoadError|
   ProjectImport|
@@ -270,4 +281,5 @@ export type Actions =
   ProjectResetAnnotationSelection|ProjectCopyAnnotationSelectionToClipboard|ProjectPasteClipBoard|
   ProjectSetTimelineDuration|
   ProjectPushUndo|ProjectUndo|ProjectRedo|
-  ProjectSettingsSetCurrentAnnotationsOnly|ProjectSettingsSetSearch|ProjectSettingsSetApplyToTimeline
+  ProjectSettingsSetCurrentAnnotationsOnly|ProjectSettingsSetSearch|ProjectSettingsSetApplyToTimeline|
+  ProjectSetActiveTrack
