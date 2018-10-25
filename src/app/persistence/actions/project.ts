@@ -1,5 +1,7 @@
+import {ElementRef} from '@angular/core'
 import {Action} from '@ngrx/store'
 
+import {PlayerOptions} from 'video.js'
 import {Record} from 'immutable'
 
 import {
@@ -270,6 +272,103 @@ export class ProjectSetActiveTrack implements Action {
   constructor(readonly payload: ProjectSetActiveTrackPayload) {}
 }
 
+/**
+ * PLAYER
+ */
+
+interface PlayerCreatePayload {
+  readonly elemRef: ElementRef
+  readonly playerOptions: PlayerOptions
+}
+
+export const PLAYER_CREATE = '[Player] Create'
+export const PLAYER_CREATE_SUCCESS = '[Player] Create Success'
+export const PLAYER_CREATE_ERROR = '[Player] Create Error'
+
+export const PLAYER_DESTROY = '[Player] Destroy'
+export const PLAYER_DESTROY_SUCCESS = '[Player] Destroy Success'
+export const PLAYER_DESTROY_ERROR = '[Player] Destroy Error'
+
+export const PLAYER_SET_SOURCE = '[Player] Set Source'
+
+export const PLAYER_SET_CURRENT_TIME = '[Player] Set Current Time'
+export const PLAYER_REQUEST_CURRENT_TIME = '[Player] Request Current Time'
+
+export const PLAYER_SET_DIMENSIONS = '[Player] Set Dimensions'
+export const PLAYER_SET_DIMENSIONS_SUCCESS = '[Player] Set Dimensions Success'
+export const PLAYER_SET_DIMENSIONS_ERROR = '[Player] Set Dimensions Error'
+
+export const PLAYER_TOGGLE_PLAYING = '[Player] Toggle Playing'
+
+export class PlayerCreate implements Action {
+  readonly type = PLAYER_CREATE
+  constructor(readonly payload: PlayerCreatePayload) {}
+}
+
+export class PlayerCreateSuccess implements Action {
+  readonly type = PLAYER_CREATE_SUCCESS
+  // constructor(readonly playload: any) {}
+}
+
+export class PlayerCreateError implements Action {
+  readonly type = PLAYER_CREATE_ERROR
+  constructor(readonly payload: any) {}
+}
+
+export class PlayerDestroy implements Action {
+  readonly type = PLAYER_DESTROY
+}
+
+export class PlayerDestroySuccess implements Action {
+  readonly type = PLAYER_DESTROY_SUCCESS
+}
+
+export class PlayerDestroyError implements Action {
+  readonly type = PLAYER_DESTROY_ERROR
+  constructor(readonly playload: any) {}
+}
+
+export class PlayerSetSource implements Action {
+  readonly type = PLAYER_SET_SOURCE
+  constructor(readonly payload: {type: string, src: string}) {}
+}
+
+// Player state
+export class PlayerSetCurrentTime implements Action {
+  readonly type = PLAYER_SET_CURRENT_TIME
+  constructor(readonly payload: {currentTime:number}) {}
+}
+
+export class PlayerRequestCurrentTime implements Action {
+  readonly type = PLAYER_REQUEST_CURRENT_TIME
+  constructor(readonly payload: {currentTime:number}) {}
+}
+
+// Player dimensions
+interface PlayerDimensionsPayload {
+  readonly width: number
+  readonly height:number
+}
+
+export class PlayerSetDimensions implements Action {
+  readonly type = PLAYER_SET_DIMENSIONS
+  constructor(readonly payload: PlayerDimensionsPayload) {}
+}
+
+export class PlayerSetDimensionsSuccess implements Action {
+  readonly type = PLAYER_SET_DIMENSIONS_SUCCESS
+  constructor(readonly payload: PlayerDimensionsPayload) {}
+}
+
+export class PlayerSetDimensionsError implements Action {
+  readonly type = PLAYER_SET_DIMENSIONS_ERROR
+  constructor(readonly payload: any) {}
+}
+
+export class PlayerTogglePlaying implements Action {
+  readonly type = PLAYER_TOGGLE_PLAYING
+}
+
 export type Actions =
   ProjectLoad|ProjectLoadSuccess|ProjectLoadError|
   ProjectImport|
@@ -283,4 +382,11 @@ export type Actions =
   ProjectSetTimelineDuration|
   ProjectPushUndo|ProjectUndo|ProjectRedo|
   ProjectSettingsSetCurrentAnnotationsOnly|ProjectSettingsSetSearch|ProjectSettingsSetApplyToTimeline|
-  ProjectSetActiveTrack
+  ProjectSetActiveTrack|
+  // PLAYER ACTIONS
+  PlayerCreate|PlayerCreateError|PlayerCreateSuccess|
+  PlayerDestroy|PlayerDestroyError|PlayerDestroySuccess|
+  PlayerSetDimensions|PlayerSetDimensionsSuccess|PlayerSetDimensionsError|
+  PlayerSetSource|
+  PlayerSetCurrentTime|
+  PlayerTogglePlaying
