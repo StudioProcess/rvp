@@ -13,7 +13,6 @@ import {Store} from '@ngrx/store'
 
 import * as project from '../../../persistence/actions/project'
 import * as fromProject from '../../../persistence/reducers'
-import * as fromPlayer from '../../../player/reducers'
 import {
   AnnotationColorMap, Annotation,
   SelectionSource, AnnotationSelection
@@ -45,13 +44,12 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren(InspectorEntryComponent) private readonly _entries: QueryList<InspectorEntryComponent>
   private readonly _subs: Subscription[] = []
   annotations: List<Record<AnnotationColorMap>>
-  height = this._playerStore.select(fromPlayer.getDimensions).pipe(map(({height}) => height))
+  height = this._store.select(fromProject.getDimensions).pipe(map(({height}) => height))
   selectedAnnotations: Set<Record<Annotation>>
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
-    private readonly _store: Store<fromProject.State>,
-    private readonly _playerStore: Store<fromPlayer.State>) {}
+    private readonly _store: Store<fromProject.State>) {}
 
   trackByFunc(_: number, annotation: Record<AnnotationColorMap>) {
     return annotation.getIn(['annotation', 'id'])

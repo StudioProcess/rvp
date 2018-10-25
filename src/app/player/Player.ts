@@ -20,8 +20,7 @@ import {
 
 import {JQueryStyleEventEmitter} from 'rxjs/internal/observable/fromEvent'
 
-import * as fromPlayer from './reducers'
-import * as player from './actions'
+import * as fromProject from '../persistence/reducers'
 import * as project from '../persistence/actions/project'
 import {_PLAYER_TIMEUPDATE_DEBOUNCE_} from '../config/player'
 
@@ -32,7 +31,7 @@ export class Player implements OnDestroy {
 
   constructor(
     private readonly _actions: Actions,
-    private readonly _store: Store<fromPlayer.State>) {
+    private readonly _store: Store<fromProject.State>) {
       const playerSubj = new ReplaySubject<videojs.Player>(1)
       const playerPendingSubj = new BehaviorSubject<boolean>(false)
       const setCurrentTimeSubj = new Subject<number>()
@@ -48,7 +47,7 @@ export class Player implements OnDestroy {
             })
           },
           error: err => {
-            this._store.dispatch(new player.PlayerCreateError(err))
+            this._store.dispatch(new project.PlayerCreateError(err))
           }
         }))
 
@@ -67,7 +66,7 @@ export class Player implements OnDestroy {
                   filter(([_, isPending]) => !isPending)
                 ).subscribe(() => {
                   const currentTime = playerInst.currentTime()
-                  this._store.dispatch(new player.PlayerSetCurrentTime({currentTime}))
+                  this._store.dispatch(new project.PlayerSetCurrentTime({currentTime}))
                 }))
 
             playerInstSubs.push(
@@ -86,15 +85,15 @@ export class Player implements OnDestroy {
               fromEvent(playerEventEmitter, 'dispose').subscribe(() => {
                 // On dispose clear all subs
                 playerInstSubs.forEach(sub => sub.unsubscribe())
-                this._store.dispatch(new player.PlayerDestroySuccess())
+                this._store.dispatch(new project.PlayerDestroySuccess())
               }, err => {
-                this._store.dispatch(new player.PlayerDestroyError(err))
+                this._store.dispatch(new project.PlayerDestroyError(err))
               }))
 
-            this._store.dispatch(new player.PlayerCreateSuccess())
+            this._store.dispatch(new project.PlayerCreateSuccess())
           },
           error: err => {
-            this._store.dispatch(new player.PlayerCreateError(err))
+            this._store.dispatch(new project.PlayerCreateError(err))
           }
         }))
 
@@ -113,10 +112,10 @@ export class Player implements OnDestroy {
               playerInst.width(width)
               playerInst.height(height)
 
-              this._store.dispatch(new player.PlayerSetDimensionsSuccess({width, height}))
+              this._store.dispatch(new project.PlayerSetDimensionsSuccess({width, height}))
             },
             error: err => {
-              this._store.dispatch(new player.PlayerSetDimensionsError(err))
+              this._store.dispatch(new project.PlayerSetDimensionsError(err))
             }
           }))
 
@@ -142,10 +141,10 @@ export class Player implements OnDestroy {
           .subscribe({
             next: ([, playerInst]) => {
               playerInst.dispose()
-              this._store.dispatch(new player.PlayerDestroySuccess())
+              this._store.dispatch(new project.PlayerDestroySuccess())
             },
             error: err => {
-              this._store.dispatch(new player.PlayerDestroyError(err))
+              this._store.dispatch(new project.PlayerDestroyError(err))
             }
           }))
 
@@ -162,22 +161,22 @@ export class Player implements OnDestroy {
     }
 
   @Effect({dispatch: false})
-  readonly createPlayer = this._actions.ofType<player.PlayerCreate>(player.PLAYER_CREATE)
+  readonly createPlayer = this._actions.ofType<project.PlayerCreate>(project.PLAYER_CREATE)
 
   @Effect({dispatch: false})
-  readonly destroyPlayer = this._actions.ofType<player.PlayerDestroy>(player.PLAYER_DESTROY)
+  readonly destroyPlayer = this._actions.ofType<project.PlayerDestroy>(project.PLAYER_DESTROY)
 
   @Effect({dispatch: false})
-  readonly setSource = this._actions.ofType<player.PlayerSetSource>(player.PLAYER_SET_SOURCE)
+  readonly setSource = this._actions.ofType<project.PlayerSetSource>(project.PLAYER_SET_SOURCE)
 
   @Effect({dispatch: false})
-  readonly setDimensions = this._actions.ofType<player.PlayerSetDimensions>(player.PLAYER_SET_DIMENSIONS)
+  readonly setDimensions = this._actions.ofType<project.PlayerSetDimensions>(project.PLAYER_SET_DIMENSIONS)
 
   @Effect({dispatch: false})
-  readonly requestCurrentTime = this._actions.ofType<player.PlayerRequestCurrentTime>(player.PLAYER_REQUEST_CURRENT_TIME)
+  readonly requestCurrentTime = this._actions.ofType<project.PlayerRequestCurrentTime>(project.PLAYER_REQUEST_CURRENT_TIME)
 
   @Effect({dispatch: false})
-  readonly togglePlaying = this._actions.ofType<player.PlayerTogglePlaying>(player.PLAYER_TOGGLE_PLAYING)
+  readonly togglePlaying = this._actions.ofType<project.PlayerTogglePlaying>(project.PLAYER_TOGGLE_PLAYING)
 
   ngOnDestroy() {
     this._subs.forEach(s => s.unsubscribe())

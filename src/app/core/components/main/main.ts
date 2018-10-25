@@ -12,7 +12,6 @@ import {filter} from 'rxjs/operators'
 import * as fromRoot from '../../reducers'
 import * as project from '../../../persistence/actions/project'
 import * as fromProject from '../../../persistence/reducers'
-import * as player from '../../../player/actions'
 import {rndColor} from '../../../lib/color'
 import {AnnotationRecordFactory, AnnotationFieldsRecordFactory} from '../../../persistence/model'
 import {_EMPTY_PROJECT_} from '../../../config/project'
@@ -123,7 +122,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       togglePlayingHotkey.subscribe(ev => {
         ev.preventDefault()
         ev.stopPropagation()
-        this._rootStore.dispatch(new player.PlayerTogglePlaying())
+        this._rootStore.dispatch(new project.PlayerTogglePlaying())
       }))
 
     this._subs.push(
