@@ -437,7 +437,29 @@ export function reducer(state: State = initialState, action: project.Actions): S
         })
         const timelineDuration = state.getIn(['meta', 'timeline', 'duration'])
 
-        const stacksWithEmbedded = embedAnnotations(timelineDuration, placedAnnotationStacks, 0, newAnnotations, List([]))
+        const sortedNewAnnotations = newAnnotations.sort((a1, a2) => {
+          const a1Start = a1.get('utc_timestamp', 0)
+          const a2Start = a2.get('utc_timestamp', 0)
+          if(a1Start < a2Start) {
+            return -1
+          } else if(a1Start > a2Start) {
+            return 1
+          } else {
+            return 0
+          }
+        })
+
+        const firstNewAnnotation = sortedNewAnnotations.get(0)!
+
+        const duration = state.getIn(['meta', 'timeline', 'duration']) as number
+        const currentTime = state.getIn(['player', 'currentTime']) as number
+        const playHeadDiff = currentTime-firstNewAnnotation.get('utc_timestamp', 0)
+
+        const placedNewAnnotations = sortedNewAnnotations.map(a => {
+          return a.set('utc_timestamp', Math.min(a.get('utc_timestamp', 0)+playHeadDiff, duration-a.get('duration', 0)))
+        })
+
+        const stacksWithEmbedded = embedAnnotations(timelineDuration, placedAnnotationStacks, 0, placedNewAnnotations, List([]))
 
         return state.withMutations(mState => {
           mState.setIn(['meta', 'timeline', 'tracks', placedTrackIndex, 'annotationStacks'], stacksWithEmbedded)
