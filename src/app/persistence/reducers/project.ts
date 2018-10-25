@@ -12,7 +12,7 @@ import {
   ProjectSnapshotRecordFactory, Track, Annotation,
   AnnotationSelection, AnnotationSelectionRecordFactory,
   BlobVideoRecordFactory, UrlVideoRecordFactory,
-  VIDEO_TYPE_BLOB, VIDEO_TYPE_URL, VideoUrlSource
+  VIDEO_TYPE_BLOB, VIDEO_TYPE_URL, VideoUrlSource, ProjectPlayerStateRecordFactory
 } from '../model'
 
 import {embedAnnotations} from '../../lib/annotationStack'
@@ -83,6 +83,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       // Create immutable representation
       return new ProjectRecordFactory({
         videoBlob: video === null ? prevVideoBlob: video,
+        player: state.get('player', new ProjectPlayerStateRecordFactory()),
         meta: ProjectMetaRecordFactory({
           id,
           video: videoMeta === null ? prevVideoMeta : (videoMeta.type === VIDEO_TYPE_BLOB ? BlobVideoRecordFactory(videoMeta) : UrlVideoRecordFactory(videoMeta)),
