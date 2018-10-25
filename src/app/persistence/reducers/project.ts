@@ -134,11 +134,16 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state.setIn(['meta', 'timeline', 'duration'], action.payload.duration)
     }
     case project.PROJECT_ADD_ANNOTATION: {
-      const {trackIndex, annotationStackIndex, annotation} = action.payload
+      const {trackIndex, annotationStackIndex, annotation, source} = action.payload
+
+      let placedAnnotation = annotation
+      if(source === 'toolbar') {
+        placedAnnotation = annotation.set('utc_timestamp', state.getIn(['player', 'currentTime']))
+      }
 
       const annotationStacks = state.getIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'])
       const newId = nextAnnotationId(state.getIn(['meta', 'timeline']))
-      const newAnnotation = annotation.set('id', newId)
+      const newAnnotation = placedAnnotation.set('id', newId)
       const timelineDuration = state.getIn(['meta', 'timeline', 'duration'])
 
       const stacksWithEmbedded = embedAnnotations(timelineDuration, annotationStacks, annotationStackIndex, List([newAnnotation]), List([]))
@@ -451,6 +456,16 @@ export function reducer(state: State = initialState, action: project.Actions): S
         }
       })
     }
+    case project.PLAYER_CREATE_SUCCESS:
+    case project.PLAYER_DESTROY_SUCCESS:
+      return state
+    case project.PLAYER_SET_CURRENT_TIME:
+      return state.setIn(['player', 'currentTime'], action.payload.currentTime)
+    case project.PLAYER_SET_DIMENSIONS_SUCCESS:
+      return state.withMutations(mState => {
+        mState.setIn(['player', 'width'], action.payload.width)
+        mState.setIn(['player', 'height'], action.payload.height)
+      })
     default: {
       return state
     }
@@ -476,4 +491,10 @@ export const getProjectClipboard = (state: State) => {
 
 export const getProjectSnapshots = (state: State) => {
   return state.get('snapshots', null)
+}
+
+// player
+
+export const getPlayerState = (state: State) => {
+  return state.get('player', null)
 }

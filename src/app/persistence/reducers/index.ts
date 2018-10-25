@@ -5,7 +5,6 @@ import {ActionReducerMap, createSelector, createFeatureSelector} from '@ngrx/sto
 import * as Fuse from 'fuse.js'
 
 import * as fromProject from './project'
-import * as fromPlayer from '../../player/reducers'
 
 import {findVerticalCollisionsWithCursor} from '../../lib/annotationStack'
 
@@ -28,6 +27,23 @@ export const reducers: ActionReducerMap<State> = {
 const getPersistenceState = createFeatureSelector<State>('persistence')
 
 export const getProjectState = createSelector(getPersistenceState, (state: State) => state.project)
+
+// Player state selectors
+
+const getPlayerState = createSelector(getProjectState, fromProject.getPlayerState)
+
+export const getCurrentTime = createSelector(getPlayerState, player => {
+  return player.get('currentTime', 0)
+})
+
+export const getDimensions = createSelector(getPlayerState, player => {
+  return {
+    width: player.get('width', null),
+    height: player.get('height', null)
+  }
+})
+
+// Project
 
 export const getProjectSettings = createSelector(getProjectState, fromProject.getProjectSettings)
 
@@ -102,7 +118,7 @@ const sortAnnotations = (annotations: List<Record<AnnotationColorMap>>) => {
 export const getSortedFlattenedAnnotations = createSelector(getFlattenedAnnotations, sortAnnotations)
 
 export const getCurrentFlattenedAnnotations = createSelector(
-  getProjectSettings, getProjectTimeline, fromPlayer.getCurrentTime,
+  getProjectSettings, getProjectTimeline, getCurrentTime,
   (settings, timeline, currentTime) => {
     if(settings.get('currentAnnotationsOnly', false)) {
       const duration = timeline!.get('duration', null)
@@ -229,3 +245,4 @@ export const getProjectClipboard = createSelector(getProjectState, fromProject.g
 // Snapshots
 
 export const getProjectSnapshots = createSelector(getProjectState, fromProject.getProjectSnapshots)
+
