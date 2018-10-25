@@ -50,6 +50,18 @@ export const getProjectTimeline = createSelector(getProjectMeta, meta => {
   return meta ? meta.get('timeline', null): null
 })
 
+export const getProjectTimelineTracks = createSelector(getProjectTimeline, timeline => {
+  if(timeline !== null) {
+    return timeline.get('tracks', null)
+  } else {
+    return List([])
+  }
+})
+
+export const getProjectHasActiveTrack = createSelector(getProjectTimelineTracks, timeline => {
+  return timeline.find(track => track.get('isActive', false)) !== undefined
+})
+
 function flattenAnnotations(timeline: Record<Timeline>|null) {
   if(timeline !== null) {
     return timeline.get('tracks', null).flatMap((track, trackIndex) => {
