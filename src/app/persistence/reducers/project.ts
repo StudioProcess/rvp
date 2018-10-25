@@ -463,10 +463,9 @@ export function reducer(state: State = initialState, action: project.Actions): S
     case project.PLAYER_SET_CURRENT_TIME:
       return state.setIn(['player', 'currentTime'], action.payload.currentTime)
     case project.PLAYER_SET_DIMENSIONS_SUCCESS:
-      return state.withMutations(mState => {
-        mState.setIn(['player', 'width'], action.payload.width)
-        mState.setIn(['player', 'height'], action.payload.height)
-      })
+      return state
+        .setIn(['player', 'width'], action.payload.width)
+        .setIn(['player', 'height'], action.payload.height)
     default: {
       return state
     }
