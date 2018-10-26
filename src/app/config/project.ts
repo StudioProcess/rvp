@@ -50,7 +50,7 @@ export const _EMPTY_PROJECT_ = {
           "id": 0,
           "color": "#ff0000",
           "fields": {
-            "title": "Track 1"
+            "title": "(Track 1)"
           },
           "annotationStacks": [
             []
