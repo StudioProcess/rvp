@@ -66,6 +66,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   @Output() readonly onDuplicateTrack = new EventEmitter<project.DuplicateTrackPayload>()
   @Output() readonly onInsertAtTrack = new EventEmitter<project.TrackInsertAtPayload>()
   @Output() readonly onSetActiveTrack = new EventEmitter<project.ProjectSetActiveTrackPayload>()
+  @Output() readonly onDblClickAnnotation = new EventEmitter<project.ProjectFocusAnnotationPayload>()
 
   private readonly _subs: Subscription[] = []
   private readonly _addAnnotationClick = new Subject<{ev: MouseEvent, annotationStackIndex: number}>()
@@ -337,6 +338,15 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     $event.stopPropagation()
     if($event.button !== 0) {return}
     this.onDuplicateTrack.emit({trackIndex})
+  }
+
+  dblClick(track: Record<Track>, trackIndex: number, annotation: Record<Annotation>, annotationIndex: number) {
+    this.onDblClickAnnotation.emit({
+      track,
+      trackIndex,
+      annotation,
+      annotationIndex
+    })
   }
 
   ngOnDestroy() {

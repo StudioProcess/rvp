@@ -27,7 +27,7 @@
           [isSelected]="isSelectedAnnotation(annotation)"
           (onHandlebarUpdate)="updateHandlebar($event, i, stackIndex)"
           (mousedown)="annotationClick($event, annotation, i)"
-          (onDblClick)="dblClick()">
+          (onDblClick)="dblClick(data, stackIndex, annotation, i)">
         </rv-handlebar>
       </div>
     </div>
