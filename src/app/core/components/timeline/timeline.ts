@@ -249,6 +249,10 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     return this.timeline.get('tracks', null).size
   }
 
+  focusAnnotation(focusAnnotation: project.ProjectFocusAnnotationPayload) {
+    this._store.dispatch(new project.ProjectFocusAnnotation(focusAnnotation))
+  }
+
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
   }
