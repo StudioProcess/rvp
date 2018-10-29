@@ -271,10 +271,7 @@ export class ProjectSetActiveTrack implements Action {
 }
 
 export interface ProjectFocusAnnotationPayload {
-  readonly track: Record<Track>
-  readonly trackIndex: number
   readonly annotation: Record<Annotation>
-  readonly annotationIndex: number
 }
 
 export class ProjectFocusAnnotation implements Action {
@@ -386,7 +383,7 @@ export type Actions =
   ProjectExport|ProjectExportError|
   ProjectReset|
   ProjectAddTrack|ProjectUpdateTrack|ProjectDeleteTrack|ProjectDuplicateTrack|ProjectInsertAtTrack|
-  ProjectAddAnnotation|ProjectUpdateAnnotation|
+  ProjectAddAnnotation|ProjectUpdateAnnotation|ProjectFocusAnnotation|
   ProjectDeleteSelectedAnnotations|ProjectSelectAnnotation|
   ProjectResetAnnotationSelection|ProjectCopyAnnotationSelectionToClipboard|ProjectPasteClipBoard|
   ProjectSetTimelineDuration|
