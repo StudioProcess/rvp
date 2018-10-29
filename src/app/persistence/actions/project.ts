@@ -176,14 +176,9 @@ export class ProjectCopyAnnotationSelectionToClipboard implements Action {
   readonly type = PROJECT_COPY_ANNOTATION_SELECTION_TO_CLIPBOARD
 }
 
-export interface PasteClipboardPayload {
-  readonly source: 'toolbar'|'timeline'
-  readonly trackIndex: number
-}
-
 export class ProjectPasteClipBoard implements Action {
   readonly type = PROJECT_PASTE_CLIPBOARD
-  constructor(readonly payload: PasteClipboardPayload) {}
+  constructor() {}
 }
 
 type AddTrackPayload = Partial<Track>
