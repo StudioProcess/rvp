@@ -340,13 +340,8 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     this.onDuplicateTrack.emit({trackIndex})
   }
 
-  dblClick(track: Record<Track>, trackIndex: number, annotation: Record<Annotation>, annotationIndex: number) {
-    this.onDblClickAnnotation.emit({
-      track,
-      trackIndex,
-      annotation,
-      annotationIndex
-    })
+  dblClick(annotation: Record<Annotation>) {
+    this.onDblClickAnnotation.emit({annotation})
   }
 
   ngOnDestroy() {
