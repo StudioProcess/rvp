@@ -65,7 +65,6 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   @Output() readonly onAddAnnotation = new EventEmitter<project.AddAnnotationPayload>()
   @Output() readonly onDuplicateTrack = new EventEmitter<project.DuplicateTrackPayload>()
   @Output() readonly onInsertAtTrack = new EventEmitter<project.TrackInsertAtPayload>()
-  @Output() readonly onPasteAnnotations = new EventEmitter<project.PasteClipboardPayload>()
   @Output() readonly onSetActiveTrack = new EventEmitter<project.ProjectSetActiveTrackPayload>()
 
   private readonly _subs: Subscription[] = []
@@ -93,28 +92,9 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     const titleInputKeydown = fromEvent(this._titleInputRef.nativeElement, 'keydown')
     const formBlur = fromEvent(this._titleInputRef.nativeElement, 'blur')
 
-    const hostMouseEnterTs = fromEvent(this._elem.nativeElement, 'mouseenter').pipe(map(() => Date.now()))
-    const hostMouseLeaveTs = fromEvent(this._elem.nativeElement, 'mouseleave').pipe(map(() => Date.now()), startWith(Date.now()))
-
-    const hostHover = combineLatest(hostMouseEnterTs, hostMouseLeaveTs, (enterTs, leaveTs) => {
-      return enterTs > leaveTs
-    })
-
-    const pasteHotkey: Observable<KeyboardEvent> = fromEvent(window, 'keydown')
-      .pipe(
-        filter((ev: KeyboardEvent) => {
-          return ev.keyCode === 86 && ev.metaKey // cmd v
-        }))
-
     this._subs.push(trackMd.subscribe(() => {
       this.onSetActiveTrack.emit({trackIndex: this.trackIndex})
     }))
-
-    this._subs.push(
-      pasteHotkey.pipe(withLatestFrom(hostHover), filter(([, hover]) => hover))
-        .subscribe(() => {
-          this.onPasteAnnotations.next({source: 'timeline', trackIndex: this.trackIndex})
-        }))
 
     this._subs.push(
       titleInputMd.subscribe((ev: KeyboardEvent) => {
