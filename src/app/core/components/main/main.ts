@@ -85,6 +85,13 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     const windowMousedown = fromEvent(window, 'mousedown') as Observable<MouseEvent>
     const windowKeydown = fromEvent(window,  'keydown') as Observable<KeyboardEvent>
 
+    // cmd v
+    const pasteHotkey: Observable<KeyboardEvent> = windowKeydown
+      .pipe(
+        filter((ev: KeyboardEvent) => {
+          return ev.keyCode === 86 && ev.metaKey
+        }))
+
     // backspace key
     const removeAnnotationHotkey = windowKeydown.pipe(filter(e => e.keyCode === 8))
 
@@ -112,6 +119,12 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     const copyToClipboardHotkey = windowKeydown.pipe(filter(e => {
       return e.keyCode === 67 && e.metaKey // cmd c
     }))
+
+    this._subs.push(
+      pasteHotkey
+        .subscribe(() => {
+          this.pasteAnnotation()
+        }))
 
     this._subs.push(
       copyToClipboardHotkey.subscribe(() => {
