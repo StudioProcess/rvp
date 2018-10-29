@@ -55,6 +55,8 @@ export const PROJECT_SETTINGS_SET_APPLY_TO_TIMELINE = '[PROJECT] Apply To Timeli
 
 export const PROJECT_SET_ACTIVE_TRACK = '[PROJECT] Set Active Track'
 
+export const PROJECT_FOCUS_ANNOTATION = '[PROJECT] Focus Annotation'
+
 export class ProjectLoad implements Action {
   readonly type = PROJECT_LOAD
 }
@@ -266,6 +268,18 @@ export interface ProjectSetActiveTrackPayload {
 export class ProjectSetActiveTrack implements Action {
   readonly type = PROJECT_SET_ACTIVE_TRACK
   constructor(readonly payload: ProjectSetActiveTrackPayload) {}
+}
+
+export interface ProjectFocusAnnotationPayload {
+  readonly track: Record<Track>
+  readonly trackIndex: number
+  readonly annotation: Record<Annotation>
+  readonly annotationIndex: number
+}
+
+export class ProjectFocusAnnotation implements Action {
+  readonly type = PROJECT_FOCUS_ANNOTATION
+  constructor(readonly payload: ProjectFocusAnnotationPayload) {}
 }
 
 /**
