@@ -416,7 +416,6 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state.set('clipboard', all)
     }
     case project.PROJECT_PASTE_CLIPBOARD: {
-      console.log('paste')
       const all = state.get('clipboard', null)!
       if(!all.isEmpty()) {
         const timeline = state.getIn(['meta', 'timeline'])
