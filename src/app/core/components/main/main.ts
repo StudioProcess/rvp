@@ -247,7 +247,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   pasteAnnotation() {
-    this._rootStore.dispatch(new project.ProjectPasteClipBoard({source: 'toolbar', trackIndex: 0}))
+    this._rootStore.dispatch(new project.ProjectPasteClipBoard())
   }
 
   undoAction() {
