@@ -23,13 +23,14 @@ import {InspectorEntryComponent} from './inspectorEntry/inspectorEntry.component
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'rv-inspector',
   template: `
-    <div #wrapper *ngIf="annotations !== null" class="wrapper" [style.max-height.px]="height|async">
+    <div #wrapper *ngIf="annotations !== null" class="wrapper" [style.max-height.px]="height|async" (mouseup)="stopPropagation($event)">
       <rv-inspector-entry
         *ngFor="let annotation of annotations; trackBy: trackByFunc;"
         [entry]="annotation"
         [isSelected]="isSelectedAnnotation(annotation.annotation)"
         (onUpdate)="updateAnnotation($event)"
-        (onSelectAnnotation)="selectAnnotation($event)">
+        (onSelectAnnotation)="selectAnnotation($event)"
+        (onFocusAnnotation)="focusAnnotation($event)">
       </rv-inspector-entry>
     </div>`,
   styles: [`
@@ -117,6 +118,16 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
 
   selectAnnotation(selectAnnotation: project.SelectAnnotationPayload) {
     this._store.dispatch(new project.ProjectSelectAnnotation(selectAnnotation))
+  }
+
+  focusAnnotation(focusAnnotation: project.ProjectFocusAnnotationPayload) {
+    this._store.dispatch(new project.ProjectFocusAnnotation(focusAnnotation))
+  }
+
+  stopPropagation(ev: MouseEvent) {
+    // Stop propagation of mouseups, which would
+    // lead to reset of selection
+    ev.stopPropagation()
   }
 
   ngOnDestroy() {
