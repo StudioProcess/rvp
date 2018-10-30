@@ -22,7 +22,8 @@ import {
 
 import {
   withLatestFrom, map, filter,
-  distinctUntilChanged
+  distinctUntilChanged, buffer,
+  debounceTime
 } from 'rxjs/operators'
 
 import {formatDuration} from '../../../../lib/time'
@@ -32,6 +33,8 @@ import {
   AnnotationFieldsRecordFactory, SelectionSource,
   AnnotationSelectionRecordFactory
 } from '../../../../persistence/model'
+
+import {_MOUSE_DBLCLICK_DEBOUNCE_} from '../../../../config/form'
 
 import * as project from '../../../../persistence/actions/project'
 import {parseDuration} from '../../../../lib/time'
@@ -59,7 +62,9 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   @Output() readonly onUpdate = new EventEmitter<project.UpdateAnnotationPayload>()
   @Output() readonly onSelectAnnotation = new EventEmitter<project.SelectAnnotationPayload>()
+  @Output() readonly onFocusAnnotation = new EventEmitter<project.ProjectFocusAnnotationPayload>()
 
+  @ViewChild('formWrapper') private readonly _formRef: ElementRef
   @ViewChild('start') private readonly _startInputRef: ElementRef
   @ViewChild('duration') private readonly _durationInputRef: ElementRef
   @ViewChild('descr') private readonly _descrInputRef: ElementRef
@@ -96,6 +101,15 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   }
 
   ngAfterViewInit() {
+    const formClick = fromEvent(this._formRef.nativeElement, 'click')
+      .pipe(filter((ev: MouseEvent) => ev.button === 0))
+
+    const formDblClick = formClick
+      .pipe(
+        buffer(formClick.pipe(debounceTime(_MOUSE_DBLCLICK_DEBOUNCE_))),
+        map(clicksInBuffer => clicksInBuffer.length),
+        filter(clicksInBuffer => clicksInBuffer === 2))
+
     const durationKeydown = merge(
       fromEvent(this._startInputRef.nativeElement, 'keydown'),
       fromEvent(this._durationInputRef.nativeElement, 'keydown'))
@@ -110,6 +124,27 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
       fromEvent(this._startInputRef.nativeElement, 'blur'),
       fromEvent(this._durationInputRef.nativeElement, 'blur'),
       fromEvent(this._descrInputRef.nativeElement, 'blur'))
+
+    // Select annotation
+    this._subs.push(
+      formClick.subscribe((ev: MouseEvent) => {
+        this.onSelectAnnotation.emit({
+          type: project.AnnotationSelectionType.Default,
+          selection: AnnotationSelectionRecordFactory({
+            track: this.entry.get('track', null),
+            annotation: this.entry.get('annotation', null),
+            source: SelectionSource.Inspector
+          })
+        })
+      }))
+
+    // Focus annotation
+    this._subs.push(
+      formDblClick.subscribe(() => {
+        this.onFocusAnnotation.emit({
+          annotation: this.entry.get('annotation', null)
+        })
+      }))
 
     this._subs.push(
       formKeydown.subscribe((ev: KeyboardEvent) => {
@@ -178,21 +213,5 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
-  }
-
-  selectAnnotationHandler(ev: MouseEvent) {
-    ev.stopPropagation()
-    // Only consider left clicks
-    if(ev.button !== 0) {
-      return
-    }
-    this.onSelectAnnotation.emit({
-      type: project.AnnotationSelectionType.Default,
-      selection: AnnotationSelectionRecordFactory({
-        track: this.entry.get('track', null),
-        annotation: this.entry.get('annotation', null),
-        source: SelectionSource.Inspector
-      })
-    })
   }
 }
