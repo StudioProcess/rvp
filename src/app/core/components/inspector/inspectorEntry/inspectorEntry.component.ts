@@ -62,7 +62,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   @Output() readonly onUpdate = new EventEmitter<project.UpdateAnnotationPayload>()
   @Output() readonly onSelectAnnotation = new EventEmitter<project.SelectAnnotationPayload>()
-  @Output() readonly onFocusAnnotation = new EventEmitter<project.ProjectFocusAnnotationPayload>()
+  @Output() readonly onFocusAnnotation = new EventEmitter<project.PlayerRequestCurrentTimePayload>()
 
   @ViewChild('formWrapper') private readonly _formRef: ElementRef
   @ViewChild('start') private readonly _startInputRef: ElementRef
@@ -142,7 +142,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     this._subs.push(
       formDblClick.subscribe(() => {
         this.onFocusAnnotation.emit({
-          annotation: this.entry.get('annotation', null)
+          currentTime: this.entry.get('annotation', null).get('utc_timestamp', null)
         })
       }))
 

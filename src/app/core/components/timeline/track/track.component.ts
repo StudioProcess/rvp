@@ -66,7 +66,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   @Output() readonly onDuplicateTrack = new EventEmitter<project.DuplicateTrackPayload>()
   @Output() readonly onInsertAtTrack = new EventEmitter<project.TrackInsertAtPayload>()
   @Output() readonly onSetActiveTrack = new EventEmitter<project.ProjectSetActiveTrackPayload>()
-  @Output() readonly onDblClickAnnotation = new EventEmitter<project.ProjectFocusAnnotationPayload>()
+  @Output() readonly onDblClickAnnotation = new EventEmitter<project.PlayerRequestCurrentTimePayload>()
 
   private readonly _subs: Subscription[] = []
   private readonly _addAnnotationClick = new Subject<{ev: MouseEvent, annotationStackIndex: number}>()
@@ -341,7 +341,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   }
 
   dblClick(annotation: Record<Annotation>) {
-    this.onDblClickAnnotation.emit({annotation})
+    this.onDblClickAnnotation.emit({currentTime: annotation.get('utc_timestamp', null)})
   }
 
   ngOnDestroy() {
