@@ -270,15 +270,6 @@ export class ProjectSetActiveTrack implements Action {
   constructor(readonly payload: ProjectSetActiveTrackPayload) {}
 }
 
-export interface ProjectFocusAnnotationPayload {
-  readonly annotation: Record<Annotation>
-}
-
-export class ProjectFocusAnnotation implements Action {
-  readonly type = PROJECT_FOCUS_ANNOTATION
-  constructor(readonly payload: ProjectFocusAnnotationPayload) {}
-}
-
 /**
  * PLAYER
  */
