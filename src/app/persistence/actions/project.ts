@@ -337,9 +337,13 @@ export class PlayerSetCurrentTime implements Action {
   constructor(readonly payload: {currentTime:number}) {}
 }
 
+export interface PlayerRequestCurrentTimePayload {
+  readonly currentTime: number
+}
+
 export class PlayerRequestCurrentTime implements Action {
   readonly type = PLAYER_REQUEST_CURRENT_TIME
-  constructor(readonly payload: {currentTime:number}) {}
+  constructor(readonly payload: PlayerRequestCurrentTimePayload) {}
 }
 
 // Player dimensions
