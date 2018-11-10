@@ -374,7 +374,7 @@ export type Actions =
   ProjectExport|ProjectExportError|
   ProjectReset|
   ProjectAddTrack|ProjectUpdateTrack|ProjectDeleteTrack|ProjectDuplicateTrack|ProjectInsertAtTrack|
-  ProjectAddAnnotation|ProjectUpdateAnnotation|ProjectFocusAnnotation|
+  ProjectAddAnnotation|ProjectUpdateAnnotation|
   ProjectDeleteSelectedAnnotations|ProjectSelectAnnotation|
   ProjectResetAnnotationSelection|ProjectCopyAnnotationSelectionToClipboard|ProjectPasteClipBoard|
   ProjectSetTimelineDuration|
