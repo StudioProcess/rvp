@@ -120,8 +120,8 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
     this._store.dispatch(new project.ProjectSelectAnnotation(selectAnnotation))
   }
 
-  focusAnnotation(focusAnnotation: project.ProjectFocusAnnotationPayload) {
-    this._store.dispatch(new project.ProjectFocusAnnotation(focusAnnotation))
+  focusAnnotation(focusAnnotation: project.PlayerRequestCurrentTimePayload) {
+    this._store.dispatch(new project.PlayerRequestCurrentTime(focusAnnotation))
   }
 
   stopPropagation(ev: MouseEvent) {
