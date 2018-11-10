@@ -493,9 +493,6 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state
         .setIn(['player', 'width'], action.payload.width)
         .setIn(['player', 'height'], action.payload.height)
-    case project.PROJECT_FOCUS_ANNOTATION:
-      const {annotation} = action.payload
-      return state.setIn(['player', 'currentTime'], annotation.get('utc_timestamp', 0))
     default: {
       return state
     }
