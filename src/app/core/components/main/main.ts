@@ -7,7 +7,7 @@ import {
 import {Store} from '@ngrx/store'
 
 import {Observable, Subscription, fromEvent} from 'rxjs'
-import {filter, pairwise} from 'rxjs/operators'
+import {filter, pairwise, withLatestFrom} from 'rxjs/operators'
 
 import * as fromRoot from '../../reducers'
 import * as project from '../../../persistence/actions/project'
@@ -61,7 +61,9 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       }
     }))
 
-    this._subs.push(this._rootStore.select(fromProject.getProjectHasActiveTrack).subscribe(hasActiveTrack => {
+    const hasActiveTrack = this._rootStore.select(fromProject.getProjectHasActiveTrack)
+
+    this._subs.push(hasActiveTrack.subscribe(hasActiveTrack => {
       this.hasActiveTrack = hasActiveTrack
     }))
 
@@ -128,9 +130,13 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       return e.keyCode === 67 && e.metaKey // cmd c
     }))
 
-    this._subs.push(addAnnotationHotkey.subscribe((e: any) => {
-      console.log(e)
-    }))
+    this._subs.push(
+      addAnnotationHotkey.pipe(
+        withLatestFrom(hasActiveTrack),
+        filter(([, hasActiveTrack]) => hasActiveTrack === true))
+      .subscribe(() => {
+        this.addAnnotation()
+      }))
 
     this._subs.push(
       pasteHotkey
