@@ -285,7 +285,8 @@ export class ServerProxy implements OnDestroy {
             filter(action => {
               return action.type !== project.PROJECT_SET_TIMELINE_DURATION &&
                 action.type !== project.PROJECT_UNDO &&
-                action.type !== project.PROJECT_REDO
+                action.type !== project.PROJECT_REDO &&
+                action.type !== project.PROJECT_LOAD_SUCCESS
             }),
             withLatestFrom(projectState.pipe(pairwise()))
           ).subscribe(([_, [prevState, __]]) => {
