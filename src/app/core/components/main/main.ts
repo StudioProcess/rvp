@@ -7,7 +7,7 @@ import {
 import {Store} from '@ngrx/store'
 
 import {Observable, Subscription, fromEvent} from 'rxjs'
-import {filter} from 'rxjs/operators'
+import {filter, pairwise} from 'rxjs/operators'
 
 import * as fromRoot from '../../reducers'
 import * as project from '../../../persistence/actions/project'
@@ -85,6 +85,14 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     const windowMousedown = fromEvent(window, 'mousedown') as Observable<MouseEvent>
     const windowKeydown = fromEvent(window,  'keydown') as Observable<KeyboardEvent>
 
+    const windowKeydownPairs = windowKeydown.pipe(pairwise())
+
+    // A + enter (shift a + enter)
+    const addAnnotationHotkey = windowKeydownPairs.pipe(filter(([e1, e2]) => {
+      return e1.keyCode === 65 && e1.shiftKey === true && // shift A
+        e2.keyCode === 13 // enter
+    }))
+
     // cmd v
     const pasteHotkey: Observable<KeyboardEvent> = windowKeydown
       .pipe(
@@ -118,6 +126,10 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     // cmd c
     const copyToClipboardHotkey = windowKeydown.pipe(filter(e => {
       return e.keyCode === 67 && e.metaKey // cmd c
+    }))
+
+    this._subs.push(addAnnotationHotkey.subscribe((e: any) => {
+      console.log(e)
     }))
 
     this._subs.push(
