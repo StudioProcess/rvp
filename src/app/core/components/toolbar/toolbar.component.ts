@@ -103,6 +103,10 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
     }))
   }
 
+  toolbarClick($event: MouseEvent) {
+    $event.stopPropagation()
+  }
+
   actionBtnClick($event: MouseEvent, btnId: string) {
     // $event.preventDefault()
     // $event.stopPropagation()
