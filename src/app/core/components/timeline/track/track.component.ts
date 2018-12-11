@@ -76,6 +76,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   @ViewChild('title') private readonly _titleInputRef: ElementRef
   @ViewChild('trackOverflow') private readonly _overflowContainerRef: ElementRef
   @ViewChild('zoomContainer') private readonly _zoomContainerRef: ElementRef
+  @ViewChild('trackBtn') private readonly _trackBtnRef: ElementRef
 
   constructor(
     private readonly _elem: ElementRef,
@@ -92,6 +93,13 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     const titleInputMd = fromEvent(this._titleInputRef.nativeElement, 'mousedown')
     const titleInputKeydown = fromEvent(this._titleInputRef.nativeElement, 'keydown')
     const formBlur = fromEvent(this._titleInputRef.nativeElement, 'blur')
+
+    const trackBtnMd = fromEvent(this._trackBtnRef.nativeElement, 'mousedown')
+
+    this._subs.push(trackBtnMd.subscribe((ev: KeyboardEvent) => {
+      ev.stopPropagation()
+      this.onSetActiveTrack.emit({trackIndex: this.trackIndex})
+    }))
 
     this._subs.push(trackMd.subscribe(() => {
       this.onSetActiveTrack.emit({trackIndex: this.trackIndex})
