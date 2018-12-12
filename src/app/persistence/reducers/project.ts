@@ -176,11 +176,11 @@ export function reducer(state: State = initialState, action: project.Actions): S
     }
     case project.PROJECT_DELETE_SELECTED_ANNOTATIONS: {
       const all = getAllSelections(state)
-      const selectedAnnotations = all.map(annotationSelection => {
-        return annotationSelection.get('annotation', null)!
-      })
+      // const selectedAnnotations = all.map(annotationSelection => {
+      //   return annotationSelection.get('annotation', null)!
+      // })
 
-      const selectedAnnotationsList = selectedAnnotations.toList()
+      // const selectedAnnotationsList = selectedAnnotations.toList()
 
       if(!all.isEmpty()) {
         const firstSelAnnotation = all.first() as Record<AnnotationSelection>
@@ -191,7 +191,13 @@ export function reducer(state: State = initialState, action: project.Actions): S
 
         const timelineDuration = state.getIn(['meta', 'timeline', 'duration'])
 
-        const updatedStacks = embedAnnotations(timelineDuration, annotationStacks, 0, List([]), selectedAnnotationsList)
+        let updatedStacks = annotationStacks
+        all.forEach(removeAnnotationSel => {
+          const annotation = removeAnnotationSel.get('annotation', null)!
+          const annotationStackIndex = removeAnnotationSel.get('annotationStackIndex', null)!
+
+          updatedStacks = embedAnnotations(timelineDuration, updatedStacks, annotationStackIndex, List([]), List([annotation]))
+        })
 
         // const updatedStacks = annotationStacks.map(stack => {
         //   return stack.filter(ann => {
