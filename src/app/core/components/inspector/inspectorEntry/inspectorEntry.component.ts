@@ -132,6 +132,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
           type: project.AnnotationSelectionType.Default,
           selection: AnnotationSelectionRecordFactory({
             track: this.entry.get('track', null),
+            annotationStackIndex: this.entry.get('annotationStackIndex', null),
             annotation: this.entry.get('annotation', null),
             source: SelectionSource.Inspector
           })
