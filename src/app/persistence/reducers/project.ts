@@ -180,6 +180,8 @@ export function reducer(state: State = initialState, action: project.Actions): S
         return annotationSelection.get('annotation', null)!
       })
 
+      const selectedAnnotationsList = selectedAnnotations.toList()
+
       if(!all.isEmpty()) {
         const firstSelAnnotation = all.first() as Record<AnnotationSelection>
         const selectedTrack = firstSelAnnotation.get('track', null)!
@@ -187,16 +189,20 @@ export function reducer(state: State = initialState, action: project.Actions): S
         const trackIndex = tracks.findIndex(t => t.get('id', null) === selectedTrack.get('id', null))!
         const annotationStacks: List<List<Record<Annotation>>> = tracks.get(trackIndex)!.get('annotationStacks', null)
 
-        const updatedStacks = annotationStacks.map(stack => {
-          return stack.filter(ann => {
-            return !selectedAnnotations.has(ann)
-          })
-        })
+        const timelineDuration = state.getIn(['meta', 'timeline', 'duration'])
+
+        const updatedStacks = embedAnnotations(timelineDuration, annotationStacks, 0, List([]), selectedAnnotationsList)
+
+        // const updatedStacks = annotationStacks.map(stack => {
+        //   return stack.filter(ann => {
+        //     return !selectedAnnotations.has(ann)
+        //   })
+        // })
 
         // remove stacks without annotations
-        const cleanedStacks = updatedStacks.size > 1 ? updatedStacks.filter(stack => stack.size > 0): updatedStacks
+        // const cleanedStacks = updatedStacks.size > 1 ? updatedStacks.filter(stack => stack.size > 0): updatedStacks
 
-        return state.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], cleanedStacks)
+        return state.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], updatedStacks)
           .setIn(['selection', 'annotation', 'range'], Set())
           .setIn(['selection', 'annotation', 'pick'], Set())
           .setIn(['selection', 'annotation', 'selected'], null)
