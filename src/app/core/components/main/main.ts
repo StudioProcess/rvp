@@ -95,6 +95,13 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
         e2.keyCode === 13 // enter
     }))
 
+    // Prevent default enter key
+    this._subs.push(
+      windowKeydown.pipe(filter(e => e.keyCode === 13))
+        .subscribe(e => {
+          e.preventDefault()
+        }))
+
     // cmd v
     const pasteHotkey: Observable<KeyboardEvent> = windowKeydown
       .pipe(
