@@ -199,12 +199,6 @@ export function reducer(state: State = initialState, action: project.Actions): S
           updatedStacks = embedAnnotations(timelineDuration, updatedStacks, annotationStackIndex, List([]), List([annotation]))
         })
 
-        // const updatedStacks = annotationStacks.map(stack => {
-        //   return stack.filter(ann => {
-        //     return !selectedAnnotations.has(ann)
-        //   })
-        // })
-
         // remove stacks without annotations
         const cleanedStacks = updatedStacks.size > 1 ? updatedStacks.filter(stack => stack.size > 0): updatedStacks
 
