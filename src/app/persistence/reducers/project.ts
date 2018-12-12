@@ -206,9 +206,9 @@ export function reducer(state: State = initialState, action: project.Actions): S
         // })
 
         // remove stacks without annotations
-        // const cleanedStacks = updatedStacks.size > 1 ? updatedStacks.filter(stack => stack.size > 0): updatedStacks
+        const cleanedStacks = updatedStacks.size > 1 ? updatedStacks.filter(stack => stack.size > 0): updatedStacks
 
-        return state.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], updatedStacks)
+        return state.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], cleanedStacks)
           .setIn(['selection', 'annotation', 'range'], Set())
           .setIn(['selection', 'annotation', 'pick'], Set())
           .setIn(['selection', 'annotation', 'selected'], null)
