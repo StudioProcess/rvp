@@ -191,6 +191,17 @@ export function reducer(state: State = initialState, action: project.Actions): S
 
         const timelineDuration = state.getIn(['meta', 'timeline', 'duration'])
 
+        /**
+         * TODO:
+         * This is a quick fix solution.
+         * Removing the selected annotations should not be implemented via `forEach`.
+         * Instead one single call to `embedAnnotations(...)` with the list of
+         * selected annotation to be removed.
+         * Currently `embedAnnotations` only supports removing a single annotation at a time
+         * due to historical reasons.
+         * `embedAnnotations` needs to be adapted to support removing a list of annotations in a
+         * single call.
+         */
         let updatedStacks = annotationStacks
         all.forEach(removeAnnotationSel => {
           const annotation = removeAnnotationSel.get('annotation', null)!
