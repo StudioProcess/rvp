@@ -70,12 +70,14 @@ export const enum SelectionSource {
 
 export const AnnotationSelectionRecordFactory = Record<AnnotationSelection>({
   track: null,
+  annotationStackIndex: null,
   annotation: null,
   source: SelectionSource.None
 })
 
 export interface AnnotationSelection {
   readonly track: Record<Track>|null
+  readonly annotationStackIndex: number|null
   readonly annotation: Record<Annotation>|null
   readonly source: SelectionSource
 }
