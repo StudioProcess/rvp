@@ -1,6 +1,7 @@
+<div class="active-track" *ngIf="data.get('isActive', null)"></div>
 <div class="row title-row">
   <div class="column shrink" [formGroup]="form">
-    <div class="track-color" [style.color]="data.get('color', null)">
+    <div #trackBtn class="track-color" [style.color]="data.get('color', null)">
       <i class="ion-ios-disc" title="Track Color"></i>
     </div>
     <input #title class="title-input" placeholder="Track Title" title="Track Title" formControlName="title">
@@ -25,7 +26,8 @@
           [width]="getAnnotationWidth(annotation)"
           [isSelected]="isSelectedAnnotation(annotation)"
           (onHandlebarUpdate)="updateHandlebar($event, i, stackIndex)"
-          (mousedown)="annotationClick($event, annotation, i)">
+          (mousedown)="annotationClick($event, annotation, stackIndex)"
+          (onDblClick)="dblClick(annotation)">
         </rv-handlebar>
       </div>
     </div>

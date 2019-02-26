@@ -6,6 +6,7 @@ export interface Project {
   readonly meta: Record<ProjectMeta>|null
   readonly settings: Record<ProjectSettings>
   readonly videoBlob: Blob|null
+  readonly player: Record<ProjectPlayerState>
   readonly selection: Record<ProjectSelection>
   readonly snapshots: ProjectSnapshots
   readonly clipboard: Set<Record<AnnotationSelection>>
@@ -45,6 +46,12 @@ export interface ProjectSettings {
   readonly applyToTimeline: boolean
 }
 
+export interface ProjectPlayerState {
+  readonly currentTime: number
+  readonly width: number
+  readonly height: number
+}
+
 export interface ProjectSelection {
   readonly annotation: Record<ProjectAnnotationSelection>
 }
@@ -63,12 +70,14 @@ export const enum SelectionSource {
 
 export const AnnotationSelectionRecordFactory = Record<AnnotationSelection>({
   track: null,
+  annotationStackIndex: null,
   annotation: null,
   source: SelectionSource.None
 })
 
 export interface AnnotationSelection {
   readonly track: Record<Track>|null
+  readonly annotationStackIndex: number|null
   readonly annotation: Record<Annotation>|null
   readonly source: SelectionSource
 }
@@ -100,6 +109,7 @@ export interface Timeline {
 
 export interface Track {
   readonly id: number|null
+  readonly isActive: boolean
   readonly color: string
   readonly fields: Record<TrackFields>
   readonly annotationStacks: List<List<Record<Annotation>>>
@@ -164,9 +174,16 @@ export const ProjectSelectionRecordFactory = Record<ProjectSelection>({
   annotation: new ProjectAnnotationSelectionRecordFactory()
 })
 
+export const ProjectPlayerStateRecordFactory = Record<ProjectPlayerState>({
+  currentTime: 0,
+  width: 0,
+  height: 0
+})
+
 export const ProjectRecordFactory = Record<Project>({
   meta: null,
   settings: new ProjectSettingsRecordFactory(),
+  player: new ProjectPlayerStateRecordFactory(),
   videoBlob: null,
   selection: new ProjectSelectionRecordFactory(),
   snapshots: new ProjectSnapshotsRecordFactory(),
@@ -188,6 +205,7 @@ export const TrackFieldsRecordFactory = Record<TrackFields>({
 
 export const TrackRecordFactory = Record<Track>({
   id: null,
+  isActive: false,
   color: '#000',
   fields: new TrackFieldsRecordFactory(),
   annotationStacks: List([List([])])

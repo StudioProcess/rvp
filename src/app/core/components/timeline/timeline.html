@@ -16,7 +16,8 @@
     (onUpdateAnnotation)="updateAnnotation($event)"
     (onSelectAnnotation)="selectAnnotation($event)"
     (onAddAnnotation)="addAnnotation($event)"
-    (onPasteAnnotations)="pasteAnnotations($event)">
+    (onSetActiveTrack)="setActiveTrack($event)"
+    (onDblClickAnnotation)="focusAnnotation($event)">
   </rv-track>
   <div #playheadOverflow class="playhead-wrapper">
     <div #playheadZoom class="playhead-zoom" [style.width.%]="pZoom*100">

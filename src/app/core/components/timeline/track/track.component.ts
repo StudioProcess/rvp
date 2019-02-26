@@ -36,6 +36,7 @@ import {ScrollSettings} from '../timeline'
 
 interface EmitAnnotationSelectionArgs {
   readonly track: Record<Track>
+  readonly annotationStackIndex: number,
   readonly annotation: Record<Annotation>
   readonly type: project.AnnotationSelectionType
 }
@@ -65,16 +66,18 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   @Output() readonly onAddAnnotation = new EventEmitter<project.AddAnnotationPayload>()
   @Output() readonly onDuplicateTrack = new EventEmitter<project.DuplicateTrackPayload>()
   @Output() readonly onInsertAtTrack = new EventEmitter<project.TrackInsertAtPayload>()
-  @Output() readonly onPasteAnnotations = new EventEmitter<project.PasteClipboardPayload>()
+  @Output() readonly onSetActiveTrack = new EventEmitter<project.ProjectSetActiveTrackPayload>()
+  @Output() readonly onDblClickAnnotation = new EventEmitter<project.PlayerRequestCurrentTimePayload>()
 
   private readonly _subs: Subscription[] = []
   private readonly _addAnnotationClick = new Subject<{ev: MouseEvent, annotationStackIndex: number}>()
   private readonly _updateAnnotationSubj = new Subject<{hb: Handlebar, annotationIndex: number, annotationStackIndex: number}>()
-  private readonly _annotationMdSubj = new Subject<{ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number}>()
+  private readonly _annotationMdSubj = new Subject<{ev: MouseEvent, annotation: Record<Annotation>, annotationStackIndex: number}>()
 
   @ViewChild('title') private readonly _titleInputRef: ElementRef
   @ViewChild('trackOverflow') private readonly _overflowContainerRef: ElementRef
   @ViewChild('zoomContainer') private readonly _zoomContainerRef: ElementRef
+  @ViewChild('trackBtn') private readonly _trackBtnRef: ElementRef
 
   constructor(
     private readonly _elem: ElementRef,
@@ -86,32 +89,27 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
       title: [this.data.getIn(['fields', 'title']), Validators.required]
     })
 
+    const trackMd = fromEvent(this._elem.nativeElement, 'mousedown')
+
     const titleInputMd = fromEvent(this._titleInputRef.nativeElement, 'mousedown')
     const titleInputKeydown = fromEvent(this._titleInputRef.nativeElement, 'keydown')
     const formBlur = fromEvent(this._titleInputRef.nativeElement, 'blur')
 
-    const hostMouseEnterTs = fromEvent(this._elem.nativeElement, 'mouseenter').pipe(map(() => Date.now()))
-    const hostMouseLeaveTs = fromEvent(this._elem.nativeElement, 'mouseleave').pipe(map(() => Date.now()), startWith(Date.now()))
+    const trackBtnMd = fromEvent(this._trackBtnRef.nativeElement, 'mousedown')
 
-    const hostHover = combineLatest(hostMouseEnterTs, hostMouseLeaveTs, (enterTs, leaveTs) => {
-      return enterTs > leaveTs
-    })
+    this._subs.push(trackBtnMd.subscribe((ev: KeyboardEvent) => {
+      ev.stopPropagation()
+      this.onSetActiveTrack.emit({trackIndex: this.trackIndex})
+    }))
 
-    const pasteHotkey: Observable<KeyboardEvent> = fromEvent(window, 'keydown')
-      .pipe(
-        filter((ev: KeyboardEvent) => {
-          return ev.keyCode === 86 && ev.metaKey // cmd v
-        }))
-
-    this._subs.push(
-      pasteHotkey.pipe(withLatestFrom(hostHover), filter(([, hover]) => hover))
-        .subscribe(() => {
-          this.onPasteAnnotations.next({trackIndex: this.trackIndex})
-        }))
+    this._subs.push(trackMd.subscribe(() => {
+      this.onSetActiveTrack.emit({trackIndex: this.trackIndex})
+    }))
 
     this._subs.push(
       titleInputMd.subscribe((ev: KeyboardEvent) => {
         ev.stopPropagation()
+        this.onSetActiveTrack.emit({trackIndex: this.trackIndex})
       }))
 
     this._subs.push(
@@ -157,13 +155,14 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
             const perc = localX/rect.width*100
             const tPerc = this.totalDuration/100
             return {
+              source: 'timeline',
               trackIndex: this.trackIndex,
               annotationStackIndex,
               annotation: new AnnotationRecordFactory({
                 utc_timestamp: perc*tPerc,
                 duration: 2
               })
-            }
+            } as project.AddAnnotationPayload
           }))
         .subscribe(this.onAddAnnotation))
 
@@ -201,22 +200,25 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     const rangeClick = this._annotationMdSubj.pipe(filter(({ev}) => ev.shiftKey && !ev.metaKey))
     const pickClick = this._annotationMdSubj.pipe(filter(({ev}) => !ev.shiftKey && ev.metaKey))
 
-    defaultClick.subscribe(({annotationIndex, annotation}) => {
+    defaultClick.subscribe(({annotationStackIndex, annotation}) => {
       this._emitSelectAnnotation({
+        annotationStackIndex,
         type: project.AnnotationSelectionType.Default,
         track: this.data, annotation
       })
     })
 
-    rangeClick.subscribe(({annotationIndex, annotation}) => {
+    rangeClick.subscribe(({annotationStackIndex, annotation}) => {
       this._emitSelectAnnotation({
+        annotationStackIndex,
         type: project.AnnotationSelectionType.Range,
         track: this.data, annotation
       })
     })
 
-    pickClick.subscribe(({annotationIndex, annotation}) => {
+    pickClick.subscribe(({annotationStackIndex, annotation}) => {
       this._emitSelectAnnotation({
+        annotationStackIndex,
         type: project.AnnotationSelectionType.Pick,
         track: this.data, annotation
       })
@@ -257,11 +259,11 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
       }))
   }
 
-  private _emitSelectAnnotation({track, annotation, type}: EmitAnnotationSelectionArgs) {
+  private _emitSelectAnnotation({track, annotationStackIndex, annotation, type}: EmitAnnotationSelectionArgs) {
     this.onSelectAnnotation.emit({
       type,
       selection: AnnotationSelectionRecordFactory({
-        track, annotation,
+        track, annotationStackIndex, annotation,
         source: SelectionSource.Timeline
       })
     })
@@ -320,10 +322,11 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     }
   }
 
-  annotationClick(ev: MouseEvent, annotation: Record<Annotation>, annotationIndex: number) {
+  annotationClick(ev: MouseEvent, annotation: Record<Annotation>, annotationStackIndex: number) {
     ev.stopPropagation()
     if(ev.button !== 0) {return}
-    this._annotationMdSubj.next({ev, annotation, annotationIndex})
+    this.onSetActiveTrack.emit({trackIndex: this.trackIndex})
+    this._annotationMdSubj.next({ev, annotation, annotationStackIndex})
   }
 
   addAnnotation(ev: MouseEvent, annotationStackIndex: number) {
@@ -347,6 +350,10 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     $event.stopPropagation()
     if($event.button !== 0) {return}
     this.onDuplicateTrack.emit({trackIndex})
+  }
+
+  dblClick(annotation: Record<Annotation>) {
+    this.onDblClickAnnotation.emit({currentTime: annotation.get('utc_timestamp', null)})
   }
 
   ngOnDestroy() {

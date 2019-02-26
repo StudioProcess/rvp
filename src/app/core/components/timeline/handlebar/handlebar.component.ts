@@ -4,7 +4,7 @@ import {
   ChangeDetectionStrategy, OnInit,
   OnDestroy, Input, HostBinding,
   Output, ChangeDetectorRef, OnChanges,
-  SimpleChanges
+  SimpleChanges, EventEmitter
 } from '@angular/core'
 
 import {DOCUMENT} from '@angular/platform-browser'
@@ -35,7 +35,7 @@ export interface Handlebar {
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'rv-handlebar',
   template: `
-    <div class="handlebar">
+    <div class="handlebar" (dblclick)="dblClick($event)">
       <div #leftHandle class="left-handle"><i class="ion-md-arrow-dropright"></i></div>
       <div #middleHandle class="content">{{caption}}</div>
       <div #rightHandle class="right-handle"><i class="ion-md-arrow-dropleft"></i></div>
@@ -65,6 +65,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   private readonly _syncValueSubj = new Subject<Handlebar>()
   private readonly _handlebarSubj = new ReplaySubject<Handlebar>(1)
   @Output() readonly onHandlebarUpdate = new ReplaySubject<Handlebar>(1)
+  @Output() readonly onDblClick = new EventEmitter()
 
   private readonly _subs: Subscription[] = []
 
@@ -216,6 +217,12 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
         this._syncValueSubj.next({source: 'extern', left: this.internLeft, width: newWidth, move: 'noopMove'})
       }
     }
+  }
+
+  dblClick(ev: MouseEvent) {
+    ev.stopPropagation()
+
+    this.onDblClick.emit()
   }
 
   ngOnDestroy() {

@@ -13,7 +13,6 @@ import {Store} from '@ngrx/store'
 
 import * as project from '../../../persistence/actions/project'
 import * as fromProject from '../../../persistence/reducers'
-import * as fromPlayer from '../../../player/reducers'
 import {
   AnnotationColorMap, Annotation,
   SelectionSource, AnnotationSelection
@@ -24,13 +23,14 @@ import {InspectorEntryComponent} from './inspectorEntry/inspectorEntry.component
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'rv-inspector',
   template: `
-    <div #wrapper *ngIf="annotations !== null" class="wrapper" [style.max-height.px]="height|async">
+    <div #wrapper *ngIf="annotations !== null" class="wrapper" [style.max-height.px]="height|async" (mouseup)="stopPropagation($event)">
       <rv-inspector-entry
         *ngFor="let annotation of annotations; trackBy: trackByFunc;"
         [entry]="annotation"
         [isSelected]="isSelectedAnnotation(annotation.annotation)"
         (onUpdate)="updateAnnotation($event)"
-        (onSelectAnnotation)="selectAnnotation($event)">
+        (onSelectAnnotation)="selectAnnotation($event)"
+        (onFocusAnnotation)="focusAnnotation($event)">
       </rv-inspector-entry>
     </div>`,
   styles: [`
@@ -45,13 +45,12 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren(InspectorEntryComponent) private readonly _entries: QueryList<InspectorEntryComponent>
   private readonly _subs: Subscription[] = []
   annotations: List<Record<AnnotationColorMap>>
-  height = this._playerStore.select(fromPlayer.getDimensions).pipe(map(({height}) => height))
+  height = this._store.select(fromProject.getDimensions).pipe(map(({height}) => height))
   selectedAnnotations: Set<Record<Annotation>>
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
-    private readonly _store: Store<fromProject.State>,
-    private readonly _playerStore: Store<fromPlayer.State>) {}
+    private readonly _store: Store<fromProject.State>) {}
 
   trackByFunc(_: number, annotation: Record<AnnotationColorMap>) {
     return annotation.getIn(['annotation', 'id'])
@@ -119,6 +118,16 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
 
   selectAnnotation(selectAnnotation: project.SelectAnnotationPayload) {
     this._store.dispatch(new project.ProjectSelectAnnotation(selectAnnotation))
+  }
+
+  focusAnnotation(focusAnnotation: project.PlayerRequestCurrentTimePayload) {
+    this._store.dispatch(new project.PlayerRequestCurrentTime(focusAnnotation))
+  }
+
+  stopPropagation(ev: MouseEvent) {
+    // Stop propagation of mouseups, which would
+    // lead to reset of selection
+    ev.stopPropagation()
   }
 
   ngOnDestroy() {

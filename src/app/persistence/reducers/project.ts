@@ -12,7 +12,7 @@ import {
   ProjectSnapshotRecordFactory, Track, Annotation,
   AnnotationSelection, AnnotationSelectionRecordFactory,
   BlobVideoRecordFactory, UrlVideoRecordFactory,
-  VIDEO_TYPE_BLOB, VIDEO_TYPE_URL, VideoUrlSource
+  VIDEO_TYPE_BLOB, VIDEO_TYPE_URL, VideoUrlSource, ProjectPlayerStateRecordFactory
 } from '../model'
 
 import {embedAnnotations} from '../../lib/annotationStack'
@@ -83,6 +83,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       // Create immutable representation
       return new ProjectRecordFactory({
         videoBlob: video === null ? prevVideoBlob: video,
+        player: state.get('player', new ProjectPlayerStateRecordFactory()),
         meta: ProjectMetaRecordFactory({
           id,
           video: videoMeta === null ? prevVideoMeta : (videoMeta.type === VIDEO_TYPE_BLOB ? BlobVideoRecordFactory(videoMeta) : UrlVideoRecordFactory(videoMeta)),
@@ -134,15 +135,23 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state.setIn(['meta', 'timeline', 'duration'], action.payload.duration)
     }
     case project.PROJECT_ADD_ANNOTATION: {
-      const {trackIndex, annotationStackIndex, annotation} = action.payload
+      const {trackIndex, annotationStackIndex, annotation, source} = action.payload
 
-      const annotationStacks = state.getIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'])
+      let placedTrackIndex = trackIndex
+      let placedAnnotation = annotation
+      if(source === 'toolbar') {
+        const tracks = state.getIn(['meta', 'timeline', 'tracks']) as List<Record<Track>>
+        placedTrackIndex = tracks.findIndex(track => track.get('isActive', false))
+        placedAnnotation = annotation.set('utc_timestamp', state.getIn(['player', 'currentTime']))
+      }
+
+      const annotationStacks = state.getIn(['meta', 'timeline', 'tracks', placedTrackIndex, 'annotationStacks'])
       const newId = nextAnnotationId(state.getIn(['meta', 'timeline']))
-      const newAnnotation = annotation.set('id', newId)
+      const newAnnotation = placedAnnotation.set('id', newId)
       const timelineDuration = state.getIn(['meta', 'timeline', 'duration'])
 
       const stacksWithEmbedded = embedAnnotations(timelineDuration, annotationStacks, annotationStackIndex, List([newAnnotation]), List([]))
-      return state.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], stacksWithEmbedded)
+      return state.setIn(['meta', 'timeline', 'tracks', placedTrackIndex, 'annotationStacks'], stacksWithEmbedded)
     }
     case project.PROJECT_UPDATE_ANNOTATION: {
       const {trackIndex, annotationIndex, annotationStackIndex, annotation} = action.payload
@@ -167,9 +176,11 @@ export function reducer(state: State = initialState, action: project.Actions): S
     }
     case project.PROJECT_DELETE_SELECTED_ANNOTATIONS: {
       const all = getAllSelections(state)
-      const selectedAnnotations = all.map(annotationSelection => {
-        return annotationSelection.get('annotation', null)!
-      })
+      // const selectedAnnotations = all.map(annotationSelection => {
+      //   return annotationSelection.get('annotation', null)!
+      // })
+
+      // const selectedAnnotationsList = selectedAnnotations.toList()
 
       if(!all.isEmpty()) {
         const firstSelAnnotation = all.first() as Record<AnnotationSelection>
@@ -178,10 +189,25 @@ export function reducer(state: State = initialState, action: project.Actions): S
         const trackIndex = tracks.findIndex(t => t.get('id', null) === selectedTrack.get('id', null))!
         const annotationStacks: List<List<Record<Annotation>>> = tracks.get(trackIndex)!.get('annotationStacks', null)
 
-        const updatedStacks = annotationStacks.map(stack => {
-          return stack.filter(ann => {
-            return !selectedAnnotations.has(ann)
-          })
+        const timelineDuration = state.getIn(['meta', 'timeline', 'duration'])
+
+        /**
+         * TODO:
+         * This is a quick fix solution.
+         * Removing the selected annotations should not be implemented via `forEach`.
+         * Instead one single call to `embedAnnotations(...)` with the list of
+         * selected annotation to be removed.
+         * Currently `embedAnnotations` only supports removing a single annotation at a time
+         * due to historical reasons.
+         * `embedAnnotations` needs to be adapted to support removing a list of annotations in a
+         * single call.
+         */
+        let updatedStacks = annotationStacks
+        all.forEach(removeAnnotationSel => {
+          const annotation = removeAnnotationSel.get('annotation', null)!
+          const annotationStackIndex = removeAnnotationSel.get('annotationStackIndex', null)!
+
+          updatedStacks = embedAnnotations(timelineDuration, updatedStacks, annotationStackIndex, List([]), List([annotation]))
         })
 
         // remove stacks without annotations
@@ -407,11 +433,13 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state.set('clipboard', all)
     }
     case project.PROJECT_PASTE_CLIPBOARD: {
-      const {trackIndex} = action.payload
       const all = state.get('clipboard', null)!
       if(!all.isEmpty()) {
         const timeline = state.getIn(['meta', 'timeline'])
-        const annotationStacks: List<List<Record<Annotation>>> = state.getIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'])
+
+        const tracks = state.getIn(['meta', 'timeline', 'tracks']) as List<Record<Track>>
+        const placedTrackIndex = tracks.findIndex(track => track.get('isActive', false))
+        const placedAnnotationStacks = state.getIn(['meta', 'timeline', 'tracks', placedTrackIndex, 'annotationStacks'])
 
         const idOffset = nextAnnotationId(timeline)
         const newAnnotations = all.toList().map((annotationSelection, i) => {
@@ -420,10 +448,32 @@ export function reducer(state: State = initialState, action: project.Actions): S
         })
         const timelineDuration = state.getIn(['meta', 'timeline', 'duration'])
 
-        const stacksWithEmbedded = embedAnnotations(timelineDuration, annotationStacks, 0, newAnnotations, List([]))
+        const sortedNewAnnotations = newAnnotations.sort((a1, a2) => {
+          const a1Start = a1.get('utc_timestamp', 0)
+          const a2Start = a2.get('utc_timestamp', 0)
+          if(a1Start < a2Start) {
+            return -1
+          } else if(a1Start > a2Start) {
+            return 1
+          } else {
+            return 0
+          }
+        })
+
+        const firstNewAnnotation = sortedNewAnnotations.get(0)!
+
+        const duration = state.getIn(['meta', 'timeline', 'duration']) as number
+        const currentTime = state.getIn(['player', 'currentTime']) as number
+        const playHeadDiff = currentTime-firstNewAnnotation.get('utc_timestamp', 0)
+
+        const placedNewAnnotations = sortedNewAnnotations.map(a => {
+          return a.set('utc_timestamp', Math.min(a.get('utc_timestamp', 0)+playHeadDiff, duration-a.get('duration', 0)))
+        })
+
+        const stacksWithEmbedded = embedAnnotations(timelineDuration, placedAnnotationStacks, 0, placedNewAnnotations, List([]))
 
         return state.withMutations(mState => {
-          mState.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], stacksWithEmbedded)
+          mState.setIn(['meta', 'timeline', 'tracks', placedTrackIndex, 'annotationStacks'], stacksWithEmbedded)
         })
       } else {
         return state
@@ -440,6 +490,26 @@ export function reducer(state: State = initialState, action: project.Actions): S
     case project.PROJECT_SETTINGS_SET_APPLY_TO_TIMELINE: {
       return state.setIn(['settings', 'applyToTimeline'], action.payload)
     }
+    case project.PROJECT_SET_ACTIVE_TRACK: {
+      const activeTrackIndex = action.payload.trackIndex
+      const tracks = state.getIn(['meta', 'timeline', 'tracks']) as List<Record<Track>>
+      const numTracks = tracks.size
+
+      return state.withMutations(mState => {
+        for(let i = 0; i < numTracks; i++) {
+          mState.setIn(['meta', 'timeline', 'tracks', i, 'isActive'], i === activeTrackIndex)
+        }
+      })
+    }
+    case project.PLAYER_CREATE_SUCCESS:
+    case project.PLAYER_DESTROY_SUCCESS:
+      return state
+    case project.PLAYER_SET_CURRENT_TIME:
+      return state.setIn(['player', 'currentTime'], action.payload.currentTime)
+    case project.PLAYER_SET_DIMENSIONS_SUCCESS:
+      return state
+        .setIn(['player', 'width'], action.payload.width)
+        .setIn(['player', 'height'], action.payload.height)
     default: {
       return state
     }
@@ -465,4 +535,10 @@ export const getProjectClipboard = (state: State) => {
 
 export const getProjectSnapshots = (state: State) => {
   return state.get('snapshots', null)
+}
+
+// player
+
+export const getPlayerState = (state: State) => {
+  return state.get('player', null)
 }

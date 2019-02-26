@@ -7,12 +7,11 @@ import {
 import {Store} from '@ngrx/store'
 
 import {Observable, Subscription, fromEvent} from 'rxjs'
-import {filter} from 'rxjs/operators'
+import {filter, pairwise, withLatestFrom} from 'rxjs/operators'
 
 import * as fromRoot from '../../reducers'
 import * as project from '../../../persistence/actions/project'
 import * as fromProject from '../../../persistence/reducers'
-import * as player from '../../../player/actions'
 import {rndColor} from '../../../lib/color'
 import {AnnotationRecordFactory, AnnotationFieldsRecordFactory} from '../../../persistence/model'
 import {_EMPTY_PROJECT_} from '../../../config/project'
@@ -31,6 +30,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   hasRedo: boolean = false
   hasUndo: boolean = false
   hasTracks: boolean = false
+  hasActiveTrack: boolean = false
   currentAnnotationsOnly: boolean = false // show current annotations only
   search: string|null = null
   applyToTimeline: boolean = false
@@ -61,6 +61,12 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       }
     }))
 
+    const hasActiveTrack = this._rootStore.select(fromProject.getProjectHasActiveTrack)
+
+    this._subs.push(hasActiveTrack.subscribe(hasActiveTrack => {
+      this.hasActiveTrack = hasActiveTrack
+    }))
+
     this._subs.push(this._rootStore.select(fromProject.getProjectSnapshots).subscribe(snapshots => {
       this.hasRedo = snapshots.redo.size > 0
       this.hasUndo = snapshots.undo.size > 0
@@ -80,6 +86,28 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
     const windowMousedown = fromEvent(window, 'mousedown') as Observable<MouseEvent>
     const windowKeydown = fromEvent(window,  'keydown') as Observable<KeyboardEvent>
+
+    const windowKeydownPairs = windowKeydown.pipe(pairwise())
+
+    // A + enter (shift a + enter)
+    const addAnnotationHotkey = windowKeydownPairs.pipe(filter(([e1, e2]) => {
+      return e1.keyCode === 65 && e1.shiftKey === true && // shift A
+        e2.keyCode === 13 // enter
+    }))
+
+    // Prevent default enter key
+    this._subs.push(
+      windowKeydown.pipe(filter(e => e.keyCode === 13))
+        .subscribe(e => {
+          e.preventDefault()
+        }))
+
+    // cmd v
+    const pasteHotkey: Observable<KeyboardEvent> = windowKeydown
+      .pipe(
+        filter((ev: KeyboardEvent) => {
+          return ev.keyCode === 86 && ev.metaKey
+        }))
 
     // backspace key
     const removeAnnotationHotkey = windowKeydown.pipe(filter(e => e.keyCode === 8))
@@ -110,6 +138,20 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     }))
 
     this._subs.push(
+      addAnnotationHotkey.pipe(
+        withLatestFrom(hasActiveTrack),
+        filter(([, hasActiveTrack]) => hasActiveTrack === true))
+      .subscribe(() => {
+        this.addAnnotation()
+      }))
+
+    this._subs.push(
+      pasteHotkey
+        .subscribe(() => {
+          this.pasteAnnotation()
+        }))
+
+    this._subs.push(
       copyToClipboardHotkey.subscribe(() => {
         this.dispatchCopyAnnotation()
       }))
@@ -118,7 +160,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       togglePlayingHotkey.subscribe(ev => {
         ev.preventDefault()
         ev.stopPropagation()
-        this._rootStore.dispatch(new player.PlayerTogglePlaying())
+        this._rootStore.dispatch(new project.PlayerTogglePlaying())
       }))
 
     this._subs.push(
@@ -194,6 +236,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
   addAnnotation() {
     this._rootStore.dispatch(new project.ProjectAddAnnotation({
+      source: 'toolbar',
       trackIndex: 0,
       annotationStackIndex: 0,
       annotation: AnnotationRecordFactory({
@@ -229,7 +272,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   pasteAnnotation() {
-    this._rootStore.dispatch(new project.ProjectPasteClipBoard({trackIndex: 0}))
+    this._rootStore.dispatch(new project.ProjectPasteClipBoard())
   }
 
   undoAction() {

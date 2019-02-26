@@ -18,8 +18,7 @@ import {
 } from 'rxjs/operators'
 
 import * as fromProject from '../../../persistence/reducers'
-import * as fromPlayer from '../../../player/reducers'
-import * as player from '../../../player/actions'
+import * as project from '../../../persistence/actions/project'
 
 import {
   _PLAYER_OPTIONS_,
@@ -45,24 +44,23 @@ export class PlayerContainer implements AfterViewInit, OnDestroy {
 
   constructor(
     private readonly _hostElem: ElementRef,
-    private readonly _projectStore: Store<fromProject.State>,
-    private readonly _store: Store<fromPlayer.State>) {}
+    private readonly _store: Store<fromProject.State>) {}
 
   ngAfterViewInit() {
     const getClientRect = () => this._hostElem.nativeElement.getBoundingClientRect()
 
-    this._store.dispatch(new player.PlayerCreate({
+    this._store.dispatch(new project.PlayerCreate({
       elemRef: this._videoElemRef,
       playerOptions: _PLAYER_OPTIONS_
     }))
 
-    const setSource: Observable<{type: string, src: string}|null> = this._projectStore.select(fromProject.getProjectVideoMeta)
+    const setSource: Observable<{type: string, src: string}|null> = this._store.select(fromProject.getProjectVideoMeta)
       .pipe(
         filter(videoMeta => videoMeta !== null),
         concatMap(videoMeta => {
           switch(videoMeta!.get('type', null)) {
             case VIDEO_TYPE_BLOB:
-              return this._projectStore.select(fromProject.getProjectVideoBlob)
+              return this._store.select(fromProject.getProjectVideoBlob)
                 .pipe(
                   filter(blob => blob !== null),
                   take(1),
@@ -89,7 +87,7 @@ export class PlayerContainer implements AfterViewInit, OnDestroy {
 
     this._subs.push(
       setSource.subscribe((src: any) => {
-        this._store.dispatch(new player.PlayerSetSource(src))
+        this._store.dispatch(new project.PlayerSetSource(src))
       }))
 
     this._subs.push(
@@ -99,7 +97,7 @@ export class PlayerContainer implements AfterViewInit, OnDestroy {
           map(getClientRect),
           startWith(getClientRect()))
         .subscribe(({width}) => {
-          this._store.dispatch(new player.PlayerSetDimensions({
+          this._store.dispatch(new project.PlayerSetDimensions({
             width, height: width / _PLAYER_ASPECT_RATIO_
           }))
       }))
@@ -108,6 +106,6 @@ export class PlayerContainer implements AfterViewInit, OnDestroy {
   ngOnDestroy() {
     this._subs.forEach(s => s.unsubscribe())
 
-    this._store.dispatch(new player.PlayerDestroy())
+    this._store.dispatch(new project.PlayerDestroy())
   }
 }

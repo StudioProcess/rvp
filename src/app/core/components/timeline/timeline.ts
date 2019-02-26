@@ -23,9 +23,7 @@ import {
 } from 'rxjs/operators'
 
 import * as fromProject from '../../../persistence/reducers'
-import * as fromPlayer from '../../../player/reducers'
 import * as project from '../../../persistence/actions/project'
-import * as player from '../../../player/actions'
 import {Timeline, Track, Annotation} from '../../../persistence/model'
 import {HandlebarComponent} from '../../components/timeline/handlebar/handlebar.component'
 import {_SCROLLBAR_CAPTION_} from '../../../config/timeline/scrollbar'
@@ -83,7 +81,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
         }))
 
     this._subs.push(
-      this._store.select(fromPlayer.getCurrentTime)
+      this._store.select(fromProject.getCurrentTime)
         .pipe(
           withLatestFrom(this._timelineSubj, (currentTime, timeline) => {
             return {
@@ -203,7 +201,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
         this.playerPos = progress
         this.playerCurrentTime = currentTime
         this._cdr.markForCheck()
-        this._store.dispatch(new player.PlayerRequestCurrentTime({currentTime}))
+        this._store.dispatch(new project.PlayerRequestCurrentTime({currentTime}))
       }))
   }
 
@@ -243,12 +241,16 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     this._store.dispatch(new project.ProjectInsertAtTrack(insertTrackAt))
   }
 
-  pasteAnnotations(pasteAnnotations: project.PasteClipboardPayload) {
-    this._store.dispatch(new project.ProjectPasteClipBoard(pasteAnnotations))
+  setActiveTrack(activeTrack: project.ProjectSetActiveTrackPayload) {
+    this._store.dispatch(new project.ProjectSetActiveTrack(activeTrack))
   }
 
   getNumTracks() {
     return this.timeline.get('tracks', null).size
+  }
+
+  focusAnnotation(focusAnnotation: project.PlayerRequestCurrentTimePayload) {
+    this._store.dispatch(new project.PlayerRequestCurrentTime(focusAnnotation))
   }
 
   ngOnDestroy() {
