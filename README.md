@@ -6,7 +6,7 @@ Research Video is a tool developed by [Process Studio](http://process.studio) an
 
 For updates follow Process Studio on [Twitter](http://twitter.com/studioprocess), [Instagram](https://www.instagram.com/process.studio/) and [Facebook](https://www.facebook.com/studioprocess).
 
-Live version: http://rv.process.studio
+Live version: https://rv.process.studio
 
 
 ## Development server
