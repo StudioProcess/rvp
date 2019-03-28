@@ -18,8 +18,8 @@ import {VIDEO_TYPE_BLOB} from '../../persistence/model'
 
 import {
   _PROJECT_DEFAULT_PATH_, _PROJECT_METADATA_PATH_,
-  _PROJECT_VIDEODATA_PATH_, _PROJECT_EXPORT_NAME_,
-  _PROJECT_AUTOSAVE_DEBOUNCE_
+  _PROJECT_VIDEODATA_PATH_, _PROJECT_AUTOSAVE_DEBOUNCE_,
+  _PROJECT_DEFAULT_TITLE_
 } from '../../config/project'
 import {_ZIP_DEFAULT_OTPIONS_} from '../../config/zip'
 import {LFCache} from '../cache/LFCache'
@@ -69,6 +69,7 @@ export class ServerProxy implements OnDestroy {
 
                 // mutates project data
                 ensureValidProjectData(projectData)
+                //console.log(/*projectData,*/ meta)
 
                 this._store.dispatch(new project.ProjectLoadSuccess({meta, video}))
               } else {
@@ -76,6 +77,7 @@ export class ServerProxy implements OnDestroy {
 
                 // mutates project data
                 ensureValidProjectData(projectData)
+                //console.log (projectData);
 
                 const cachePromises = [
                   this._cache.cache('meta', projectData.meta),
@@ -160,7 +162,8 @@ export class ServerProxy implements OnDestroy {
                 zip.file(`${_PROJECT_VIDEODATA_PATH_}`, video as Blob)
 
                 const zipBlob = await zip.generateAsync(_ZIP_DEFAULT_OTPIONS_) as Blob
-                saveAs(zipBlob, _PROJECT_EXPORT_NAME_)
+                const export_name = ((meta.general! && meta.general!.title!) ? meta.general.title : _PROJECT_DEFAULT_TITLE_) + '.rv'
+                saveAs(zipBlob, export_name)
               } catch(err) {
                 this._store.dispatch(new project.ProjectExportError(err))
               }
@@ -259,6 +262,7 @@ export class ServerProxy implements OnDestroy {
 
       const projectUpdate =
         this._actions.pipe(filter(action => {
+          //console.log(action)
           return action.type === project.PROJECT_UPDATE_ANNOTATION ||
             action.type === project.PROJECT_ADD_ANNOTATION ||
             action.type === project.PROJECT_DELETE_SELECTED_ANNOTATIONS ||
@@ -273,7 +277,8 @@ export class ServerProxy implements OnDestroy {
             action.type === project.PROJECT_REDO ||
             action.type === project.PROJECT_IMPORT_VIDEO_SUCCESS ||
             action.type === project.PROJECT_LOAD_SUCCESS ||
-            action.type === project.PROJECT_UPDATE_HASHTAGS
+            action.type === project.PROJECT_UPDATE_HASHTAGS ||
+            action.type === project.PROJECT_UPDATE_TITLE
         }))
 
       this._subs.push(
@@ -307,6 +312,7 @@ export class ServerProxy implements OnDestroy {
               timestamp: Date.now(),
               state: projState
             })
+            //console.log (projState, snapshot);
             this._store.dispatch(new project.ProjectPushUndo(snapshot))
           }))
     }

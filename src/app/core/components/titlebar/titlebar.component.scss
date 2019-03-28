@@ -1,0 +1,40 @@
+:host {
+  display: block;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-top: 10px;
+}
+
+form {
+  &.project-title {
+    display: inline-block;
+    width: 90%;
+
+    .title-wrapper {
+      margin: 0 0 0 5px;
+
+      input {
+        position: relative;
+        top: 2px;
+        padding: 4px 5px;
+        border-radius: 2px;
+        border: solid 1px #FFFFFF;
+        //font-size: 1.2em;
+        font-size: 20px;
+        outline: none;
+        -webkit-box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        box-shadow: none !important;
+
+        &:hover {
+          border-color: #CCC;
+        }
+        &:focus {
+          border-color: #000000;
+        }
+      }
+    }
+  }
+}
