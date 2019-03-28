@@ -1,7 +1,8 @@
 import {NgModule} from '@angular/core'
 import {CommonModule} from '@angular/common'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
-import { ContenteditableModule } from '@ng-stack/contenteditable'
+import {ContenteditableModule} from '@ng-stack/contenteditable'
+import {AutoSizeInputModule} from 'ngx-autosize-input';
 
 import {MainContainer} from './components/main/main'
 import {PlayerContainer} from './components/player/player'
@@ -17,6 +18,7 @@ import {VersionComponent} from './components/version/version.component'
 import {ToolbarComponent} from './components/toolbar/toolbar.component'
 import {ProgressModalComponent} from './components/project/progress-modal/progress-modal.component'
 import {TaggingComponent} from './components/tagging/tagging.component'
+import {TitlebarComponent} from './components/titlebar/titlebar.component'
 
 // Inspector components
 import {InspectorEntryComponent} from './components/inspector/inspectorEntry/inspectorEntry.component'
@@ -33,7 +35,7 @@ const _DECLS_ = [
   // Components
   NotFoundComponent, LogoComponent, VersionComponent,
   ProjectBtnComponent, ProjectModalComponent, FooterComponent,
-  ToolbarComponent, ProgressModalComponent,
+  ToolbarComponent, ProgressModalComponent, TitlebarComponent,
   // Inspector
   InspectorEntryComponent,
   // Timeline
@@ -48,6 +50,7 @@ const _DECLS_ = [
     ReactiveFormsModule,
     FormsModule,
     ContenteditableModule,
+    AutoSizeInputModule
   ],
   declarations: _DECLS_,
   exports: _DECLS_,

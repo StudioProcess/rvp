@@ -57,6 +57,7 @@
     "localforage": "^1.7.2",
     "moment": "^2.22.2",
     "natives": "^1.1.6",
+    "ngx-autosize-input": "^2.2.2",
     "pace-progress": "^1.0.2",
     "rxjs": "~6.2.2",
     "rxjs-compat": "^6.5.2",

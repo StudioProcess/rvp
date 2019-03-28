@@ -114,6 +114,7 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateAnnotation(updateAnnotation: project.UpdateAnnotationPayload) {
+    //console.log (updateAnnotation)
     this._store.dispatch(new project.ProjectUpdateAnnotation(updateAnnotation))
   }
 
