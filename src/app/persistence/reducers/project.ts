@@ -458,7 +458,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
     }
     case project.PROJECT_UPDATE_TITLE: {
       //let a = state.getIn(['meta', 'general'])
-      console.log ('PROJECT_UPDATE_TITLE', action.payload)
+      //console.log ('PROJECT_UPDATE_TITLE', action.payload)
       return state.setIn(['meta', 'general'], action.payload)
     }
     case project.PROJECT_PASTE_CLIPBOARD: {
