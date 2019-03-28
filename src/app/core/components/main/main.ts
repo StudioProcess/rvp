@@ -247,6 +247,11 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     }))
   }
 
+  updateProjectTitle (updateTitle: project.ProjectUpdateTitle) {
+    //console.log ('updateProjectTitle', updateTitle);
+    this._rootStore.dispatch (new project.ProjectUpdateTitle(updateTitle))
+  }
+
   private dispatchDeleteAnnotation() {
     this._rootStore.dispatch(new project.ProjectDeleteSelectedAnnotations())
   }

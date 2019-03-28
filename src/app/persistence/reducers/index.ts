@@ -58,6 +58,10 @@ export const getProjectId = createSelector(getProjectMeta, meta => {
   return meta ? meta.get('id', null): null
 })
 
+export const getProjectGeneralData = createSelector(getProjectMeta, meta => {
+  return meta ? meta.get('general', null): null
+})
+
 export const getProjectVideoMeta = createSelector(getProjectMeta, meta => {
   return meta ? meta.get('video', null): null
 })
@@ -245,4 +249,3 @@ export const getProjectClipboard = createSelector(getProjectState, fromProject.g
 // Snapshots
 
 export const getProjectSnapshots = createSelector(getProjectState, fromProject.getProjectSnapshots)
-

@@ -36,6 +36,7 @@ export const PROJECT_SELECT_ANNOTATION = '[Project] Selection Annotation'
 export const PROJECT_SELECTION_RESETALL_ANNOTATION = '[Project] Reset Annotation Selection'
 export const PROJECT_COPY_ANNOTATION_SELECTION_TO_CLIPBOARD = '[Project] Copy Annotation Selection to Clipboard'
 export const PROJECT_PASTE_CLIPBOARD = '[Project] Paste Annotation Selection form Clipboard'
+export const PROJECT_UPDATE_TITLE = '[Project] Update Projecttitle'
 
 export const PROJECT_ADD_TRACK = '[Project] Add Track'
 export const PROJECT_UPDATE_TRACK = '[Project] Update Track'
@@ -145,6 +146,11 @@ export interface UpdateAnnotationPayload {
   readonly annotation: Record<Annotation>
 }
 
+export interface UpdateProjectTitlePayload {
+  readonly title: string
+  //readonly general: Record<ProjectGeneralData>
+}
+
 export class ProjectUpdateAnnotation implements Action {
   readonly type = PROJECT_UPDATE_ANNOTATION
   constructor(readonly payload: UpdateAnnotationPayload) {}
@@ -181,6 +187,13 @@ export class ProjectCopyAnnotationSelectionToClipboard implements Action {
 export class ProjectPasteClipBoard implements Action {
   readonly type = PROJECT_PASTE_CLIPBOARD
   constructor() {}
+}
+
+export class ProjectUpdateTitle implements Action {
+  readonly type = PROJECT_UPDATE_TITLE
+  constructor(readonly payload: any) {}
+  //constructor(readonly payload: UpdateProjectTitlePayload) {}
+  //constructor(readonly payload: {title : string}) {}
 }
 
 type AddTrackPayload = Partial<Track>
@@ -381,6 +394,7 @@ export type Actions =
   ProjectAddAnnotation|ProjectUpdateAnnotation|
   ProjectDeleteSelectedAnnotations|ProjectSelectAnnotation|
   ProjectResetAnnotationSelection|ProjectCopyAnnotationSelectionToClipboard|ProjectPasteClipBoard|
+  ProjectUpdateTitle|
   ProjectSetTimelineDuration|
   ProjectPushUndo|ProjectUndo|ProjectRedo|
   ProjectSettingsSetCurrentAnnotationsOnly|ProjectSettingsSetSearch|ProjectSettingsSetApplyToTimeline|

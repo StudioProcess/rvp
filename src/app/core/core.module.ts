@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core'
 import {CommonModule} from '@angular/common'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
+import {AutoSizeInputModule} from 'ngx-autosize-input';
 
 import {MainContainer} from './components/main/main'
 import {PlayerContainer} from './components/player/player'
@@ -14,6 +15,7 @@ import {ProjectModalComponent} from './components/project/projectModal/projectMo
 import {FooterComponent} from './components/footer/footer.component'
 import {VersionComponent} from './components/version/version.component'
 import {ToolbarComponent} from './components/toolbar/toolbar.component'
+import {TitlebarComponent} from './components/titlebar/titlebar.component'
 
 // Inspector components
 import {InspectorEntryComponent} from './components/inspector/inspectorEntry/inspectorEntry.component'
@@ -31,6 +33,7 @@ const _DECLS_ = [
   NotFoundComponent, LogoComponent, VersionComponent,
   ProjectBtnComponent, ProjectModalComponent, FooterComponent,
   ToolbarComponent,
+  TitlebarComponent,
   // Inspector
   InspectorEntryComponent,
   // Timeline
@@ -38,7 +41,7 @@ const _DECLS_ = [
 ]
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, AutoSizeInputModule],
   declarations: _DECLS_,
   exports: _DECLS_,
 })

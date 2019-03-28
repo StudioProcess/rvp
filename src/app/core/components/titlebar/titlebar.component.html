@@ -1,0 +1,15 @@
+<rv-logo></rv-logo>
+<form #formWrapper class="project-title" [formGroup]="pnform" novalidate>
+  <div class="title-wrapper">
+    <input
+      #projecttitle
+      type="text"
+      title="Project Title"
+      formControlName="project_title"
+      maxlength="50"
+      AutoSizeInput
+      [includeBorders]="true"
+      [extraWidth]="2"
+    >
+  </div>
+</form>

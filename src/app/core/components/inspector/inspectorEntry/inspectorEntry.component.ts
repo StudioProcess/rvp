@@ -89,9 +89,13 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   ngOnInit() {
     const {
-      utc_timestamp, duration,
+      utc_timestamp,
+      duration,
       description
     } = this._mapModel(this.entry)
+
+    //console.log(this.entry)
+    //console.log (description)
 
     this.form = this._fb.group({
       utc_timestamp: [utc_timestamp, durationValidator],
@@ -207,6 +211,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     if(this.form !== null && changes.entry !== undefined && !changes.entry.firstChange) {
       const {previousValue, currentValue} = changes.entry
       if(previousValue === undefined || !previousValue.equals(currentValue)) {
+        //console.log(previousValue, currentValue)
         this.form.setValue(this._mapModel(currentValue))
       }
     }

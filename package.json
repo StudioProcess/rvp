@@ -3,8 +3,12 @@
   "version": "0.1.0",
   "description": "Research Video Prototype",
   "author": "Studio Process <contact@process.studio>",
-  "maintainers": ["Studio Process <contact@process.studio>"],
-  "contributors": ["Onur Dogangönül <contact@dinony.com>"],
+  "maintainers": [
+    "Studio Process <contact@process.studio>"
+  ],
+  "contributors": [
+    "Onur Dogangönül <contact@dinony.com>"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/StudioProcess/rvp.git"
@@ -51,6 +55,8 @@
     "jszip-utils": "0.0.2",
     "localforage": "^1.7.2",
     "moment": "^2.22.2",
+    "natives": "^1.1.6",
+    "ngx-autosize-input": "^2.2.2",
     "pace-progress": "^1.0.2",
     "rxjs": "~6.2.2",
     "video.js": "^5.20.5",
