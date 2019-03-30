@@ -15,7 +15,7 @@
     "noUnusedParameters": false,
     "pretty": true,
     "target": "es5",
-    "skipLibCheck": true,
+    "keyofStringsOnly": true,
     "lib": [
       "es2015",
       "es2016",
