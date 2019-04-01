@@ -144,6 +144,10 @@
       background-color: #bbb;
       border-radius: 50%;
       cursor: pointer;
+
+      &:focus {
+        outline: none !important;
+      }
     }
   }
 }

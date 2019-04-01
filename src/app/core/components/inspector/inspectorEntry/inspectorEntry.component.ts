@@ -73,6 +73,9 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   private readonly _subs: Subscription[] = []
 
+  //private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
+  private readonly _video_elem = document.querySelector('.video-main-elem video') as HTMLElement
+
   constructor(readonly elem: ElementRef, private readonly _fb: FormBuilder) {}
 
   private _mapModel(entry: Record<AnnotationColorMap>) {
@@ -214,5 +217,11 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
+  }
+
+  pointerAction($event: MouseEvent) {
+    //$event.preventDefault()
+    //$event.stopPropagation()
+    console.log (this._video_elem.offsetWidth, this._video_elem.offsetHeight)
   }
 }
