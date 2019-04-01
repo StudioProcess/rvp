@@ -11,6 +11,13 @@ import {
   Validators, ValidatorFn, ValidationErrors
 } from '@angular/forms'
 
+//type NgElement = import ('@angular/elements').NgElement;
+//type WithProperties<T> = import ('@angular/elements').WithProperties<T>;
+import {
+  NgElement,
+  WithProperties
+} from '@angular/elements'
+
 const _VALID_ = 'VALID' // not exported by @angular/forms
 
 import {Record} from 'immutable'
@@ -73,7 +80,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   private readonly _subs: Subscription[] = []
 
-  //private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
+  private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
   private readonly _video_elem = document.querySelector('.video-main-elem video') as HTMLElement
 
   constructor(readonly elem: ElementRef, private readonly _fb: FormBuilder) {}
@@ -223,5 +230,11 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     //$event.preventDefault()
     //$event.stopPropagation()
     console.log (this._video_elem.offsetWidth, this._video_elem.offsetHeight)
+    const newPointer = document.createElement('rv-pointer-element') as NgElement & WithProperties<{content: string}>;
+    this._video_elem_container.appendChild(newPointer);
+    // newPointer.connect(this._video_elem)
+
+    //document.createElement('rv-pointer-element')
+
   }
 }

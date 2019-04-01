@@ -15,7 +15,8 @@ import {PlayerModule} from './player/player.module'
 import {reducers, metaReducers} from './core/reducers'
 
 // import {AppShellContainer} from './shell'
-import {MainContainer} from './core/components/main/main'
+import {MainContainer} from './core/components/main/main';
+import {PointerElementComponent} from './pointer-element/pointer-element.component'
 
 // import {appRoutes} from './routes'
 
@@ -32,6 +33,7 @@ import {MainContainer} from './core/components/main/main'
     PlayerModule
   ],
   // declarations: [AppShellContainer],
-  bootstrap: [MainContainer]
+  bootstrap: [MainContainer],
+  declarations: [PointerElementComponent]
 })
 export class AppModule {}
