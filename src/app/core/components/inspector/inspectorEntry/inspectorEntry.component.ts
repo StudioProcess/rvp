@@ -3,7 +3,11 @@ import {
   OnInit, OnChanges, AfterViewInit,
   EventEmitter, ViewChild, ElementRef,
   ChangeDetectionStrategy, OnDestroy,
-  SimpleChanges, HostBinding
+  SimpleChanges, HostBinding,
+  ComponentFactoryResolver,
+  Injector,
+  EmbeddedViewRef,
+  ApplicationRef
 } from '@angular/core'
 
 import {
@@ -14,8 +18,8 @@ import {
 //type NgElement = import ('@angular/elements').NgElement;
 //type WithProperties<T> = import ('@angular/elements').WithProperties<T>;
 import {
-  NgElement,
-  WithProperties
+  //NgElement,
+  //WithProperties
 } from '@angular/elements'
 
 const _VALID_ = 'VALID' // not exported by @angular/forms
@@ -45,6 +49,8 @@ import {_MOUSE_DBLCLICK_DEBOUNCE_} from '../../../../config/form'
 
 import * as project from '../../../../persistence/actions/project'
 import {parseDuration} from '../../../../lib/time'
+
+import {PointerElementComponent} from '../../pointer-element/pointer-element.component'
 
 function durationValidatorFactory(): ValidatorFn {
   const durationRegex = /^([0-9]*:){0,2}[0-9]*(\.[0-9]*)?$/
@@ -83,7 +89,13 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
   private readonly _video_elem = document.querySelector('.video-main-elem video') as HTMLElement
 
-  constructor(readonly elem: ElementRef, private readonly _fb: FormBuilder) {}
+  constructor(
+    readonly elem: ElementRef,
+    private readonly _fb: FormBuilder,
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private appRef: ApplicationRef,
+    private injector: Injector
+  ) {}
 
   private _mapModel(entry: Record<AnnotationColorMap>) {
     const utc_timestamp = entry.getIn(['annotation', 'utc_timestamp'])
@@ -230,11 +242,23 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     //$event.preventDefault()
     //$event.stopPropagation()
     console.log (this._video_elem.offsetWidth, this._video_elem.offsetHeight)
-    const newPointer = document.createElement('rv-pointer-element') as NgElement & WithProperties<{content: string}>;
-    this._video_elem_container.appendChild(newPointer);
-    // newPointer.connect(this._video_elem)
+    //const newPointer = document.createElement('rv-pointer-element') as NgElement & WithProperties<{content: string}>;
 
-    //document.createElement('rv-pointer-element')
+    // 1. Create a component reference from the component
+    const componentRef = this.componentFactoryResolver
+      .resolveComponentFactory(PointerElementComponent)
+      .create(this.injector)
 
+    // 2. Attach component to the appRef so that it's inside the ng component tree
+    this.appRef.attachView(componentRef.hostView);
+
+    // 3. Get DOM element from component
+    const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
+      .rootNodes[0] as HTMLElement;
+
+    // 4. Append DOM element to the body
+    this._video_elem_container.appendChild(domElem);
+
+    //console.log(componentRef, domElem)
   }
 }

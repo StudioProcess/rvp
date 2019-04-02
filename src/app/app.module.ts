@@ -16,7 +16,6 @@ import {reducers, metaReducers} from './core/reducers'
 
 // import {AppShellContainer} from './shell'
 import {MainContainer} from './core/components/main/main';
-import {PointerElementComponent} from './pointer-element/pointer-element.component'
 
 // import {appRoutes} from './routes'
 
@@ -34,6 +33,5 @@ import {PointerElementComponent} from './pointer-element/pointer-element.compone
   ],
   // declarations: [AppShellContainer],
   bootstrap: [MainContainer],
-  declarations: [PointerElementComponent]
 })
 export class AppModule {}

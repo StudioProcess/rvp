@@ -14,6 +14,7 @@ import {ProjectModalComponent} from './components/project/projectModal/projectMo
 import {FooterComponent} from './components/footer/footer.component'
 import {VersionComponent} from './components/version/version.component'
 import {ToolbarComponent} from './components/toolbar/toolbar.component'
+import {PointerElementComponent} from './components/pointer-element/pointer-element.component'
 
 // Inspector components
 import {InspectorEntryComponent} from './components/inspector/inspectorEntry/inspectorEntry.component'
@@ -31,6 +32,7 @@ const _DECLS_ = [
   NotFoundComponent, LogoComponent, VersionComponent,
   ProjectBtnComponent, ProjectModalComponent, FooterComponent,
   ToolbarComponent,
+  PointerElementComponent,
   // Inspector
   InspectorEntryComponent,
   // Timeline
@@ -41,5 +43,6 @@ const _DECLS_ = [
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
   declarations: _DECLS_,
   exports: _DECLS_,
+  entryComponents: [PointerElementComponent],
 })
 export class CoreModule {}
