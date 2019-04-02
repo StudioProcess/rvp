@@ -141,8 +141,8 @@ export interface AnnotationColorMap {
 }
 
 export interface PointerElement {
-  readonly x: number|null
-  readonly y: number|null
+  readonly x: number
+  readonly y: number
 }
 
 // Record factories

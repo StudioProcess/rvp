@@ -42,7 +42,8 @@ import {formatDuration} from '../../../../lib/time'
 import {
   AnnotationColorMap, AnnotationRecordFactory,
   AnnotationFieldsRecordFactory, SelectionSource,
-  AnnotationSelectionRecordFactory
+  AnnotationSelectionRecordFactory,
+  PointerElement
 } from '../../../../persistence/model'
 
 import {_MOUSE_DBLCLICK_DEBOUNCE_} from '../../../../config/form'
@@ -239,7 +240,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   }
 
 
-  instantiatePointer(options: Object) {
+  instantiatePointer(options: PointerElement) {
 
     // 1. Create a component reference from the component
     let componentRef = this.componentFactoryResolver
