@@ -257,21 +257,10 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     // 4. Append DOM element
     this._video_elem_container.appendChild(domElem);
 
-    componentRef.instance.left = options.x;
-    componentRef.instance.top = options.y;
+    componentRef.instance.left = options.x
+    componentRef.instance.top = options.y
 
-    componentRef.changeDetectorRef.detectChanges();
-
-    //domElem.
-    //domElem.instance.left = 50
-    /*componentRef.location.nativeElement.style = `
-      left: 50px;
-      top: 30px;
-    `;
-    componentRef.changeDetectorRef.detectChanges();*/
-
-
-
+    //componentRef.changeDetectorRef.detectChanges();
   }
 
   pointerAction($event: MouseEvent) {
