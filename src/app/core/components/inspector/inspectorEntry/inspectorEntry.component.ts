@@ -92,9 +92,9 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   constructor(
     readonly elem: ElementRef,
     private readonly _fb: FormBuilder,
-    private componentFactoryResolver: ComponentFactoryResolver,
-    private appRef: ApplicationRef,
-    private injector: Injector
+    private readonly componentFactoryResolver: ComponentFactoryResolver,
+    private readonly appRef: ApplicationRef,
+    private readonly injector: Injector
   ) {}
 
   private _mapModel(entry: Record<AnnotationColorMap>) {
@@ -238,14 +238,11 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     this._subs.forEach(sub => sub.unsubscribe())
   }
 
-  pointerAction($event: MouseEvent) {
-    //$event.preventDefault()
-    //$event.stopPropagation()
-    console.log (this._video_elem.offsetWidth, this._video_elem.offsetHeight)
-    //const newPointer = document.createElement('rv-pointer-element') as NgElement & WithProperties<{content: string}>;
+
+  instantiatePointer(options: Object) {
 
     // 1. Create a component reference from the component
-    const componentRef = this.componentFactoryResolver
+    let componentRef = this.componentFactoryResolver
       .resolveComponentFactory(PointerElementComponent)
       .create(this.injector)
 
@@ -253,12 +250,39 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     this.appRef.attachView(componentRef.hostView);
 
     // 3. Get DOM element from component
-    const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
+    let domElem = (componentRef.hostView as EmbeddedViewRef<any>)
       .rootNodes[0] as HTMLElement;
 
-    // 4. Append DOM element to the body
+    // 4. Append DOM element
     this._video_elem_container.appendChild(domElem);
 
+    componentRef.instance.left = options.x;
+    componentRef.instance.top = options.y;
+
+    componentRef.changeDetectorRef.detectChanges();
+
+    //domElem.
+    //domElem.instance.left = 50
+    /*componentRef.location.nativeElement.style = `
+      left: 50px;
+      top: 30px;
+    `;
+    componentRef.changeDetectorRef.detectChanges();*/
+
+
+
+  }
+
+  pointerAction($event: MouseEvent) {
+    //$event.preventDefault()
+    //$event.stopPropagation()
+    console.log (this._video_elem.offsetWidth, this._video_elem.offsetHeight)
+    let options = {
+      x: (this._video_elem.offsetWidth / 2),
+      y: (this._video_elem.offsetHeight / 2)
+    }
+    //const newPointer = document.createElement('rv-pointer-element') as NgElement & WithProperties<{content: string}>;
     //console.log(componentRef, domElem)
+    this.instantiatePointer(options)
   }
 }

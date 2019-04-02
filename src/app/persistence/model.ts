@@ -140,6 +140,11 @@ export interface AnnotationColorMap {
   readonly color: string
 }
 
+export interface PointerElement {
+  readonly x: number|null
+  readonly y: number|null
+}
+
 // Record factories
 
 export const ProjectMetaRecordFactory = Record<ProjectMeta>({
