@@ -34,6 +34,10 @@ form {
         &:focus {
           border-color: #000000;
         }
+
+        &.initial-title {
+          color: #CCC;
+        }
       }
     }
   }
