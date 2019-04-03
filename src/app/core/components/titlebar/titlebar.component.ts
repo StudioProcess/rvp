@@ -15,6 +15,8 @@ import {
   Validators
 } from '@angular/forms'
 
+import {Title} from '@angular/platform-browser'
+
 import {
   Subscription,
   fromEvent,
@@ -55,7 +57,8 @@ export class TitlebarComponent implements OnInit {
 
   constructor(
     private readonly formBldr: FormBuilder,
-    private readonly _store: Store<fromProject.State>
+    private readonly _store: Store<fromProject.State>,
+    private titleService: Title
   ) {
     this._store.select(fromProject.getProjectMeta).subscribe(meta => {
       if(meta !== null) {
@@ -84,9 +87,12 @@ export class TitlebarComponent implements OnInit {
       fromEvent(this._projecttitleInputRef.nativeElement, 'blur')
         .subscribe(
           ({project_title}) => {
-            //console.log(this.pnform!.value!.project_title!)
+            let newTitle = this.pnform!.value!.project_title!
+            // reset document title
+            this.titleService.setTitle(newTitle);
+
             this.onTitleUpdate.emit({
-              title: this.pnform!.value!.project_title!
+              title: newTitle
             })
     }))
 
