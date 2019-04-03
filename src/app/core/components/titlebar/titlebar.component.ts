@@ -23,6 +23,7 @@ import {
 } from 'rxjs'
 
 import {
+  _PROJECT_DEFAULT_TITLE_,
   _PROJECT_TITLE_MAX_LENGTH_
 } from '../../../config/project'
 
@@ -45,6 +46,7 @@ import * as fromProject from '../../../persistence/reducers'
 export class TitlebarComponent implements OnInit {
 
   @Input() project_title: string
+  @Input() project_initial_title: boolean
   @Input() readonly general: Record<ProjectGeneralData>
   @Input() readonly maxLength: 5
 
@@ -64,12 +66,14 @@ export class TitlebarComponent implements OnInit {
       if(meta !== null) {
         const title = meta.getIn(['general', 'title'])! as string
         this.pnform!.controls['project_title'].setValue(title) //this.pnform!.patchValue({project_title: title})
+
+        // set css class when default title
+        this.project_initial_title = ((this.pnform!.value!.project_title! === _PROJECT_DEFAULT_TITLE_) ? true : false)
       }
     })
   }
 
   ngOnInit() {
-
     this.pnform = this.formBldr.group({
       project_title: [
         this.project_title,
