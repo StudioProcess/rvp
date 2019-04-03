@@ -92,6 +92,10 @@ export class TitlebarComponent implements OnInit {
         .subscribe(
           ({project_title}) => {
             let newTitle = this.pnform!.value!.project_title!
+            if(newTitle === '') {
+              newTitle = _PROJECT_DEFAULT_TITLE_
+              this.pnform!.patchValue({project_title: newTitle})
+            }
             // reset document title
             this.titleService.setTitle(newTitle);
 

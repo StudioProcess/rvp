@@ -458,7 +458,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state
     }
     case project.PROJECT_UPDATE_TITLE: {
-      if (state.getIn(['meta', 'general'])!.title !== action!.payload!.title) {
+      if (state.getIn(['meta', 'general'])!.title !== action!.payload!.title || action!.payload!.title !== _PROJECT_DEFAULT_TITLE_) {
         return state.setIn(['meta', 'general'], action.payload)
       }
       return state
