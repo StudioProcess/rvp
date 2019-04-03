@@ -20,9 +20,9 @@
   },
   "scripts": {
     "ng": "ng",
-    "prestart": "gulp prep:env",
+    "prestart": "node tools/prepEnv",
     "start": "ng serve",
-    "prebuild": "gulp prep:env",
+    "prebuild": "node tools/prepEnv",
     "build": "ng build",
     "build:prod": "ng build --prod; open dist/",
     "build:prod-old": "ng build --prod --output-hashing none",
@@ -78,9 +78,6 @@
     "@types/node": "~8.9.4",
     "@types/video.js": "^5.16",
     "codelyzer": "^5.0.1",
-    "gulp": "^3.9.1",
-    "gulp-rename": "^1.4.0",
-    "gulp-replace": "^1.0.0",
     "tslint": "~5.11.0",
     "typescript": "~3.4.5"
   }
