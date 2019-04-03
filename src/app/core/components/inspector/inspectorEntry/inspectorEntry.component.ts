@@ -15,12 +15,9 @@ import {
   Validators, ValidatorFn, ValidationErrors
 } from '@angular/forms'
 
-//type NgElement = import ('@angular/elements').NgElement;
-//type WithProperties<T> = import ('@angular/elements').WithProperties<T>;
 /*import {
-  //NgElement,
-  //WithProperties
-} from '@angular/elements'*/
+  CdkDragDrop, moveItemInArray, transferArrayItem
+} from '@angular/cdk/drag-drop'*/
 
 const _VALID_ = 'VALID' // not exported by @angular/forms
 

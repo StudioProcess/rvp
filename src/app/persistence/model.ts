@@ -143,6 +143,7 @@ export interface AnnotationColorMap {
 export interface PointerElement {
   readonly x: number
   readonly y: number
+  //readonly color: string
 }
 
 // Record factories

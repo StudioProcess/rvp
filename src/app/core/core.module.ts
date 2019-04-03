@@ -15,6 +15,7 @@ import {FooterComponent} from './components/footer/footer.component'
 import {VersionComponent} from './components/version/version.component'
 import {ToolbarComponent} from './components/toolbar/toolbar.component'
 import {PointerElementComponent} from './components/pointer-element/pointer-element.component'
+import {DragDropModule} from '@angular/cdk/drag-drop'
 
 // Inspector components
 import {InspectorEntryComponent} from './components/inspector/inspectorEntry/inspectorEntry.component'
@@ -40,7 +41,7 @@ const _DECLS_ = [
 ]
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, DragDropModule],
   declarations: _DECLS_,
   exports: _DECLS_,
   entryComponents: [PointerElementComponent],

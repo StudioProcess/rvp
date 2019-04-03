@@ -5,10 +5,13 @@ import {
   //ViewEncapsulation
 } from '@angular/core';
 
+//import { DragDropModule } from '@angular/cdk/drag-drop';
+
 @Component({
   selector: 'rv-pointer-element',
+  //<div cdkDrag (dropped)="onDrop($event)"
   template: `
-    <div
+    <div cdkDrag
       class="annotation-pointer-element annotation-pointer-dot"
       [style.left.px]="calculatedX"
     >
@@ -37,4 +40,7 @@ export class PointerElementComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  /*onDrop(event: CdkDragDrop<string[]>) {
+  }*/
 }
