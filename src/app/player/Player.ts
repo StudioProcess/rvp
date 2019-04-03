@@ -1,7 +1,7 @@
 import {Injectable, OnDestroy} from '@angular/core'
 
 import {Store} from '@ngrx/store'
-import {Effect, Actions} from '@ngrx/effects'
+import {Effect, Actions, ofType} from '@ngrx/effects'
 
 import * as videojs from 'video.js'
 import 'videojs-vimeo'
@@ -161,22 +161,28 @@ export class Player implements OnDestroy {
     }
 
   @Effect({dispatch: false})
-  readonly createPlayer = this._actions.ofType<project.PlayerCreate>(project.PLAYER_CREATE)
+  //readonly createPlayer = this._actions.ofType<project.PlayerCreate>(project.PLAYER_CREATE)
+  readonly createPlayer = this._actions.pipe(ofType<project.PlayerCreate>(project.PLAYER_CREATE))
 
   @Effect({dispatch: false})
-  readonly destroyPlayer = this._actions.ofType<project.PlayerDestroy>(project.PLAYER_DESTROY)
+  //readonly destroyPlayer = this._actions.ofType<project.PlayerDestroy>(project.PLAYER_DESTROY)
+  readonly destroyPlayer = this._actions.pipe(ofType<project.PlayerDestroy>(project.PLAYER_DESTROY))
 
   @Effect({dispatch: false})
-  readonly setSource = this._actions.ofType<project.PlayerSetSource>(project.PLAYER_SET_SOURCE)
+  //readonly setSource = this._actions.ofType<project.PlayerSetSource>(project.PLAYER_SET_SOURCE)
+  readonly setSource = this._actions.pipe(ofType<project.PlayerSetSource>(project.PLAYER_SET_SOURCE))
 
   @Effect({dispatch: false})
-  readonly setDimensions = this._actions.ofType<project.PlayerSetDimensions>(project.PLAYER_SET_DIMENSIONS)
+  //readonly setDimensions = this._actions.ofType<project.PlayerSetDimensions>(project.PLAYER_SET_DIMENSIONS)
+  readonly setDimensions = this._actions.pipe(ofType<project.PlayerSetDimensions>(project.PLAYER_SET_DIMENSIONS))
 
   @Effect({dispatch: false})
-  readonly requestCurrentTime = this._actions.ofType<project.PlayerRequestCurrentTime>(project.PLAYER_REQUEST_CURRENT_TIME)
+  //readonly requestCurrentTime = this._actions.ofType<project.PlayerRequestCurrentTime>(project.PLAYER_REQUEST_CURRENT_TIME)
+  readonly requestCurrentTime = this._actions.pipe(ofType<project.PlayerRequestCurrentTime>(project.PLAYER_REQUEST_CURRENT_TIME))
 
   @Effect({dispatch: false})
-  readonly togglePlaying = this._actions.ofType<project.PlayerTogglePlaying>(project.PLAYER_TOGGLE_PLAYING)
+  //readonly togglePlaying = this._actions.ofType<project.PlayerTogglePlaying>(project.PLAYER_TOGGLE_PLAYING)
+  readonly togglePlaying = this._actions.pipe(ofType<project.PlayerTogglePlaying>(project.PLAYER_TOGGLE_PLAYING))
 
   ngOnDestroy() {
     this._subs.forEach(s => s.unsubscribe())
