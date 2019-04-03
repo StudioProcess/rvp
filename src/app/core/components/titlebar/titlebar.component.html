@@ -10,6 +10,9 @@
       AutoSizeInput
       [includeBorders]="true"
       [extraWidth]="2"
+      [class.my-class]=""
+      [ngClass]="{'initial-title': project_initial_title}"
+      (click)="!project_initial_title || projecttitle.select()"
     >
   </div>
 </form>
