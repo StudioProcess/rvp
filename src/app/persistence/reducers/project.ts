@@ -458,9 +458,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state
     }
     case project.PROJECT_UPDATE_TITLE: {
-      //let a = state.getIn(['meta', 'general'])
-      //console.log ('PROJECT_UPDATE_TITLE', action.payload)
-      return state.setIn(['meta', 'general'], action.payload)
+      if (state.getIn(['meta', 'general'])!.title !== action!.payload!.title) {
+        return state.setIn(['meta', 'general'], action.payload)
+      }
+      return state
     }
     case project.PROJECT_PASTE_CLIPBOARD: {
       const all = state.get('clipboard', null)!
