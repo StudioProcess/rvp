@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "importHelpers": true,
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
@@ -14,6 +15,7 @@
     "noUnusedParameters": false,
     "pretty": true,
     "target": "es5",
+    "keyofStringsOnly": true,
     "lib": [
       "es2015",
       "es2016",

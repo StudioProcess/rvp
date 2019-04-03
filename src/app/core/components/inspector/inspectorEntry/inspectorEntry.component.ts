@@ -17,10 +17,10 @@ import {
 
 //type NgElement = import ('@angular/elements').NgElement;
 //type WithProperties<T> = import ('@angular/elements').WithProperties<T>;
-import {
+/*import {
   //NgElement,
   //WithProperties
-} from '@angular/elements'
+} from '@angular/elements'*/
 
 const _VALID_ = 'VALID' // not exported by @angular/forms
 
