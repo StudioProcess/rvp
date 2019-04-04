@@ -11,7 +11,7 @@ import {
   selector: 'rv-pointer-element',
   //<div cdkDrag (dropped)="onDrop($event)"
   template: `
-    <div cdkDrag
+    <div cdkDrag cdkDragBoundary=".video-main-elem"
       class="annotation-pointer-element annotation-pointer-dot"
       [style.left.px]="calculatedX"
     >
