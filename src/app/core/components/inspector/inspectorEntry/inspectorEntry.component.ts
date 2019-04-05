@@ -47,8 +47,8 @@ import {_MOUSE_DBLCLICK_DEBOUNCE_} from '../../../../config/form'
 
 import * as project from '../../../../persistence/actions/project'
 import {parseDuration} from '../../../../lib/time'
-
 import {PointerElementComponent} from '../../pointer-element/pointer-element.component'
+import {DomService} from '../../../actions/dom.service'
 
 function durationValidatorFactory(): ValidatorFn {
   const durationRegex = /^([0-9]*:){0,2}[0-9]*(\.[0-9]*)?$/
@@ -83,13 +83,14 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   form: FormGroup|null = null
 
   private readonly _subs: Subscription[] = []
-
   private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
   private readonly _video_elem = document.querySelector('.video-main-elem video') as HTMLElement
+  //private readonly domService = new domService()
 
   constructor(
     readonly elem: ElementRef,
     private readonly _fb: FormBuilder,
+    private readonly _domService: DomService,
     private readonly componentFactoryResolver: ComponentFactoryResolver,
     private readonly appRef: ApplicationRef,
     private readonly injector: Injector
@@ -237,10 +238,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   }
 
   instantiatePointer(options: PointerElement) {
-
-    //const factory = this.resolver.resolveComponentFactory(PointerElementComponent);
-    //this.componentRef = this.entry.createComponent(factory);
-
     // 1. Create a component reference from the component
     let componentRef = this.componentFactoryResolver
       .resolveComponentFactory(PointerElementComponent)
@@ -254,11 +251,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
     // 4. Append DOM element
     this._video_elem_container.appendChild(domElem);
-
-    //componentRef.instance.left = options.x
-    //componentRef.instance.top = options.y
-    componentRef.instance.setPointerTraits(options)
-    //componentRef.changeDetectorRef.detectChanges();
+    console.log(componentRef)
   }
 
   pointerAction($event: MouseEvent) {
@@ -269,10 +262,15 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
       left: (this._video_elem.offsetWidth / 2),
       top: (this._video_elem.offsetHeight / 2),
       active: true
-    }
-    //const newPointer = document.createElement('rv-pointer-element') as NgElement & WithProperties<{content: string}>;
-    //console.log(componentRef, domElem)
-    console.log(options)
-    this.instantiatePointer(options)
+    } as PointerElement
+
+    const componentRef = this._domService.instantiateComponent(PointerElementComponent)
+    const componentRefInstance = this._domService.getInstance(componentRef)
+    this._domService.attachComponent(componentRef, this._video_elem_container)
+    componentRefInstance.setPointerTraits(<PointerElement>options)
+    console.log(options, componentRef.instance)
+    //componentRef.instance.left = options.left
+    //componentRef.instance.top = options.top
+    //componentRef.changeDetectorRef.detectChanges();
   }
 }

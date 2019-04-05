@@ -50,6 +50,8 @@ export class PointerElementComponent implements OnInit {
   @HostBinding('style.left.px') left: number
   @HostBinding('style.top.px') top: number
 
+  //private readonly active: boolean
+
   //@Output() dropped = new EventEmitter<CdkDragDrop<any>>()
   //@Output('cdkDragDropped') dropped: EventEmitter<CdkDragDrop<any>>
   //@HostListener('window:mouseup', ['$event']) mouseUp(event: any) {}
@@ -62,8 +64,8 @@ export class PointerElementComponent implements OnInit {
   setPointerTraits(options: PointerElement) {
     this.top = options.top
     this.left = options.left
+    //this.active = options.active
   }
-
   dragStarted(event: CdkDragDrop<string[]>) {
     //console.log('CdkDragStart', event);
   }
@@ -78,7 +80,6 @@ export class PointerElementComponent implements OnInit {
     console.log(boundingClientRect, parentPosition);
     //console.log('x: ' + (boundingClientRect.x - parentPosition.left), 'y: ' + (boundingClientRect.y - parentPosition.top));
   }
-
   getPosition(el: any) {
     let x = 0;
     let y = 0;

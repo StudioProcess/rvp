@@ -25,6 +25,8 @@ import {TrackComponent} from './components/timeline/track/track.component'
 import {HandlebarComponent} from './components/timeline/handlebar/handlebar.component'
 import {PlayheadComponent} from './components/timeline/playhead/playhead.component'
 
+//import {DomService} from './actions/dom.service'
+
 const _DECLS_ = [
   // Containers
   MainContainer, PlayerContainer, InspectorContainer,
@@ -45,5 +47,6 @@ const _DECLS_ = [
   declarations: _DECLS_,
   exports: _DECLS_,
   entryComponents: [PointerElementComponent],
+  //providers: [DomService]
 })
 export class CoreModule {}
