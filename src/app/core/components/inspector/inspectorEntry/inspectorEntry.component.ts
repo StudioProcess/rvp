@@ -236,8 +236,10 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     this._subs.forEach(sub => sub.unsubscribe())
   }
 
-
   instantiatePointer(options: PointerElement) {
+
+    //const factory = this.resolver.resolveComponentFactory(PointerElementComponent);
+    //this.componentRef = this.entry.createComponent(factory);
 
     // 1. Create a component reference from the component
     let componentRef = this.componentFactoryResolver
@@ -248,15 +250,14 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     this.appRef.attachView(componentRef.hostView);
 
     // 3. Get DOM element from component
-    let domElem = (componentRef.hostView as EmbeddedViewRef<any>)
-      .rootNodes[0] as HTMLElement;
+    let domElem = (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
 
     // 4. Append DOM element
     this._video_elem_container.appendChild(domElem);
 
-    componentRef.instance.left = options.x
-    componentRef.instance.top = options.y
-
+    //componentRef.instance.left = options.x
+    //componentRef.instance.top = options.y
+    componentRef.instance.setPointerProps(options)
     //componentRef.changeDetectorRef.detectChanges();
   }
 
@@ -270,6 +271,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     }
     //const newPointer = document.createElement('rv-pointer-element') as NgElement & WithProperties<{content: string}>;
     //console.log(componentRef, domElem)
+    console.log(options)
     this.instantiatePointer(options)
   }
 }

@@ -10,9 +10,13 @@ import {
 
 import {
   //CdkDragExit,
-  CdkDragDrop
   //cdkDragDropped
+  CdkDragDrop
 } from '@angular/cdk/drag-drop';
+
+import {
+  PointerElement
+} from '../../../persistence/model'
 
 @Component({
   selector: 'rv-pointer-element',
@@ -23,7 +27,6 @@ import {
       (cdkDragStarted)="dragStarted($event)"
       (cdkDragReleased)="dragReleased($event)"
       (cdkDragEnded)="dragEnded($event)"
-      [style.left.px]="calculatedX"
       class="annotation-pointer-element annotation-pointer-dot"
     >
     </div>
@@ -56,18 +59,24 @@ export class PointerElementComponent implements OnInit {
   ngOnInit() {
   }
 
+  setPointerProps(options: PointerElement) {
+    this.top = options.y
+    this.left = options.x
+  }
+
   dragStarted(event: CdkDragDrop<string[]>) {
     //console.log('CdkDragStart', event);
   }
   dragEnded(event: CdkDragDrop<string[]>) {
     //console.log('CdkDragEnd', event);
   }
-  dragReleased(event: CdkDragDrop<string[]>) {
-    console.log('cdkDragReleased', event);
-    let element = event.source.getRootElement();
+  dragReleased(event: any) {
+    let element = event!.source!.getRootElement();
+    console.log('cdkDragReleased', event, element);
     let boundingClientRect = element.getBoundingClientRect();
     let parentPosition = this.getPosition(element);
-    console.log('x: ' + (boundingClientRect.x - parentPosition.left), 'y: ' + (boundingClientRect.y - parentPosition.top));
+    console.log(boundingClientRect, parentPosition);
+    //console.log('x: ' + (boundingClientRect.x - parentPosition.left), 'y: ' + (boundingClientRect.y - parentPosition.top));
   }
 
   getPosition(el: any) {
