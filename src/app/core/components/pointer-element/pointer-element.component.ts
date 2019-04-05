@@ -59,9 +59,9 @@ export class PointerElementComponent implements OnInit {
   ngOnInit() {
   }
 
-  setPointerProps(options: PointerElement) {
-    this.top = options.y
-    this.left = options.x
+  setPointerTraits(options: PointerElement) {
+    this.top = options.top
+    this.left = options.left
   }
 
   dragStarted(event: CdkDragDrop<string[]>) {

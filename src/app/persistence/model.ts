@@ -141,8 +141,9 @@ export interface AnnotationColorMap {
 }
 
 export interface PointerElement {
-  readonly x: number
-  readonly y: number
+  readonly left: number
+  readonly top: number
+  readonly active: boolean
   //readonly color: string
 }
 

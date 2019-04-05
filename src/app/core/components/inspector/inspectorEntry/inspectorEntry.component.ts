@@ -257,7 +257,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
     //componentRef.instance.left = options.x
     //componentRef.instance.top = options.y
-    componentRef.instance.setPointerProps(options)
+    componentRef.instance.setPointerTraits(options)
     //componentRef.changeDetectorRef.detectChanges();
   }
 
@@ -266,8 +266,9 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     //$event.stopPropagation()
     console.log (this._video_elem.offsetWidth, this._video_elem.offsetHeight)
     let options = {
-      x: (this._video_elem.offsetWidth / 2),
-      y: (this._video_elem.offsetHeight / 2)
+      left: (this._video_elem.offsetWidth / 2),
+      top: (this._video_elem.offsetHeight / 2),
+      active: true
     }
     //const newPointer = document.createElement('rv-pointer-element') as NgElement & WithProperties<{content: string}>;
     //console.log(componentRef, domElem)
