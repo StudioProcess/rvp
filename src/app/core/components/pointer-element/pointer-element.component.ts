@@ -35,6 +35,9 @@ import {
   styles: [`
     :host {
       position: absolute;
+      width: 0;
+      height: 0;
+      z-index: 10000;
     }
     .annotation-pointer-element {
       width: 20px;
@@ -80,7 +83,8 @@ export class PointerElementComponent implements OnInit {
   dragStarted(event: CdkDragDrop<string[]>) {
     //console.log('CdkDragStart', event);
   }
-  dragEnded(event: CdkDragDrop<string[]>) {
+  //dragEnded(event: CdkDragDrop<string[]>) {
+  dragEnded(event: any) {
     this.getPosition(event)
     /*console.log('CdkDragEnd', this.offset)
     console.log('initialPosition', this.initialPosition)*/
@@ -92,5 +96,12 @@ export class PointerElementComponent implements OnInit {
     this.offset = {...(<any>event.source._dragRef)._passiveTransform}
     this.position.left = this.initialPosition.left + this.offset.x
     this.position.top = this.initialPosition.top + this.offset.y
+  }
+  resetPointerPosition(event: any) {
+    // visually reset element to its origin
+    event.source.element.nativeElement.style.transform = 'none'
+    const source: any = event.source
+    // make it so new drag starts from same origin
+    source._passiveTransform = {x: 0, y: 0}
   }
 }

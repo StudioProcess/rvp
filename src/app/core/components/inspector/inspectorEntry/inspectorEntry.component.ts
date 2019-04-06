@@ -80,7 +80,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   private readonly _subs: Subscription[] = []
   private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
-  private readonly _video_elem = document.querySelector('.video-main-elem video') as HTMLElement
+  //private readonly _video_elem = document.querySelector('.video-main-elem video') as HTMLElement
   //private readonly domService = new domService()
 
   constructor(
@@ -233,21 +233,20 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   pointerAction($event: MouseEvent) {
     //$event.preventDefault()
     //$event.stopPropagation()
-    console.log (this._video_elem.offsetWidth, this._video_elem.offsetHeight)
+    console.log (this._video_elem_container.offsetWidth, this._video_elem_container.offsetHeight)
 
     const componentRef = this._domService.instantiateComponent(PointerElementComponent)
     const componentRefInstance = this._domService.getInstance(componentRef)
     this._domService.attachComponent(componentRef, this._video_elem_container)
 
-
-    //console.log(componentRef)
-    console.log(componentRefInstance.element.nativeElement.offsetHeight)
+    const componentWidth = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetWidth
+    const componentHeight = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetHeight
 
     let options = {
-      video_width: this._video_elem.offsetWidth,
-      video_height: this._video_elem.offsetHeight,
-      left: ((this._video_elem.offsetWidth/2) - (componentRefInstance.element.nativeElement.offsetHeight/2)),
-      top: ((this._video_elem.offsetHeight/2) - (componentRefInstance.element.nativeElement.offsetWidth/2)),
+      video_width: this._video_elem_container.offsetWidth,
+      video_height: this._video_elem_container.offsetHeight,
+      left: ((this._video_elem_container.offsetWidth/2)-(componentWidth/2)),
+      top: ((this._video_elem_container.offsetHeight/2)-(componentHeight/2)),
       active: true
     } as PointerElement
 
