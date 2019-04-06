@@ -4,10 +4,6 @@ import {
   EventEmitter, ViewChild, ElementRef,
   ChangeDetectionStrategy, OnDestroy,
   SimpleChanges, HostBinding,
-  ComponentFactoryResolver,
-  Injector,
-  EmbeddedViewRef,
-  ApplicationRef
 } from '@angular/core'
 
 import {
@@ -90,10 +86,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   constructor(
     readonly elem: ElementRef,
     private readonly _fb: FormBuilder,
-    private readonly _domService: DomService,
-    private readonly componentFactoryResolver: ComponentFactoryResolver,
-    private readonly appRef: ApplicationRef,
-    private readonly injector: Injector
+    private readonly _domService: DomService
   ) {}
 
   private _mapModel(entry: Record<AnnotationColorMap>) {
@@ -237,28 +230,13 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     this._subs.forEach(sub => sub.unsubscribe())
   }
 
-  instantiatePointer(options: PointerElement) {
-    // 1. Create a component reference from the component
-    let componentRef = this.componentFactoryResolver
-      .resolveComponentFactory(PointerElementComponent)
-      .create(this.injector)
-
-    // 2. Attach component to the appRef so that it's inside the ng component tree
-    this.appRef.attachView(componentRef.hostView);
-
-    // 3. Get DOM element from component
-    let domElem = (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
-
-    // 4. Append DOM element
-    this._video_elem_container.appendChild(domElem);
-    console.log(componentRef)
-  }
-
   pointerAction($event: MouseEvent) {
     //$event.preventDefault()
     //$event.stopPropagation()
     console.log (this._video_elem.offsetWidth, this._video_elem.offsetHeight)
     let options = {
+      video_width: this._video_elem.offsetWidth,
+      video_height: this._video_elem.offsetHeight,
       left: (this._video_elem.offsetWidth / 2),
       top: (this._video_elem.offsetHeight / 2),
       active: true
@@ -268,7 +246,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     const componentRefInstance = this._domService.getInstance(componentRef)
     this._domService.attachComponent(componentRef, this._video_elem_container)
     componentRefInstance.setPointerTraits(<PointerElement>options)
-    console.log(options, componentRef.instance)
+    console.log(options, componentRef.instance, this.entry.getIn(['annotation', 'id']))
     //componentRef.instance.left = options.left
     //componentRef.instance.top = options.top
     //componentRef.changeDetectorRef.detectChanges();
