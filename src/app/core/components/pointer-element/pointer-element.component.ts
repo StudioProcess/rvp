@@ -52,53 +52,45 @@ export class PointerElementComponent implements OnInit {
   @HostBinding('style.top.px') top: number
 
   public active: boolean
-  public initialPosition = {left: 0, top: 0}
-  public position = {...this.initialPosition}
-  public offset = {x: 0, y: 0}
+  public offset: any
+  public position: any // {...this.initialPosition}
+  public initialPosition: any
+  public width: number
+  public height: number
 
   //@Output() dropped = new EventEmitter<CdkDragDrop<any>>()
   //@Output('cdkDragDropped') dropped: EventEmitter<CdkDragDrop<any>>
   //@HostListener('window:mouseup', ['$event']) mouseUp(event: any) {}
 
   constructor(private element: ElementRef) {
+    this.height = this.element.nativeElement.offsetHeight
+    this.width = this.element.nativeElement.offsetWidth
   }
 
   ngOnInit() {
   }
 
   setPointerTraits(options: PointerElement) {
-    const elementHeight = this.element.nativeElement.offsetHeight
-    const elementWidth = this.element.nativeElement.offsetWidth
-
-    this.top = (options.top - (elementHeight / 2))
-    this.left = (options.left - (elementWidth / 2))
+    this.top = options.top
+    this.left = options.left
     this.active = options.active
     this.position = options
-    this.initialPosition = Object.assign({}, options)
+    this.initialPosition = {...options}
   }
   dragStarted(event: CdkDragDrop<string[]>) {
     //console.log('CdkDragStart', event);
   }
-  dragEnded(event: any) {
-    this.offset = {...(<any>event.source._dragRef)._passiveTransform}
-    this.position.left = this.initialPosition.left + this.offset.x
-    this.position.top = this.initialPosition.top + this.offset.y
-
+  dragEnded(event: CdkDragDrop<string[]>) {
+    this.getPosition(event)
     /*console.log('CdkDragEnd', this.offset)
     console.log('initialPosition', this.initialPosition)*/
     console.log('position', this.position)
   }
   dragReleased(event: any) {
   }
-  getPosition(el: any) {
-    let x = 0;
-    let y = 0;
-    console.log('getPosition', el.scrollLeft, el.scrollTop)
-    while(el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
-      x += el.offsetLeft - el.scrollLeft;
-      y += el.offsetTop - el.scrollTop;
-      el = el.offsetParent;
-    }
-    return { top: y, left: x };
+  getPosition(event: any) {
+    this.offset = {...(<any>event.source._dragRef)._passiveTransform}
+    this.position.left = this.initialPosition.left + this.offset.x
+    this.position.top = this.initialPosition.top + this.offset.y
   }
 }

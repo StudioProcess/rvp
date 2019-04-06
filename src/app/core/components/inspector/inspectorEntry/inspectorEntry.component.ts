@@ -234,17 +234,23 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     //$event.preventDefault()
     //$event.stopPropagation()
     console.log (this._video_elem.offsetWidth, this._video_elem.offsetHeight)
-    let options = {
-      video_width: this._video_elem.offsetWidth,
-      video_height: this._video_elem.offsetHeight,
-      left: (this._video_elem.offsetWidth / 2),
-      top: (this._video_elem.offsetHeight / 2),
-      active: true
-    } as PointerElement
 
     const componentRef = this._domService.instantiateComponent(PointerElementComponent)
     const componentRefInstance = this._domService.getInstance(componentRef)
     this._domService.attachComponent(componentRef, this._video_elem_container)
+
+
+    //console.log(componentRef)
+    console.log(componentRefInstance.element.nativeElement.offsetHeight)
+
+    let options = {
+      video_width: this._video_elem.offsetWidth,
+      video_height: this._video_elem.offsetHeight,
+      left: ((this._video_elem.offsetWidth/2) - (componentRefInstance.element.nativeElement.offsetHeight/2)),
+      top: ((this._video_elem.offsetHeight/2) - (componentRefInstance.element.nativeElement.offsetWidth/2)),
+      active: true
+    } as PointerElement
+
     componentRefInstance.setPointerTraits(<PointerElement>options)
     console.log(options, componentRef.instance, this.entry.getIn(['annotation', 'id']))
     //componentRef.instance.left = options.left
