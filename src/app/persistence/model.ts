@@ -144,7 +144,8 @@ export interface PointerElement {
   readonly left: number
   readonly top: number
   readonly active: boolean
-  //readonly color: string
+  readonly zIndex: number
+  readonly bgcolor: string
 }
 
 // Record factories

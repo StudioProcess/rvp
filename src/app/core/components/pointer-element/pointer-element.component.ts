@@ -28,6 +28,8 @@ import {
       (cdkDragStarted)="dragStarted($event)"
       (cdkDragReleased)="dragReleased($event)"
       (cdkDragEnded)="dragEnded($event)"
+      (cdkDragEntered)="dragEntered($event)"
+      (mousedown)="mousedown()"
       class="annotation-pointer-element annotation-pointer-dot"
     >
     </div>
@@ -37,7 +39,7 @@ import {
       position: absolute;
       width: 0;
       height: 0;
-      z-index: 10000;
+      z-index: 1;
     }
     .annotation-pointer-element {
       width: 20px;
@@ -51,8 +53,9 @@ import {
 })
 export class PointerElementComponent implements OnInit {
 
-  @HostBinding('style.left.px') left: number
   @HostBinding('style.top.px') top: number
+  @HostBinding('style.left.px') left: number
+  @HostBinding('style.zIndex') zIndex: number
 
   public active: boolean
   public offset: any
@@ -60,14 +63,21 @@ export class PointerElementComponent implements OnInit {
   public initialPosition: any
   public width: number
   public height: number
+  public bgcolor: string
 
   //@Output() dropped = new EventEmitter<CdkDragDrop<any>>()
   //@Output('cdkDragDropped') dropped: EventEmitter<CdkDragDrop<any>>
-  //@HostListener('window:mouseup', ['$event']) mouseUp(event: any) {}
+  /*@HostListener('window:mouseup', ['$event']) mouseUp(event: any) {
+    console.log('mouseup')
+  }
+  @HostListener('window:mousedown', ['$event']) onMouseDown(event: any) {
+    console.log('mousedown')
+  }*/
 
   constructor(private element: ElementRef) {
     this.height = this.element.nativeElement.offsetHeight
     this.width = this.element.nativeElement.offsetWidth
+    this.position = {}
   }
 
   ngOnInit() {
@@ -77,8 +87,14 @@ export class PointerElementComponent implements OnInit {
     this.top = options.top
     this.left = options.left
     this.active = options.active
-    this.position = options
-    this.initialPosition = {...options}
+    this.zIndex = options.zIndex
+    this.position.top = options.top
+    this.position.left = options.left
+    this.initialPosition = {...this.position}
+    this.element.nativeElement.querySelector('.annotation-pointer-element').style.backgroundColor = options.bgcolor
+  }
+  dragEntered(event: any) {
+    console.log('dragEntered')
   }
   dragStarted(event: CdkDragDrop<string[]>) {
     //console.log('CdkDragStart', event);
@@ -92,16 +108,24 @@ export class PointerElementComponent implements OnInit {
   }
   dragReleased(event: any) {
   }
+  mousedown() {
+    console.log('mousedown')
+    this.zIndex += 1;
+  }
   getPosition(event: any) {
     this.offset = {...(<any>event.source._dragRef)._passiveTransform}
     this.position.left = this.initialPosition.left + this.offset.x
     this.position.top = this.initialPosition.top + this.offset.y
   }
   resetPointerPosition(event: any) {
-    // visually reset element to its origin
+    /**
+     * visually reset element to its origin
+     */
     event.source.element.nativeElement.style.transform = 'none'
     const source: any = event.source
-    // make it so new drag starts from same origin
+    /**
+     * make it so new drag starts from same origin
+     */
     source._passiveTransform = {x: 0, y: 0}
   }
 }

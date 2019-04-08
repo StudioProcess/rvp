@@ -11,10 +11,6 @@ import {
   Validators, ValidatorFn, ValidationErrors
 } from '@angular/forms'
 
-/*import {
-  CdkDragDrop, moveItemInArray, transferArrayItem
-} from '@angular/cdk/drag-drop'*/
-
 const _VALID_ = 'VALID' // not exported by @angular/forms
 
 import {Record} from 'immutable'
@@ -247,7 +243,9 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
       video_height: this._video_elem_container.offsetHeight,
       left: ((this._video_elem_container.offsetWidth/2)-(componentWidth/2)),
       top: ((this._video_elem_container.offsetHeight/2)-(componentHeight/2)),
-      active: true
+      bgcolor: ("#"+((1<<24)*Math.random()|0).toString(16)),
+      active: true,
+      zIndex: 1
     } as PointerElement
 
     componentRefInstance.setPointerTraits(<PointerElement>options)
