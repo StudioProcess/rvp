@@ -501,6 +501,9 @@ export function reducer(state: State = initialState, action: project.Actions): S
         }
       })
     }
+    case project.PROJECT_ANNOTATION_ADD_POINTER: {
+      console.log('PROJECT_ANNOTATION_ADD_POINTER')
+    }
     case project.PLAYER_CREATE_SUCCESS:
     case project.PLAYER_DESTROY_SUCCESS:
       return state

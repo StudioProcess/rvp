@@ -66,6 +66,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   @Output() readonly onUpdate = new EventEmitter<project.UpdateAnnotationPayload>()
   @Output() readonly onSelectAnnotation = new EventEmitter<project.SelectAnnotationPayload>()
   @Output() readonly onFocusAnnotation = new EventEmitter<project.PlayerRequestCurrentTimePayload>()
+  @Output() readonly onAddAnnotationPointer = new EventEmitter<project.UpdateAnnotationPointerPayload>()
 
   @ViewChild('formWrapper') private readonly _formRef: ElementRef
   @ViewChild('start') private readonly _startInputRef: ElementRef
@@ -250,8 +251,11 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
     componentRefInstance.setPointerTraits(<PointerElement>options)
     console.log(options, componentRef.instance, this.entry.getIn(['annotation', 'id']), this.entry.get('color', null))
+
     //componentRef.instance.left = options.left
     //componentRef.instance.top = options.top
     //componentRef.changeDetectorRef.detectChanges();
+    
+    this.onAddAnnotationPointer.emit(options)
   }
 }

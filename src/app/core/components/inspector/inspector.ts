@@ -30,7 +30,8 @@ import {InspectorEntryComponent} from './inspectorEntry/inspectorEntry.component
         [isSelected]="isSelectedAnnotation(annotation.annotation)"
         (onUpdate)="updateAnnotation($event)"
         (onSelectAnnotation)="selectAnnotation($event)"
-        (onFocusAnnotation)="focusAnnotation($event)">
+        (onFocusAnnotation)="focusAnnotation($event)"
+        (onAddAnnotationPointer)="addAnnotationPointer($event)">
       </rv-inspector-entry>
     </div>`,
   styles: [`
@@ -122,6 +123,10 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
 
   focusAnnotation(focusAnnotation: project.PlayerRequestCurrentTimePayload) {
     this._store.dispatch(new project.PlayerRequestCurrentTime(focusAnnotation))
+  }
+
+  addAnnotationPointer(addAnnotationPointer: project.UpdateAnnotationPointerPayload) {
+    this._store.dispatch(new project.ProjectAnnotationAddPointer(addAnnotationPointer))
   }
 
   stopPropagation(ev: MouseEvent) {

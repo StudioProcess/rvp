@@ -62,8 +62,6 @@ export class PointerElementComponent implements OnInit {
   public height: number
   public bgcolor: string
 
-  //@Output() dropped = new EventEmitter<CdkDragDrop<any>>()
-  //@Output('cdkDragDropped') dropped: EventEmitter<CdkDragDrop<any>>
   /*@HostListener('window:mouseup', ['$event']) mouseUp(event: any) {
     console.log('mouseup')
   }
@@ -114,7 +112,7 @@ export class PointerElementComponent implements OnInit {
     this.position.left = this.initialPosition.left + this.offset.x
     this.position.top = this.initialPosition.top + this.offset.y
   }
-  
+
   resetPointerPosition(event: any) {
     /**
      * visually reset element to its origin

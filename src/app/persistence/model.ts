@@ -125,7 +125,7 @@ export interface Annotation {
   readonly utc_timestamp: number
   readonly duration: number
   readonly fields: Record<AnnotationFields>
-  //readonly pointerElement: Record<PointerElement>|null
+  readonly pointerElement: Record<PointerElement>|null
 }
 
 export interface AnnotationFields {
@@ -229,7 +229,8 @@ export const AnnotationRecordFactory = Record<Annotation>({
   isShown: true,
   utc_timestamp: -1,
   duration: -1,
-  fields: new AnnotationFieldsRecordFactory()
+  fields: new AnnotationFieldsRecordFactory(),
+  pointerElement: null
 })
 
 export const BlobVideoRecordFactory = Record<BlobVideo>({
@@ -251,5 +252,10 @@ export const AnnotationColorMapRecordFactory = Record<AnnotationColorMap>({
   color: '#000'
 })
 
-/*export const PointerElementRecordFactory = Record<pointerElement>({
-})*/
+export const PointerElementRecordFactory = Record<PointerElement>({
+  left: 0,
+  top: 0,
+  active: true,
+  zIndex: 1,
+  bgcolor: '#000000'
+})

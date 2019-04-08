@@ -36,6 +36,7 @@ export const PROJECT_SELECT_ANNOTATION = '[Project] Selection Annotation'
 export const PROJECT_SELECTION_RESETALL_ANNOTATION = '[Project] Reset Annotation Selection'
 export const PROJECT_COPY_ANNOTATION_SELECTION_TO_CLIPBOARD = '[Project] Copy Annotation Selection to Clipboard'
 export const PROJECT_PASTE_CLIPBOARD = '[Project] Paste Annotation Selection form Clipboard'
+export const PROJECT_ANNOTATION_ADD_POINTER = '[Project] Add Annotation Pointer'
 
 export const PROJECT_ADD_TRACK = '[Project] Add Track'
 export const PROJECT_UPDATE_TRACK = '[Project] Update Track'
@@ -148,6 +149,20 @@ export interface UpdateAnnotationPayload {
 export class ProjectUpdateAnnotation implements Action {
   readonly type = PROJECT_UPDATE_ANNOTATION
   constructor(readonly payload: UpdateAnnotationPayload) {}
+}
+
+export interface UpdateAnnotationPointerPayload {
+  readonly left: number // x
+  readonly top: number  // y
+  readonly active: boolean
+  readonly zIndex: number
+  readonly bgcolor: string
+}
+
+export class ProjectAnnotationAddPointer implements Action {
+  readonly type = PROJECT_ANNOTATION_ADD_POINTER
+  //constructor(readonly payload: any) {}
+  constructor(readonly payload: UpdateAnnotationPointerPayload) {}
 }
 
 export class ProjectDeleteSelectedAnnotations implements Action {
@@ -385,6 +400,7 @@ export type Actions =
   ProjectPushUndo|ProjectUndo|ProjectRedo|
   ProjectSettingsSetCurrentAnnotationsOnly|ProjectSettingsSetSearch|ProjectSettingsSetApplyToTimeline|
   ProjectSetActiveTrack|
+  ProjectAnnotationAddPointer|
   // PLAYER ACTIONS
   PlayerCreate|PlayerCreateError|PlayerCreateSuccess|
   PlayerDestroy|PlayerDestroyError|PlayerDestroySuccess|
