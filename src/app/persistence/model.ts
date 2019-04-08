@@ -125,6 +125,7 @@ export interface Annotation {
   readonly utc_timestamp: number
   readonly duration: number
   readonly fields: Record<AnnotationFields>
+  //readonly pointerElement: Record<PointerElement>|null
 }
 
 export interface AnnotationFields {
@@ -141,8 +142,8 @@ export interface AnnotationColorMap {
 }
 
 export interface PointerElement {
-  readonly left: number
-  readonly top: number
+  readonly left: number // x
+  readonly top: number  // y
   readonly active: boolean
   readonly zIndex: number
   readonly bgcolor: string
@@ -249,3 +250,6 @@ export const AnnotationColorMapRecordFactory = Record<AnnotationColorMap>({
   annotation: new AnnotationRecordFactory(),
   color: '#000'
 })
+
+/*export const PointerElementRecordFactory = Record<pointerElement>({
+})*/

@@ -90,10 +90,10 @@ export class PointerElementComponent implements OnInit {
     this.initialPosition = {...this.position}
     this.element.nativeElement.querySelector('.annotation-pointer-element').style.backgroundColor = options.bgcolor
   }
+
   dragStarted(event: CdkDragDrop<string[]>) {
-    //console.log('CdkDragStart', event);
   }
-  //dragEnded(event: CdkDragDrop<string[]>) {
+
   dragEnded(event: any) {
     this.getPosition(event)
     /*console.log('CdkDragEnd', this.offset)
@@ -101,16 +101,20 @@ export class PointerElementComponent implements OnInit {
     console.log('position', this.position)
     this.zIndex -= 10; // TODO :
   }
+
   dragReleased(event: any) {
   }
+
   mousedown() {
     this.zIndex += 10; // TODO :
   }
+
   getPosition(event: any) {
     this.offset = {...(<any>event.source._dragRef)._passiveTransform}
     this.position.left = this.initialPosition.left + this.offset.x
     this.position.top = this.initialPosition.top + this.offset.y
   }
+  
   resetPointerPosition(event: any) {
     /**
      * visually reset element to its origin
