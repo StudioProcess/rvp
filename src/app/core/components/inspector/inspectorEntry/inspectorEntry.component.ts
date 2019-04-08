@@ -249,7 +249,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     } as PointerElement
 
     componentRefInstance.setPointerTraits(<PointerElement>options)
-    console.log(options, componentRef.instance, this.entry.getIn(['annotation', 'id']))
+    console.log(options, componentRef.instance, this.entry.getIn(['annotation', 'id']), this.entry.getIn(['annotation', 'color']))
     //componentRef.instance.left = options.left
     //componentRef.instance.top = options.top
     //componentRef.changeDetectorRef.detectChanges();

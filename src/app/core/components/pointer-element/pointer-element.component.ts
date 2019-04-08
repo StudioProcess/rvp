@@ -10,8 +10,6 @@ import {
 } from '@angular/core';
 
 import {
-  //CdkDragExit,
-  //cdkDragDropped
   CdkDragDrop
 } from '@angular/cdk/drag-drop';
 
@@ -28,7 +26,6 @@ import {
       (cdkDragStarted)="dragStarted($event)"
       (cdkDragReleased)="dragReleased($event)"
       (cdkDragEnded)="dragEnded($event)"
-      (cdkDragEntered)="dragEntered($event)"
       (mousedown)="mousedown()"
       class="annotation-pointer-element annotation-pointer-dot"
     >
@@ -93,9 +90,6 @@ export class PointerElementComponent implements OnInit {
     this.initialPosition = {...this.position}
     this.element.nativeElement.querySelector('.annotation-pointer-element').style.backgroundColor = options.bgcolor
   }
-  dragEntered(event: any) {
-    console.log('dragEntered')
-  }
   dragStarted(event: CdkDragDrop<string[]>) {
     //console.log('CdkDragStart', event);
   }
@@ -105,12 +99,12 @@ export class PointerElementComponent implements OnInit {
     /*console.log('CdkDragEnd', this.offset)
     console.log('initialPosition', this.initialPosition)*/
     console.log('position', this.position)
+    this.zIndex -= 10; // TODO :
   }
   dragReleased(event: any) {
   }
   mousedown() {
-    console.log('mousedown')
-    this.zIndex += 1;
+    this.zIndex += 10; // TODO :
   }
   getPosition(event: any) {
     this.offset = {...(<any>event.source._dragRef)._passiveTransform}
