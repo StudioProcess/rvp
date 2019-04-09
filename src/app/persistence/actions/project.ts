@@ -151,12 +151,19 @@ export class ProjectUpdateAnnotation implements Action {
   constructor(readonly payload: UpdateAnnotationPayload) {}
 }
 
-export interface UpdateAnnotationPointerPayload {
+export interface AnnotationPointerPayload {
   readonly left: number // x
   readonly top: number  // y
   readonly active: boolean
   readonly zIndex: number
   readonly bgcolor: string
+  readonly video_width: number
+  readonly video_height: number
+}
+
+export interface UpdateAnnotationPointerPayload {
+  readonly annotation_id: number
+  readonly pointerPayload: AnnotationPointerPayload
 }
 
 export class ProjectAnnotationAddPointer implements Action {

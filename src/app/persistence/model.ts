@@ -147,6 +147,8 @@ export interface PointerElement {
   readonly active: boolean
   readonly zIndex: number
   readonly bgcolor: string
+  readonly video_width: number  // initial video width for scaling
+  readonly video_height: number // initial video height for scaling 
 }
 
 // Record factories
@@ -257,5 +259,7 @@ export const PointerElementRecordFactory = Record<PointerElement>({
   top: 0,
   active: true,
   zIndex: 1,
-  bgcolor: '#000000'
+  bgcolor: '#000000',
+  video_width: 0,
+  video_height: 0,
 })

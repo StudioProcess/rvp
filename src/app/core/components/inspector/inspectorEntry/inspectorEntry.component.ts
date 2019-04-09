@@ -246,7 +246,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
       top: ((this._video_elem_container.offsetHeight/2)-(componentHeight/2)),
       bgcolor: this.entry.get('color', null),
       active: true,
-      zIndex: 1
+      zIndex: 1,
     } as PointerElement
 
     componentRefInstance.setPointerTraits(<PointerElement>options)
@@ -255,7 +255,12 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     //componentRef.instance.left = options.left
     //componentRef.instance.top = options.top
     //componentRef.changeDetectorRef.detectChanges();
-    
-    this.onAddAnnotationPointer.emit(options)
+    let g = {
+      annotation_id: this.entry.getIn(['annotation', 'id']) as number,
+      pointerPayload: options
+      //annotation: this.entry.get('annotation', null)
+    }
+
+    this.onAddAnnotationPointer.emit(g)
   }
 }
