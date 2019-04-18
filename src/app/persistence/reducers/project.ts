@@ -523,8 +523,16 @@ export function reducer(state: State = initialState, action: project.Actions): S
       //const annotationId = annotation.get('id', null)!
       //const s: Record<AnnotationSelection> = state.getIn(['selection', 'annotation', 'selected'])
       //const annotations = track.get('annotationStacks', null).flatMap(stack => stack)
+      //const {trackIndex, annotationIndex, annotationStackIndex, annotation} = action.payload
       const annotation = getAnnotationById(state, action.payload.annotation_id)
-      console.log('PROJECT_ANNOTATION_ADD_POINTER', action.payload, annotation)
+      const annotationCp = { ...annotation };
+      //annotationCp.pointerElement = action.payload.pointerPayload
+      console.log('PROJECT_ANNOTATION_ADD_POINTER', action.payload, annotation, annotationCp)
+
+      const path = ['meta', 'timeline', 'tracks', action.payload.path.trackIndex, 'annotationStacks', action.payload.path.annotationStackIndex, action.payload.path.annotationIndex]
+      let s = state.getIn(path)
+      console.log('PATH', s, action.payload.path.annotationIndex, action.payload.annotation_id)
+
     }
     case project.PLAYER_CREATE_SUCCESS:
     case project.PLAYER_DESTROY_SUCCESS:
