@@ -54,7 +54,7 @@ export class TitlebarComponent implements OnInit {
 
   @ViewChild('projecttitle') private readonly _projecttitleInputRef: ElementRef
 
-  private pnform: FormGroup | null = null
+  pnform: FormGroup | null = null
   private readonly _subs: Subscription[] = []
 
   constructor(
