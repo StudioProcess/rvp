@@ -89,7 +89,8 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   ngOnInit() {
     const {
-      utc_timestamp, duration,
+      utc_timestamp,
+      duration,
       description
     } = this._mapModel(this.entry)
 
@@ -169,7 +170,8 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
     this._subs.push(
       enterHotKey.subscribe((ev: any) => {
-        if(ev.target.nodeName !== 'TEXTAREA') {
+        //if(ev.target.nodeName !== 'TEXTAREA') {
+        if(ev.target.classList.contains('contenteditable') !== true) {
           ev.target.blur()
         }
       }))
