@@ -14,7 +14,8 @@
       </div>
       <div class="row text-row">
         <div class="column">
-          <textarea #descr formControlName="description" rows="1" cols="1" class="description" title="Description" style="overflow: hidden" placeholder="(Text, optional)"></textarea>
+          <!--<textarea #descr formControlName="description" rows="1" cols="1" class="description" title="Description" style="overflow: hidden" placeholder="(Text, optional)"></textarea>-->
+          <div #descr contenteditable="true" propValueAccessor="innerHTML" formControlName="description" class="description contenteditable" title="Description" placeholder="(Text, optional)"></div>
         </div>
       </div>
     </div>
