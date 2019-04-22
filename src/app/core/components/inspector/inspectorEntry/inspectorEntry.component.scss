@@ -96,11 +96,25 @@
       background-color: inherit;
       width: 100%;
 
+      &.contenteditable {
+        height: 19px;
+        padding: 2px 8px 2px 5px;
+        margin: 4px 0 8px 0;
+        overflow-y: hidden;
+
+        &:focus {
+          height: auto;
+          overflow-y: visible;
+        }
+        &[placeholder]:empty:not(:focus):before {
+          content: attr(placeholder);
+          color: #CCC;
+        }
+      }
       &:focus {
         color: $black;
       }
     }
-
     .duration {
       font-size: 13px; // TODO: 14px needed to be set explicitly
       font-weight: 400;
