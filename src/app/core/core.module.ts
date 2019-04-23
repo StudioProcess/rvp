@@ -16,6 +16,7 @@ import {FooterComponent} from './components/footer/footer.component'
 import {VersionComponent} from './components/version/version.component'
 import {ToolbarComponent} from './components/toolbar/toolbar.component'
 import {ProgressModalComponent} from './components/project/progress-modal/progress-modal.component'
+import {TaggingComponent} from './components/tagging/tagging.component'
 
 // Inspector components
 import {InspectorEntryComponent} from './components/inspector/inspectorEntry/inspectorEntry.component'
@@ -36,12 +37,15 @@ const _DECLS_ = [
   // Inspector
   InspectorEntryComponent,
   // Timeline
-  TrackComponent, HandlebarComponent, PlayheadComponent
+  TrackComponent, HandlebarComponent, PlayheadComponent,
+  // Tagging
+  TaggingComponent
 ]
 
 @NgModule({
   imports: [CommonModule, ReactiveFormsModule, FormsModule, ContenteditableModule],
   declarations: _DECLS_,
   exports: _DECLS_,
+  entryComponents: [TaggingComponent],
 })
 export class CoreModule {}
