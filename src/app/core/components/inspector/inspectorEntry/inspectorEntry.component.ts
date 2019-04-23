@@ -38,6 +38,8 @@ import {_MOUSE_DBLCLICK_DEBOUNCE_} from '../../../../config/form'
 
 import * as project from '../../../../persistence/actions/project'
 import {parseDuration} from '../../../../lib/time'
+import {TaggingComponent} from '../../tagging/tagging.component'
+import {DomService} from '../../../actions/dom.service'
 
 function durationValidatorFactory(): ValidatorFn {
   const durationRegex = /^([0-9]*:){0,2}[0-9]*(\.[0-9]*)?$/
@@ -73,7 +75,11 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   private readonly _subs: Subscription[] = []
 
-  constructor(readonly elem: ElementRef, private readonly _fb: FormBuilder) {}
+  constructor(
+    readonly elem: ElementRef,
+    private readonly _fb: FormBuilder,
+    private readonly _domService: DomService
+  ) {}
 
   private _mapModel(entry: Record<AnnotationColorMap>) {
     const utc_timestamp = entry.getIn(['annotation', 'utc_timestamp'])
@@ -151,6 +157,13 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
     this._subs.push(
       formKeydown.subscribe((ev: KeyboardEvent) => {
+         if(ev.key === '#') {
+           let elem = ev.target as HTMLElement
+           console.log(ev, ev.key, ev.target, elem)
+           const componentRef = this._domService.instantiateComponent(TaggingComponent)
+           const componentRefInstance = this._domService.getInstance(componentRef)
+           this._domService.attachComponent(componentRef, elem)
+         }
         ev.stopPropagation()
       }))
 
