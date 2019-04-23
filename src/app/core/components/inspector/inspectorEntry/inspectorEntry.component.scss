@@ -100,11 +100,10 @@
         height: 19px;
         padding: 2px 8px 2px 5px;
         margin: 4px 0 8px 0;
-        overflow-y: hidden;
+        overflow: hidden;
 
         &:focus {
           height: auto;
-          overflow-y: visible;
         }
         &[placeholder]:empty:not(:focus):before {
           content: attr(placeholder);
