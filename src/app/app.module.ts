@@ -15,7 +15,8 @@ import {PlayerModule} from './player/player.module'
 import {reducers, metaReducers} from './core/reducers'
 
 // import {AppShellContainer} from './shell'
-import {MainContainer} from './core/components/main/main'
+import {MainContainer} from './core/components/main/main';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
 // import {appRoutes} from './routes'
 
@@ -29,7 +30,8 @@ import {MainContainer} from './core/components/main/main'
 
     CoreModule,
     PersistenceModule,
-    PlayerModule
+    PlayerModule,
+    BrowserAnimationsModule
   ],
   // declarations: [AppShellContainer],
   bootstrap: [MainContainer]
