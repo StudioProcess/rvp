@@ -102,6 +102,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   }
 
   ngAfterViewInit() {
+
     const formClick = fromEvent(this._formRef.nativeElement, 'click')
       .pipe(filter((ev: MouseEvent) => ev.button === 0))
 
@@ -189,6 +190,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
               prev.utc_timestamp === cur.utc_timestamp && prev.duration === cur.duration
           }))
         .subscribe(({description, utc_timestamp, duration}) => {
+          description = htmlBr(description)
           const annotation = new AnnotationRecordFactory({
             id: this.entry.getIn(['annotation', 'id']),
             utc_timestamp: parseDuration(utc_timestamp),
@@ -203,6 +205,13 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
             annotation
           })
         }))
+
+        const htmlBr = function(description: string) {
+          const pat1 = new RegExp('<div>', 'g')
+          const pat2= new RegExp('</div>', 'g')
+          //const pat3= new RegExp('<br>', 'g')
+          return description.replace(pat1, '<br>').replace(pat2, '')
+        }
   }
 
   ngOnChanges(changes: SimpleChanges) {
