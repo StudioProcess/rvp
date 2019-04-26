@@ -25,6 +25,10 @@ import {TrackComponent} from './components/timeline/track/track.component'
 import {HandlebarComponent} from './components/timeline/handlebar/handlebar.component'
 import {PlayheadComponent} from './components/timeline/playhead/playhead.component'
 
+import {MatInputModule} from '@angular/material'
+import {MatFormFieldModule} from '@angular/material/form-field'
+import {MatAutocompleteModule} from '@angular/material/autocomplete'
+
 const _DECLS_ = [
   // Containers
   MainContainer, PlayerContainer, InspectorContainer,
@@ -42,7 +46,15 @@ const _DECLS_ = [
 ]
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, ContenteditableModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ContenteditableModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatAutocompleteModule
+  ],
   declarations: _DECLS_,
   exports: _DECLS_,
   entryComponents: [TaggingComponent],
