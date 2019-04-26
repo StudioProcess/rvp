@@ -73,6 +73,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   form: FormGroup|null = null
 
+  private readonly _tag_container_id = 'tag-container'
   private readonly _subs: Subscription[] = []
 
   constructor(
@@ -118,6 +119,8 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
         map(clicksInBuffer => clicksInBuffer.length),
         filter(clicksInBuffer => clicksInBuffer === 2))
 
+    const formKeyUp = fromEvent(this._descrInputRef.nativeElement, 'keyup')
+
     const durationKeydown = merge(
       fromEvent(this._startInputRef.nativeElement, 'keydown'),
       fromEvent(this._durationInputRef.nativeElement, 'keydown'))
@@ -156,15 +159,16 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
       }))
 
     this._subs.push(
+      formKeyUp.subscribe((ev: KeyboardEvent) => {
+        //if(ev.key === '#') {}
+      }))
+
+    this._subs.push(
       formKeydown.subscribe((ev: KeyboardEvent) => {
-         if(ev.key === '#') {
-           let elem = ev.target as HTMLElement
-           console.log(ev, ev.key, ev.target, elem)
-           const componentRef = this._domService.instantiateComponent(TaggingComponent)
-           const componentRefInstance = this._domService.getInstance(componentRef)
-           this._domService.attachComponent(componentRef, elem)
-         }
         ev.stopPropagation()
+        if(ev.key === '#') {
+          this.hashTag(ev, this._tag_container_id)
+        }
       }))
 
     const validDurationInputKey = (keyCode: number) => {
@@ -203,7 +207,10 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
               prev.utc_timestamp === cur.utc_timestamp && prev.duration === cur.duration
           }))
         .subscribe(({description, utc_timestamp, duration}) => {
-          description = htmlBr(description)
+
+          //this.removeHashTag()
+
+          description = this.htmlBr(description)
           const annotation = new AnnotationRecordFactory({
             id: this.entry.getIn(['annotation', 'id']),
             utc_timestamp: parseDuration(utc_timestamp),
@@ -218,13 +225,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
             annotation
           })
         }))
-
-        const htmlBr = function(description: string) {
-          const pat1 = new RegExp('<div>', 'g')
-          const pat2= new RegExp('</div>', 'g')
-          //const pat3= new RegExp('<br>', 'g')
-          return description.replace(pat1, '<br>').replace(pat2, '')
-        }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -238,5 +238,57 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
+  }
+
+  removeHashTagContainer() {
+    console.log('REMOVE')
+  }
+
+  hashTag(ev: any, tag_container_id: string) {
+
+    if (this.addHashTagContainer(tag_container_id)) {
+      //let elem = ev.target as HTMLElement
+      const e = document.getElementById('tag-container')!
+      //console.log(e)
+      const componentRef = this._domService.instantiateComponent(TaggingComponent)
+      //const componentRefInstance = this._domService.getInstance(componentRef)
+      this._domService.attachComponent(componentRef, e)
+    }
+  }
+
+  addHashTagContainer(tag_container_id: any) {
+    if (document.getSelection) {
+      const sel = window.getSelection()
+      if (sel.getRangeAt && sel.rangeCount) {
+        let range = sel.getRangeAt(0)
+        range.deleteContents()
+        let el = document.createElement('div')
+        el.innerHTML = '<span id="'+tag_container_id+'" style="display:inline-block;">#</span>'
+
+        let frag = document.createDocumentFragment(), node, lastNode
+        while (node = el.firstChild) {
+          lastNode = frag.appendChild(node)
+        }
+        range.insertNode(frag)
+
+        // Preserve the selection
+        if (lastNode) {
+          range = range.cloneRange()
+          range.setStartAfter(lastNode)
+          range.collapse(true)
+          sel.removeAllRanges()
+          sel.addRange(range)
+        }
+        return true
+      }
+    }
+    return false
+  }
+
+  htmlBr(description: string) {
+    const pat1 = new RegExp('<div>', 'g')
+    const pat2 = new RegExp('</div>', 'g')
+    //const pat3= new RegExp('<br>', 'g')
+    return description.replace(pat1, '<br>').replace(pat2, '')
   }
 }
