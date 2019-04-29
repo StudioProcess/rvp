@@ -109,6 +109,9 @@
           content: attr(placeholder);
           color: #CCC;
         }
+        .hashtag {
+          background-color:yellow;
+        }
       }
       &:focus {
         color: $black;

@@ -72,9 +72,12 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   @ViewChild('descr') private readonly _descrInputRef: ElementRef
 
   form: FormGroup|null = null
+  isHashTagContainerOpen: boolean = false
 
-  private readonly _tag_container_id = 'tag-container'
   private readonly _subs: Subscription[] = []
+  private readonly _tag_container_id = 'tag-container'
+  private _hashtagContainer: HTMLElement|null = null
+  private _taggingComponentRef: any|null = null
 
   constructor(
     readonly elem: ElementRef,
@@ -165,10 +168,11 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
     this._subs.push(
       formKeydown.subscribe((ev: KeyboardEvent) => {
-        ev.stopPropagation()
+        //if(ev.key === '#' && ! this.isHashTagContainerOpen) {
         if(ev.key === '#') {
           this.hashTag(ev, this._tag_container_id)
         }
+        ev.stopPropagation()
       }))
 
     const validDurationInputKey = (keyCode: number) => {
@@ -194,6 +198,12 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
         }
       }))
 
+    /*this._subs.push(
+      formBlur
+        .subscribe((ev: any) => {
+          this.removeHashTagContainer()
+        }))*/
+
     this._subs.push(
       formBlur
         .pipe(
@@ -207,8 +217,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
               prev.utc_timestamp === cur.utc_timestamp && prev.duration === cur.duration
           }))
         .subscribe(({description, utc_timestamp, duration}) => {
-
-          //this.removeHashTag()
 
           description = this.htmlBr(description)
           const annotation = new AnnotationRecordFactory({
@@ -240,30 +248,92 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     this._subs.forEach(sub => sub.unsubscribe())
   }
 
-  removeHashTagContainer() {
-    console.log('REMOVE')
-  }
-
   hashTag(ev: any, tag_container_id: string) {
 
     if (this.addHashTagContainer(tag_container_id)) {
       //let elem = ev.target as HTMLElement
-      const e = document.getElementById('tag-container')!
-      //console.log(e)
-      const componentRef = this._domService.instantiateComponent(TaggingComponent)
+      this._hashtagContainer = document.getElementById(this._tag_container_id)! as HTMLElement
+
+      //const componentRef = this._domService.instantiateComponent(TaggingComponent)
+      this._taggingComponentRef = this._domService.instantiateComponent(TaggingComponent)
+      //console.log(this._taggingComponentRef)
+      this._taggingComponentRef.instance.closeHashTagContainer.subscribe((ev: any) => {
+        this.closeHashTagContainer(ev)
+      })
+      //this._taggingComponentRef.instance.passed_hashtag = 'OK'
+
       //const componentRefInstance = this._domService.getInstance(componentRef)
-      this._domService.attachComponent(componentRef, e)
+      this._domService.attachComponent(this._taggingComponentRef, this._hashtagContainer)
+
+      this.isHashTagContainerOpen = true
+    }
+  }
+
+  removeHashTagContainer() {
+    if(document.getElementById(this._tag_container_id)) {
+      //var node = document.getSelection().anchorNode;
+      //this._taggingComponentRef
+      //return (node.nodeType == 3 ? node.parentNode : node);
+      let elem = document.getElementById(this._tag_container_id)!
+      //elem.parentNode.removeNode(true)
+      if (elem.parentNode) {
+        let parent = elem.parentNode!
+        /*if(this._taggingComponentRef) {
+          this._taggingComponentRef.destroy()
+          console.log(this._taggingComponentRef)
+          //parent.removeChild(this._taggingComponentRef.nativeElement)
+        }*/
+        /*if(this._hashtagContainer) {
+          parent.removeChild(this._hashtagContainer)
+        }*/
+        //detachEvent(, 'blur', onblur)
+        parent.removeChild(elem)
+        //parent.innerText = ''
+        console.log('REMOVE', elem)
+        //console.log(this._taggingComponentRef.instance)
+
+        this._hashtagContainer = null
+        this.isHashTagContainerOpen = false
+      }
     }
   }
 
   addHashTagContainer(tag_container_id: any) {
+
+    let range = document.getSelection()!.getRangeAt(0)!
+    console.log('addHashTagContainer')
+    //let modifiers = [0,8] // List of keys to ignore (0 is arrows & 8 is delete in firefox)
+    //console.log(range.startContainer.parentNode.className)
+    //if(range.startContainer!.parentNode!.className! !== 'hashtag') {
+      if(!range.collapsed) {
+        range.deleteContents()
+      }
+      let hashtag_span =  document.createElement('span')
+      hashtag_span.appendChild(document.createTextNode('A'))
+      hashtag_span.className = 'hashtag'
+      let hashtag_container_span = document.createElement('span')
+      hashtag_container_span.id = tag_container_id
+      hashtag_container_span.style.display = 'inline-block'
+      hashtag_span.appendChild(hashtag_container_span)
+      range.insertNode(hashtag_span)
+
+      let sel = window.getSelection()
+      range.setStartBefore(hashtag_span.childNodes[0])
+      range.setEndAfter(hashtag_span.childNodes[0])
+      sel.removeAllRanges()
+      sel.addRange(range)
+    //}
+
+    return true
+
+    /*
     if (document.getSelection) {
-      const sel = window.getSelection()
+      const sel = document.getSelection()!
       if (sel.getRangeAt && sel.rangeCount) {
         let range = sel.getRangeAt(0)
         range.deleteContents()
         let el = document.createElement('div')
-        el.innerHTML = '<span id="'+tag_container_id+'" style="display:inline-block;">#</span>'
+        el.innerHTML = '<span id="'+tag_container_id+'" style="display:inline-block;"></span>'
 
         let frag = document.createDocumentFragment(), node, lastNode
         while (node = el.firstChild) {
@@ -277,18 +347,23 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
           range.setStartAfter(lastNode)
           range.collapse(true)
           sel.removeAllRanges()
+          //console.log(range)
           sel.addRange(range)
         }
         return true
       }
     }
-    return false
+    return false*/
+  }
+
+  closeHashTagContainer(ev: any) {
+    //console.log('closeHashTagContainer', ev)
+    this.removeHashTagContainer()
   }
 
   htmlBr(description: string) {
     const pat1 = new RegExp('<div>', 'g')
     const pat2 = new RegExp('</div>', 'g')
-    //const pat3= new RegExp('<br>', 'g')
     return description.replace(pat1, '<br>').replace(pat2, '')
   }
 }
