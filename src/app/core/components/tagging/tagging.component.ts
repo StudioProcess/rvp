@@ -1,24 +1,26 @@
 import {
   Component,
   OnInit,
-  ViewChild,
-  ElementRef,
+  //Input,
+  Output,
+  EventEmitter,
+  //HostBinding,
+  //ViewChild,
+  //ChangeDetectorRef,
+  //ElementRef,
+  //ViewContainerRef,
   //ViewEncapsulation,
-  //ChangeDetectorRef
 } from '@angular/core'
-import {FormControl} from '@angular/forms'
-//import {MatAutocompleteModule} from '@angular/material/autocomplete'
 
-import {MatInput} from '@angular/material'
+//import {FormControl} from '@angular/forms'
+//import {MatAutocompleteModule} from '@angular/material/autocomplete'
+//import {MatInput} from '@angular/material'
 
 @Component({
   selector: 'rv-tagging',
-  /*template: `
-    <span class="tagging-position">
-      <div contenteditable="false" class="tagging-list">
-      </div>
-    </span>
-  `,*/
+  host: {
+    '(document:click)': 'onClick($event)',
+  },
   /*template: `
     <div class="tagging-list">
       <form class="">
@@ -35,7 +37,7 @@ import {MatInput} from '@angular/material'
   `,*/
   template: `
     <div class="tagging-list" contenteditable="false">
-      <span contenteditable="true" class="">#</span>
+      <span #tag_editable contenteditable="false" id="tag_editable">{{passed_hashtag}}</span>
       <ul contenteditable="false">
         <li *ngFor="let option of options" [value]="option">
           {{option}}
@@ -64,24 +66,42 @@ import {MatInput} from '@angular/material'
 })
 export class TaggingComponent implements OnInit {
 
-  @ViewChild('inputelem') nameInput: MatInput
-  myControl = new FormControl()
+  //@ViewChild('inputelem') nameInput: MatInput
+  //@ViewChild('tag_editable') private _tagEditable: any
+  //myControl = new FormControl()
+  //@Input() @HostBinding('hashTag') bindHashTag = ''
   options: string[] = ['One', 'Two', 'Three']
+  passed_hashtag: string = ''
+
+  @Output() closeHashTagContainer: EventEmitter<any> = new EventEmitter();
 
   constructor(
-    private element: ElementRef,
-    //private cd: ChangeDetectorRef
+    //private _eref: ElementRef,
+    //private _vcRef: ViewContainerRef,
+    //private _cd: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    //this.nameInput.focus()
-    //this.cd.detectChanges()
   }
 
   ngAfterViewInit() {
-    console.log(this.element.nativeElement)
-    //this.element.nativeElement.querySelector('input').focus()
+    //this._tagEditable.nativeElement.focus()
+    //this.cd.detectChanges()
+    /*setTimeout(() => {
+    }, 10)*/
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    console.log('on tagging component DESTROY')
+  }
+
+  onClick(ev: any) {
+    this.closeHashTagContainer.emit({close: true})
+    /*if (!this._eref.nativeElement.contains(ev.target)) {
+      let elem = document.getElementById('tag-container')!
+      if (elem) {
+        elem.parentNode!.removeChild(elem)
+      }
+    }*/
+  }
 }
