@@ -35,22 +35,20 @@ import {
       </form>
     </div>
   `,*/
-  template: `
-    <span class="hashtag">
-      <span class="hashtag-close ion-ios-close-circle"></span>
-      <span id="tag-container">
-        <div class="tagging-list" contenteditable="false">
-          <span #tag_editable contenteditable="false" id="tag_editable">{{passed_hashtag}}</span>
-          <ul contenteditable="false">
-            <li *ngFor="let option of options" [value]="option">
-              {{option}}
-            </li>
-          </ul>
-        </div>
-      </span>
-    </span>
-  `,
   /*template: `
+    <span class="hashtag-close ion-ios-close-circle"></span>
+    <span id="tag-container">
+      <div class="tagging-list" contenteditable="false">
+        <span #tag_editable contenteditable="false" id="tag_editable">{{passed_hashtag}}</span>
+        <ul contenteditable="false">
+          <li *ngFor="let option of options" [value]="option">
+            {{option}}
+          </li>
+        </ul>
+      </div>
+    </span>
+  `,*/
+  template: `
     <div class="tagging-list" contenteditable="false">
       <span #tag_editable contenteditable="false" id="tag_editable">{{passed_hashtag}}</span>
       <ul contenteditable="false">
@@ -59,7 +57,7 @@ import {
         </li>
       </ul>
     </div>
-  `,*/
+  `,
   styles: [`
     :host {
       display: block;
@@ -96,15 +94,9 @@ export class TaggingComponent implements OnInit {
     //private _cd: ChangeDetectorRef
   ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  ngAfterViewInit() {
-    //this._tagEditable.nativeElement.focus()
-    //this.cd.detectChanges()
-    /*setTimeout(() => {
-    }, 10)*/
-  }
+  ngAfterViewInit() {}
 
   ngOnDestroy() {}
 
