@@ -7,7 +7,7 @@ import {
   //HostBinding,
   //ViewChild,
   //ChangeDetectorRef,
-  //ElementRef,
+  ElementRef,
   //ViewContainerRef,
   //ViewEncapsulation,
 } from '@angular/core'
@@ -19,7 +19,7 @@ import {
 @Component({
   selector: 'rv-tagging',
   host: {
-    '(document:click)': 'onClick($event)',
+    '(document:click)': 'onClickOutside($event)',
   },
   /*template: `
     <div class="tagging-list">
@@ -36,6 +36,21 @@ import {
     </div>
   `,*/
   template: `
+    <span class="hashtag">
+      <span class="hashtag-close ion-ios-close-circle"></span>
+      <span id="tag-container">
+        <div class="tagging-list" contenteditable="false">
+          <span #tag_editable contenteditable="false" id="tag_editable">{{passed_hashtag}}</span>
+          <ul contenteditable="false">
+            <li *ngFor="let option of options" [value]="option">
+              {{option}}
+            </li>
+          </ul>
+        </div>
+      </span>
+    </span>
+  `,
+  /*template: `
     <div class="tagging-list" contenteditable="false">
       <span #tag_editable contenteditable="false" id="tag_editable">{{passed_hashtag}}</span>
       <ul contenteditable="false">
@@ -44,7 +59,7 @@ import {
         </li>
       </ul>
     </div>
-  `,
+  `,*/
   styles: [`
     :host {
       display: block;
@@ -76,7 +91,7 @@ export class TaggingComponent implements OnInit {
   @Output() closeHashTagContainer: EventEmitter<any> = new EventEmitter();
 
   constructor(
-    //private _eref: ElementRef,
+    private _eref: ElementRef,
     //private _vcRef: ViewContainerRef,
     //private _cd: ChangeDetectorRef
   ) {}
@@ -91,17 +106,11 @@ export class TaggingComponent implements OnInit {
     }, 10)*/
   }
 
-  ngOnDestroy() {
-    console.log('on tagging component DESTROY')
-  }
+  ngOnDestroy() {}
 
-  onClick(ev: any) {
-    this.closeHashTagContainer.emit({close: true})
-    /*if (!this._eref.nativeElement.contains(ev.target)) {
-      let elem = document.getElementById('tag-container')!
-      if (elem) {
-        elem.parentNode!.removeChild(elem)
-      }
-    }*/
+  onClickOutside(ev: any) {
+    if (!this._eref.nativeElement.contains(ev.target)) {
+      this.closeHashTagContainer.emit({close: true})
+    }
   }
 }

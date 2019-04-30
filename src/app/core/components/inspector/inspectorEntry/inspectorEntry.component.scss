@@ -85,32 +85,47 @@
     }
 
     .description {
+      width: 100%;
+      margin: 0;
+      padding: 0.1em;
       font-size: 14px;
       line-height: 15px;
       resize: vertical;
-      margin: 0;
-      padding: 0.1em;
       outline: none;
       border-color: transparent;
       box-shadow: 0 0 0 $white;
       background-color: inherit;
-      width: 100%;
 
       &.contenteditable {
         height: 19px;
         padding: 2px 8px 2px 5px;
         margin: 4px 0 8px 0;
         overflow: hidden;
+        /*-webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;*/
+
+        .hashtag {
+          padding: 1px 5px;
+          background-color: #efefef;
+
+          .hashtag-close {
+            margin-left: 10px;
+            font-size: 16px;
+          }
+        }
 
         &:focus {
           height: auto;
+
+          .hashtag {
+            color: #000000;
+          }
         }
         &[placeholder]:empty:not(:focus):before {
           content: attr(placeholder);
           color: #CCC;
-        }
-        .hashtag {
-          background-color:yellow;
         }
       }
       &:focus {

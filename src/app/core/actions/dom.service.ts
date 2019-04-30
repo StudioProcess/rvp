@@ -36,6 +36,22 @@ export class DomService {
     return attachTo.appendChild(domElem);
   }
 
+  attachNodeToSelection(componentRef: any) {
+
+    let domElem = (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
+    let range = document.getSelection()!.getRangeAt(0)!
+    if(!range.collapsed) {
+      range.deleteContents()
+    }
+    range.insertNode(domElem)
+
+    let sel = document.getSelection()
+    range.setStartBefore(domElem.childNodes[0])
+    range.setEndAfter(domElem.childNodes[0])
+    sel!.removeAllRanges()
+    sel!.addRange(range)
+  }
+
   destroyComponent(componentRef: any) {
     // remove component from the component tree and from the DOM
     this.appRef.detachView(componentRef.hostView);
