@@ -89,7 +89,7 @@
       margin: 0;
       padding: 0.1em;
       font-size: 14px;
-      line-height: 15px;
+      line-height: 18px;
       resize: vertical;
       outline: none;
       border-color: transparent;
@@ -97,8 +97,8 @@
       background-color: inherit;
 
       &.contenteditable {
-        height: 19px;
-        padding: 2px 8px 2px 5px;
+        /*height: 19px;*/
+        padding: 3px 8px 3px 5px;
         margin: 4px 0 8px 0;
         overflow: hidden;
         /*-webkit-user-select: text;
@@ -107,12 +107,23 @@
         user-select: text;*/
 
         .hashtag {
-          padding: 1px 5px;
+          margin: 0;
+          padding: 2px 5px;
           background-color: #efefef;
 
           .hashtag-close {
-            margin-left: 10px;
+            display: none;
+            position: relative;
+            top: 1px;
+            right: 0;
+            margin-left: 5px;
             font-size: 16px;
+            background-color: #efefef;
+          }
+          &:hover {
+            .hashtag-close {
+              display: inline-block;
+            }
           }
         }
 
