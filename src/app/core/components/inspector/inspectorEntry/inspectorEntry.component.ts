@@ -3,7 +3,8 @@ import {
   OnInit, OnChanges, AfterViewInit,
   EventEmitter, ViewChild, ElementRef,
   ChangeDetectionStrategy, OnDestroy,
-  SimpleChanges, HostBinding
+  SimpleChanges, HostBinding,
+  ViewEncapsulation
 } from '@angular/core'
 
 import {
@@ -54,6 +55,7 @@ const durationValidator = Validators.compose([Validators.required, durationValid
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
   selector: 'rv-inspector-entry',
   templateUrl: 'inspectorEntry.component.html',
   styleUrls: ['inspectorEntry.component.scss']
@@ -113,6 +115,8 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   ngAfterViewInit() {
 
+    this.removeHashTagContainer()
+
     const formClick = fromEvent(this._formRef.nativeElement, 'click')
       .pipe(filter((ev: MouseEvent) => ev.button === 0))
 
@@ -168,12 +172,18 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
     this._subs.push(
       formKeydown.subscribe((ev: KeyboardEvent) => {
-        //if(ev.key === '#' && ! this.isHashTagContainerOpen) {
-        if(ev.key === '#') {
-          this.hashTag(ev, this._tag_container_id)
-        }
         ev.stopPropagation()
+        //console.log(ev)
+        if(ev.keyCode === 191 || ev.key === '#') {
+          this.addHashTag(ev, this._tag_container_id)
+        }
+        if(hashTagActionsInputKeys(ev.keyCode)) {
+        }
       }))
+
+    const hashTagActionsInputKeys = (keyCode: number) => {
+      return keyCode === 32
+    }
 
     const validDurationInputKey = (keyCode: number) => {
       return (keyCode >= 48 && keyCode <= 57) || // 0-9
@@ -248,24 +258,34 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     this._subs.forEach(sub => sub.unsubscribe())
   }
 
-  hashTag(ev: any, tag_container_id: string) {
+  addHashTag(ev: any, tag_container_id: string) {
 
-    if (this.addHashTagContainer(tag_container_id)) {
-      //let elem = ev.target as HTMLElement
-      this._hashtagContainer = document.getElementById(this._tag_container_id)! as HTMLElement
+    if(! this.isHashTagContainerOpen) {
 
-      //const componentRef = this._domService.instantiateComponent(TaggingComponent)
-      this._taggingComponentRef = this._domService.instantiateComponent(TaggingComponent)
-      //console.log(this._taggingComponentRef)
-      this._taggingComponentRef.instance.closeHashTagContainer.subscribe((ev: any) => {
-        this.closeHashTagContainer(ev)
-      })
-      //this._taggingComponentRef.instance.passed_hashtag = 'OK'
+      let range = document.getSelection()!.getRangeAt(0)!
+      if(!range.collapsed) {
+        range.deleteContents()
+      }
 
-      //const componentRefInstance = this._domService.getInstance(componentRef)
-      this._domService.attachComponent(this._taggingComponentRef, this._hashtagContainer)
+      //if (this.addHashTagContainer(tag_container_id)) {
+        //let elem = ev.target as HTMLElement
+        this._hashtagContainer = document.getElementById(this._tag_container_id)! as HTMLElement
 
-      this.isHashTagContainerOpen = true
+        //const componentRef = this._domService.instantiateComponent(TaggingComponent)
+        this._taggingComponentRef = this._domService.instantiateComponent(TaggingComponent)
+        // subscribe to tagging components onClickOutside event
+        this._taggingComponentRef.instance.closeHashTagContainer.subscribe((ev: any) => {
+          //this.closeHashTagContainer(ev)
+          this.removeHashTagContainer()
+        })
+        //this._taggingComponentRef.instance.passed_hashtag = 'OK'
+
+        //const componentRefInstance = this._domService.getInstance(componentRef)
+        //this._domService.attachComponent(this._taggingComponentRef, this._hashtagContainer)
+        this._domService.attachNodeToSelection(this._taggingComponentRef)
+
+        this.isHashTagContainerOpen = true
+      //}
     }
   }
 
@@ -278,15 +298,13 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
       //elem.parentNode.removeNode(true)
       if (elem.parentNode) {
         let parent = elem.parentNode!
-        /*if(this._taggingComponentRef) {
-          this._taggingComponentRef.destroy()
-          console.log(this._taggingComponentRef)
-          //parent.removeChild(this._taggingComponentRef.nativeElement)
-        }*/
         /*if(this._hashtagContainer) {
           parent.removeChild(this._hashtagContainer)
         }*/
         //detachEvent(, 'blur', onblur)
+        if(this._taggingComponentRef) {
+          this._taggingComponentRef.destroy()
+        }
         parent.removeChild(elem)
         //parent.innerText = ''
         console.log('REMOVE', elem)
@@ -299,29 +317,29 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   }
 
   addHashTagContainer(tag_container_id: any) {
-
     let range = document.getSelection()!.getRangeAt(0)!
-    console.log('addHashTagContainer')
-    //let modifiers = [0,8] // List of keys to ignore (0 is arrows & 8 is delete in firefox)
-    //console.log(range.startContainer.parentNode.className)
-    //if(range.startContainer!.parentNode!.className! !== 'hashtag') {
-      if(!range.collapsed) {
-        range.deleteContents()
-      }
-      let hashtag_span =  document.createElement('span')
-      hashtag_span.appendChild(document.createTextNode('A'))
-      hashtag_span.className = 'hashtag'
-      let hashtag_container_span = document.createElement('span')
-      hashtag_container_span.id = tag_container_id
-      hashtag_container_span.style.display = 'inline-block'
-      hashtag_span.appendChild(hashtag_container_span)
-      range.insertNode(hashtag_span)
+    if(!range.collapsed) {
+      range.deleteContents()
+    }
+    let hashtag_span =  document.createElement('span')
+    hashtag_span.appendChild(document.createTextNode('A'))
+    hashtag_span.className = 'hashtag'
+    let hashtag_span_close =  document.createElement('span')
+    hashtag_span_close.className = 'hashtag-close ion-ios-close-circle'
+    hashtag_span.appendChild(hashtag_span_close)
+    let hashtag_popup_container_span = document.createElement('span')
+    hashtag_popup_container_span.id = tag_container_id
+    hashtag_popup_container_span.style.display = 'inline-block'
+    hashtag_span.appendChild(hashtag_popup_container_span)
 
-      let sel = window.getSelection()
-      range.setStartBefore(hashtag_span.childNodes[0])
-      range.setEndAfter(hashtag_span.childNodes[0])
-      sel.removeAllRanges()
-      sel.addRange(range)
+    range.insertNode(hashtag_span)
+
+    let sel = document.getSelection()
+    range.setStartBefore(hashtag_span.childNodes[0])
+    range.setEndAfter(hashtag_span.childNodes[0])
+    sel!.removeAllRanges()
+    sel!.addRange(range)
+    //if(range.startContainer!.parentNode!.className! !== 'hashtag') {
     //}
 
     return true
@@ -356,10 +374,10 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     return false*/
   }
 
-  closeHashTagContainer(ev: any) {
+  /*closeHashTagContainer(ev: any) {
     //console.log('closeHashTagContainer', ev)
     this.removeHashTagContainer()
-  }
+  }*/
 
   htmlBr(description: string) {
     const pat1 = new RegExp('<div>', 'g')
