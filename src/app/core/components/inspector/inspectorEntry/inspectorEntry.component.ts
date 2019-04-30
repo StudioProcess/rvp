@@ -73,13 +73,13 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   @ViewChild('duration') private readonly _durationInputRef: ElementRef
   @ViewChild('descr') private readonly _descrInputRef: ElementRef
 
-  @HostListener('click', ['$event'])
-    onClick(event: MouseEvent) {
-      //console.log(event.target, event.target.classList.contains(''))
+  @HostListener('click', ['$event', '$event.target'])
+    onClick(event: MouseEvent, target: HTMLElement) {
+      this.removeHashTag(target)
     }
 
   form: FormGroup|null = null
-  isHashTagContainerOpen: boolean = false
+  isHashTagPopupContainerOpen: boolean = false
 
   private readonly _subs: Subscription[] = []
 
@@ -124,7 +124,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   ngAfterViewInit() {
 
-    this.removeHashTagContainer()
+    this.removeHashTagPopupContainer()
 
     const formClick = fromEvent(this._formRef.nativeElement, 'click')
       .pipe(filter((ev: MouseEvent) => ev.button === 0))
@@ -220,7 +220,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     /*this._subs.push(
       formBlur
         .subscribe((ev: any) => {
-          this.removeHashTagContainer()
+          this.removeHashTagPopupContainer()
         }))*/
 
     this._subs.push(
@@ -269,7 +269,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   addHashTag(ev: any) {
 
-    if(! this.isHashTagContainerOpen) {
+    if(! this.isHashTagPopupContainerOpen) {
       if (this.addHashTagContainer()) {
         //let elem = ev.target as HTMLElement
         this._hashtagContainer = document.getElementById(this._tag_popup_container_id)! as HTMLElement
@@ -279,18 +279,28 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
         // subscribe to tagging components onClickOutside event
         this._taggingComponentRef.instance.closeHashTagContainer.subscribe((ev: any) => {
           //this.closeHashTagContainer(ev)
-          this.removeHashTagContainer()
+          this.removeHashTagPopupContainer()
         })
         //this._taggingComponentRef.instance.passed_hashtag = 'OK'
         //const componentRefInstance = this._domService.getInstance(componentRef)
         this._domService.attachComponent(this._taggingComponentRef, this._hashtagContainer)
 
-        this.isHashTagContainerOpen = true
+        this.isHashTagPopupContainerOpen = true
       }
     }
   }
 
-  removeHashTagContainer() {
+  removeHashTag(target: HTMLElement) {
+    if(target.classList.contains(this._tag_container_close_class)) {
+      const p = target.parentNode as HTMLElement
+      if(p.classList.contains(this._tag_container_class)) {
+        p.parentNode!.removeChild(p)
+        this.isHashTagPopupContainerOpen = false
+      }
+    }
+  }
+
+  removeHashTagPopupContainer() {
     if(document.getElementById(this._tag_popup_container_id)) {
       //var node = document.getSelection().anchorNode;
       //this._taggingComponentRef
@@ -312,7 +322,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
         //console.log(this._taggingComponentRef.instance)
 
         this._hashtagContainer = null
-        this.isHashTagContainerOpen = false
+        this.isHashTagPopupContainerOpen = false
       }
     }
   }
@@ -377,7 +387,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   /*closeHashTagContainer(ev: any) {
     //console.log('closeHashTagContainer', ev)
-    this.removeHashTagContainer()
+    this.removeHashTagPopupContainer()
   }*/
 
   htmlBr(description: string) {
