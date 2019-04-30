@@ -278,7 +278,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
         this._taggingComponentRef = this._domService.instantiateComponent(TaggingComponent)
         // subscribe to tagging components onClickOutside event
         this._taggingComponentRef.instance.closeHashTagContainer.subscribe((ev: any) => {
-          //this.closeHashTagContainer(ev)
           this.removeHashTagPopupContainer()
         })
         //this._taggingComponentRef.instance.passed_hashtag = 'OK'
@@ -302,24 +301,14 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   removeHashTagPopupContainer() {
     if(document.getElementById(this._tag_popup_container_id)) {
-      //var node = document.getSelection().anchorNode;
-      //this._taggingComponentRef
-      //return (node.nodeType == 3 ? node.parentNode : node);
       let elem = document.getElementById(this._tag_popup_container_id)!
-      //elem.parentNode.removeNode(true)
       if (elem.parentNode) {
         let parent = elem.parentNode!
-        /*if(this._hashtagContainer) {
-          parent.removeChild(this._hashtagContainer)
-        }*/
-        //detachEvent(, 'blur', onblur)
         if(this._taggingComponentRef) {
           this._taggingComponentRef.destroy()
         }
         parent.removeChild(elem)
-        //parent.innerText = ''
-        console.log('REMOVE', elem)
-        //console.log(this._taggingComponentRef.instance)
+        //console.log('REMOVE', elem)
 
         this._hashtagContainer = null
         this.isHashTagPopupContainerOpen = false
@@ -384,11 +373,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     }
     return false*/
   }
-
-  /*closeHashTagContainer(ev: any) {
-    //console.log('closeHashTagContainer', ev)
-    this.removeHashTagPopupContainer()
-  }*/
 
   htmlBr(description: string) {
     const pat1 = new RegExp('<div>', 'g')
