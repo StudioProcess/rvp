@@ -112,19 +112,20 @@
           background-color: #efefef;
 
           .hashtag-close {
-            display: none;
-            position: relative;
+            /*display: none;*/
+            /*position: relative;
             top: 1px;
-            right: 0;
+            right: 0;*/
             margin-left: 5px;
             font-size: 16px;
             background-color: #efefef;
+            cursor: pointer;
           }
-          &:hover {
+          /*&:hover {
             .hashtag-close {
               display: inline-block;
             }
-          }
+          }*/
         }
 
         &:focus {
