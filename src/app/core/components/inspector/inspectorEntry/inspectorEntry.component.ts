@@ -4,7 +4,8 @@ import {
   EventEmitter, ViewChild, ElementRef,
   ChangeDetectionStrategy, OnDestroy,
   SimpleChanges, HostBinding, HostListener,
-  ViewEncapsulation
+  ViewEncapsulation,
+  //ChangeDetectorRef
 } from '@angular/core'
 
 import {
@@ -93,7 +94,8 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   constructor(
     readonly elem: ElementRef,
     private readonly _fb: FormBuilder,
-    private readonly _domService: DomService
+    private readonly _domService: DomService,
+    //private readonly _changeDetector: ChangeDetectorRef
   ) {}
 
   private _mapModel(entry: Record<AnnotationColorMap>) {
@@ -176,23 +178,25 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
     this._subs.push(
       formKeyUp.subscribe((ev: KeyboardEvent) => {
-        //if(ev.key === '#') {}
       }))
 
     this._subs.push(
       formKeydown.subscribe((ev: KeyboardEvent) => {
         ev.stopPropagation()
-        //console.log(ev)
-        if(ev.keyCode === 191 || ev.key === '#') {
-          this.addHashTag(ev)
-        }
-        if(hashTagActionsInputKeys(ev.keyCode)) {
+        if(this.isHashTagPopupContainerOpen) {
+          this.handleHashtagInput(ev)
+        } else {
+          //console.log(ev)
+          if(ev.keyCode === 191 || ev.key === '#') {
+            this.addHashTag(ev)
+          }
+          //if(hashTagActionsInputKeys(ev.keyCode)) {}
         }
       }))
 
-    const hashTagActionsInputKeys = (keyCode: number) => {
+    /*const hashTagActionsInputKeys = (keyCode: number) => {
       return keyCode === 32
-    }
+    }*/
 
     const validDurationInputKey = (keyCode: number) => {
       return (keyCode >= 48 && keyCode <= 57) || // 0-9
@@ -237,7 +241,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
           }))
         .subscribe(({description, utc_timestamp, duration}) => {
 
-          description = this.htmlBr(description)
+          //description = this.htmlBr(description)
           const annotation = new AnnotationRecordFactory({
             id: this.entry.getIn(['annotation', 'id']),
             utc_timestamp: parseDuration(utc_timestamp),
@@ -267,25 +271,64 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     this._subs.forEach(sub => sub.unsubscribe())
   }
 
+  handleHashtagInput(ev: KeyboardEvent) {
+
+    let selection = window.getSelection().anchorNode
+    setTimeout(() => { // TODO : ugly hack, better find node another way (& read content via e.g. innerHTML)
+      this._taggingComponentRef.instance.passed_hashtag = selection.textContent
+    }, 10)
+
+    //this._taggingComponentRef.instance.passed_hashtag_2 = selection.textContent
+    //this._taggingComponentRef.instance._changeDetector.detectChanges()
+    //this._taggingComponentRef.instance._changeDetector.markForCheck()
+  }
+
+  /*
+  getCaretPosition() {
+    if (window.getSelection && window.getSelection().getRangeAt) {
+      var range = window.getSelection().getRangeAt(0);
+      var selectedObj = window.getSelection();
+      var rangeCount = 0;
+      var childNodes = selectedObj.anchorNode.parentNode.childNodes;
+      for (var i = 0; i < childNodes.length; i++) {
+        if (childNodes[i] == selectedObj.anchorNode) {
+          break;
+        }
+        if (childNodes[i].outerHTML)
+          rangeCount += childNodes[i].outerHTML.length;
+        else if (childNodes[i].nodeType == 3) {
+          rangeCount += childNodes[i].textContent.length;
+        }
+      }
+      //console.log(range.startOffset, selectedObj.anchorNode)
+      return range.startOffset + rangeCount;
+    }
+    return -1;
+  }
+  */
+
   addHashTag(ev: any) {
 
     if(! this.isHashTagPopupContainerOpen) {
-      if (this.addHashTagContainer()) {
-        //let elem = ev.target as HTMLElement
-        this._hashtagContainer = document.getElementById(this._tag_popup_container_id)! as HTMLElement
+      //this.addHashTagContainer().then(value => {
+      this.addHashTagPopupContainer()
+      //this.addHashTagContainer()
 
-        //const componentRef = this._domService.instantiateComponent(TaggingComponent)
-        this._taggingComponentRef = this._domService.instantiateComponent(TaggingComponent)
-        // subscribe to tagging components onClickOutside event
-        this._taggingComponentRef.instance.closeHashTagContainer.subscribe((ev: any) => {
-          this.removeHashTagPopupContainer()
-        })
-        //this._taggingComponentRef.instance.passed_hashtag = 'OK'
-        //const componentRefInstance = this._domService.getInstance(componentRef)
-        this._domService.attachComponent(this._taggingComponentRef, this._hashtagContainer)
+      //let elem = ev.target as HTMLElement
+      this._hashtagContainer = document.getElementById(this._tag_popup_container_id)! as HTMLElement
 
-        this.isHashTagPopupContainerOpen = true
-      }
+      //const componentRef = this._domService.instantiateComponent(TaggingComponent)
+      this._taggingComponentRef = this._domService.instantiateComponent(TaggingComponent)
+      // subscribe to tagging components onClickOutside event
+      this._taggingComponentRef.instance.closeHashTagContainer.subscribe((ev: any) => {
+        this.removeHashTagPopupContainer()
+      })
+      //this._taggingComponentRef.instance.passed_hashtag = 'tag'
+      //const componentRefInstance = this._domService.getInstance(componentRef)
+      this._domService.attachComponent(this._taggingComponentRef, this._hashtagContainer)
+
+      this.isHashTagPopupContainerOpen = true
+
     }
   }
 
@@ -302,13 +345,15 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   removeHashTagPopupContainer() {
     if(document.getElementById(this._tag_popup_container_id)) {
       let elem = document.getElementById(this._tag_popup_container_id)!
+      //console.log('removeHashTagPopupContainer', elem)
       if (elem.parentNode) {
         let parent = elem.parentNode!
+        //console.log('REMOVE', elem, parent)
+
         if(this._taggingComponentRef) {
           this._taggingComponentRef.destroy()
         }
         parent.removeChild(elem)
-        //console.log('REMOVE', elem)
 
         this._hashtagContainer = null
         this.isHashTagPopupContainerOpen = false
@@ -316,62 +361,94 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     }
   }
 
-  addHashTagContainer() {
+  addHashTagPopupContainer() {
     let range = document.getSelection()!.getRangeAt(0)!
     if(!range.collapsed) {
       range.deleteContents()
     }
-    let hashtag_span =  document.createElement('span')
-    hashtag_span.appendChild(document.createTextNode('A'))
-    hashtag_span.className = this._tag_container_class
-    let hashtag_span_close =  document.createElement('span')
-    hashtag_span_close.className = this._tag_container_close_class +' ion-ios-close-circle'
-    hashtag_span.appendChild(hashtag_span_close)
     let hashtag_popup_container_span = document.createElement('span')
     hashtag_popup_container_span.id = this._tag_popup_container_id
     hashtag_popup_container_span.style.display = 'inline-block'
-    hashtag_span.appendChild(hashtag_popup_container_span)
+    hashtag_popup_container_span.contentEditable = 'false'
 
-    range.insertNode(hashtag_span)
+    range.insertNode(hashtag_popup_container_span)
 
-    let sel = document.getSelection()
-    range.setStartBefore(hashtag_span.childNodes[0])
-    range.setEndAfter(hashtag_span.childNodes[0])
-    sel!.removeAllRanges()
-    sel!.addRange(range)
-    //if(range.startContainer!.parentNode!.className! !== 'hashtag') {
-    //}
+    let sel = document.getSelection()!
+    range = range!.cloneRange()
+    range!.setStartAfter(hashtag_popup_container_span)
+    range!.collapse(true)
+    sel.removeAllRanges()
+    sel.addRange(range)
 
     return true
+  }
+
+  addHashTagContainer() {
 
     /*
-    if (document.getSelection) {
-      const sel = document.getSelection()!
-      if (sel.getRangeAt && sel.rangeCount) {
-        let range = sel.getRangeAt(0)
-        range.deleteContents()
-        let el = document.createElement('div')
-        el.innerHTML = '<span id="'+tag_container_id+'" style="display:inline-block;"></span>'
-
-        let frag = document.createDocumentFragment(), node, lastNode
-        while (node = el.firstChild) {
-          lastNode = frag.appendChild(node)
-        }
-        range.insertNode(frag)
-
-        // Preserve the selection
-        if (lastNode) {
-          range = range.cloneRange()
-          range.setStartAfter(lastNode)
-          range.collapse(true)
-          sel.removeAllRanges()
-          //console.log(range)
-          sel.addRange(range)
-        }
-        return true
-      }
+    let html = '<span class="'+this._tag_container_class+'">'
+    html += '</span>'
+    let range = document.getSelection().getRangeAt(0)
+    let fragment = document.createRange().createContextualFragment(html)
+    range.insertNode(fragment)
+    */
+    //return new Promise(resolve => {
+    let range = document.getSelection()!.getRangeAt(0)!
+    if(!range.collapsed) {
+      range.deleteContents()
     }
-    return false*/
+    let hashtag_span = document.createElement('span')
+    hashtag_span.className = this._tag_container_class
+    hashtag_span.appendChild(document.createTextNode('#'))
+    //hashtag_span.contentEditable = false
+    //hashtag_span.style.display = 'inline-block'
+
+    //let hashtag_span_text = document.createElement('span')
+    //hashtag_span_text.className = 'hashtag-text'
+    //hashtag_span_text.contentEditable = true
+
+    // let hashtag_popup_container_span = document.createElement('span')
+    // hashtag_popup_container_span.id = this._tag_popup_container_id
+    // hashtag_popup_container_span.style.display = 'inline-block'
+    //hashtag_popup_container_span.contentEditable = false
+
+    //let hashtag_span_close = document.createElement('span')
+    //hashtag_span_close.className = this._tag_container_close_class +' ion-ios-close-circle'
+    //hashtag_span_close.style.display = 'inline-block'
+
+    //hashtag_span.appendChild(document.createTextNode(''))
+    //hashtag_span.appendChild(hashtag_popup_container_span)
+    //hashtag_span.appendChild(hashtag_span_text)
+    //hashtag_span_text.appendChild(document.createTextNode('#'))
+    //hashtag_span.appendChild(hashtag_span_close)
+    //hashtag_span.insertBefore(document.createTextNode('#'), hashtag_span_close)
+
+    //console.log(hashtag_span)
+    range.insertNode(hashtag_span)
+    //range.surroundContents(hashtag_span)
+    //range.insertNode(hashtag_popup_container_span)
+    //range.insertNode(hashtag_span)
+
+
+    // let sel = document.getSelection()
+    // range.setStartBefore(hashtag_span.childNodes[0])
+    // range.setEndAfter(hashtag_span.childNodes[0])
+    // sel!.removeAllRanges()
+    // sel!.addRange(range)
+
+    let sel = document.getSelection()!
+    range = range!.cloneRange()
+    range!.setStartAfter(hashtag_span)
+    range!.collapse(true)
+    sel.removeAllRanges()
+    sel.addRange(range)
+
+    return true
+      /*
+      setTimeout(() => {
+        resolve(true)
+      }, 10)
+    })*/
   }
 
   htmlBr(description: string) {
