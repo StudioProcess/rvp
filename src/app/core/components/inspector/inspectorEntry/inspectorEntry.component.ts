@@ -221,11 +221,13 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
         }
       }))
 
-    /*this._subs.push(
+    /*
+    this._subs.push(
       formBlur
         .subscribe((ev: any) => {
           this.removeHashTagPopupContainer()
-        }))*/
+        }))
+    */
 
     this._subs.push(
       formBlur
@@ -241,6 +243,8 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
           }))
         .subscribe(({description, utc_timestamp, duration}) => {
 
+          console.log(description)
+          //this.removeHashTagPopupContainer()
           //description = this.htmlBr(description)
           const annotation = new AnnotationRecordFactory({
             id: this.entry.getIn(['annotation', 'id']),
@@ -273,10 +277,28 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   handleHashtagInput(ev: KeyboardEvent) {
 
-    let selection = window.getSelection().anchorNode
-    setTimeout(() => { // TODO : ugly hack, better find node another way (& read content via e.g. innerHTML)
-      this._taggingComponentRef.instance.passed_hashtag = selection.textContent
-    }, 10)
+    const selection = document.getSelection()!.anchorNode!
+    //console.log(window.getSelection().anchorNode.childNodes)
+    /*
+    let iter = document.createNodeIterator(selection, NodeFilter.SHOW_TEXT), textnode
+    while (textnode = iter.nextNode()) {
+      console.log(textnode.textContent)
+    }
+    */
+    setTimeout(() => { // TODO : ugly hack, find another way to read nodes textcontent
+      if(selection.nodeType == Node.TEXT_NODE) {
+        let hashtag = selection.textContent!
+        let hashtag_concise = hashtag
+        if(/\s/.test(hashtag)) {
+          // when empty spaces occur on textnode hashtag end on next empty space
+          hashtag_concise = hashtag.substr(0, hashtag.indexOf(' '))!
+        }
+
+        this._taggingComponentRef.instance.passed_hashtag = hashtag_concise
+      }
+      //this._taggingComponentRef.instance.passed_hashtag = selection.nodeValue
+      //this._taggingComponentRef.instance.passed_hashtag = selection.textContent
+    }, 5)
 
     //this._taggingComponentRef.instance.passed_hashtag_2 = selection.textContent
     //this._taggingComponentRef.instance._changeDetector.detectChanges()
@@ -319,10 +341,13 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
       //const componentRef = this._domService.instantiateComponent(TaggingComponent)
       this._taggingComponentRef = this._domService.instantiateComponent(TaggingComponent)
+
       // subscribe to tagging components onClickOutside event
       this._taggingComponentRef.instance.closeHashTagContainer.subscribe((ev: any) => {
+        console.log('closeHashTagContainer')
         this.removeHashTagPopupContainer()
       })
+
       //this._taggingComponentRef.instance.passed_hashtag = 'tag'
       //const componentRefInstance = this._domService.getInstance(componentRef)
       this._domService.attachComponent(this._taggingComponentRef, this._hashtagContainer)
@@ -345,10 +370,9 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   removeHashTagPopupContainer() {
     if(document.getElementById(this._tag_popup_container_id)) {
       let elem = document.getElementById(this._tag_popup_container_id)!
-      //console.log('removeHashTagPopupContainer', elem)
       if (elem.parentNode) {
         let parent = elem.parentNode!
-        //console.log('REMOVE', elem, parent)
+        console.log('removeHashTagPopupContainer', elem)
 
         if(this._taggingComponentRef) {
           this._taggingComponentRef.destroy()
