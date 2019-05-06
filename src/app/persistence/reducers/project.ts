@@ -12,6 +12,7 @@ import {
   ProjectSnapshotRecordFactory, Track, Annotation,
   AnnotationSelection, AnnotationSelectionRecordFactory,
   BlobVideoRecordFactory, UrlVideoRecordFactory,
+  ProjectHashtagsRecordFactory,
   VIDEO_TYPE_BLOB, VIDEO_TYPE_URL, VideoUrlSource, ProjectPlayerStateRecordFactory
 } from '../model'
 
@@ -71,7 +72,8 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const prevVideoMeta = state.getIn(['meta', 'video'])
       const prevVideoBlob = state.get('videoBlob', null)
 
-      const {meta: {id, timeline, video:videoMeta}, video} = action.payload
+      const {meta: {id, timeline, video:videoMeta, hashtags}, video} = action.payload
+      console.log(action.payload, hashtags)
 
       if(videoMeta === null) {
         timeline.duration = prevDuration
@@ -105,6 +107,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
                 }))
               })
             }))
+          }),
+          //hashtags: hashtags
+          hashtags: ProjectHashtagsRecordFactory({
+            list: hashtags.list
           })
         })
       })
@@ -431,6 +437,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
     case project.PROJECT_COPY_ANNOTATION_SELECTION_TO_CLIPBOARD: {
       const all = getAllSelections(state)
       return state.set('clipboard', all)
+    }
+    case project.PROJECT_UPDATE_HASHTAGS: {
+      //console.log('PROJECT_UPDATE_HASHTAGS', action!.payload!)
+      return state.setIn(['meta', 'hashtags', 'list'], action.payload!.hashtags!)
     }
     case project.PROJECT_PASTE_CLIPBOARD: {
       const all = state.get('clipboard', null)!
