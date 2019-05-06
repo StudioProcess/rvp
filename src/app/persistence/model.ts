@@ -38,7 +38,6 @@ export interface ProjectMeta {
   readonly id: number|null
   readonly video: Record<ProjectVideo>|null,
   readonly timeline: Record<Timeline>|null,
-  //readonly hashtags: []|null
   readonly hashtags: Record<ProjectHashtags>|null
 }
 
