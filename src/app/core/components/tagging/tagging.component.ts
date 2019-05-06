@@ -106,7 +106,9 @@ export class TaggingComponent implements OnInit {
     //console.log("CHANGE", change)
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    //console.log('TAGGINGCOMPONENT DESTROY')
+  }
 
   /*updatePassedHashtag(hashtag: string) {
     this._changeDetector.markForCheck()
