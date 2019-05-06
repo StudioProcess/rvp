@@ -68,6 +68,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   @Output() readonly onUpdate = new EventEmitter<project.UpdateAnnotationPayload>()
   @Output() readonly onSelectAnnotation = new EventEmitter<project.SelectAnnotationPayload>()
   @Output() readonly onFocusAnnotation = new EventEmitter<project.PlayerRequestCurrentTimePayload>()
+  @Output() readonly onHashtagsUpdate = new EventEmitter<project.UpdateProjectHashtagsPayload>()
 
   @ViewChild('formWrapper') private readonly _formRef: ElementRef
   @ViewChild('start') private readonly _startInputRef: ElementRef
@@ -287,13 +288,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   handleHashtagInput(ev: KeyboardEvent) {
 
     const selection = document.getSelection()!.anchorNode!
-    //console.log(window.getSelection().anchorNode.childNodes)
-    /*
-    let iter = document.createNodeIterator(selection, NodeFilter.SHOW_TEXT), textnode
-    while (textnode = iter.nextNode()) {
-      console.log(textnode.textContent)
-    }
-    */
     setTimeout(() => { // TODO : ugly hack, find another way to read nodes textcontent
       if(selection.nodeType == Node.TEXT_NODE) {
         let hashtag = selection.textContent!
@@ -302,7 +296,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
           // when empty spaces occur on textnode hashtag end on next empty space
           hashtag_concise = hashtag.substr(0, hashtag.indexOf(' '))!
         }
-
         this._taggingComponentRef.instance.passed_hashtag = hashtag_concise
       }
       //this._taggingComponentRef.instance.passed_hashtag = selection.nodeValue
@@ -313,7 +306,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     //this._taggingComponentRef.instance._changeDetector.detectChanges()
     //this._taggingComponentRef.instance._changeDetector.markForCheck()
   }
-
   /*
   getCaretPosition() {
     if (window.getSelection && window.getSelection().getRangeAt) {
@@ -342,6 +334,10 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     //console.log('saveHashtags', description)
     const hashtags = description.match(/#\w+/g)
     console.log(hashtags)
+
+    this.onHashtagsUpdate.emit({
+      hashtags
+    })
   }
 
   removeDescriptionNodes(description: string) {
