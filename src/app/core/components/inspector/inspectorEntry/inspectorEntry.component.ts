@@ -331,10 +331,8 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   */
 
   saveHashtags(description: string) {
-    //console.log('saveHashtags', description)
     const hashtags = description.match(/#\w+/g)
-    console.log(hashtags)
-
+    //console.log(hashtags)
     this.onHashtagsUpdate.emit({
       hashtags
     })
