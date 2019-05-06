@@ -250,11 +250,11 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
           }))
         .subscribe(({description, utc_timestamp, duration}) => {
 
+          //description = this.htmlBr(description)
           description = this.removeDescriptionNodes(description)
           this.saveHashtags(description)
           //console.log('item', description_text)
           //console.log('formBlur', description)
-          //description = this.htmlBr(description)
           const annotation = new AnnotationRecordFactory({
             id: this.entry.getIn(['annotation', 'id']),
             utc_timestamp: parseDuration(utc_timestamp),
@@ -340,14 +340,17 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   saveHashtags(description: string) {
     //console.log('saveHashtags', description)
-    
+    const hashtags = description.match(/#\w+/g)
+    console.log(hashtags)
   }
 
   removeDescriptionNodes(description: string) {
-    const description_node = document.createRange().createContextualFragment(description)
-    // console.log('description_node', description_node)
+    //const description_node = document.createRange().createContextualFragment(description)
+    // description_node.childNodes.forEach(function (item: HTMLElement) {
+    const description_node = new DOMParser().parseFromString(description, 'text/html').body.childNodes
+    //console.log('description_node', description_node)
     let description_text = ''
-    description_node.childNodes.forEach(function (item: HTMLElement) {
+    description_node.forEach(function (item: HTMLElement) {
       if(item.nodeType == Node.TEXT_NODE) {
         description_text += item.textContent
       }
