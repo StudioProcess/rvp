@@ -37,7 +37,9 @@ export class UrlVideo {
 export interface ProjectMeta {
   readonly id: number|null
   readonly video: Record<ProjectVideo>|null,
-  readonly timeline: Record<Timeline>|null
+  readonly timeline: Record<Timeline>|null,
+  //readonly hashtags: []|null
+  readonly hashtags: Record<ProjectHashtags>|null
 }
 
 export interface ProjectSettings {
@@ -107,6 +109,10 @@ export interface Timeline {
   readonly tracks: List<Record<Track>>
 }
 
+export interface ProjectHashtags {
+  readonly list: []|null
+}
+
 export interface Track {
   readonly id: number|null
   readonly isActive: boolean
@@ -146,6 +152,7 @@ export const ProjectMetaRecordFactory = Record<ProjectMeta>({
   id: null,
   video: null,
   timeline: null,
+  hashtags: null,
 })
 
 export const ProjectSettingsRecordFactory = Record<ProjectSettings>({
@@ -221,6 +228,10 @@ export const AnnotationRecordFactory = Record<Annotation>({
   utc_timestamp: -1,
   duration: -1,
   fields: new AnnotationFieldsRecordFactory()
+})
+
+export const ProjectHashtagsRecordFactory = Record<ProjectHashtags>({
+  list: []
 })
 
 export const BlobVideoRecordFactory = Record<BlobVideo>({
