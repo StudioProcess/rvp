@@ -126,7 +126,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   ngAfterViewInit() {
 
-    this.removeHashTagPopupContainer()
+    //this.removeHashTagPopupContainer()
 
     const formClick = fromEvent(this._formRef.nativeElement, 'click')
       .pipe(filter((ev: MouseEvent) => ev.button === 0))
@@ -221,13 +221,20 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
         }
       }))
 
-    /*
+
     this._subs.push(
       formBlur
         .subscribe((ev: any) => {
-          this.removeHashTagPopupContainer()
+
+          /*ev.target.childNodes.forEach(function (item: HTMLElement) {
+            if(item.nodeType != Node.TEXT_NODE) {
+              console.log('remove no TEXT_NODE', item)
+              item.remove()
+            }
+          })*/
+          //this.removeHashTagPopupContainer()
         }))
-    */
+
 
     this._subs.push(
       formBlur
@@ -243,8 +250,10 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
           }))
         .subscribe(({description, utc_timestamp, duration}) => {
 
-          console.log(description)
-          //this.removeHashTagPopupContainer()
+          description = this.removeDescriptionNodes(description)
+          this.saveHashtags(description)
+          //console.log('item', description_text)
+          //console.log('formBlur', description)
           //description = this.htmlBr(description)
           const annotation = new AnnotationRecordFactory({
             id: this.entry.getIn(['annotation', 'id']),
@@ -329,6 +338,23 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   }
   */
 
+  saveHashtags(description: string) {
+    //console.log('saveHashtags', description)
+    
+  }
+
+  removeDescriptionNodes(description: string) {
+    const description_node = document.createRange().createContextualFragment(description)
+    // console.log('description_node', description_node)
+    let description_text = ''
+    description_node.childNodes.forEach(function (item: HTMLElement) {
+      if(item.nodeType == Node.TEXT_NODE) {
+        description_text += item.textContent
+      }
+    })
+    return description_text
+  }
+
   addHashTag(ev: any) {
 
     if(! this.isHashTagPopupContainerOpen) {
@@ -376,6 +402,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
         if(this._taggingComponentRef) {
           this._taggingComponentRef.destroy()
+          //console.log('DESTROYED')
         }
         parent.removeChild(elem)
 
