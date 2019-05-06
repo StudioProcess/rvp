@@ -17,6 +17,7 @@ import {
 } from '../model'
 
 import {embedAnnotations} from '../../lib/annotationStack'
+import {prepareHashTagList} from '../../lib/hashtags'
 
 const initialState = new ProjectRecordFactory()
 
@@ -73,7 +74,6 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const prevVideoBlob = state.get('videoBlob', null)
 
       const {meta: {id, timeline, video:videoMeta, hashtags}, video} = action.payload
-      console.log(action.payload, hashtags)
 
       if(videoMeta === null) {
         timeline.duration = prevDuration
@@ -438,8 +438,9 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state.set('clipboard', all)
     }
     case project.PROJECT_UPDATE_HASHTAGS: {
-      //console.log('PROJECT_UPDATE_HASHTAGS', action!.payload!)
-      return state.setIn(['meta', 'hashtags', 'list'], action.payload!.hashtags!)
+      console.log('PROJECT_UPDATE_HASHTAGS', action!.payload!)
+      const hashtags = prepareHashTagList(action.payload!.hashtags!)
+      return state.setIn(['meta', 'hashtags', 'list'], hashtags)
     }
     case project.PROJECT_PASTE_CLIPBOARD: {
       const all = state.get('clipboard', null)!
