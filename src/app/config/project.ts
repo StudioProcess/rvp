@@ -45,6 +45,9 @@ export const _EMPTY_PROJECT_ = {
     "timeline": {
       "id": 0,
       "duration": 60,
+      "hashtags": {
+        "list": []
+      },
       "tracks": [
         {
           "id": 0,
