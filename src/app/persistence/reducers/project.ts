@@ -108,9 +108,8 @@ export function reducer(state: State = initialState, action: project.Actions): S
               })
             }))
           }),
-          //hashtags: hashtags
           hashtags: ProjectHashtagsRecordFactory({
-            list: hashtags.list
+            list: (hashtags! && hashtags!.list) ? hashtags.list : null
           })
         })
       })
