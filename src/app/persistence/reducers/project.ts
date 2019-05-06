@@ -438,8 +438,11 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state.set('clipboard', all)
     }
     case project.PROJECT_UPDATE_HASHTAGS: {
-      console.log('PROJECT_UPDATE_HASHTAGS', action!.payload!)
-      const hashtags = prepareHashTagList(action.payload!.hashtags!)
+      const prev_hashtags = state.getIn(['meta', 'hashtags', 'list'])
+      const new_hashtags = action.payload!.hashtags!
+      let hashtags = new_hashtags.concat(prev_hashtags)
+      hashtags = prepareHashTagList(hashtags)
+      //console.log('PROJECT_UPDATE_HASHTAGS', hashtags)
       return state.setIn(['meta', 'hashtags', 'list'], hashtags)
     }
     case project.PROJECT_PASTE_CLIPBOARD: {
