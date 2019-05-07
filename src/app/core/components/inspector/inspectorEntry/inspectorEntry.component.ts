@@ -287,9 +287,19 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   handleHashtagInput(ev: KeyboardEvent) {
 
+    //console.log(ev)
     const selection = document.getSelection()!.anchorNode!
-    setTimeout(() => { // TODO : ugly hack, find another way to read nodes textcontent
-      if(selection.nodeType == Node.TEXT_NODE) {
+
+    if(selection.nodeType == Node.TEXT_NODE) {
+      setTimeout(() => { // TODO : ugly hack, find another way to read nodes textcontent
+
+        if(this.getCurrentSelectionOffsetLength(selection) == 0) {
+          console.log('CARET 0')
+          this.removeHashTagPopupContainer()
+
+          return false
+        }
+
         let hashtag = selection.textContent!
         let hashtag_concise = hashtag
         if(/\s/.test(hashtag)) {
@@ -297,38 +307,15 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
           hashtag_concise = hashtag.substr(0, hashtag.indexOf(' '))!
         }
         this._taggingComponentRef.instance.passed_hashtag = hashtag_concise
-      }
-      //this._taggingComponentRef.instance.passed_hashtag = selection.nodeValue
-      //this._taggingComponentRef.instance.passed_hashtag = selection.textContent
-    }, 5)
+        //this._taggingComponentRef.instance.passed_hashtag = selection.nodeValue
+        //this._taggingComponentRef.instance.passed_hashtag = selection.textContent
+      }, 5)
+    }
 
     //this._taggingComponentRef.instance.passed_hashtag_2 = selection.textContent
     //this._taggingComponentRef.instance._changeDetector.detectChanges()
     //this._taggingComponentRef.instance._changeDetector.markForCheck()
   }
-  /*
-  getCaretPosition() {
-    if (window.getSelection && window.getSelection().getRangeAt) {
-      var range = window.getSelection().getRangeAt(0);
-      var selectedObj = window.getSelection();
-      var rangeCount = 0;
-      var childNodes = selectedObj.anchorNode.parentNode.childNodes;
-      for (var i = 0; i < childNodes.length; i++) {
-        if (childNodes[i] == selectedObj.anchorNode) {
-          break;
-        }
-        if (childNodes[i].outerHTML)
-          rangeCount += childNodes[i].outerHTML.length;
-        else if (childNodes[i].nodeType == 3) {
-          rangeCount += childNodes[i].textContent.length;
-        }
-      }
-      //console.log(range.startOffset, selectedObj.anchorNode)
-      return range.startOffset + rangeCount;
-    }
-    return -1;
-  }
-  */
 
   saveHashtags(description: string) {
     const hashtags = description.match(/#\w+/g)
@@ -336,6 +323,15 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     this.onHashtagsUpdate.emit({
       hashtags
     })
+  }
+
+  getCurrentSelectionOffsetLength(selection: Node) {
+    let range = document.getSelection()!.getRangeAt(0)
+    let preCaretRange = range.cloneRange()
+    preCaretRange.selectNodeContents(selection)
+    preCaretRange.setEnd(range.endContainer, range.endOffset)
+
+    return preCaretRange.toString().length
   }
 
   removeDescriptionNodes(description: string) {
@@ -349,6 +345,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
         description_text += item.textContent
       }
     })
+    this.isHashTagPopupContainerOpen = false
     return description_text
   }
 
