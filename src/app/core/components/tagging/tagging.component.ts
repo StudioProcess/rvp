@@ -9,8 +9,8 @@ import {
   //ChangeDetectorRef,
   ElementRef,
   SimpleChanges,
-  //ViewContainerRef,
   //ViewEncapsulation,
+  //ViewContainerRef,
 } from '@angular/core'
 
 import {Store} from '@ngrx/store'
@@ -26,11 +26,12 @@ import * as fromProject from '../../../persistence/reducers'
     '(document:click)': 'onClickOutside($event)',
   },
   template: `
-    <div class="tagging-list" contenteditable="false">
+    <div class="tagging-list-container" contenteditable="false">
       {{passed_hashtag_2}}
       <span #tag_editable contenteditable="false" id="tag_editable">{{passed_hashtag}}</span>
-      <ul contenteditable="false">
-        <li *ngFor="let option of options" [value]="option" [type]="option">
+      <ul class="tagging-list" contenteditable="false">
+        <li *ngFor="let option of options" [value]="option" [type]="option"
+          (click)="selectHashtag($event, option)">
           {{option}}
         </li>
       </ul>
@@ -41,20 +42,23 @@ import * as fromProject from '../../../persistence/reducers'
       display: block;
       position: absolute;
     }
-    .tagging-list {
-      margin-top: 1px;
-      margin-left: 1px;
+    .tagging-list-container {
+      margin-top: -20px;
+      margin-left: -10px;
       min-width: 100px;
       padding: 10px;
       background-color: rgba(255, 255, 255, 0.9);
       color: #000;
 
-      ul {
-        list-style: none;
-      }
+    }
+    #tag_editable {
+    }
+    .tagging-list {
+      padding: 0;
+      margin: 5px 0 0 0;
+      list-style: none;
     }
   `],
-  //encapsulation: ViewEncapsulation.ShadowDom
 })
 export class TaggingComponent implements OnInit {
 
@@ -105,5 +109,9 @@ export class TaggingComponent implements OnInit {
     })
     this.options = filtered
     //this._changeDetector.markForCheck()
+  }
+
+  selectHashtag(event: any, hashtag: string) {
+    console.log(event, hashtag)
   }
 }
