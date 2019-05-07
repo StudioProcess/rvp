@@ -8,9 +8,13 @@ import {
   //ViewChild,
   //ChangeDetectorRef,
   ElementRef,
+  SimpleChanges,
   //ViewContainerRef,
   //ViewEncapsulation,
 } from '@angular/core'
+
+import {Store} from '@ngrx/store'
+import * as fromProject from '../../../persistence/reducers'
 
 //import {FormControl} from '@angular/forms'
 //import {MatAutocompleteModule} from '@angular/material/autocomplete'
@@ -21,39 +25,12 @@ import {
   host: {
     '(document:click)': 'onClickOutside($event)',
   },
-  /*template: `
-    <div class="tagging-list">
-      <form class="">
-        <mat-form-field class="">
-          <input type="text" matInput placeholder="HASHTAG" #inputelem="matInput" [formControl]="myControl" [matAutocomplete]="auto">
-          <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let option of options" [value]="option">
-              {{option}}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-      </form>
-    </div>
-  `,*/
-  /*template: `
-    <span class="hashtag-close ion-ios-close-circle"></span>
-    <span id="tag-container">
-      <div class="tagging-list" contenteditable="false">
-        <span #tag_editable contenteditable="false" id="tag_editable">{{passed_hashtag}}</span>
-        <ul contenteditable="false">
-          <li *ngFor="let option of options" [value]="option">
-            {{option}}
-          </li>
-        </ul>
-      </div>
-    </span>
-  `,*/
   template: `
     <div class="tagging-list" contenteditable="false">
       {{passed_hashtag_2}}
       <span #tag_editable contenteditable="false" id="tag_editable">{{passed_hashtag}}</span>
       <ul contenteditable="false">
-        <li *ngFor="let option of options" [value]="option">
+        <li *ngFor="let option of options" [value]="option" [type]="option">
           {{option}}
         </li>
       </ul>
@@ -81,11 +58,8 @@ import {
 })
 export class TaggingComponent implements OnInit {
 
-  //@ViewChild('inputelem') nameInput: MatInput
-  //@ViewChild('tag_editable') private _tagEditable: any
-  //@Input() @HostBinding('hashTag') bindHashTag = ''
-  //passed_hashtag: string = ''
-  options: string[] = ['One', 'Two', 'Three']
+  options: string[] = []
+  options_init: string[] = []
 
   @Input() passed_hashtag: string
 
@@ -93,32 +67,43 @@ export class TaggingComponent implements OnInit {
 
   constructor(
     private _eref: ElementRef,
+    private readonly _store: Store<fromProject.State>,
     //private _changeDetector: ChangeDetectorRef
     //private _vcRef: ViewContainerRef,
-  ) {}
-
-  ngOnInit() {
+  ) {
+    this._store.select(fromProject.getProjectMeta).subscribe(meta => {
+      const hashtags = meta!.getIn(['hashtags', 'list'])!
+      this.options = (hashtags) ? hashtags : []
+      this.options_init = this.options
+    })
+    console.log("HASHTAGS", this.options)
   }
+
+  ngOnInit() {}
 
   ngAfterViewInit() {}
 
-  ngOnChanges(change: any) {
-    //console.log("CHANGE", change)
+  //ngOnChanges(changes: { [passed_hashtag: string]: SimpleChange }) {
+  ngOnChanges(changes: SimpleChanges) {
+    //console.log("CHANGE", changes)
   }
 
   ngOnDestroy() {
-    //console.log('TAGGINGCOMPONENT DESTROY')
+    console.log("ngOnDestroy")
   }
-
-  /*updatePassedHashtag(hashtag: string) {
-    this._changeDetector.markForCheck()
-    this.passed_hashtag = hashtag
-    this._changeDetector.detectChanges()
-  }*/
 
   onClickOutside(ev: any) {
     if (!this._eref.nativeElement.contains(ev.target)) {
       this.closeHashTagContainer.emit({close: true})
     }
+  }
+
+  updateHashtags(hashtag: string) {
+    this.passed_hashtag = hashtag
+    const filtered = this.options_init.filter((option) => {
+      return option.includes(hashtag.substr(1))
+    })
+    this.options = filtered
+    //this._changeDetector.markForCheck()
   }
 }
