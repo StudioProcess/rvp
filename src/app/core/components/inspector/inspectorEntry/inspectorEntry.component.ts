@@ -287,9 +287,15 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   handleHashtagInput(ev: KeyboardEvent) {
 
-    //console.log(ev)
-    const selection = document.getSelection()!.anchorNode!
+    if(ev.key == ' ' || ev.key == 'Enter') {
+      //console.log(ev)
+      if(ev.key == 'Enter') { ev.preventDefault() }
+      this.removeHashTagPopupContainer()
 
+      return false
+    }
+
+    const selection = document.getSelection()!.anchorNode!
     if(selection.nodeType == Node.TEXT_NODE) {
       setTimeout(() => { // TODO : ugly hack, find another way to read nodes textcontent
 
