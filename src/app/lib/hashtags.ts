@@ -51,7 +51,6 @@ export function swapHashtag(InspectorEntryComponentRef: InspectorEntryComponent,
   })
 }
 
-
 export function handleHashtagInput(InspectorEntryComponentRef: InspectorEntryComponent, ev: KeyboardEvent) {
   if(ev.key == ' ' || ev.key == 'Enter') {
     //console.log(ev)
@@ -65,7 +64,7 @@ export function handleHashtagInput(InspectorEntryComponentRef: InspectorEntryCom
   if(selection.nodeType == Node.TEXT_NODE) {
     setTimeout(() => { // TODO : ugly hack, find another way to read nodes textcontent
 
-      if(InspectorEntryComponentRef.getCurrentSelectionOffsetLength(selection) == 0) {
+      if(getCurrentSelectionOffsetLength(selection) == 0) {
         removeHashTagPopupContainer(InspectorEntryComponentRef)
 
         return false
@@ -90,4 +89,38 @@ export function handleHashtagInput(InspectorEntryComponentRef: InspectorEntryCom
   //InspectorEntryComponentRef.taggingComponentRef.instance.passed_hashtag_2 = selection.textContent
   //InspectorEntryComponentRef.taggingComponentRef.instance._changeDetector.detectChanges()
   //InspectorEntryComponentRef.taggingComponentRef.instance._changeDetector.markForCheck()
+}
+
+export function getCurrentSelectionOffsetLength(selection: Node) {
+  let range = document.getSelection()!.getRangeAt(0)
+  let preCaretRange = range.cloneRange()
+  preCaretRange.selectNodeContents(selection)
+  preCaretRange.setEnd(range.endContainer, range.endOffset)
+
+  return preCaretRange.toString().length
+}
+
+/**
+ *  add a node within contenteditable container (left of the hashtag textnode)
+ *  which is used as the container (mainly positioning) of the tagging
+ *  popup component (will be removed on any formblur, save, pick etc. event).
+ */
+export function addHashTagPopupContainer(InspectorEntryComponentRef: InspectorEntryComponent) {
+  let range = document.getSelection()!.getRangeAt(0)!
+  if(!range.collapsed) {
+    range.deleteContents()
+  }
+  let hashtag_popup_container_span = document.createElement('span')
+  hashtag_popup_container_span.id = InspectorEntryComponentRef.tagPopupContainerId
+  hashtag_popup_container_span.style.display = 'inline-block'
+  hashtag_popup_container_span.contentEditable = 'false'
+
+  range.insertNode(hashtag_popup_container_span)
+
+  let sel = document.getSelection()!
+  range = range!.cloneRange()
+  range!.setStartAfter(hashtag_popup_container_span)
+  range!.collapse(true)
+  sel.removeAllRanges()
+  sel.addRange(range)
 }
