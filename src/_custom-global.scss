@@ -5,3 +5,11 @@
 body {
   user-select: none;
 }
+
+/**
+ * Scrollbars
+ */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { border-radius: 15px; }
+::-webkit-scrollbar-thumb { border-radius: 15px; background: #c1c1c1; }
+::-webkit-scrollbar-thumb:hover { background: #a3a3a3; }
