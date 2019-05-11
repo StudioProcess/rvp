@@ -46,6 +46,7 @@ import {DomService} from '../../../actions/dom.service'
 import {
   swapHashtag,
   removeHashTagPopupContainer,
+  addHashTagPopupContainer,
   handleHashtagInput,
 } from '../../../../lib/hashtags'
 
@@ -295,15 +296,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     })
   }
 
-  getCurrentSelectionOffsetLength(selection: Node) {
-    let range = document.getSelection()!.getRangeAt(0)
-    let preCaretRange = range.cloneRange()
-    preCaretRange.selectNodeContents(selection)
-    preCaretRange.setEnd(range.endContainer, range.endOffset)
-
-    return preCaretRange.toString().length
-  }
-
   removeDescriptionNodes(description: string) {
     //const description_node = document.createRange().createContextualFragment(description)
     // description_node.childNodes.forEach(function (item: HTMLElement) {
@@ -322,7 +314,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   addHashTag(ev: any) {
     if(! this.isHashTagPopupContainerOpen) {
       //this.addHashTagContainer()
-      this.addHashTagPopupContainer()
+      addHashTagPopupContainer(this)
 
       //let elem = ev.target as HTMLElement
       this.hashtagContainer = document.getElementById(this.tagPopupContainerId)! as HTMLElement
@@ -355,28 +347,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
         this.isHashTagPopupContainerOpen = false
       }
     }
-  }
-
-  addHashTagPopupContainer() {
-    let range = document.getSelection()!.getRangeAt(0)!
-    if(!range.collapsed) {
-      range.deleteContents()
-    }
-    let hashtag_popup_container_span = document.createElement('span')
-    hashtag_popup_container_span.id = this.tagPopupContainerId
-    hashtag_popup_container_span.style.display = 'inline-block'
-    hashtag_popup_container_span.contentEditable = 'false'
-
-    range.insertNode(hashtag_popup_container_span)
-
-    let sel = document.getSelection()!
-    range = range!.cloneRange()
-    range!.setStartAfter(hashtag_popup_container_span)
-    range!.collapse(true)
-    sel.removeAllRanges()
-    sel.addRange(range)
-
-    return true
   }
 
   addHashTagContainer() {
