@@ -46,6 +46,7 @@ import {DomService} from '../../../actions/dom.service'
 import {
   swapHashtag,
   removeHashTagPopupContainer,
+  handleHashtagInput,
 } from '../../../../lib/hashtags'
 
 function durationValidatorFactory(): ValidatorFn {
@@ -132,8 +133,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   ngAfterViewInit() {
 
-    //removeHashTagPopupContainer(this)
-
     const formClick = fromEvent(this._formRef.nativeElement, 'click')
       .pipe(filter((ev: MouseEvent) => ev.button === 0))
 
@@ -190,7 +189,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
       formKeydown.subscribe((ev: KeyboardEvent) => {
         ev.stopPropagation()
         if(this.isHashTagPopupContainerOpen) {
-          this.handleHashtagInput(ev)
+          handleHashtagInput(this, ev)
         } else {
           //console.log(ev)
           if(ev.keyCode === 191 || ev.key === '#') {
@@ -287,46 +286,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
-  }
-
-  handleHashtagInput(ev: KeyboardEvent) {
-    if(ev.key == ' ' || ev.key == 'Enter') {
-      //console.log(ev)
-      if(ev.key == 'Enter') { ev.preventDefault() }
-      removeHashTagPopupContainer(this)
-
-      return false
-    }
-
-    const selection = document.getSelection()!.anchorNode!
-    if(selection.nodeType == Node.TEXT_NODE) {
-      setTimeout(() => { // TODO : ugly hack, find another way to read nodes textcontent
-
-        if(this.getCurrentSelectionOffsetLength(selection) == 0) {
-          removeHashTagPopupContainer(this)
-
-          return false
-        }
-
-        let hashtag = selection.textContent!
-        let hashtag_concise = hashtag
-        if(/\s/.test(hashtag)) {
-          // when empty spaces occur on textnode hashtag end on next empty space
-          hashtag_concise = hashtag.substr(0, hashtag.indexOf(' '))!
-        }
-        //this.taggingComponentRef.instance.passed_hashtag = hashtag_concise
-        this.taggingComponentRef.instance.updateHashtags(hashtag_concise)
-        //this.taggingComponentRef.hostView.detectChanges()
-        //this.taggingComponentRef.injector.get(ChangeDetectorRef).markForCheck() // or detectChanges()
-        //this.taggingComponentRef.instance._changeDetector.detectChanges()
-        //this.taggingComponentRef.instance.passed_hashtag = selection.nodeValue
-        //this.taggingComponentRef.instance.passed_hashtag = selection.textContent
-      }, 5)
-    }
-
-    //this.taggingComponentRef.instance.passed_hashtag_2 = selection.textContent
-    //this.taggingComponentRef.instance._changeDetector.detectChanges()
-    //this.taggingComponentRef.instance._changeDetector.markForCheck()
   }
 
   saveHashtags(description: string) {

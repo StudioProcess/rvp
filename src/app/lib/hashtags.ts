@@ -17,7 +17,7 @@ export function removeHashTagPopupContainer(InspectorEntryComponentRef: Inspecto
 
       if(InspectorEntryComponentRef.taggingComponentRef) {
         InspectorEntryComponentRef.taggingComponentRef.destroy()
-        //this.taggingComponentRef.nativeElement.remove()
+        //InspectorEntryComponentRef.taggingComponentRef.nativeElement.remove()
       }
       parent.removeChild(elem)
 
@@ -49,4 +49,45 @@ export function swapHashtag(InspectorEntryComponentRef: InspectorEntryComponent,
   InspectorEntryComponentRef.form!.patchValue({
     'description': parentNode.textContent
   })
+}
+
+
+export function handleHashtagInput(InspectorEntryComponentRef: InspectorEntryComponent, ev: KeyboardEvent) {
+  if(ev.key == ' ' || ev.key == 'Enter') {
+    //console.log(ev)
+    if(ev.key == 'Enter') { ev.preventDefault() }
+    removeHashTagPopupContainer(InspectorEntryComponentRef)
+
+    return false
+  }
+
+  const selection = document.getSelection()!.anchorNode!
+  if(selection.nodeType == Node.TEXT_NODE) {
+    setTimeout(() => { // TODO : ugly hack, find another way to read nodes textcontent
+
+      if(InspectorEntryComponentRef.getCurrentSelectionOffsetLength(selection) == 0) {
+        removeHashTagPopupContainer(InspectorEntryComponentRef)
+
+        return false
+      }
+
+      let hashtag = selection.textContent!
+      let hashtag_concise = hashtag
+      if(/\s/.test(hashtag)) {
+        // when empty spaces occur on textnode hashtag end on next empty space
+        hashtag_concise = hashtag.substr(0, hashtag.indexOf(' '))!
+      }
+      //InspectorEntryComponentRef.taggingComponentRef.instance.passed_hashtag = hashtag_concise
+      InspectorEntryComponentRef.taggingComponentRef.instance.updateHashtags(hashtag_concise)
+      //InspectorEntryComponentRef.taggingComponentRef.hostView.detectChanges()
+      //InspectorEntryComponentRef.taggingComponentRef.injector.get(ChangeDetectorRef).markForCheck() // or detectChanges()
+      //InspectorEntryComponentRef.taggingComponentRef.instance._changeDetector.detectChanges()
+      //InspectorEntryComponentRef.taggingComponentRef.instance.passed_hashtag = selection.nodeValue
+      //InspectorEntryComponentRef.taggingComponentRef.instance.passed_hashtag = selection.textContent
+    }, 5)
+  }
+
+  //InspectorEntryComponentRef.taggingComponentRef.instance.passed_hashtag_2 = selection.textContent
+  //InspectorEntryComponentRef.taggingComponentRef.instance._changeDetector.detectChanges()
+  //InspectorEntryComponentRef.taggingComponentRef.instance._changeDetector.markForCheck()
 }
