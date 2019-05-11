@@ -25,10 +25,11 @@ import * as fromProject from '../../../persistence/reducers'
   host: {
     '(document:click)': 'onClickOutside($event)',
   },
+  styleUrls: ['tagging.component.scss'],
   template: `
     <div class="tagging-list-container" contenteditable="false">
       {{passed_hashtag_2}}
-      <span #tag_editable contenteditable="false" id="tag_editable">{{passed_hashtag}}</span>
+      <span #tag_editable contenteditable="false" id="tag-editable">{{passed_hashtag}}</span>
       <ul class="tagging-list" contenteditable="false">
         <li *ngFor="let option of options" [value]="option" [type]="option"
           (click)="selectHashtag($event, option)">
@@ -37,32 +38,6 @@ import * as fromProject from '../../../persistence/reducers'
       </ul>
     </div>
   `,
-  styleUrls: ['tagging.component.scss'],
-  /*
-  styles: [`
-    :host {
-      display: block;
-      position: absolute;
-    }
-    .tagging-list-container {
-      margin-top: -20px;
-      margin-left: -10px;
-      min-width: 100px;
-      max-height: 300px;
-      padding: 10px;
-      background-color: rgba(255, 255, 255, 0.9);
-      color: #000;
-      overflow-y: scroll;
-    }
-    #tag_editable {
-    }
-    .tagging-list {
-      padding: 0;
-      margin: 5px 0 0 0;
-      list-style: none;
-    }
-  `],
-  */
 })
 export class TaggingComponent implements OnInit {
 
