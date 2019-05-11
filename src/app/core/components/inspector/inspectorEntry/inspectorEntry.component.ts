@@ -64,6 +64,7 @@ const durationValidator = Validators.compose([Validators.required, durationValid
   encapsulation: ViewEncapsulation.None,
   selector: 'rv-inspector-entry',
   templateUrl: 'inspectorEntry.component.html',
+  host: {'class': 'inspectorEntryHost'},
   styleUrls: ['inspectorEntry.component.scss']
 })
 export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {

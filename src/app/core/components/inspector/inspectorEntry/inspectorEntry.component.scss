@@ -3,7 +3,9 @@
 
 :host {
   display: block;
+}
 
+.inspectorEntryHost {
   .entry-container {
     background-color: $process-super-light-gray3;
 
@@ -11,10 +13,20 @@
       background-color: $white;
     }
   }
-
   &:nth-child(even) {
     .entry-container {
       background-color: $process-super-light-gray;
+
+      &:hover {
+        background-color: $white;
+      }
+    }
+  }
+  &.selected {
+    .entry-container {
+      background-color: $process-super-light-gray;
+      outline-offset: (-$selection-outlinewidth);
+      outline: $selection-outlinewidth solid $black;
 
       &:hover {
         background-color: $white;
@@ -25,18 +37,6 @@
 
 .ion-md-time, .ion-ios-time {
   margin-left: 20px;
-}
-
-.selected {
-  .entry-container {
-    background-color: $process-super-light-gray;
-    outline-offset: (-$selection-outlinewidth);
-    outline: $selection-outlinewidth solid $black;
-
-    &:hover {
-      background-color: $white;
-    }
-  }
 }
 
 .entry-container {
