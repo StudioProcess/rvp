@@ -44,10 +44,8 @@ import {TaggingComponent} from '../../tagging/tagging.component'
 import {DomService} from '../../../actions/dom.service'
 
 import {
-  swapHashtag,
-  removeHashTagPopupContainer,
-  addHashTagPopupContainer,
-  handleHashtagInput,
+  swapHashtag, removeHashTagPopupContainer, addHashTagPopupContainer,
+  handleHashtagInput, encloseHashtags
 } from '../../../../lib/hashtags'
 
 function durationValidatorFactory(): ValidatorFn {
@@ -172,6 +170,9 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
             source: SelectionSource.Inspector
           })
         })
+        console.log('FOCUS', this.entry.get('annotation', null))
+        encloseHashtags(ev)
+
       }))
 
     // Focus annotation
