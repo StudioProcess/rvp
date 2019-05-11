@@ -100,8 +100,12 @@ export function getCurrentSelectionOffsetLength(selection: Node) {
   return preCaretRange.toString().length
 }
 
+export function encloseHashtags(ev: MouseEvent) {
+  console.log(ev)
+}
+
 /**
- *  add a node within contenteditable container (left of the hashtag textnode)
+ *  add a node within contenteditable container (left of the hashtag textnode before caret)
  *  which is used as the container (mainly positioning) of the tagging
  *  popup component (will be removed on any formblur, save, pick etc. event).
  */
