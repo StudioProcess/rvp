@@ -1,3 +1,4 @@
+import {InspectorEntryComponent} from '../core/components/inspector/inspectorEntry/inspectorEntry.component'
 
 export function prepareHashTagList(hashtags: []) {
 
@@ -7,28 +8,28 @@ export function prepareHashTagList(hashtags: []) {
   return sorted
 }
 
-export function removeHashTagPopupContainer(that: any) {
-  if(document.getElementById(that._tag_popup_container_id)) {
-    let elem = document.getElementById(that._tag_popup_container_id)!
+export function removeHashTagPopupContainer(InspectorEntryComponentRef: InspectorEntryComponent) {
+  if(document.getElementById(InspectorEntryComponentRef.tagPopupContainerId)) {
+    let elem = document.getElementById(InspectorEntryComponentRef.tagPopupContainerId)!
     if (elem.parentNode) {
       let parent = elem.parentNode!
       console.log('removeHashTagPopupContainer', elem)
 
-      if(that._taggingComponentRef) {
-        that._taggingComponentRef.destroy()
-        //this._taggingComponentRef.nativeElement.remove()
-        console.log('_taggingComponentRef DESTROYED')
+      if(InspectorEntryComponentRef.taggingComponentRef) {
+        InspectorEntryComponentRef.taggingComponentRef.destroy()
+        //this.taggingComponentRef.nativeElement.remove()
+        console.log('taggingComponentRef DESTROYED')
       }
       parent.removeChild(elem)
 
-      that._taggingComponentRef = null
-      that._hashtagContainer = null
-      that._isHashTagPopupContainerOpen = false
+      InspectorEntryComponentRef.taggingComponentRef = null
+      InspectorEntryComponentRef.hashtagContainer = null
+      InspectorEntryComponentRef.isHashTagPopupContainerOpen = false
     }
   }
 }
 
-export function swapHashtag(that: any, hashtag: string) {
+export function swapHashtag(InspectorEntryComponentRef: any, hashtag: string) {
   const selection = document.getSelection()
   const range = selection!.getRangeAt(0)!
   let rootNode = range.commonAncestorContainer //as Node
@@ -40,11 +41,11 @@ export function swapHashtag(that: any, hashtag: string) {
   }
 
   // update node
-  removeHashTagPopupContainer(that)
+  removeHashTagPopupContainer(InspectorEntryComponentRef)
   rootNode.nodeValue = hashtag
   let parentNode = rootNode.parentNode as HTMLElement
   parentNode.normalize()
 
   // update also FormBuilder form
-  that.form.patchValue({'description': parentNode.textContent})
+  InspectorEntryComponentRef.form.patchValue({'description': parentNode.textContent})
 }
