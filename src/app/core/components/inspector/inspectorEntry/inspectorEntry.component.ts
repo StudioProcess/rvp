@@ -90,12 +90,12 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   private readonly _subs: Subscription[] = []
 
   // #Hashtags
-  private readonly _tag_container_class = 'hashtag'
-  private readonly _tag_container_close_class = 'hashtag-close'
-  private readonly _tag_popup_container_id = 'tag-container'
-  private _hashtagContainer: HTMLElement|null = null
-  private _taggingComponentRef: any|null = null
-  private _isHashTagPopupContainerOpen: boolean = false
+  readonly tagContainerClass = 'hashtag'
+  readonly tagContainerCloseClass = 'hashtag-close'
+  readonly tagPopupContainerId = 'tag-container'
+  hashtagContainer: HTMLElement|null = null
+  taggingComponentRef: any|null = null
+  isHashTagPopupContainerOpen: boolean = false
 
   constructor(
     readonly elem: ElementRef,
@@ -189,7 +189,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     this._subs.push(
       formKeydown.subscribe((ev: KeyboardEvent) => {
         ev.stopPropagation()
-        if(this._isHashTagPopupContainerOpen) {
+        if(this.isHashTagPopupContainerOpen) {
           this.handleHashtagInput(ev)
         } else {
           //console.log(ev)
@@ -314,19 +314,19 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
           // when empty spaces occur on textnode hashtag end on next empty space
           hashtag_concise = hashtag.substr(0, hashtag.indexOf(' '))!
         }
-        //this._taggingComponentRef.instance.passed_hashtag = hashtag_concise
-        this._taggingComponentRef.instance.updateHashtags(hashtag_concise)
-        //this._taggingComponentRef.hostView.detectChanges()
-        //this._taggingComponentRef.injector.get(ChangeDetectorRef).markForCheck() // or detectChanges()
-        //this._taggingComponentRef.instance._changeDetector.detectChanges()
-        //this._taggingComponentRef.instance.passed_hashtag = selection.nodeValue
-        //this._taggingComponentRef.instance.passed_hashtag = selection.textContent
+        //this.taggingComponentRef.instance.passed_hashtag = hashtag_concise
+        this.taggingComponentRef.instance.updateHashtags(hashtag_concise)
+        //this.taggingComponentRef.hostView.detectChanges()
+        //this.taggingComponentRef.injector.get(ChangeDetectorRef).markForCheck() // or detectChanges()
+        //this.taggingComponentRef.instance._changeDetector.detectChanges()
+        //this.taggingComponentRef.instance.passed_hashtag = selection.nodeValue
+        //this.taggingComponentRef.instance.passed_hashtag = selection.textContent
       }, 5)
     }
 
-    //this._taggingComponentRef.instance.passed_hashtag_2 = selection.textContent
-    //this._taggingComponentRef.instance._changeDetector.detectChanges()
-    //this._taggingComponentRef.instance._changeDetector.markForCheck()
+    //this.taggingComponentRef.instance.passed_hashtag_2 = selection.textContent
+    //this.taggingComponentRef.instance._changeDetector.detectChanges()
+    //this.taggingComponentRef.instance._changeDetector.markForCheck()
   }
 
   saveHashtags(description: string) {
@@ -356,49 +356,44 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
         description_text += item.textContent
       }
     })
-    this._isHashTagPopupContainerOpen = false
+    this.isHashTagPopupContainerOpen = false
     return description_text
   }
 
   addHashTag(ev: any) {
-
-    if(! this._isHashTagPopupContainerOpen) {
-      //this.addHashTagContainer().then(value => {
-      this.addHashTagPopupContainer()
+    if(! this.isHashTagPopupContainerOpen) {
       //this.addHashTagContainer()
+      this.addHashTagPopupContainer()
 
       //let elem = ev.target as HTMLElement
-      this._hashtagContainer = document.getElementById(this._tag_popup_container_id)! as HTMLElement
+      this.hashtagContainer = document.getElementById(this.tagPopupContainerId)! as HTMLElement
 
       //const componentRef = this._domService.instantiateComponent(TaggingComponent)
-      this._taggingComponentRef = this._domService.instantiateComponent(TaggingComponent)
+      this.taggingComponentRef = this._domService.instantiateComponent(TaggingComponent)
 
       // subscribe to tagging components onClickOutside event
-      this._taggingComponentRef.instance.closeHashTagContainer.subscribe((ev: any) => {
+      this.taggingComponentRef.instance.closeHashTagContainer.subscribe((ev: any) => {
         removeHashTagPopupContainer(this)
       })
 
-      this._taggingComponentRef.instance.passHashTagToContent.subscribe((data: any) => {
-        //console.log('passHashTagToContent', data)
+      this.taggingComponentRef.instance.passHashTagToContent.subscribe((data: any) => {
         swapHashtag(this, data.hashtag)
-        console.log('FORM', this.form)
       })
 
-      this._taggingComponentRef.instance.passed_hashtag = '#'
+      this.taggingComponentRef.instance.passed_hashtag = '#'
       //const componentRefInstance = this._domService.getInstance(componentRef)
-      this._domService.attachComponent(this._taggingComponentRef, this._hashtagContainer)
+      this._domService.attachComponent(this.taggingComponentRef, this.hashtagContainer)
 
-      this._isHashTagPopupContainerOpen = true
-
+      this.isHashTagPopupContainerOpen = true
     }
   }
 
   removeHashTag(target: HTMLElement) {
-    if(target.classList.contains(this._tag_container_close_class)) {
+    if(target.classList.contains(this.tagContainerCloseClass)) {
       const p = target.parentNode as HTMLElement
-      if(p.classList.contains(this._tag_container_class)) {
+      if(p.classList.contains(this.tagContainerClass)) {
         p.parentNode!.removeChild(p)
-        this._isHashTagPopupContainerOpen = false
+        this.isHashTagPopupContainerOpen = false
       }
     }
   }
@@ -409,7 +404,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
       range.deleteContents()
     }
     let hashtag_popup_container_span = document.createElement('span')
-    hashtag_popup_container_span.id = this._tag_popup_container_id
+    hashtag_popup_container_span.id = this.tagPopupContainerId
     hashtag_popup_container_span.style.display = 'inline-block'
     hashtag_popup_container_span.contentEditable = 'false'
 
@@ -427,7 +422,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   addHashTagContainer() {
     /*
-    let html = '<span class="'+this._tag_container_class+'">'
+    let html = '<span class="'+this.tagContainerClass+'">'
     html += '</span>'
     let range = document.getSelection().getRangeAt(0)
     let fragment = document.createRange().createContextualFragment(html)
@@ -439,7 +434,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
       range.deleteContents()
     }
     let hashtag_span = document.createElement('span')
-    hashtag_span.className = this._tag_container_class
+    hashtag_span.className = this.tagContainerClass
     hashtag_span.appendChild(document.createTextNode('#'))
     //hashtag_span.contentEditable = false
     //hashtag_span.style.display = 'inline-block'
@@ -449,12 +444,12 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     //hashtag_span_text.contentEditable = true
 
     // let hashtag_popup_container_span = document.createElement('span')
-    // hashtag_popup_container_span.id = this._tag_popup_container_id
+    // hashtag_popup_container_span.id = this.tagPopupContainerId
     // hashtag_popup_container_span.style.display = 'inline-block'
     //hashtag_popup_container_span.contentEditable = false
 
     //let hashtag_span_close = document.createElement('span')
-    //hashtag_span_close.className = this._tag_container_close_class +' ion-ios-close-circle'
+    //hashtag_span_close.className = this.tagContainerCloseClass +' ion-ios-close-circle'
     //hashtag_span_close.style.display = 'inline-block'
 
     //hashtag_span.appendChild(document.createTextNode(''))
