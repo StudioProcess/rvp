@@ -37,6 +37,8 @@ import * as fromProject from '../../../persistence/reducers'
       </ul>
     </div>
   `,
+  styleUrls: ['tagging.component.scss'],
+  /*
   styles: [`
     :host {
       display: block;
@@ -46,10 +48,11 @@ import * as fromProject from '../../../persistence/reducers'
       margin-top: -20px;
       margin-left: -10px;
       min-width: 100px;
+      max-height: 300px;
       padding: 10px;
       background-color: rgba(255, 255, 255, 0.9);
       color: #000;
-
+      overflow-y: scroll;
     }
     #tag_editable {
     }
@@ -59,6 +62,7 @@ import * as fromProject from '../../../persistence/reducers'
       list-style: none;
     }
   `],
+  */
 })
 export class TaggingComponent implements OnInit {
 
@@ -81,7 +85,7 @@ export class TaggingComponent implements OnInit {
       this.options = (hashtags) ? hashtags : []
       this.options_init = this.options
     })
-    console.log("HASHTAGS", this.options)
+    //console.log("HASHTAGS", this.options)
   }
 
   ngOnInit() {}

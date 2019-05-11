@@ -13,12 +13,11 @@ export function removeHashTagPopupContainer(InspectorEntryComponentRef: Inspecto
     let elem = document.getElementById(InspectorEntryComponentRef.tagPopupContainerId)!
     if (elem.parentNode) {
       let parent = elem.parentNode!
-      console.log('removeHashTagPopupContainer', elem)
+      //console.log('removeHashTagPopupContainer', elem)
 
       if(InspectorEntryComponentRef.taggingComponentRef) {
         InspectorEntryComponentRef.taggingComponentRef.destroy()
         //this.taggingComponentRef.nativeElement.remove()
-        console.log('taggingComponentRef DESTROYED')
       }
       parent.removeChild(elem)
 
@@ -29,7 +28,7 @@ export function removeHashTagPopupContainer(InspectorEntryComponentRef: Inspecto
   }
 }
 
-export function swapHashtag(InspectorEntryComponentRef: any, hashtag: string) {
+export function swapHashtag(InspectorEntryComponentRef: InspectorEntryComponent, hashtag: string) {
   const selection = document.getSelection()
   const range = selection!.getRangeAt(0)!
   let rootNode = range.commonAncestorContainer //as Node
@@ -46,6 +45,8 @@ export function swapHashtag(InspectorEntryComponentRef: any, hashtag: string) {
   let parentNode = rootNode.parentNode as HTMLElement
   parentNode.normalize()
 
-  // update also FormBuilder form
-  InspectorEntryComponentRef.form.patchValue({'description': parentNode.textContent})
+  // update FormBuilder form
+  InspectorEntryComponentRef.form!.patchValue({
+    'description': parentNode.textContent
+  })
 }

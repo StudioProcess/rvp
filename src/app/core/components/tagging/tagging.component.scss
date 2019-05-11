@@ -1,0 +1,29 @@
+:host {
+  display: block;
+  position: absolute;
+}
+.tagging-list-container {
+  margin-top: -20px;
+  margin-left: -10px;
+  min-width: 100px;
+  max-height: 300px;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #000;
+  overflow-y: scroll;
+}
+#tag_editable {
+}
+.tagging-list {
+  padding: 0;
+  margin: 5px 0 0 0;
+  list-style: none;
+
+  li {
+    cursor: hand;
+
+    &:hover {
+      background: #CCC;
+    }
+  }
+}
