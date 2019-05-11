@@ -43,6 +43,11 @@ import {parseDuration} from '../../../../lib/time'
 import {TaggingComponent} from '../../tagging/tagging.component'
 import {DomService} from '../../../actions/dom.service'
 
+import {
+  swapHashtag,
+  removeHashTagPopupContainer,
+} from '../../../../lib/hashtags'
+
 function durationValidatorFactory(): ValidatorFn {
   const durationRegex = /^([0-9]*:){0,2}[0-9]*(\.[0-9]*)?$/
 
@@ -127,7 +132,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   ngAfterViewInit() {
 
-    //this.removeHashTagPopupContainer()
+    //removeHashTagPopupContainer(this)
 
     const formClick = fromEvent(this._formRef.nativeElement, 'click')
       .pipe(filter((ev: MouseEvent) => ev.button === 0))
@@ -226,14 +231,13 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     this._subs.push(
       formBlur
         .subscribe((ev: any) => {
-
           /*ev.target.childNodes.forEach(function (item: HTMLElement) {
             if(item.nodeType != Node.TEXT_NODE) {
               console.log('remove no TEXT_NODE', item)
               item.remove()
             }
           })*/
-          //this.removeHashTagPopupContainer()
+          //removeHashTagPopupContainer(this)
         }))
 
 
@@ -255,7 +259,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
           description = this.removeDescriptionNodes(description)
           this.saveHashtags(description)
           //console.log('item', description_text)
-          //console.log('formBlur', description)
+          console.log('formBlur', description)
           const annotation = new AnnotationRecordFactory({
             id: this.entry.getIn(['annotation', 'id']),
             utc_timestamp: parseDuration(utc_timestamp),
@@ -286,11 +290,10 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   }
 
   handleHashtagInput(ev: KeyboardEvent) {
-
     if(ev.key == ' ' || ev.key == 'Enter') {
       //console.log(ev)
       if(ev.key == 'Enter') { ev.preventDefault() }
-      this.removeHashTagPopupContainer()
+      removeHashTagPopupContainer(this)
 
       return false
     }
@@ -300,8 +303,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
       setTimeout(() => { // TODO : ugly hack, find another way to read nodes textcontent
 
         if(this.getCurrentSelectionOffsetLength(selection) == 0) {
-          console.log('CARET 0')
-          this.removeHashTagPopupContainer()
+          removeHashTagPopupContainer(this)
 
           return false
         }
@@ -329,7 +331,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   saveHashtags(description: string) {
     const hashtags = description.match(/#\w+/g)
-    //console.log(hashtags)
     this.onHashtagsUpdate.emit({
       hashtags
     })
@@ -374,8 +375,13 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
       // subscribe to tagging components onClickOutside event
       this._taggingComponentRef.instance.closeHashTagContainer.subscribe((ev: any) => {
-        console.log('closeHashTagContainer')
-        this.removeHashTagPopupContainer()
+        removeHashTagPopupContainer(this)
+      })
+
+      this._taggingComponentRef.instance.passHashTagToContent.subscribe((data: any) => {
+        //console.log('passHashTagToContent', data)
+        swapHashtag(this, data.hashtag)
+        console.log('FORM', this.form)
       })
 
       this._taggingComponentRef.instance.passed_hashtag = '#'
@@ -392,26 +398,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
       const p = target.parentNode as HTMLElement
       if(p.classList.contains(this._tag_container_class)) {
         p.parentNode!.removeChild(p)
-        this._isHashTagPopupContainerOpen = false
-      }
-    }
-  }
-
-  removeHashTagPopupContainer() {
-    if(document.getElementById(this._tag_popup_container_id)) {
-      let elem = document.getElementById(this._tag_popup_container_id)!
-      if (elem.parentNode) {
-        let parent = elem.parentNode!
-        console.log('removeHashTagPopupContainer', elem)
-
-        if(this._taggingComponentRef) {
-          this._taggingComponentRef.destroy()
-          console.log('_taggingComponentRef DESTROYED')
-        }
-        parent.removeChild(elem)
-
-        this._taggingComponentRef = null
-        this._hashtagContainer = null
         this._isHashTagPopupContainerOpen = false
       }
     }
@@ -440,7 +426,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   }
 
   addHashTagContainer() {
-
     /*
     let html = '<span class="'+this._tag_container_class+'">'
     html += '</span>'

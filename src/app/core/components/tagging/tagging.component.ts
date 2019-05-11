@@ -68,6 +68,7 @@ export class TaggingComponent implements OnInit {
   @Input() passed_hashtag: string
 
   @Output() closeHashTagContainer: EventEmitter<any> = new EventEmitter()
+  @Output() passHashTagToContent: EventEmitter<any> = new EventEmitter()
 
   constructor(
     private _eref: ElementRef,
@@ -98,6 +99,9 @@ export class TaggingComponent implements OnInit {
 
   onClickOutside(ev: any) {
     if (!this._eref.nativeElement.contains(ev.target)) {
+      /*const element = this._eref.nativeElement
+      console.log('HERE', element)
+      this._eref.nativeElement.remove()*/
       this.closeHashTagContainer.emit({close: true})
     }
   }
@@ -113,5 +117,6 @@ export class TaggingComponent implements OnInit {
 
   selectHashtag(event: any, hashtag: string) {
     console.log(event, hashtag)
+    this.passHashTagToContent.emit({hashtag: hashtag})
   }
 }
