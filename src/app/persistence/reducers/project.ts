@@ -335,6 +335,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state
     }
     case project.PROJECT_SELECT_ANNOTATION: {
+      //console.log(action)
       const {type, selection} = action.payload
       switch(type) {
         case project.AnnotationSelectionType.Default: {
