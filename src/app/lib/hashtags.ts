@@ -30,6 +30,28 @@ export function saveHashtags(
   })
 }
 
+export function removeHashTag(
+  InspectorEntryComponentRef: InspectorEntryComponent,
+  target: HTMLElement,
+  tagContainerClass: string,
+  tagContainerCloseClass: string
+) {
+  //console.log(target)
+  if(target.classList.contains(tagContainerCloseClass)) {
+    const p = target.parentNode as HTMLElement
+    const container = target.parentNode!.parentNode! as HTMLElement
+    if(p.classList.contains(tagContainerClass)) {
+      p.parentNode!.removeChild(p)
+      InspectorEntryComponentRef.isHashTagPopupContainerOpen = false
+
+      // update FormBuilder form
+      InspectorEntryComponentRef.form!.patchValue({
+        'description': container.textContent
+      })
+    }
+  }
+}
+
 export function removeDescriptionNodes(
   InspectorEntryComponentRef: InspectorEntryComponent,
   description: string
@@ -102,33 +124,20 @@ export function handleHashtagInput(InspectorEntryComponentRef: InspectorEntryCom
 
   const selection = document.getSelection()!.anchorNode!
   if(selection.nodeType == Node.TEXT_NODE) {
-    setTimeout(() => { // TODO : ugly hack, find another way to read nodes textcontent
-
+    setTimeout(() => { // TODO : hacky, find another way to read nodes textcontent
       if(getCurrentSelectionOffsetLength(selection) == 0) {
         removeHashTagPopupContainer(InspectorEntryComponentRef)
-
         return false
       }
-
       let hashtag = selection.textContent!
       let hashtag_concise = hashtag
       if(/\s/.test(hashtag)) {
         // when empty spaces occur on textnode hashtag end on next empty space
         hashtag_concise = hashtag.substr(0, hashtag.indexOf(' '))!
       }
-      //InspectorEntryComponentRef.taggingComponentRef.instance.passed_hashtag = hashtag_concise
       InspectorEntryComponentRef.taggingComponentRef.instance.updateHashtags(hashtag_concise)
-      //InspectorEntryComponentRef.taggingComponentRef.hostView.detectChanges()
-      //InspectorEntryComponentRef.taggingComponentRef.injector.get(ChangeDetectorRef).markForCheck() // or detectChanges()
-      //InspectorEntryComponentRef.taggingComponentRef.instance._changeDetector.detectChanges()
-      //InspectorEntryComponentRef.taggingComponentRef.instance.passed_hashtag = selection.nodeValue
-      //InspectorEntryComponentRef.taggingComponentRef.instance.passed_hashtag = selection.textContent
     }, 5)
   }
-
-  //InspectorEntryComponentRef.taggingComponentRef.instance.passed_hashtag_2 = selection.textContent
-  //InspectorEntryComponentRef.taggingComponentRef.instance._changeDetector.detectChanges()
-  //InspectorEntryComponentRef.taggingComponentRef.instance._changeDetector.markForCheck()
 }
 
 export function getCurrentSelectionOffsetLength(selection: Node) {
@@ -141,21 +150,16 @@ export function getCurrentSelectionOffsetLength(selection: Node) {
 }
 
 export function encloseHashtags(
-  ev: MouseEvent,
   descrInputRef: ElementRef,
   tagContainerClass: string,
   tagContainerCloseClass: string
 ) {
-  //let description = descrInputRef.nativeElement.textContent
-  //const hashtags = description.match(/#\w+/g)
-  //if (descrInputRef.nativeElement.childNodes.length) {
-  descrInputRef.nativeElement.childNodes.forEach(function(node: Node){
+  descrInputRef.nativeElement.childNodes.forEach((node: Node) => {
     if (node.nodeType === Node.TEXT_NODE) {
       let r = /#\w+/g
       let result = r.exec(node.nodeValue as string)
       if(!result) { return } else {
         let parent = descrInputRef.nativeElement
-        //let newNode = document.createElement('span')
         parent.innerHTML = node.nodeValue!.replace(
           r,
           '<span class="'+tagContainerClass+'" contenteditable="false">'
@@ -163,8 +167,6 @@ export function encloseHashtags(
             +'<span class="'+tagContainerCloseClass+' ion-ios-close-circle" contenteditable="false"></span>'
           +'</span>'
         )
-        //parent.replaceChild(newNode, node)
-        //console.log(node, node.nodeType, node.textContent, node.nodeValue, result)
       }
     }
   })
