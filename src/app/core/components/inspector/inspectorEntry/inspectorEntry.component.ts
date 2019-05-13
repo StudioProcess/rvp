@@ -64,7 +64,7 @@ const durationValidator = Validators.compose([Validators.required, durationValid
   encapsulation: ViewEncapsulation.None,
   selector: 'rv-inspector-entry',
   templateUrl: 'inspectorEntry.component.html',
-  host: {'class': 'inspectorEntryHost'},
+  host: {'class': 'inspector-entry-host'},
   styleUrls: ['inspectorEntry.component.scss']
 })
 export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
@@ -171,9 +171,8 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
             source: SelectionSource.Inspector
           })
         })
-        console.log('FOCUS', this.entry.get('annotation', null))
+        console.log('FOCUS', this.form)
         encloseHashtags(ev)
-
       }))
 
     // Focus annotation
