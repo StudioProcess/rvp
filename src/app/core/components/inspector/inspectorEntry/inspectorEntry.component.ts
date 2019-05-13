@@ -45,7 +45,8 @@ import {DomService} from '../../../actions/dom.service'
 
 import {
   swapHashtag, removeHashTagPopupContainer, addHashTagPopupContainer,
-  handleHashtagInput, encloseHashtags
+  handleHashtagInput, encloseHashtags, saveHashtags, removeDescriptionNodes,
+  //HashtagOperations
 } from '../../../../lib/hashtags'
 
 function durationValidatorFactory(): ValidatorFn {
@@ -79,7 +80,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   @ViewChild('formWrapper') private readonly _formRef: ElementRef
   @ViewChild('start') private readonly _startInputRef: ElementRef
   @ViewChild('duration') private readonly _durationInputRef: ElementRef
-  @ViewChild('descr') private readonly _descrInputRef: ElementRef
+  @ViewChild('descr') readonly _descrInputRef: ElementRef
 
   @HostListener('click', ['$event', '$event.target'])
     onClick(event: MouseEvent, target: HTMLElement) {
@@ -103,6 +104,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     private readonly _fb: FormBuilder,
     private readonly _domService: DomService,
     //private readonly _changeDetector: ChangeDetectorRef
+    //private readonly _hashtagsOperations: HashtagOperations
   ) {}
 
   private _mapModel(entry: Record<AnnotationColorMap>) {
@@ -171,8 +173,9 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
             source: SelectionSource.Inspector
           })
         })
-        //console.log('FOCUS', this.form, this._formRef, this._descrInputRef)
+        // add span nodes around hashtag textnodes
         encloseHashtags(ev, this._descrInputRef, this.tagContainerClass, this.tagContainerCloseClass)
+        //this._hashtagsOperations.encloseHashtags(ev)
       }))
 
     // Focus annotation
@@ -251,10 +254,10 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
         .subscribe(({description, utc_timestamp, duration}) => {
 
           //description = this.htmlBr(description)
-          description = this.removeDescriptionNodes(description)
-          this.saveHashtags(description)
-          //console.log('item', description_text)
+          description = removeDescriptionNodes(this, description)
           console.log('formBlur', description)
+          saveHashtags(this, description)
+
           const annotation = new AnnotationRecordFactory({
             id: this.entry.getIn(['annotation', 'id']),
             utc_timestamp: parseDuration(utc_timestamp),
@@ -282,28 +285,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
-  }
-
-  saveHashtags(description: string) {
-    const hashtags = description.match(/#\w+/g)
-    this.onHashtagsUpdate.emit({
-      hashtags
-    })
-  }
-
-  removeDescriptionNodes(description: string) {
-    //const description_node = document.createRange().createContextualFragment(description)
-    // description_node.childNodes.forEach(function (item: HTMLElement) {
-    const description_node = new DOMParser().parseFromString(description, 'text/html').body.childNodes
-    //console.log('description_node', description_node)
-    let description_text = ''
-    description_node.forEach(function (item: HTMLElement) {
-      if(item.nodeType == Node.TEXT_NODE) {
-        description_text += item.textContent
-      }
-    })
-    this.isHashTagPopupContainerOpen = false
-    return description_text
   }
 
   addHashTag(ev: any) {

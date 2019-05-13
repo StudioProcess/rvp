@@ -1,7 +1,16 @@
 import {
+  Injectable,
   ElementRef,
 } from '@angular/core'
+
 import {InspectorEntryComponent} from '../core/components/inspector/inspectorEntry/inspectorEntry.component'
+@Injectable({
+  providedIn: 'root',
+})
+export class HashtagOperations {
+  InspectorEntryComponentRef: InspectorEntryComponent
+  constructor() {}
+}
 
 export function prepareHashTagList(hashtags: []) {
 
@@ -9,6 +18,34 @@ export function prepareHashTagList(hashtags: []) {
   const sorted = uniq.sort()
 
   return sorted
+}
+
+export function saveHashtags(
+  InspectorEntryComponentRef: InspectorEntryComponent,
+  description: string
+) {
+  const hashtags = description.match(/#\w+/g)
+  InspectorEntryComponentRef.onHashtagsUpdate.emit({
+    hashtags
+  })
+}
+
+export function removeDescriptionNodes(
+  InspectorEntryComponentRef: InspectorEntryComponent,
+  description: string
+) {
+  const tagContainerClass = InspectorEntryComponentRef.tagContainerClass
+  const descriptionNode = new DOMParser().parseFromString(description, 'text/html').body.childNodes
+  let descriptionText = ''
+  descriptionNode.forEach(function (item: HTMLElement) {
+    if(item.nodeType == Node.TEXT_NODE) {
+      descriptionText += item.textContent
+    } else if(item.classList.contains(tagContainerClass)) {
+      descriptionText += item.textContent +' '
+    }
+  })
+  InspectorEntryComponentRef.isHashTagPopupContainerOpen = false
+  return descriptionText
 }
 
 export function removeHashTagPopupContainer(InspectorEntryComponentRef: InspectorEntryComponent) {
