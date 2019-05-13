@@ -171,8 +171,8 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
             source: SelectionSource.Inspector
           })
         })
-        console.log('FOCUS', this.form)
-        encloseHashtags(ev)
+        //console.log('FOCUS', this.form, this._formRef, this._descrInputRef)
+        encloseHashtags(ev, this._descrInputRef, this.tagContainerClass, this.tagContainerCloseClass)
       }))
 
     // Focus annotation
@@ -193,17 +193,11 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
         if(this.isHashTagPopupContainerOpen) {
           handleHashtagInput(this, ev)
         } else {
-          //console.log(ev)
           if(ev.keyCode === 191 || ev.key === '#') {
             this.addHashTag(ev)
           }
-          //if(hashTagActionsInputKeys(ev.keyCode)) {}
         }
       }))
-
-    /*const hashTagActionsInputKeys = (keyCode: number) => {
-      return keyCode === 32
-    }*/
 
     const validDurationInputKey = (keyCode: number) => {
       return (keyCode >= 48 && keyCode <= 57) || // 0-9
@@ -314,7 +308,8 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   addHashTag(ev: any) {
     if(! this.isHashTagPopupContainerOpen) {
-      //this.addHashTagContainer()
+
+      // container for the hashtag popup component
       addHashTagPopupContainer(this)
 
       //let elem = ev.target as HTMLElement
@@ -348,73 +343,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
         this.isHashTagPopupContainerOpen = false
       }
     }
-  }
-
-  addHashTagContainer() {
-    /*
-    let html = '<span class="'+this.tagContainerClass+'">'
-    html += '</span>'
-    let range = document.getSelection().getRangeAt(0)
-    let fragment = document.createRange().createContextualFragment(html)
-    range.insertNode(fragment)
-    */
-    //return new Promise(resolve => {
-    let range = document.getSelection()!.getRangeAt(0)!
-    if(!range.collapsed) {
-      range.deleteContents()
-    }
-    let hashtag_span = document.createElement('span')
-    hashtag_span.className = this.tagContainerClass
-    hashtag_span.appendChild(document.createTextNode('#'))
-    //hashtag_span.contentEditable = false
-    //hashtag_span.style.display = 'inline-block'
-
-    //let hashtag_span_text = document.createElement('span')
-    //hashtag_span_text.className = 'hashtag-text'
-    //hashtag_span_text.contentEditable = true
-
-    // let hashtag_popup_container_span = document.createElement('span')
-    // hashtag_popup_container_span.id = this.tagPopupContainerId
-    // hashtag_popup_container_span.style.display = 'inline-block'
-    //hashtag_popup_container_span.contentEditable = false
-
-    //let hashtag_span_close = document.createElement('span')
-    //hashtag_span_close.className = this.tagContainerCloseClass +' ion-ios-close-circle'
-    //hashtag_span_close.style.display = 'inline-block'
-
-    //hashtag_span.appendChild(document.createTextNode(''))
-    //hashtag_span.appendChild(hashtag_popup_container_span)
-    //hashtag_span.appendChild(hashtag_span_text)
-    //hashtag_span_text.appendChild(document.createTextNode('#'))
-    //hashtag_span.appendChild(hashtag_span_close)
-    //hashtag_span.insertBefore(document.createTextNode('#'), hashtag_span_close)
-
-    //console.log(hashtag_span)
-    range.insertNode(hashtag_span)
-    //range.surroundContents(hashtag_span)
-    //range.insertNode(hashtag_popup_container_span)
-    //range.insertNode(hashtag_span)
-
-
-    // let sel = document.getSelection()
-    // range.setStartBefore(hashtag_span.childNodes[0])
-    // range.setEndAfter(hashtag_span.childNodes[0])
-    // sel!.removeAllRanges()
-    // sel!.addRange(range)
-
-    let sel = document.getSelection()!
-    range = range!.cloneRange()
-    range!.setStartAfter(hashtag_span)
-    range!.collapse(true)
-    sel.removeAllRanges()
-    sel.addRange(range)
-
-    return true
-      /*
-      setTimeout(() => {
-        resolve(true)
-      }, 10)
-    })*/
   }
 
   htmlBr(description: string) {

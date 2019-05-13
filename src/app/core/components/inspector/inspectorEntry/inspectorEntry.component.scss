@@ -107,15 +107,14 @@
         user-select: text;*/
 
         .hashtag {
-          margin: 0;
+          display: inline-block;
+          margin: 0 3px;
           padding: 2px 5px;
           background-color: #efefef;
 
           .hashtag-close {
-            /*display: none;*/
-            /*position: relative;
-            top: 1px;
-            right: 0;*/
+            /*display: none;
+            position: absolute;*/
             margin-left: 5px;
             font-size: 16px;
             background-color: #efefef;

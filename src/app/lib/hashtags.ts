@@ -1,3 +1,6 @@
+import {
+  ElementRef,
+} from '@angular/core'
 import {InspectorEntryComponent} from '../core/components/inspector/inspectorEntry/inspectorEntry.component'
 
 export function prepareHashTagList(hashtags: []) {
@@ -100,8 +103,34 @@ export function getCurrentSelectionOffsetLength(selection: Node) {
   return preCaretRange.toString().length
 }
 
-export function encloseHashtags(ev: MouseEvent) {
-  console.log(ev)
+export function encloseHashtags(
+  ev: MouseEvent,
+  descrInputRef: ElementRef,
+  tagContainerClass: string,
+  tagContainerCloseClass: string
+) {
+  //let description = descrInputRef.nativeElement.textContent
+  //const hashtags = description.match(/#\w+/g)
+  //if (descrInputRef.nativeElement.childNodes.length) {
+  descrInputRef.nativeElement.childNodes.forEach(function(node: Node){
+    if (node.nodeType === Node.TEXT_NODE) {
+      let r = /#\w+/g
+      let result = r.exec(node.nodeValue as string)
+      if(!result) { return } else {
+        let parent = descrInputRef.nativeElement
+        //let newNode = document.createElement('span')
+        parent.innerHTML = node.nodeValue!.replace(
+          r,
+          '<span class="'+tagContainerClass+'" contenteditable="false">'
+            +'$&'
+            +'<span class="'+tagContainerCloseClass+' ion-ios-close-circle" contenteditable="false"></span>'
+          +'</span>'
+        )
+        //parent.replaceChild(newNode, node)
+        //console.log(node, node.nodeType, node.textContent, node.nodeValue, result)
+      }
+    }
+  })
 }
 
 /**
