@@ -46,6 +46,7 @@ import {DomService} from '../../../actions/dom.service'
 import {
   swapHashtag, removeHashTagPopupContainer, addHashTagPopupContainer,
   handleHashtagInput, encloseHashtags, saveHashtags, removeDescriptionNodes,
+  removeHashTag,
   //HashtagOperations
 } from '../../../../lib/hashtags'
 
@@ -84,7 +85,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   @HostListener('click', ['$event', '$event.target'])
     onClick(event: MouseEvent, target: HTMLElement) {
-      this.removeHashTag(target)
+      removeHashTag(this, target, this.tagContainerClass, this.tagContainerCloseClass)
     }
 
   form: FormGroup|null = null
@@ -135,6 +136,9 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   ngAfterViewInit() {
 
+    // add span nodes around hashtag textnodes
+    encloseHashtags(this._descrInputRef, this.tagContainerClass, this.tagContainerCloseClass)
+
     const formClick = fromEvent(this._formRef.nativeElement, 'click')
       .pipe(filter((ev: MouseEvent) => ev.button === 0))
 
@@ -173,9 +177,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
             source: SelectionSource.Inspector
           })
         })
-        // add span nodes around hashtag textnodes
-        encloseHashtags(ev, this._descrInputRef, this.tagContainerClass, this.tagContainerCloseClass)
-        //this._hashtagsOperations.encloseHashtags(ev)
       }))
 
     // Focus annotation
@@ -257,6 +258,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
           description = removeDescriptionNodes(this, description)
           console.log('formBlur', description)
           saveHashtags(this, description)
+          //encloseHashtags(this._descrInputRef, this.tagContainerClass, this.tagContainerCloseClass)
 
           const annotation = new AnnotationRecordFactory({
             id: this.entry.getIn(['annotation', 'id']),
@@ -313,16 +315,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
       this._domService.attachComponent(this.taggingComponentRef, this.hashtagContainer)
 
       this.isHashTagPopupContainerOpen = true
-    }
-  }
-
-  removeHashTag(target: HTMLElement) {
-    if(target.classList.contains(this.tagContainerCloseClass)) {
-      const p = target.parentNode as HTMLElement
-      if(p.classList.contains(this.tagContainerClass)) {
-        p.parentNode!.removeChild(p)
-        this.isHashTagPopupContainerOpen = false
-      }
     }
   }
 
