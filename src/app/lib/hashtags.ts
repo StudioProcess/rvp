@@ -90,19 +90,25 @@ export function removeHashTagPopupContainer(InspectorEntryComponentRef: Inspecto
   }
 }
 
-export function swapHashtag(InspectorEntryComponentRef: InspectorEntryComponent, hashtag: string) {
+export function swapHashtag(
+  InspectorEntryComponentRef: InspectorEntryComponent,
+  event: any,
+  hashtag: string
+) {
+  //console.log('HASHTAGS', selection.focusNode)
   const selection = document.getSelection()
   const range = selection!.getRangeAt(0)!
   let rootNode = range.commonAncestorContainer //as Node
   const oldText = rootNode.nodeValue
-
+  //console.log('HASHTAGS', selection.focusNode, oldText)
   let hasSpace = oldText!.indexOf(' ')
-  if(hasSpace >= 0) {
+  if(hasSpace > 0) {
     hashtag = hashtag + oldText!.slice(hasSpace)
   }
-
   // update node
+  //console.log('HASHTAGS', rootNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode)
   removeHashTagPopupContainer(InspectorEntryComponentRef)
+
   rootNode.nodeValue = hashtag
   let parentNode = rootNode.parentNode as HTMLElement
   parentNode.normalize()
