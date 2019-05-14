@@ -32,7 +32,8 @@ import * as fromProject from '../../../persistence/reducers'
       <span #tag_editable contenteditable="false" id="tag-editable">{{passed_hashtag}}</span>
       <ul class="tagging-list" contenteditable="false">
         <li *ngFor="let option of options" [value]="option" [type]="option"
-          (click)="selectHashtag($event, option)">
+          (click)="selectHashtag($event, option)"
+          contenteditable="false">
           {{option}}
         </li>
       </ul>
@@ -73,14 +74,11 @@ export class TaggingComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    console.log("ngOnDestroy")
+    //console.log("ngOnDestroy")
   }
 
   onClickOutside(ev: any) {
     if (!this._eref.nativeElement.contains(ev.target)) {
-      /*const element = this._eref.nativeElement
-      console.log('HERE', element)
-      this._eref.nativeElement.remove()*/
       this.closeHashTagContainer.emit({close: true})
     }
   }
@@ -95,7 +93,7 @@ export class TaggingComponent implements OnInit {
   }
 
   selectHashtag(event: any, hashtag: string) {
-    console.log(event, hashtag)
-    this.passHashTagToContent.emit({hashtag: hashtag})
+    //console.log(event, hashtag)
+    this.passHashTagToContent.emit({hashtag: hashtag, event: event})
   }
 }
