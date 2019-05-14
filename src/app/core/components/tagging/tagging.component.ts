@@ -88,7 +88,7 @@ export class TaggingComponent implements OnInit {
   updateHashtags(hashtag: string) {
     this.passed_hashtag = hashtag
     const filtered = this.options_init.filter((option) => {
-      return option.includes(hashtag.substr(1))
+      return ((option) ? option.includes(hashtag.substr(1)) : null)
     })
     this.options = filtered
     //this._changeDetector.markForCheck()
