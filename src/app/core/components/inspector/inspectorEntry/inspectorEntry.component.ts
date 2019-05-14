@@ -177,6 +177,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
             source: SelectionSource.Inspector
           })
         })
+        encloseHashtags(this._descrInputRef, this.tagContainerClass, this.tagContainerCloseClass)
       }))
 
     // Focus annotation
@@ -258,7 +259,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
           description = removeDescriptionNodes(this, description)
           console.log('formBlur', description)
           saveHashtags(this, description)
-          //encloseHashtags(this._descrInputRef, this.tagContainerClass, this.tagContainerCloseClass)
 
           const annotation = new AnnotationRecordFactory({
             id: this.entry.getIn(['annotation', 'id']),
@@ -273,6 +273,10 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
             annotationIndex: this.entry.get('annotationIndex', null),
             annotation
           })
+
+          setTimeout(() => {
+            encloseHashtags(this._descrInputRef, this.tagContainerClass, this.tagContainerCloseClass)
+          }, 10)
         }))
   }
 
