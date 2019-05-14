@@ -98,9 +98,11 @@
 
       &.contenteditable {
         /*height: 19px;*/
+        min-height: 22px;
         padding: 3px 8px 3px 5px;
         margin: 4px 0 8px 0;
         overflow: hidden;
+        word-wrap: break-word;
         /*-webkit-user-select: text;
         -moz-user-select: text;
         -ms-user-select: text;

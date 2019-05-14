@@ -296,6 +296,9 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   addHashTag(ev: any) {
     if(! this.isHashTagPopupContainerOpen) {
 
+      //const selection = document.getSelection()
+      //console.log('HASHTAGS', selection.focusNode)
+
       // container for the hashtag popup component
       addHashTagPopupContainer(this)
 
@@ -311,7 +314,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
       })
 
       this.taggingComponentRef.instance.passHashTagToContent.subscribe((data: any) => {
-        swapHashtag(this, data.hashtag)
+        swapHashtag(this, data.event, data.hashtag)
       })
 
       this.taggingComponentRef.instance.passed_hashtag = '#'
