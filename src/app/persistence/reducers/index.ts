@@ -148,7 +148,21 @@ function searchAnnotations(search: string|null, annotations: List<Record<Annotat
   if(search !== null) {
     const jsAnnotations = annotations.toJS()
     const fuse = new Fuse(jsAnnotations, _FUSE_OPTIONS_)
-    const res: string[] = fuse.search(search)
+    let res: string[] = fuse.search(search)
+
+    const hashtags = search.match(/#\w+/g)
+    if(hashtags) {
+      let res_hash: string[] = []
+      let res_tmp: string[] = []
+      hashtags.forEach((tag: string) => {
+        res_tmp = fuse.search(tag)
+        res_hash = res_hash.concat(res_tmp)
+      })
+      res_hash = res_hash.filter((e, i, arr) => arr.indexOf(e) == i) // unique
+      res = res_hash
+    }
+
+    //console.log(_FUSE_OPTIONS_, fuse, res)
     return annotations.filter(ann => {
       const aId = ann.getIn(['annotation', 'id'])
       return res.find(id => parseInt(id) === aId)
@@ -245,4 +259,3 @@ export const getProjectClipboard = createSelector(getProjectState, fromProject.g
 // Snapshots
 
 export const getProjectSnapshots = createSelector(getProjectState, fromProject.getProjectSnapshots)
-
