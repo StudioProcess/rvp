@@ -93,29 +93,22 @@ export function removeHashTagPopupContainer(InspectorEntryComponentRef: Inspecto
 export function swapHashtag(
   InspectorEntryComponentRef: InspectorEntryComponent,
   event: any,
-  hashtag: string
+  hashtag: string,
+  user_input: string
 ) {
-  //console.log('HASHTAGS', selection.focusNode)
-  const selection = document.getSelection()
-  const range = selection!.getRangeAt(0)!
-  let rootNode = range.commonAncestorContainer //as Node
-  const oldText = rootNode.nodeValue
-  //console.log('HASHTAGS', selection.focusNode, oldText)
-  let hasSpace = oldText!.indexOf(' ')
-  if(hasSpace > 0) {
-    hashtag = hashtag + oldText!.slice(hasSpace)
-  }
-  // update node
-  //console.log('HASHTAGS', rootNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode)
   removeHashTagPopupContainer(InspectorEntryComponentRef)
+  let elem = InspectorEntryComponentRef._descrInputRef.nativeElement
+  let old_text = elem.textContent
+  let new_text = null
 
-  rootNode.nodeValue = hashtag
-  let parentNode = rootNode.parentNode as HTMLElement
-  parentNode.normalize()
-
-  // update FormBuilder form
+  if(old_text.endsWith(user_input)) {
+    new_text = old_text.replace(new RegExp(user_input + '$'), hashtag)
+  }  else {
+    new_text = old_text.replace(user_input + ' ', hashtag)
+  }
+  InspectorEntryComponentRef._descrInputRef.nativeElement.textContent = new_text
   InspectorEntryComponentRef.form!.patchValue({
-    'description': parentNode.textContent
+    'description': new_text
   })
 }
 
