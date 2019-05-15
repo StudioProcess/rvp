@@ -94,6 +94,10 @@ export class TaggingComponent implements OnInit {
 
   selectHashtag(event: any, hashtag: string) {
     //console.log(event, hashtag)
-    this.passHashTagToContent.emit({hashtag: hashtag, event: event})
+    this.passHashTagToContent.emit({
+      hashtag: hashtag,
+      user_input: this.passed_hashtag,
+      event: event
+    })
   }
 }

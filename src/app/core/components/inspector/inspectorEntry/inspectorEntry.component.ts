@@ -46,7 +46,7 @@ import {DomService} from '../../../actions/dom.service'
 import {
   swapHashtag, removeHashTagPopupContainer, addHashTagPopupContainer,
   handleHashtagInput, encloseHashtags, saveHashtags, removeDescriptionNodes,
-  removeHashTag,
+  removeHashTag
   //HashtagOperations
 } from '../../../../lib/hashtags'
 
@@ -296,9 +296,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   addHashTag(ev: any) {
     if(! this.isHashTagPopupContainerOpen) {
 
-      //const selection = document.getSelection()
-      //console.log('HASHTAGS', selection.focusNode)
-
       // container for the hashtag popup component
       addHashTagPopupContainer(this)
 
@@ -314,7 +311,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
       })
 
       this.taggingComponentRef.instance.passHashTagToContent.subscribe((data: any) => {
-        swapHashtag(this, data.event, data.hashtag)
+        swapHashtag(this, data.event, data.hashtag, data.user_input)
       })
 
       this.taggingComponentRef.instance.passed_hashtag = '#'
