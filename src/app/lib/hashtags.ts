@@ -59,7 +59,7 @@ export function removeDescriptionNodes(
   const tagContainerClass = InspectorEntryComponentRef.tagContainerClass
   const descriptionNode = new DOMParser().parseFromString(description, 'text/html').body.childNodes
   let descriptionText = ''
-  descriptionNode.forEach(function (item: HTMLElement) {
+  descriptionNode.forEach((item: HTMLElement) => {
     if(item.nodeType == Node.TEXT_NODE) {
       descriptionText += item.textContent
     } else if(item.classList.contains(tagContainerClass)) {
