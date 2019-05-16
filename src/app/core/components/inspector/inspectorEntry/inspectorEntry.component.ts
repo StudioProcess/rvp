@@ -40,15 +40,18 @@ import {_MOUSE_DBLCLICK_DEBOUNCE_} from '../../../../config/form'
 
 import * as project from '../../../../persistence/actions/project'
 import {parseDuration} from '../../../../lib/time'
-import {TaggingComponent} from '../../tagging/tagging.component'
+//import {TaggingComponent} from '../../tagging/tagging.component'
 import {DomService} from '../../../actions/dom.service'
 
-import {
-  swapHashtag, removeHashTagPopupContainer, addHashTagPopupContainer,
-  handleHashtagInput, encloseHashtags, saveHashtags, removeDescriptionNodes,
-  removeHashTag
-  //HashtagOperations
+/*import {
+  //swapHashtag, removeHashTagPopupContainer, addHashTagPopupContainer,
+  //handleHashtagInput, encloseHashtags, saveHashtags, removeDescriptionNodes, removeHashTag
 } from '../../../../lib/hashtags'
+*/
+
+import {
+  HashtagService
+} from '../../../../lib/hashtagService'
 
 function durationValidatorFactory(): ValidatorFn {
   const durationRegex = /^([0-9]*:){0,2}[0-9]*(\.[0-9]*)?$/
@@ -69,7 +72,7 @@ const durationValidator = Validators.compose([Validators.required, durationValid
   host: {'class': 'inspector-entry-host'},
   styleUrls: ['inspectorEntry.component.scss']
 })
-export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
+export class InspectorEntryComponent extends HashtagService implements OnChanges, OnInit, AfterViewInit, OnDestroy {
   @Input() readonly entry: Record<AnnotationColorMap>
   @Input() @HostBinding('class.selected') readonly isSelected = false
 
@@ -85,7 +88,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   @HostListener('click', ['$event', '$event.target'])
     onClick(event: MouseEvent, target: HTMLElement) {
-      removeHashTag(this, target, this.tagContainerClass, this.tagContainerCloseClass)
+      this.removeHashTag(target)
     }
 
   form: FormGroup|null = null
@@ -93,20 +96,24 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   private readonly _subs: Subscription[] = []
 
   // #Hashtags
+  /*
   readonly tagContainerClass = 'hashtag'
   readonly tagContainerCloseClass = 'hashtag-close'
   readonly tagPopupContainerId = 'tag-container'
   hashtagContainer: HTMLElement|null = null
   taggingComponentRef: any|null = null
   isHashTagPopupContainerOpen: boolean = false
+  */
 
   constructor(
     readonly elem: ElementRef,
     private readonly _fb: FormBuilder,
-    private readonly _domService: DomService,
+    readonly _domService: DomService,
     //private readonly _changeDetector: ChangeDetectorRef
     //private readonly _hashtagsOperations: HashtagOperations
-  ) {}
+  ) {
+    super(_domService)
+  }
 
   private _mapModel(entry: Record<AnnotationColorMap>) {
     const utc_timestamp = entry.getIn(['annotation', 'utc_timestamp'])
@@ -137,7 +144,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   ngAfterViewInit() {
 
     // add span nodes around hashtag textnodes
-    encloseHashtags(this._descrInputRef, this.tagContainerClass, this.tagContainerCloseClass)
+    this.encloseHashtags()
 
     const formClick = fromEvent(this._formRef.nativeElement, 'click')
       .pipe(filter((ev: MouseEvent) => ev.button === 0))
@@ -177,7 +184,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
             source: SelectionSource.Inspector
           })
         })
-        encloseHashtags(this._descrInputRef, this.tagContainerClass, this.tagContainerCloseClass)
+        this.encloseHashtags()
       }))
 
     // Focus annotation
@@ -196,7 +203,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
       formKeydown.subscribe((ev: KeyboardEvent) => {
         ev.stopPropagation()
         if(this.isHashTagPopupContainerOpen) {
-          handleHashtagInput(this, ev)
+          this.handleHashtagInput(ev)
         } else {
           if(ev.keyCode === 191 || ev.key === '#') {
             this.addHashTag(ev)
@@ -256,9 +263,9 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
         .subscribe(({description, utc_timestamp, duration}) => {
 
           //description = this.htmlBr(description)
-          description = removeDescriptionNodes(this, description)
+          description = this.removeDescriptionNodes(description)
           console.log('formBlur', description)
-          saveHashtags(this, description)
+          this.saveHashtags(description)
 
           const annotation = new AnnotationRecordFactory({
             id: this.entry.getIn(['annotation', 'id']),
@@ -275,7 +282,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
           })
 
           setTimeout(() => {
-            encloseHashtags(this._descrInputRef, this.tagContainerClass, this.tagContainerCloseClass)
+            this.encloseHashtags()
           }, 10)
         }))
   }
@@ -291,35 +298,6 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
-  }
-
-  addHashTag(ev: any) {
-    if(! this.isHashTagPopupContainerOpen) {
-
-      // container for the hashtag popup component
-      addHashTagPopupContainer(this)
-
-      //let elem = ev.target as HTMLElement
-      this.hashtagContainer = document.getElementById(this.tagPopupContainerId)! as HTMLElement
-
-      //const componentRef = this._domService.instantiateComponent(TaggingComponent)
-      this.taggingComponentRef = this._domService.instantiateComponent(TaggingComponent)
-
-      // subscribe to tagging components onClickOutside event
-      this.taggingComponentRef.instance.closeHashTagContainer.subscribe((ev: any) => {
-        removeHashTagPopupContainer(this)
-      })
-
-      this.taggingComponentRef.instance.passHashTagToContent.subscribe((data: any) => {
-        swapHashtag(this, data.event, data.hashtag, data.user_input)
-      })
-
-      this.taggingComponentRef.instance.passed_hashtag = '#'
-      //const componentRefInstance = this._domService.getInstance(componentRef)
-      this._domService.attachComponent(this.taggingComponentRef, this.hashtagContainer)
-
-      this.isHashTagPopupContainerOpen = true
-    }
   }
 
   htmlBr(description: string) {

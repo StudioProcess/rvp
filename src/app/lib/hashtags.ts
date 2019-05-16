@@ -1,6 +1,6 @@
-import {
+/*import {
   Injectable,
-  ElementRef,
+  //ElementRef,
 } from '@angular/core'
 
 import {InspectorEntryComponent} from '../core/components/inspector/inspectorEntry/inspectorEntry.component'
@@ -10,7 +10,7 @@ import {InspectorEntryComponent} from '../core/components/inspector/inspectorEnt
 export class HashtagOperations {
   InspectorEntryComponentRef: InspectorEntryComponent
   constructor() {}
-}
+}*/
 
 export function prepareHashTagList(hashtags: []) {
 
@@ -20,6 +20,7 @@ export function prepareHashTagList(hashtags: []) {
   return sorted
 }
 
+/*
 export function saveHashtags(
   InspectorEntryComponentRef: InspectorEntryComponent,
   description: string
@@ -29,7 +30,9 @@ export function saveHashtags(
     hashtags
   })
 }
+*/
 
+/*
 export function removeHashTag(
   InspectorEntryComponentRef: InspectorEntryComponent,
   target: HTMLElement,
@@ -51,7 +54,9 @@ export function removeHashTag(
     }
   }
 }
+*/
 
+/*
 export function removeDescriptionNodes(
   InspectorEntryComponentRef: InspectorEntryComponent,
   description: string
@@ -69,7 +74,9 @@ export function removeDescriptionNodes(
   InspectorEntryComponentRef.isHashTagPopupContainerOpen = false
   return descriptionText
 }
+*/
 
+/*
 export function removeHashTagPopupContainer(InspectorEntryComponentRef: InspectorEntryComponent) {
   if(document.getElementById(InspectorEntryComponentRef.tagPopupContainerId)) {
     let elem = document.getElementById(InspectorEntryComponentRef.tagPopupContainerId)!
@@ -89,7 +96,9 @@ export function removeHashTagPopupContainer(InspectorEntryComponentRef: Inspecto
     }
   }
 }
+*/
 
+/*
 export function swapHashtag(
   InspectorEntryComponentRef: InspectorEntryComponent,
   event: any,
@@ -111,7 +120,9 @@ export function swapHashtag(
     'description': new_text
   })
 }
+*/
 
+/*
 export function handleHashtagInput(InspectorEntryComponentRef: InspectorEntryComponent, ev: KeyboardEvent) {
   if(ev.key == ' ' || ev.key == 'Enter') {
     //console.log(ev)
@@ -138,7 +149,9 @@ export function handleHashtagInput(InspectorEntryComponentRef: InspectorEntryCom
     }, 5)
   }
 }
+*/
 
+/*
 export function getCurrentSelectionOffsetLength(selection: Node) {
   let range = document.getSelection()!.getRangeAt(0)
   let preCaretRange = range.cloneRange()
@@ -147,7 +160,9 @@ export function getCurrentSelectionOffsetLength(selection: Node) {
 
   return preCaretRange.toString().length
 }
+*/
 
+/*
 export function encloseHashtags(
   descrInputRef: ElementRef,
   tagContainerClass: string,
@@ -170,12 +185,14 @@ export function encloseHashtags(
     }
   })
 }
+*/
 
 /**
  *  add a node within contenteditable container (left of the hashtag textnode before caret)
  *  which is used as the container (mainly positioning) of the tagging
  *  popup component (will be removed on any formblur, save, pick etc. event).
  */
+/*
 export function addHashTagPopupContainer(InspectorEntryComponentRef: InspectorEntryComponent) {
   let range = document.getSelection()!.getRangeAt(0)!
   if(!range.collapsed) {
@@ -195,3 +212,4 @@ export function addHashTagPopupContainer(InspectorEntryComponentRef: InspectorEn
   sel.removeAllRanges()
   sel.addRange(range)
 }
+*/
