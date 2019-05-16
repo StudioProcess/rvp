@@ -56,6 +56,9 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
 
   private readonly _subs: Subscription[] = []
 
+  // #Hashtags
+  isHashTagPopupContainerOpen: boolean = false
+
   constructor(private readonly _fb: FormBuilder) {}
 
   private _mapLeftModel() {
@@ -100,6 +103,9 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this._subs.push(fromEvent(this._searchRef.nativeElement, 'keydown').subscribe((ev: KeyboardEvent) => {
       ev.stopPropagation()
+      if(ev.keyCode === 191 || ev.key === '#') {
+        this.addHashTag(ev)
+      }
     }))
   }
 
@@ -162,5 +168,11 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
 
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
+  }
+
+  addHashTag(ev: KeyboardEvent) {
+    if(! this.isHashTagPopupContainerOpen) {
+      //console.log(ev)
+    }
   }
 }
