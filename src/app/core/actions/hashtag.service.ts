@@ -4,8 +4,8 @@ import {
   //ElementRef,
 } from '@angular/core'
 
-import {DomService} from '../core/actions/dom.service'
-import {TaggingComponent} from '../core/components/tagging/tagging.component'
+import {DomService} from './dom.service'
+import {TaggingComponent} from '../components/tagging/tagging.component'
 //import {InspectorEntryComponent} from '../core/components/inspector/inspectorEntry/inspectorEntry.component'
 
 @Injectable({
