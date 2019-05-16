@@ -42,16 +42,7 @@ import * as project from '../../../../persistence/actions/project'
 import {parseDuration} from '../../../../lib/time'
 //import {TaggingComponent} from '../../tagging/tagging.component'
 import {DomService} from '../../../actions/dom.service'
-
-/*import {
-  //swapHashtag, removeHashTagPopupContainer, addHashTagPopupContainer,
-  //handleHashtagInput, encloseHashtags, saveHashtags, removeDescriptionNodes, removeHashTag
-} from '../../../../lib/hashtags'
-*/
-
-import {
-  HashtagService
-} from '../../../../lib/hashtagService'
+import {HashtagService} from '../../../actions/hashtag.service'
 
 function durationValidatorFactory(): ValidatorFn {
   const durationRegex = /^([0-9]*:){0,2}[0-9]*(\.[0-9]*)?$/
@@ -110,7 +101,6 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     private readonly _fb: FormBuilder,
     readonly _domService: DomService,
     //private readonly _changeDetector: ChangeDetectorRef
-    //private readonly _hashtagsOperations: HashtagOperations
   ) {
     super(_domService)
   }
