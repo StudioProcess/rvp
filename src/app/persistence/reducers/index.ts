@@ -154,8 +154,11 @@ function searchAnnotations(search: string|null, annotations: List<Record<Annotat
       search = search.replace(regexp, '').trim()
     }
 
-    const fuse = new Fuse(jsAnnotations, _FUSE_OPTIONS_)
-    let res: string[] = fuse.search(search)
+    let res: string[] = []
+    if(search) {
+      const fuse = new Fuse(jsAnnotations, _FUSE_OPTIONS_)
+      res = fuse.search(search)
+    }
 
     if(hashtags) {
       let res_hash: string[] = []
