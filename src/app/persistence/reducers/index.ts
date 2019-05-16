@@ -8,7 +8,7 @@ import * as fromProject from './project'
 
 import {findVerticalCollisionsWithCursor} from '../../lib/annotationStack'
 
-import {_FUSE_OPTIONS_} from '../../config/search'
+import {_FUSE_OPTIONS_, _FUSE_OPTIONS_HASHTAGS_} from '../../config/search'
 
 import {
   AnnotationColorMapRecordFactory, AnnotationSelection,
@@ -147,21 +147,28 @@ export const getCurrentFlattenedAnnotations = createSelector(
 function searchAnnotations(search: string|null, annotations: List<Record<AnnotationColorMap>>) {
   if(search !== null) {
     const jsAnnotations = annotations.toJS()
-    const fuse = new Fuse(jsAnnotations, _FUSE_OPTIONS_)
-    let res: string[] = fuse.search(search)
 
     const hashtags = search.match(/#\w+/g)
     if(hashtags) {
+      let regexp = new RegExp('#([^\\s]*)','g')
+      search = search.replace(regexp, '').trim()
+    }
+
+    const fuse = new Fuse(jsAnnotations, _FUSE_OPTIONS_)
+    let res: string[] = fuse.search(search)
+
+    if(hashtags) {
       let res_hash: string[] = []
       let res_tmp: string[] = []
+      const fuse_hashtags = new Fuse(jsAnnotations, _FUSE_OPTIONS_HASHTAGS_)
       hashtags.forEach((tag: string) => {
-        res_tmp = fuse.search(tag)
+        res_tmp = fuse_hashtags.search(tag)
         res_hash = res_hash.concat(res_tmp)
+        res_hash = res.concat(res_hash)
       })
       res_hash = res_hash.filter((e, i, arr) => arr.indexOf(e) == i) // unique
       res = res_hash
     }
-
     //console.log(_FUSE_OPTIONS_, fuse, res)
     return annotations.filter(ann => {
       const aId = ann.getIn(['annotation', 'id'])
