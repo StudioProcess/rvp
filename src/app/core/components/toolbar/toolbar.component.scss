@@ -61,6 +61,11 @@ button {
     padding: 8px 30px;
     outline: none;
     min-width: 225px;
+
+    &.contenteditable {
+      white-space: nowrap;
+      overflow: hidden;
+    }
   }
 
   .searchBox::placeholder {
