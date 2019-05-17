@@ -1,21 +1,22 @@
 import {
-  Injectable,
+  //Injectable,
   //ViewChild,
   //ElementRef,
 } from '@angular/core'
 
 import {DomService} from './dom.service'
 import {TaggingComponent} from '../components/tagging/tagging.component'
-//import {InspectorEntryComponent} from '../core/components/inspector/inspectorEntry/inspectorEntry.component'
 
-@Injectable({
+/*@Injectable({
   providedIn: 'root',
-})
+})*/
 export class HashtagService {
 
   // Placeholders
   onHashtagsUpdate: any
   _descrInputRef: any
+  _searchRef: any
+  rightForm: any
   form: any
 
   // #Hashtags
@@ -32,7 +33,6 @@ export class HashtagService {
 
   addHashTag(ev: KeyboardEvent) {
     if(! this.isHashTagPopupContainerOpen) {
-
       // container for the hashtag popup component
       this.addHashTagPopupContainer()
 
@@ -48,7 +48,8 @@ export class HashtagService {
       })
 
       this.taggingComponentRef.instance.passHashTagToContent.subscribe((data: any) => {
-        this.swapHashtag(data.event, data.hashtag, data.user_input)
+        //console.log(data, this._descrInputRef)
+        this.swapHashtag(data)
       })
 
       this.taggingComponentRef.instance.passed_hashtag = '#'
@@ -76,6 +77,7 @@ export class HashtagService {
     if(!range.collapsed) {
       range.deleteContents()
     }
+    //console.log(range)
     let hashtag_popup_container_span = document.createElement('span')
     hashtag_popup_container_span.id = this.tagPopupContainerId
     hashtag_popup_container_span.style.display = 'inline-block'
@@ -112,24 +114,33 @@ export class HashtagService {
   }
 
   swapHashtag(
-    event: any,
-    hashtag: string,
-    user_input: string
+    data: any
   ) {
     this.removeHashTagPopupContainer()
-    let elem = this._descrInputRef.nativeElement
+    let elem = null
+    if(this._descrInputRef) {
+      elem = this._descrInputRef.nativeElement
+    } else if(this._searchRef) {
+      elem = this._searchRef.nativeElement
+    }
     let old_text = elem.textContent
     let new_text = null
 
-    if(old_text.endsWith(user_input)) {
-      new_text = old_text.replace(new RegExp(user_input + '$'), hashtag)
+    if(old_text.endsWith(data!.user_input)) {
+      new_text = old_text.replace(new RegExp(data!.user_input + '$'), data!.hashtag)
     }  else {
-      new_text = old_text.replace(user_input + ' ', hashtag)
+      new_text = old_text.replace(data!.user_input + ' ', data!.hashtag)
     }
-    this._descrInputRef.nativeElement.textContent = new_text
-    this.form!.patchValue({
-      'description': new_text
-    })
+    elem.textContent = new_text
+    // annotations list input
+    if(this._descrInputRef) {
+      this.form!.patchValue({
+        'description': new_text
+      })
+    } else if(this._searchRef) {
+    // search input
+      this.rightForm!.patchValue({search: new_text})
+    }
   }
 
   handleHashtagInput(ev: KeyboardEvent) {

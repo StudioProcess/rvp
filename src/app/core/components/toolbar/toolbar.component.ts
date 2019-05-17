@@ -55,12 +55,9 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
   @Output() readonly onResetProject = new EventEmitter()
   @Output() readonly onNewProject = new EventEmitter()
 
-  @ViewChild('search') private readonly _searchRef: ElementRef
+  @ViewChild('search') readonly _searchRef: ElementRef
 
   private readonly _subs: Subscription[] = []
-
-  // #Hashtags
-  isHashTagPopupContainerOpen: boolean = false
 
   constructor(
     private readonly _fb: FormBuilder,
@@ -176,11 +173,5 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
 
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
-  }
-
-  addHashTag(ev: KeyboardEvent) {
-    if(! this.isHashTagPopupContainerOpen) {
-      //console.log(ev)
-    }
   }
 }
