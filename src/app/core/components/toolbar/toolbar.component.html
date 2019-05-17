@@ -40,7 +40,7 @@
         <input class="searchBox" #search formControlName="search" type="text" placeholder="Search..." (focus)="search.placeholder=''" (blur)="search.placeholder='Search...'"/>
         <i class="close-icon ion-md-close" [hidden]="!(search.value.length > 0)" (click)="clearSearch()"></i>
         -->
-        <div #search contenteditable="true" class="searchBox contenteditable" formControlName="search" placeholder="Search..." (focus)="search.placeholder=''" (blur)="search.placeholder='Search...'"></div>
+        <div #search contenteditable="true" class="searchBox contenteditable" formControlName="search" placeholder="Search..." (focus)="search.placeholder=''" placeholder="Search..."></div>
         <i class="search-icon ion-md-search"></i>
         <i class="close-icon ion-md-close" [hidden]="!(search.innerHTML.length > 0)" (click)="clearSearch()"></i>
       </div>
