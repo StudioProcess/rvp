@@ -115,32 +115,44 @@ export class HashtagService {
 
   swapHashtag(
     data: any
-  ) {
+  ): void {
     this.removeHashTagPopupContainer()
-    let elem = null
+    let elem:HTMLElement|null = null
     if(this._descrInputRef) {
-      elem = this._descrInputRef.nativeElement
+      elem = this._descrInputRef.nativeElement as HTMLElement
     } else if(this._searchRef) {
-      elem = this._searchRef.nativeElement
+      elem = this._searchRef.nativeElement as HTMLElement
     }
-    let old_text = elem.textContent
+    let old_text = elem!.textContent
     let new_text = null
 
-    if(old_text.endsWith(data!.user_input)) {
-      new_text = old_text.replace(new RegExp(data!.user_input + '$'), data!.hashtag)
-    }  else {
-      new_text = old_text.replace(data!.user_input + ' ', data!.hashtag)
+    if(old_text!.endsWith(data!.user_input)) {
+      new_text = old_text!.replace(new RegExp(data!.user_input + '$'), data!.hashtag)
+    } else {
+      new_text = old_text!.replace(data!.user_input + ' ', data!.hashtag)
     }
-    elem.textContent = new_text
-    // annotations list input
+    elem!.textContent = new_text
     if(this._descrInputRef) {
+      // annotations input
       this.form!.patchValue({
         'description': new_text
       })
     } else if(this._searchRef) {
-    // search input
+      // search input
       this.rightForm!.patchValue({search: new_text})
     }
+    setTimeout(() => {
+      this.setCaretToPositionEnd(elem)
+    }, 0)
+  }
+
+  setCaretToPositionEnd(elem: any): void {
+    const range = document.createRange()
+    const sel = document.getSelection()
+    range.selectNodeContents(elem)
+    range.collapse(false)
+    sel!.removeAllRanges()
+    sel!.addRange(range)
   }
 
   handleHashtagInput(ev: KeyboardEvent) {
@@ -199,13 +211,12 @@ export class HashtagService {
   }
 
   removeDescriptionNodes(description: string) {
-    const tagContainerClass = this.tagContainerClass
     const descriptionNode = new DOMParser().parseFromString(description, 'text/html').body.childNodes
     let descriptionText = ''
     descriptionNode.forEach((item: HTMLElement) => {
       if(item.nodeType == Node.TEXT_NODE) {
         descriptionText += item.textContent
-      } else if(item.classList.contains(tagContainerClass)) {
+      } else if(item.classList.contains(this.tagContainerClass)) {
         descriptionText += item.textContent +' '
       }
     })
