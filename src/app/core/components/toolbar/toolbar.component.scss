@@ -63,8 +63,14 @@ button {
     min-width: 225px;
 
     &.contenteditable {
-      white-space: nowrap;
-      overflow: hidden;
+      padding: 6px 32px;
+    }
+    &:focus + .search-icon {
+      opacity: 0;
+    }
+    &[placeholder]:empty:not(:focus):before {
+      content: attr(placeholder);
+      color: #CCC;
     }
   }
 
