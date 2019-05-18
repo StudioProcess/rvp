@@ -263,8 +263,7 @@ export class HashtagService {
     }
   }
 
-  removeHashTag(target: HTMLElement) {
-    //console.log(target)
+  removeHashTag(target: HTMLElement): void {
     if(target.classList.contains(this.tagContainerCloseClass)) {
       const p = target.parentNode as HTMLElement
       const container = target.parentNode!.parentNode! as HTMLElement
