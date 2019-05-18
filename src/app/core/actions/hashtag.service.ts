@@ -137,7 +137,9 @@ export class HashtagService {
       })
     } else if(this._searchRef) {
       // search input
-      this.rightForm!.patchValue({search: new_text})
+      this.rightForm!.patchValue({
+        search: new_text
+      })
     }
     setTimeout(() => {
       this.encloseHashtags()
@@ -270,13 +272,26 @@ export class HashtagService {
         p.parentNode!.removeChild(p)
         this.isHashTagPopupContainerOpen = false
 
-        // update FormBuilder form
-        this.form!.patchValue({
-          'description': container.textContent
-        })
+        if(this._descrInputRef) {
+          // update FormBuilder form
+          this.form!.patchValue({
+            'description': container.textContent
+          })
+        } else if(this._searchRef) {
+          this.rightForm!.patchValue({
+            search: container.textContent
+          })
+        }
+
         this.encloseHashtags()
         this.setCaretToPositionEnd(container)
       }
     }
+  }
+
+  htmlBr(description: string) {
+    const pat1 = new RegExp('<div>', 'g')
+    const pat2 = new RegExp('</div>', 'g')
+    return description.replace(pat1, '<br>').replace(pat2, '')
   }
 }
