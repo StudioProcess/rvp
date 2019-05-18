@@ -148,27 +148,31 @@ export class HashtagService {
   }
 
   setCaretToPositionEnd(elem: any): void {
-    const range = document.createRange()
-    const sel = document.getSelection()
-    range.selectNodeContents(elem)
-    range.collapse(false)
-    sel!.removeAllRanges()
-    sel!.addRange(range)
+    if(elem) {
+      const range = document.createRange()
+      const sel = document.getSelection()
+      range.selectNodeContents(elem)
+      range.collapse(false)
+      sel!.removeAllRanges()
+      sel!.addRange(range)
+    }
   }
 
   handleHashtagInput(ev: KeyboardEvent): boolean {
 
     //console.log(ev)
     const selection = document.getSelection()!.anchorNode!
+    let element = this.getCurrentFocusNativeElement()
 
     if(ev.key == ' ' || ev.key == 'Enter') {
       if(ev.key == 'Enter') {
         ev.preventDefault()
       }
       this.removeHashTagPopupContainer()
-      this._descrInputRef.nativeElement.innerHTML = this.removeNodesFromHTMLElement(this._descrInputRef.nativeElement)
+      element!.innerHTML = this.removeNodesFromHTMLElement(element)
       this.encloseHashtags()
-      this.setCaretToPositionEnd(this._descrInputRef.nativeElement)
+      this.setCaretToPositionEnd(element)
+
       return false
     } else if(ev.key == '#') {
       ev.preventDefault()
@@ -194,22 +198,21 @@ export class HashtagService {
     return true
   }
 
-  removeNodesFromHTMLElement(element: HTMLElement) {
-    //console.log('removeNodesFromHTMLElement', element)
+  removeNodesFromHTMLElement(element: HTMLElement|null): string {
     let text: string = ''
-    element.childNodes.forEach((node: HTMLElement) => {
-      if (node.nodeType === Node.TEXT_NODE) {
-        //console.log('TEXT_NODE', node.textContent!.trim())
-        let textContent = node.textContent!.trim()
-        if(textContent) {
-          text += textContent +' '
+    if(element) {
+      element.childNodes.forEach((node: HTMLElement) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          let textContent = node.textContent!.trim()
+          if(textContent) {
+            text += textContent +' '
+          }
+        } else if(node.classList.contains(this.tagContainerClass)) {
+          text += node.textContent!.trim() +' '
         }
-      } else if(node.classList.contains(this.tagContainerClass)) {
-        text += node.textContent!.trim() +' '
-      }
-    })
-    text = text.replace(/#\s+/g, '')
-    //console.log('TEXT', text)
+      })
+      text = text.replace(/#\s+/g, '')
+    }
     return text
   }
 
@@ -225,6 +228,16 @@ export class HashtagService {
     })
     this.isHashTagPopupContainerOpen = false
     return descriptionText
+  }
+
+  getCurrentFocusNativeElement(): HTMLElement|null {
+    let elem: HTMLElement|null = null
+    if(this._descrInputRef) {
+      elem = this._descrInputRef.nativeElement as HTMLElement
+    } else if(this._searchRef) {
+      elem = this._searchRef.nativeElement as HTMLElement
+    }
+    return elem
   }
 
   getCurrentSelectionOffsetLength(selection: Node) {
@@ -246,7 +259,7 @@ export class HashtagService {
 
     if(elem) {
       elem.childNodes.forEach((node: Node) => {
-        if (node.nodeType === Node.TEXT_NODE) {
+        if(node.nodeType === Node.TEXT_NODE) {
           let r = /#\w+/g
           let result = r.exec(node.nodeValue as string)
           if(!result) { return } else {
