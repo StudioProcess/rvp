@@ -86,21 +86,10 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
   private readonly _subs: Subscription[] = []
 
-  // #Hashtags
-  /*
-  readonly tagContainerClass = 'hashtag'
-  readonly tagContainerCloseClass = 'hashtag-close'
-  readonly tagPopupContainerId = 'tag-container'
-  hashtagContainer: HTMLElement|null = null
-  taggingComponentRef: any|null = null
-  isHashTagPopupContainerOpen: boolean = false
-  */
-
   constructor(
     readonly elem: ElementRef,
     private readonly _fb: FormBuilder,
     readonly _domService: DomService,
-    //private readonly _changeDetector: ChangeDetectorRef
   ) {
     super(_domService)
   }
@@ -224,7 +213,6 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
         }
       }))
 
-
     this._subs.push(
       formBlur
         .subscribe((ev: any) => {
@@ -234,9 +222,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
               item.remove()
             }
           })*/
-          //removeHashTagPopupContainer(this)
         }))
-
 
     this._subs.push(
       formBlur
