@@ -154,16 +154,25 @@ export class HashtagService {
     sel!.addRange(range)
   }
 
-  handleHashtagInput(ev: KeyboardEvent) {
-    //console.log(ev)
-    if(ev.key == ' ' || ev.key == 'Enter') {
-      if(ev.key == 'Enter') { ev.preventDefault() }
-      this.removeHashTagPopupContainer()
+  handleHashtagInput(ev: KeyboardEvent): boolean {
 
+    //console.log(ev)
+    const selection = document.getSelection()!.anchorNode!
+
+    if(ev.key == ' ' || ev.key == 'Enter') {
+      if(ev.key == 'Enter') {
+        ev.preventDefault()
+        //this.encloseHashtags()
+        //this.setCaretToPositionEnd()
+      }
+      this.removeHashTagPopupContainer()
       return false
+    } else if(ev.key == '#') {
+      ev.preventDefault()
+    } else if(ev.key == 'Backspace') {
+      // already handled via getCurrentSelectionOffsetLength check further below
     }
 
-    const selection = document.getSelection()!.anchorNode!
     if(selection.nodeType == Node.TEXT_NODE) {
       setTimeout(() => { // TODO : hacky, find another way to read nodes textcontent
         if(this.getCurrentSelectionOffsetLength(selection) == 0) {
@@ -177,8 +186,9 @@ export class HashtagService {
           hashtag_concise = hashtag.substr(0, hashtag.indexOf(' '))!
         }
         this.taggingComponentRef.instance.updateHashtags(hashtag_concise)
-      }, 5)
+      }, 0)
     }
+    return true
   }
 
   getCurrentSelectionOffsetLength(selection: Node) {
@@ -195,6 +205,7 @@ export class HashtagService {
       if (node.nodeType === Node.TEXT_NODE) {
         let r = /#\w+/g
         let result = r.exec(node.nodeValue as string)
+        console.log('encloseHashtags', result)
         if(!result) { return } else {
           let parent = this._descrInputRef.nativeElement
           parent.innerHTML = node.nodeValue!.replace(
