@@ -215,17 +215,6 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
     this._subs.push(
       formBlur
-        .subscribe((ev: any) => {
-          /*ev.target.childNodes.forEach(function (item: HTMLElement) {
-            if(item.nodeType != Node.TEXT_NODE) {
-              console.log('remove no TEXT_NODE', item)
-              item.remove()
-            }
-          })*/
-        }))
-
-    this._subs.push(
-      formBlur
         .pipe(
           withLatestFrom(combineLatest(this.form!.valueChanges, this.form!.statusChanges), (_, [form, status]) => {
             return [form, status]
@@ -239,7 +228,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
         .subscribe(({description, utc_timestamp, duration}) => {
 
           //description = this.htmlBr(description)
-          description = this.removeDescriptionNodes(description)
+          description = this.removeNodesFromText(description)
           console.log('formBlur', description)
           this.saveHashtags(description)
 

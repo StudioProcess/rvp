@@ -162,10 +162,11 @@ export class HashtagService {
     if(ev.key == ' ' || ev.key == 'Enter') {
       if(ev.key == 'Enter') {
         ev.preventDefault()
-        //this.encloseHashtags()
-        //this.setCaretToPositionEnd()
       }
       this.removeHashTagPopupContainer()
+      this._descrInputRef.nativeElement.innerHTML = this.removeNodesFromHTMLElement(this._descrInputRef.nativeElement)
+      this.encloseHashtags()
+      this.setCaretToPositionEnd(this._descrInputRef.nativeElement)
       return false
     } else if(ev.key == '#') {
       ev.preventDefault()
@@ -191,6 +192,39 @@ export class HashtagService {
     return true
   }
 
+  removeNodesFromHTMLElement(element: HTMLElement) {
+    //console.log('removeNodesFromHTMLElement', element)
+    let text: string = ''
+    element.childNodes.forEach((node: HTMLElement) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        //console.log('TEXT_NODE', node.textContent!.trim())
+        let textContent = node.textContent!.trim()
+        if(textContent) {
+          text += textContent +' '
+        }
+      } else if(node.classList.contains(this.tagContainerClass)) {
+        text += node.textContent!.trim() +' '
+      }
+    })
+    text = text.replace(/#\s+/g, '')
+    //console.log('TEXT', text)
+    return text
+  }
+
+  removeNodesFromText(description: string): string {
+    const descriptionNode = new DOMParser().parseFromString(description, 'text/html').body.childNodes
+    let descriptionText: string = ''
+    descriptionNode.forEach((item: HTMLElement) => {
+      if(item.nodeType == Node.TEXT_NODE) {
+        descriptionText += item.textContent
+      } else if(item.classList.contains(this.tagContainerClass)) {
+        descriptionText += item.textContent +' '
+      }
+    })
+    this.isHashTagPopupContainerOpen = false
+    return descriptionText
+  }
+
   getCurrentSelectionOffsetLength(selection: Node) {
     let range = document.getSelection()!.getRangeAt(0)
     let preCaretRange = range.cloneRange()
@@ -200,14 +234,14 @@ export class HashtagService {
     return preCaretRange.toString().length
   }
 
-  encloseHashtags() {
+  encloseHashtags(): void {
+    let parent = this._descrInputRef.nativeElement
     this._descrInputRef.nativeElement.childNodes.forEach((node: Node) => {
       if (node.nodeType === Node.TEXT_NODE) {
         let r = /#\w+/g
         let result = r.exec(node.nodeValue as string)
-        console.log('encloseHashtags', result)
+        //console.log('encloseHashtags', result)
         if(!result) { return } else {
-          let parent = this._descrInputRef.nativeElement
           parent.innerHTML = node.nodeValue!.replace(
             r,
             '<span class="'+this.tagContainerClass+'" contenteditable="false">'
@@ -218,20 +252,6 @@ export class HashtagService {
         }
       }
     })
-  }
-
-  removeDescriptionNodes(description: string) {
-    const descriptionNode = new DOMParser().parseFromString(description, 'text/html').body.childNodes
-    let descriptionText = ''
-    descriptionNode.forEach((item: HTMLElement) => {
-      if(item.nodeType == Node.TEXT_NODE) {
-        descriptionText += item.textContent
-      } else if(item.classList.contains(this.tagContainerClass)) {
-        descriptionText += item.textContent +' '
-      }
-    })
-    this.isHashTagPopupContainerOpen = false
-    return descriptionText
   }
 
   removeHashTag(target: HTMLElement) {
