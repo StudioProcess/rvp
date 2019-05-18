@@ -48,7 +48,6 @@ export class HashtagService {
       })
 
       this.taggingComponentRef.instance.passHashTagToContent.subscribe((data: any) => {
-        //console.log(data, this._descrInputRef)
         this.swapHashtag(data)
       })
 
@@ -141,6 +140,7 @@ export class HashtagService {
       this.rightForm!.patchValue({search: new_text})
     }
     setTimeout(() => {
+      this.encloseHashtags()
       this.setCaretToPositionEnd(elem)
     }, 0)
   }
@@ -235,23 +235,30 @@ export class HashtagService {
   }
 
   encloseHashtags(): void {
-    let element = this._descrInputRef.nativeElement
-    element.childNodes.forEach((node: Node) => {
-      if (node.nodeType === Node.TEXT_NODE) {
-        let r = /#\w+/g
-        let result = r.exec(node.nodeValue as string)
-        //console.log('encloseHashtags', result)
-        if(!result) { return } else {
-          element.innerHTML = node.nodeValue!.replace(
-            r,
-            '<span class="'+this.tagContainerClass+'" contenteditable="false">'
-              +'$&'
-              +'<span class="'+this.tagContainerCloseClass+' ion-ios-close-circle" contenteditable="false"></span>'
-            +'</span>'
-          )
+    let elem:HTMLElement|null = null
+    if(this._descrInputRef) {
+      elem = this._descrInputRef.nativeElement as HTMLElement
+    } else if(this._searchRef) {
+      elem = this._searchRef.nativeElement as HTMLElement
+    }
+
+    if(elem) {
+      elem.childNodes.forEach((node: Node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          let r = /#\w+/g
+          let result = r.exec(node.nodeValue as string)
+          if(!result) { return } else {
+            elem!.innerHTML = node.nodeValue!.replace(
+              r,
+              '<span class="'+this.tagContainerClass+'" contenteditable="false">'
+                +'$&'
+                +'<span class="'+this.tagContainerCloseClass+' ion-ios-close-circle" contenteditable="false"></span>'
+              +'</span>'
+            )
+          }
         }
-      }
-    })
+      })
+    }
   }
 
   removeHashTag(target: HTMLElement) {
