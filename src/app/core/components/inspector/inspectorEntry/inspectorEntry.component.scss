@@ -112,25 +112,31 @@
           z-index: 50000;
         }
 
+        $hashtag-body-color: #e0e0e0;
+        $hashtag-body-color-hover: #ffca82;
+
         .hashtag {
           display: inline-block;
           margin: 1px 3px;
           padding: 2px 5px;
-          background-color: #e0e0e0;
+          background-color: $hashtag-body-color;
 
           .hashtag-close {
             display: none;
             position: absolute;
             margin-left: 5px;
             font-size: 16px;
-            background-color: #e0e0e0;
+            background-color: $hashtag-body-color;
             cursor: pointer;
           }
           &:hover {
+            background-color: $hashtag-body-color-hover;
+
             .hashtag-close {
               display: inline-block;
               margin-top: -2px;
               padding: 3px 4px 1px 0;
+              background-color: $hashtag-body-color-hover;
               color: #474747;
             }
           }
