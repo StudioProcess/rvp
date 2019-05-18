@@ -248,7 +248,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
           setTimeout(() => {
             this.encloseHashtags()
-          }, 10)
+          }, 0)
         }))
   }
 
@@ -263,11 +263,5 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
-  }
-
-  htmlBr(description: string) {
-    const pat1 = new RegExp('<div>', 'g')
-    const pat2 = new RegExp('</div>', 'g')
-    return description.replace(pat1, '<br>').replace(pat2, '')
   }
 }
