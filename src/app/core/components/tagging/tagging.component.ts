@@ -4,21 +4,12 @@ import {
   Input,
   Output,
   EventEmitter,
-  //HostBinding,
-  //ViewChild,
-  //ChangeDetectorRef,
   ElementRef,
   SimpleChanges,
-  //ViewEncapsulation,
-  //ViewContainerRef,
 } from '@angular/core'
 
 import {Store} from '@ngrx/store'
 import * as fromProject from '../../../persistence/reducers'
-
-//import {FormControl} from '@angular/forms'
-//import {MatAutocompleteModule} from '@angular/material/autocomplete'
-//import {MatInput} from '@angular/material'
 
 @Component({
   selector: 'rv-tagging',
@@ -53,29 +44,21 @@ export class TaggingComponent implements OnInit {
   constructor(
     private _eref: ElementRef,
     private readonly _store: Store<fromProject.State>,
-    //private _changeDetector: ChangeDetectorRef
-    //private _vcRef: ViewContainerRef,
   ) {
     this._store.select(fromProject.getProjectMeta).subscribe(meta => {
       const hashtags = meta!.getIn(['hashtags', 'list'])!
       this.options = (hashtags) ? hashtags : []
       this.options_init = this.options
     })
-    //console.log("HASHTAGS", this.options)
   }
 
   ngOnInit() {}
 
   ngAfterViewInit() {}
 
-  //ngOnChanges(changes: { [passed_hashtag: string]: SimpleChange }) {
-  ngOnChanges(changes: SimpleChanges) {
-    //console.log("CHANGE", changes)
-  }
+  ngOnChanges(changes: SimpleChanges) {}
 
-  ngOnDestroy() {
-    //console.log("ngOnDestroy")
-  }
+  ngOnDestroy() {}
 
   onClickOutside(ev: any) {
     if (!this._eref.nativeElement.contains(ev.target)) {
@@ -89,11 +72,9 @@ export class TaggingComponent implements OnInit {
       return ((option) ? option.includes(hashtag.substr(1)) : null)
     })
     this.options = filtered
-    //this._changeDetector.markForCheck()
   }
 
   selectHashtag(event: any, hashtag: string) {
-    //console.log(event, hashtag)
     this.passHashTagToContent.emit({
       hashtag: hashtag,
       user_input: this.passed_hashtag,

@@ -98,7 +98,6 @@ export class HashtagService {
       let elem = document.getElementById(this.tagPopupContainerId)!
       if (elem.parentNode) {
         let parent = elem.parentNode!
-        //console.log('removeHashTagPopupContainer', elem)
 
         if(this.taggingComponentRef) {
           this.taggingComponentRef.destroy()
@@ -156,8 +155,8 @@ export class HashtagService {
   }
 
   handleHashtagInput(ev: KeyboardEvent) {
+    //console.log(ev)
     if(ev.key == ' ' || ev.key == 'Enter') {
-      //console.log(ev)
       if(ev.key == 'Enter') { ev.preventDefault() }
       this.removeHashTagPopupContainer()
 
