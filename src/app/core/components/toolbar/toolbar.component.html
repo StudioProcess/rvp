@@ -44,7 +44,9 @@
         <i class="search-icon ion-md-search"></i>
         <i class="close-icon ion-md-close" [hidden]="!(search.innerHTML.length > 0)" (click)="clearSearch()"></i>
       </div>
-      <input formControlName="applyToTimeline" type="checkbox"/> Apply to timeline
+      <div class="applyToTimeline-wrapper">
+        <input formControlName="applyToTimeline" type="checkbox"/> Apply to timeline
+      </div>
     </form>
   </div>
 </div>
