@@ -236,6 +236,8 @@ export class HashtagService {
         this.form!.patchValue({
           'description': container.textContent
         })
+        this.encloseHashtags()
+        this.setCaretToPositionEnd(container)
       }
     }
   }
