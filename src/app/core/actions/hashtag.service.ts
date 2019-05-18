@@ -111,40 +111,35 @@ export class HashtagService {
     }
   }
 
-  swapHashtag(
-    data: any
-  ): void {
+  swapHashtag(data: any): void {
     this.removeHashTagPopupContainer()
-    let elem:HTMLElement|null = null
-    if(this._descrInputRef) {
-      elem = this._descrInputRef.nativeElement as HTMLElement
-    } else if(this._searchRef) {
-      elem = this._searchRef.nativeElement as HTMLElement
-    }
-    let old_text = elem!.textContent
-    let new_text = null
+    let elem = this.getCurrentFocusNativeElement()
+    if(elem) {
+      let old_text = elem!.textContent
+      let new_text = null
 
-    if(old_text!.endsWith(data!.user_input)) {
-      new_text = old_text!.replace(new RegExp(data!.user_input + '$'), data!.hashtag)
-    } else {
-      new_text = old_text!.replace(data!.user_input + ' ', data!.hashtag)
+      if(old_text!.endsWith(data!.user_input)) {
+        new_text = old_text!.replace(new RegExp(data!.user_input + '$'), data!.hashtag)
+      } else {
+        new_text = old_text!.replace(data!.user_input + ' ', data!.hashtag)
+      }
+      elem!.textContent = new_text
+      if(this._descrInputRef) {
+        // annotations input
+        this.form!.patchValue({
+          'description': new_text
+        })
+      } else if(this._searchRef) {
+        // search input
+        this.rightForm!.patchValue({
+          search: new_text
+        })
+      }
+      setTimeout(() => {
+        this.encloseHashtags()
+        this.setCaretToPositionEnd(elem)
+      }, 0)
     }
-    elem!.textContent = new_text
-    if(this._descrInputRef) {
-      // annotations input
-      this.form!.patchValue({
-        'description': new_text
-      })
-    } else if(this._searchRef) {
-      // search input
-      this.rightForm!.patchValue({
-        search: new_text
-      })
-    }
-    setTimeout(() => {
-      this.encloseHashtags()
-      this.setCaretToPositionEnd(elem)
-    }, 0)
   }
 
   setCaretToPositionEnd(elem: any): void {
@@ -250,13 +245,7 @@ export class HashtagService {
   }
 
   encloseHashtags(): void {
-    let elem:HTMLElement|null = null
-    if(this._descrInputRef) {
-      elem = this._descrInputRef.nativeElement as HTMLElement
-    } else if(this._searchRef) {
-      elem = this._searchRef.nativeElement as HTMLElement
-    }
-
+    let elem = this.getCurrentFocusNativeElement()
     if(elem) {
       elem.childNodes.forEach((node: Node) => {
         if(node.nodeType === Node.TEXT_NODE) {
