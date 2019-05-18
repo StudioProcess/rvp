@@ -2,7 +2,8 @@ import {
   Component, Input, OnInit,
   Output, ChangeDetectionStrategy,
   AfterViewInit, ViewChild,
-  ElementRef, EventEmitter
+  ElementRef, EventEmitter,
+  HostListener
 } from '@angular/core'
 import {FormBuilder, FormGroup} from '@angular/forms'
 
@@ -56,6 +57,11 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
   @Output() readonly onNewProject = new EventEmitter()
 
   @ViewChild('search') readonly _searchRef: ElementRef
+
+  @HostListener('click', ['$event', '$event.target'])
+    onClick(event: MouseEvent, target: HTMLElement) {
+      this.removeHashTag(target)
+    }
 
   private readonly _subs: Subscription[] = []
 
