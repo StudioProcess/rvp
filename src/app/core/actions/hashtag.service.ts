@@ -235,14 +235,14 @@ export class HashtagService {
   }
 
   encloseHashtags(): void {
-    let parent = this._descrInputRef.nativeElement
-    this._descrInputRef.nativeElement.childNodes.forEach((node: Node) => {
+    let element = this._descrInputRef.nativeElement
+    element.childNodes.forEach((node: Node) => {
       if (node.nodeType === Node.TEXT_NODE) {
         let r = /#\w+/g
         let result = r.exec(node.nodeValue as string)
         //console.log('encloseHashtags', result)
         if(!result) { return } else {
-          parent.innerHTML = node.nodeValue!.replace(
+          element.innerHTML = node.nodeValue!.replace(
             r,
             '<span class="'+this.tagContainerClass+'" contenteditable="false">'
               +'$&'
