@@ -113,9 +113,17 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
 
   ngAfterViewInit() {
     this._subs.push(fromEvent(this._searchRef.nativeElement, 'keydown').subscribe((ev: KeyboardEvent) => {
+      //console.log(ev)
       ev.stopPropagation()
-      if(ev.keyCode === 191 || ev.key === '#') {
-        this.addHashTag(ev)
+      if(ev.key == 'Enter') {
+        ev.preventDefault()
+      }
+      if(this.isHashTagPopupContainerOpen) {
+        this.handleHashtagInput(ev)
+      } else {
+        if(ev.keyCode === 191 || ev.key === '#') {
+          this.addHashTag(ev)
+        }
       }
     }))
   }
