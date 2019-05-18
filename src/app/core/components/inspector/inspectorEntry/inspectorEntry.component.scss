@@ -114,24 +114,26 @@
 
         .hashtag {
           display: inline-block;
-          margin: 0 3px;
+          margin: 1px 3px;
           padding: 2px 5px;
           background-color: #e0e0e0;
 
           .hashtag-close {
-            /**
             display: none;
-            position: absolute;*/
+            position: absolute;
             margin-left: 5px;
             font-size: 16px;
             background-color: #e0e0e0;
             cursor: pointer;
           }
-          /*&:hover {
+          &:hover {
             .hashtag-close {
               display: inline-block;
+              margin-top: -2px;
+              padding: 3px 4px 1px 0;
+              color: #474747;
             }
-          }*/
+          }
         }
 
         &:focus {
