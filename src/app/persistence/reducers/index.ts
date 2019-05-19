@@ -147,19 +147,17 @@ export const getCurrentFlattenedAnnotations = createSelector(
 function searchAnnotations(search: string|null, annotations: List<Record<AnnotationColorMap>>) {
   if(search !== null) {
     const jsAnnotations = annotations.toJS()
-
     const hashtags = search.match(/#\w+/g)
+    let res: string[] = []
+
     if(hashtags) {
       let regexp = new RegExp('#([^\\s]*)','g')
       search = search.replace(regexp, '').trim()
     }
-
-    let res: string[] = []
     if(search) {
       const fuse = new Fuse(jsAnnotations, _FUSE_OPTIONS_)
       res = fuse.search(search)
     }
-
     if(hashtags) {
       let res_hash: string[] = []
       let res_tmp: string[] = []
@@ -172,7 +170,6 @@ function searchAnnotations(search: string|null, annotations: List<Record<Annotat
       res_hash = res_hash.filter((e, i, arr) => arr.indexOf(e) == i) // unique
       res = res_hash
     }
-    //console.log(_FUSE_OPTIONS_, fuse, res)
     return annotations.filter(ann => {
       const aId = ann.getIn(['annotation', 'id'])
       return res.find(id => parseInt(id) === aId)
