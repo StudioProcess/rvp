@@ -4,6 +4,8 @@ import {
   ChangeDetectorRef
 } from '@angular/core'
 
+import {Title} from '@angular/platform-browser'
+
 import {Store} from '@ngrx/store'
 
 import {Observable, Subscription, fromEvent} from 'rxjs'
@@ -38,10 +40,20 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
-    private readonly _rootStore: Store<fromRoot.State>) {}
+    private readonly _rootStore: Store<fromRoot.State>,
+    private titleService: Title
+  ) {}
 
   ngOnInit() {
     this._rootStore.dispatch(new project.ProjectLoad())
+
+    // set document title
+    this._rootStore.select(fromProject.getProjectMeta).subscribe(meta => {
+      if(meta !== null) {
+        const title = meta.getIn(['general', 'title'])! as string
+        this.titleService.setTitle(title);
+      }
+    })
 
     this._subs.push(this._rootStore.select(fromProject.getProjectFocusAnnotationSelection).subscribe(selected => {
       this.hasSelectedAnnotations = selected !== null
@@ -245,6 +257,11 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
         fields: AnnotationFieldsRecordFactory({description: ''})
       })
     }))
+  }
+
+  updateProjectTitle (updateTitle: project.ProjectUpdateTitle) {
+    //console.log ('updateProjectTitle', updateTitle);
+    this._rootStore.dispatch (new project.ProjectUpdateTitle(updateTitle))
   }
 
   private dispatchDeleteAnnotation() {

@@ -12,9 +12,14 @@ import {
   ProjectSnapshotRecordFactory, Track, Annotation,
   AnnotationSelection, AnnotationSelectionRecordFactory,
   BlobVideoRecordFactory, UrlVideoRecordFactory,
+  VIDEO_TYPE_BLOB, VIDEO_TYPE_URL, VideoUrlSource, ProjectPlayerStateRecordFactory,
   ProjectHashtagsRecordFactory,
-  VIDEO_TYPE_BLOB, VIDEO_TYPE_URL, VideoUrlSource, ProjectPlayerStateRecordFactory
+  ProjectGeneralDataRecordFactory,
 } from '../model'
+
+import {
+  _PROJECT_DEFAULT_TITLE_
+} from '../../config/project'
 
 import {embedAnnotations} from '../../lib/annotationStack'
 import {prepareHashTagList} from '../../lib/hashtags'
@@ -73,7 +78,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const prevVideoMeta = state.getIn(['meta', 'video'])
       const prevVideoBlob = state.get('videoBlob', null)
 
-      const {meta: {id, timeline, video:videoMeta, hashtags}, video} = action.payload
+      const {meta: {id, timeline, video:videoMeta, hashtags, general}, video} = action.payload
 
       if(videoMeta === null) {
         timeline.duration = prevDuration
@@ -110,6 +115,9 @@ export function reducer(state: State = initialState, action: project.Actions): S
           }),
           hashtags: ProjectHashtagsRecordFactory({
             list: (hashtags! && hashtags!.list) ? hashtags.list : null
+          }),
+          general: ProjectGeneralDataRecordFactory({
+            title: (general! && general!.title) ? general.title : _PROJECT_DEFAULT_TITLE_
           })
         })
       })
@@ -447,6 +455,11 @@ export function reducer(state: State = initialState, action: project.Actions): S
         //console.log('PROJECT_UPDATE_HASHTAGS', hashtags)
         return state.setIn(['meta', 'hashtags', 'list'], hashtags)
       }
+    }
+    case project.PROJECT_UPDATE_TITLE: {
+      if (state.getIn(['meta', 'general'])!.title !== action!.payload!.title || action!.payload!.title !== _PROJECT_DEFAULT_TITLE_) {
+        return state.setIn(['meta', 'general'], action.payload)
+      }
       return state
     }
     case project.PROJECT_PASTE_CLIPBOARD: {
@@ -540,6 +553,7 @@ export const getProjectSettings = (state: State) => {
 export const getProjectMeta = (state: State) => {
   return state.get('meta', null)
 }
+
 export const getProjectVideoBlob = (state: State) => state.get('videoBlob', null)
 
 export const getProjectSelection = (state: State) => {

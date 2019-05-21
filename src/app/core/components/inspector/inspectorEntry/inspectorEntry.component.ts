@@ -113,6 +113,9 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       description
     } = this._mapModel(this.entry)
 
+    //console.log(this.entry)
+    //console.log (description)
+
     this.form = this._fb.group({
       utc_timestamp: [utc_timestamp, durationValidator],
       duration: [duration, durationValidator],
@@ -256,6 +259,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     if(this.form !== null && changes.entry !== undefined && !changes.entry.firstChange) {
       const {previousValue, currentValue} = changes.entry
       if(previousValue === undefined || !previousValue.equals(currentValue)) {
+        //console.log(previousValue, currentValue)
         this.form.setValue(this._mapModel(currentValue))
       }
     }
