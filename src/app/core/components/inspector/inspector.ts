@@ -126,7 +126,7 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
     this._store.dispatch(new project.PlayerRequestCurrentTime(focusAnnotation))
   }
 
-  hashtagsUpdate(hashtags: Array) {
+  hashtagsUpdate(hashtags: Array<String>) {
     this._store.dispatch(new project.ProjectUpdateHashtags(hashtags))
   }
 
