@@ -110,7 +110,7 @@ export interface Timeline {
 }
 
 export interface ProjectHashtags {
-  readonly list: []|null
+  readonly list: Array<String>|null
 }
 
 export interface ProjectGeneralData {
