@@ -196,7 +196,8 @@ export class HashtagService {
   removeNodesFromHTMLElement(element: HTMLElement|null): string {
     let text: string = ''
     if(element) {
-      element.childNodes.forEach((node: HTMLElement) => {
+      const elemArr = Array.from(element.childNodes)
+      elemArr.forEach((node: HTMLElement) => {
         if (node.nodeType === Node.TEXT_NODE) {
           let textContent = node.textContent!.trim()
           if(textContent) {
@@ -214,7 +215,8 @@ export class HashtagService {
   removeNodesFromText(description: string): string {
     const descriptionNode = new DOMParser().parseFromString(description, 'text/html').body.childNodes
     let descriptionText: string = ''
-    descriptionNode.forEach((item: HTMLElement) => {
+    const elemArr = Array.from(descriptionNode)
+    elemArr.forEach((item: HTMLElement) => {
       if(item.nodeType == Node.TEXT_NODE) {
         descriptionText += item.textContent
       } else if(item.classList.contains(this.tagContainerClass)) {
@@ -247,7 +249,8 @@ export class HashtagService {
   encloseHashtags(): void {
     let elem = this.getCurrentFocusNativeElement()
     if(elem) {
-      elem.childNodes.forEach((node: Node) => {
+      const elemArr = Array.from(elem.childNodes)
+      elemArr.forEach((node: HTMLElement) => {
         if(node.nodeType === Node.TEXT_NODE) {
           let r = /#\w+/g
           let result = r.exec(node.nodeValue as string)
