@@ -101,6 +101,7 @@ export class ServerProxy implements OnDestroy {
 
             //const progressModal = $('#progress-modal') as any
             const progressModal = $('#progress-modal') as any
+            console.log(progressModal)
             progressModal.foundation('open')
 
             try {

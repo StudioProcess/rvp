@@ -14,6 +14,7 @@ import {ProjectModalComponent} from './components/project/projectModal/projectMo
 import {FooterComponent} from './components/footer/footer.component'
 import {VersionComponent} from './components/version/version.component'
 import {ToolbarComponent} from './components/toolbar/toolbar.component'
+import {ProgressModalComponent} from './components/project/progress-modal/progress-modal.component'
 
 // Inspector components
 import {InspectorEntryComponent} from './components/inspector/inspectorEntry/inspectorEntry.component'
@@ -30,7 +31,7 @@ const _DECLS_ = [
   // Components
   NotFoundComponent, LogoComponent, VersionComponent,
   ProjectBtnComponent, ProjectModalComponent, FooterComponent,
-  ToolbarComponent,
+  ToolbarComponent, ProgressModalComponent,
   // Inspector
   InspectorEntryComponent,
   // Timeline
