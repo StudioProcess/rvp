@@ -230,7 +230,6 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
   closeProjectModal() {
     const modal = $('#settings-reveal') as any
-    // $('body').removeClass('is-reveal-open')
     modal.foundation('close')
   }
 
