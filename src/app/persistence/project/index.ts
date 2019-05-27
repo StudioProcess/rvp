@@ -8,7 +8,9 @@ import {loadZip} from '../zip'
 export async function extractProject(zip: JSZip): Promise<any> {
   const extractPromises = _PROJECT_ZIP_META_.map(meta => {
     return zip.file(meta.file)
-      .async(meta.type)
+      .async(meta.type, (metadata) => {
+        console.log('progression: ' + metadata.percent.toFixed(2) + ' %')
+      })
       .then((f:any) => [meta.middleware.postLoad(f), meta])
   })
 
