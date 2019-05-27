@@ -29,6 +29,8 @@ import {loadZip} from '../zip'
 import {ProjectSnapshotRecordFactory} from '../model'
 import {formatDuration} from '../../lib/time'
 
+declare var $: any
+
 @Injectable()
 export class ServerProxy implements OnDestroy {
   private readonly _subs: Subscription[] = []
@@ -96,6 +98,11 @@ export class ServerProxy implements OnDestroy {
       this._subs.push(
         this.importProject.subscribe({
           next: async ({payload}) => {
+
+            //const progressModal = $('#progress-modal') as any
+            const progressModal = $('#progress-modal') as any
+            progressModal.foundation('open')
+
             try {
               const zip = await loadZip(payload)
               const projectData = await extractProject(zip)
@@ -116,6 +123,8 @@ export class ServerProxy implements OnDestroy {
             } catch(err) {
               this._store.dispatch(new project.ProjectImportError(err))
             }
+
+            progressModal.foundation('close')
           },
           error: err => {
             this._store.dispatch(new project.ProjectImportError(err))

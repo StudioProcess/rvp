@@ -6,6 +6,7 @@ import loadBinary from '../binary'
 import {loadZip} from '../zip'
 
 export async function extractProject(zip: JSZip): Promise<any> {
+
   const extractPromises = _PROJECT_ZIP_META_.map(meta => {
     return zip.file(meta.file)
       .async(meta.type, (metadata) => {
