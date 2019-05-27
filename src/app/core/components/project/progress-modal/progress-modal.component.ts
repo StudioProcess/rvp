@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
 
 @Component({
   selector: 'rv-progress-modal',
@@ -7,9 +10,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProgressModalComponent implements OnInit {
 
+  value: number = 0
+
   constructor() { }
 
   ngOnInit() {
   }
 
+  updateProgress(value: number) {
+    this.value = value
+  }
 }

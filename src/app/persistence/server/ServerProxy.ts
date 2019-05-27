@@ -99,9 +99,7 @@ export class ServerProxy implements OnDestroy {
         this.importProject.subscribe({
           next: async ({payload}) => {
 
-            //const progressModal = $('#progress-modal') as any
             const progressModal = $('#progress-modal') as any
-            console.log(progressModal)
             progressModal.foundation('open')
 
             try {

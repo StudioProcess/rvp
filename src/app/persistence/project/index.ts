@@ -7,10 +7,15 @@ import {loadZip} from '../zip'
 
 export async function extractProject(zip: JSZip): Promise<any> {
 
+  const progressModal = (<HTMLInputElement> document.getElementById('progress-modal-bar'))
+
   const extractPromises = _PROJECT_ZIP_META_.map(meta => {
     return zip.file(meta.file)
       .async(meta.type, (metadata) => {
-        console.log('progression: ' + metadata.percent.toFixed(2) + ' %')
+        if(meta.type === 'blob') {
+          progressModal.value = metadata.percent.toFixed(0)
+          //console.log('progression: ' + metadata.percent.toFixed(0) + ' %')
+        }
       })
       .then((f:any) => [meta.middleware.postLoad(f), meta])
   })
