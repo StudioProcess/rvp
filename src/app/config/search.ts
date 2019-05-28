@@ -7,7 +7,7 @@ export const _FUSE_OPTIONS_: Fuse.FuseOptions<any> = {
   id: 'annotation.id'
 }
 
-export const _FUSE_OPTIONS_HASHTAGS_: Fuse.FuseOptions = {
+export const _FUSE_OPTIONS_HASHTAGS_: Fuse.FuseOptions<any> = {
   threshold: 0.2,
   keys: ['annotation.fields.description'],
   id: 'annotation.id'
