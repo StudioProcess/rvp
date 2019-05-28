@@ -19,7 +19,9 @@ export async function extractProject(zip: JSZip): Promise<any> {
           //console.log('progression: ' + metadata.percent.toFixed(0) + ' %')
         }
       })
-      .then((f:any) => [meta.middleware.postLoad(f), meta])
+      .then((f:any) => {
+        progressModalText.innerText = 'please wait'
+        return [meta.middleware.postLoad(f), meta]})
   })
 
   const res = await Promise.all(extractPromises)
