@@ -31,6 +31,9 @@ import {formatDuration} from '../../lib/time'
 
 declare var $: any
 
+//import {BehaviorSubject} from 'rxjs/BehaviorSubject'
+import {MessageService} from '../../core/actions/message.service'
+
 @Injectable()
 export class ServerProxy implements OnDestroy {
   private readonly _subs: Subscription[] = []
@@ -38,7 +41,8 @@ export class ServerProxy implements OnDestroy {
   constructor(
     private readonly _actions: Actions,
     private readonly _cache: LFCache,
-    private readonly _store: Store<fromProject.State>) {
+    private readonly _store: Store<fromProject.State>,
+    private readonly _msg: MessageService) {
       const projectState = this._store.select(fromProject.getProjectState)
         .pipe(
           filter(proj => proj.get('meta', null) !== null),
@@ -107,7 +111,7 @@ export class ServerProxy implements OnDestroy {
 
             try {
               const zip = await loadZip(payload)
-              const projectData = await extractProject(zip)
+              const projectData = await extractProject(zip, this._msg)
 
               // mutates project data
               ensureValidProjectData(projectData)

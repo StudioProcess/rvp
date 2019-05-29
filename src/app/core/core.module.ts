@@ -28,6 +28,9 @@ import {TrackComponent} from './components/timeline/track/track.component'
 import {HandlebarComponent} from './components/timeline/handlebar/handlebar.component'
 import {PlayheadComponent} from './components/timeline/playhead/playhead.component'
 
+//import {MessageService} from './actions/message.service'
+
+
 const _DECLS_ = [
   // Containers
   MainContainer, PlayerContainer, InspectorContainer,
@@ -56,5 +59,6 @@ const _DECLS_ = [
   declarations: _DECLS_,
   exports: _DECLS_,
   entryComponents: [TaggingComponent],
+  //providers: [MessageService],
 })
 export class CoreModule {}

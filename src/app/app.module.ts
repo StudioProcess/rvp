@@ -16,6 +16,7 @@ import {reducers, metaReducers} from './core/reducers'
 
 // import {AppShellContainer} from './shell'
 import {MainContainer} from './core/components/main/main'
+import {MessageService} from './core/actions/message.service'
 
 // import {appRoutes} from './routes'
 
@@ -32,6 +33,7 @@ import {MainContainer} from './core/components/main/main'
     PlayerModule
   ],
   // declarations: [AppShellContainer],
-  bootstrap: [MainContainer]
+  bootstrap: [MainContainer],
+  providers: [MessageService],
 })
 export class AppModule {}

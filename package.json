@@ -62,6 +62,7 @@
     "ngx-autosize-input": "^2.2.2",
     "pace-progress": "^1.0.2",
     "rxjs": "~6.5.2",
+    "rxjs-compat": "^6.5.2",
     "tslib": "^1.9.0",
     "video.js": "^5.20.5",
     "videojs-vimeo": "github:dinony/videojs-vimeo#patch-1",
