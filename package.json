@@ -58,6 +58,8 @@
     "natives": "^1.1.6",
     "pace-progress": "^1.0.2",
     "rxjs": "~6.2.2",
+    "rxjs-compat": "^6.5.2",
+    "tslib": "^1.9.0",
     "video.js": "^5.20.5",
     "videojs-vimeo": "github:dinony/videojs-vimeo#patch-1",
     "videojs-youtube": "^2.6.0",

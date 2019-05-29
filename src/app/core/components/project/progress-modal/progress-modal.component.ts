@@ -1,23 +1,40 @@
 import {
+  OnInit,
   Component,
-  OnInit
+  ChangeDetectorRef
 } from '@angular/core';
+
+import {Subscription} from 'rxjs/Subscription'
+import {MessageService} from '../../../actions/message.service'
 
 @Component({
   selector: 'rv-progress-modal',
   templateUrl: './progress-modal.component.html',
-  styleUrls: ['./progress-modal.component.scss']
+  styleUrls: ['./progress-modal.component.scss'],
 })
 export class ProgressModalComponent implements OnInit {
 
-  value: number = 0
+  text: string = ''
+  percent: number = 0
+  subscription: Subscription
 
-  constructor() { }
+  constructor(
+    private readonly _cdr: ChangeDetectorRef,
+    private _msg: MessageService
+  ) {}
 
   ngOnInit() {
+    this.subscription = this._msg.msgData.subscribe((res: any) => {
+      if(res.hasOwnProperty('percent')) { this.updateProgress(res.percent) }
+      if(res.hasOwnProperty('text')) { this.updateProgressText(res.text) }
+      this._cdr.detectChanges()
+    })
   }
 
-  updateProgress(value: number) {
-    this.value = value
+  updateProgress(percent: number) {
+    this.percent = percent
+  }
+  updateProgressText(text: string) {
+    this.text = text
   }
 }

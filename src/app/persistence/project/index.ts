@@ -4,22 +4,26 @@ import {_PROJECT_ZIP_META_} from '../../config/project'
 
 import loadBinary from '../binary'
 import {loadZip} from '../zip'
+import {MessageService} from '../../core/actions/message.service'
 
-export async function extractProject(zip: JSZip): Promise<any> {
-
-  const progressModalBar = (<HTMLInputElement> document.getElementById('progress-modal-bar'))
-  const progressModalText = (<HTMLInputElement> document.getElementById('progress-modal-text'))
+export async function extractProject(zip: JSZip, msg?: MessageService): Promise<any> {
 
   const extractPromises = _PROJECT_ZIP_META_.map(meta => {
     return zip.file(meta.file)
       .async(meta.type, (metadata) => {
         if(meta.type === 'blob') {
-          progressModalBar.value = metadata.percent.toFixed(0)
-          progressModalText.innerText = 'importing '+ meta.file +': '+ metadata.percent.toFixed(2) +'%'
-          //console.log('progression: ' + metadata.percent.toFixed(0) + ' %')
+          let percent = metadata.percent.toFixed(2)
+          msg!.update({
+            percent: percent,
+            text: 'importing '+ meta.file +': '+ percent +'%'
+          })
         }
       })
-      .then((f:any) => [meta.middleware.postLoad(f), meta])
+      .then((f:any) => {
+        msg!.update({
+          text: 'please wait'
+        })
+        return [meta.middleware.postLoad(f), meta]})
   })
 
   const res = await Promise.all(extractPromises)
@@ -33,5 +37,5 @@ export async function extractProject(zip: JSZip): Promise<any> {
 export async function loadProject(path: string): Promise<any> {
   const bin = await loadBinary(path)
   const zip = await loadZip(bin)
-  return extractProject(zip)
+  return extractProject(zip, undefined)
 }
