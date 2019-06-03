@@ -16,16 +16,16 @@
       &:hover {
         background-color: $process-gray5;
 
-        /deep/ .left-handle, /deep/ .right-handle {
+        .left-handle, .right-handle {
           color: $process-super-light-gray4;
         }
       }
 
-      /deep/ .content {
+      .content {
         color: $process-gray4;
       }
 
-      /deep/ .left-handle, /deep/ .right-handle {
+      .left-handle, .right-handle {
         color: $process-gray2;
 
         &:hover {

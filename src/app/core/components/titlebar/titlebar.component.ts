@@ -52,7 +52,7 @@ export class TitlebarComponent implements OnInit {
 
   @Output() readonly onTitleUpdate = new EventEmitter<project.UpdateProjectTitlePayload>()
 
-  @ViewChild('projecttitle') private readonly _projecttitleInputRef: ElementRef
+  @ViewChild('projecttitle', { static: true }) private readonly _projecttitleInputRef: ElementRef
 
   pnform: FormGroup | null = null
   private readonly _subs: Subscription[] = []

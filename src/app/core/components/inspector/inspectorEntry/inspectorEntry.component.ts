@@ -72,10 +72,10 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   @Output() readonly onFocusAnnotation = new EventEmitter<project.PlayerRequestCurrentTimePayload>()
   @Output() readonly onHashtagsUpdate = new EventEmitter<project.UpdateProjectHashtagsPayload>()
 
-  @ViewChild('formWrapper') private readonly _formRef: ElementRef
-  @ViewChild('start') private readonly _startInputRef: ElementRef
-  @ViewChild('duration') private readonly _durationInputRef: ElementRef
-  @ViewChild('descr') readonly _descrInputRef: ElementRef
+  @ViewChild('formWrapper', { static: true }) private readonly _formRef: ElementRef
+  @ViewChild('start', { static: true }) private readonly _startInputRef: ElementRef
+  @ViewChild('duration', { static: true }) private readonly _durationInputRef: ElementRef
+  @ViewChild('descr', { static: true }) readonly _descrInputRef: ElementRef
 
   @HostListener('click', ['$event', '$event.target'])
     onClick(event: MouseEvent, target: HTMLElement) {
