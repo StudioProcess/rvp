@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "incremental": true,
     "importHelpers": true,
     "module": "esnext",
     "outDir": "./dist/out-tsc",
