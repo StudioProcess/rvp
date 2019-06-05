@@ -157,12 +157,24 @@ export class ServerProxy implements OnDestroy {
           .subscribe({
             next: async ({meta, video}) => {
               try {
+                const progressModal = $('#progress-modal') as any
+                progressModal.foundation('open')
+
                 const zip = new JSZip()
                 zip.file(`${_PROJECT_METADATA_PATH_}`, JSON.stringify(meta))
                 zip.file(`${_PROJECT_VIDEODATA_PATH_}`, video as Blob)
 
-                const zipBlob = await zip.generateAsync(_ZIP_DEFAULT_OTPIONS_) as Blob
+                const zipBlob = await zip.generateAsync(_ZIP_DEFAULT_OTPIONS_, (metadata) => {
+                  let percent = metadata.percent.toFixed(2)
+                  this._msg!.update({
+                    percent: percent,
+                    text: 'exporting: '+ percent +'%'
+                  })
+                }) as Blob
                 saveAs(zipBlob, _PROJECT_EXPORT_NAME_)
+
+                progressModal.foundation('close')
+
               } catch(err) {
                 this._store.dispatch(new project.ProjectExportError(err))
               }
