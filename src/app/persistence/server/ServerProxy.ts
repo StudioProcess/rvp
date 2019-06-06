@@ -1,7 +1,7 @@
 import {Injectable, OnDestroy} from '@angular/core'
 
 import {Store} from '@ngrx/store'
-import {Effect, Actions} from '@ngrx/effects'
+import {Effect, Actions, ofType} from '@ngrx/effects'
 
 import * as JSZip from 'jszip'
 import {saveAs} from 'file-saver'
@@ -332,22 +332,28 @@ export class ServerProxy implements OnDestroy {
     }
 
   @Effect({dispatch: false})
-  readonly loadProject = this._actions.ofType<project.ProjectLoad>(project.PROJECT_LOAD)
+  //readonly loadProject = this._actions.ofType<project.ProjectLoad>(project.PROJECT_LOAD)
+  readonly loadProject = this._actions.pipe(ofType<project.ProjectLoad>(project.PROJECT_LOAD))
 
   @Effect({dispatch:false})
-  readonly importProject = this._actions.ofType<project.ProjectImport>(project.PROJECT_IMPORT)
+  //readonly importProject = this._actions.ofType<project.ProjectImport>(project.PROJECT_IMPORT)
+  readonly importProject = this._actions.pipe(ofType<project.ProjectImport>(project.PROJECT_IMPORT))
 
   @Effect({dispatch: false})
-  readonly importVideo = this._actions.ofType<project.ProjectImportVideo>(project.PROJECT_IMPORT_VIDEO)
+  //readonly importVideo = this._actions.ofType<project.ProjectImportVideo>(project.PROJECT_IMPORT_VIDEO)
+  readonly importVideo = this._actions.pipe(ofType<project.ProjectImportVideo>(project.PROJECT_IMPORT_VIDEO))
 
   @Effect({dispatch: false})
-  readonly exportProject = this._actions.ofType<project.ProjectExport>(project.PROJECT_EXPORT)
+  //readonly exportProject = this._actions.ofType<project.ProjectExport>(project.PROJECT_EXPORT)
+  readonly exportProject = this._actions.pipe(ofType<project.ProjectExport>(project.PROJECT_EXPORT))
 
   @Effect({dispatch: false})
-  readonly exportProjectAsText = this._actions.ofType<project.ProjectExportAsText>(project.PROJECT_EXPORT_AS_TEXT)
+  //readonly exportProjectAsText = this._actions.ofType<project.ProjectExportAsText>(project.PROJECT_EXPORT_AS_TEXT)
+  readonly exportProjectAsText = this._actions.pipe(ofType<project.ProjectExportAsText>(project.PROJECT_EXPORT_AS_TEXT))
 
   @Effect({dispatch: false})
-  readonly resetProject = this._actions.ofType<project.ProjectReset>(project.PROJECT_RESET)
+  //readonly resetProject = this._actions.ofType<project.ProjectReset>(project.PROJECT_RESET)
+  readonly resetProject = this._actions.pipe(ofType<project.ProjectReset>(project.PROJECT_RESET))
 
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
