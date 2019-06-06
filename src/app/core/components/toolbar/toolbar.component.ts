@@ -56,7 +56,7 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
   @Output() readonly onResetProject = new EventEmitter()
   @Output() readonly onNewProject = new EventEmitter()
 
-  @ViewChild('search') readonly _searchRef: ElementRef
+  @ViewChild('search', { static: true }) readonly _searchRef: ElementRef
 
   @HostListener('click', ['$event', '$event.target'])
     onClick(event: MouseEvent, target: HTMLElement) {

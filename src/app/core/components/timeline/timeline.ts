@@ -5,7 +5,7 @@ import {
   AfterViewInit, Inject
 } from '@angular/core'
 
-import {DOCUMENT} from '@angular/platform-browser'
+import { DOCUMENT } from "@angular/common";
 
 import {Store} from '@ngrx/store'
 
@@ -53,10 +53,10 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   readonly timelineWrapperRect = new ReplaySubject<ClientRect>(1)
   readonly scrollSettings = new ReplaySubject<ScrollSettings>(1)
 
-  @ViewChild('scrollbar') private readonly _scrollbarRef: ElementRef
-  @ViewChild('handlebar') private readonly _handlebarRef: HandlebarComponent
-  @ViewChild('timelineWrapper') private readonly _timelineWrapperRef: ElementRef
-  @ViewChild('playheadOverflow') private readonly _playheadOverflowRef: ElementRef
+  @ViewChild('scrollbar', { static: true }) private readonly _scrollbarRef: ElementRef
+  @ViewChild('handlebar', { static: true }) private readonly _handlebarRef: HandlebarComponent
+  @ViewChild('timelineWrapper', { static: true }) private readonly _timelineWrapperRef: ElementRef
+  @ViewChild('playheadOverflow', { static: true }) private readonly _playheadOverflowRef: ElementRef
   private readonly _subs: Subscription[] = []
   private readonly _timelineSubj = this._store.select(fromProject.getProjectQueriedTimeline)
     .pipe(filter(timeline => timeline !== null), share())

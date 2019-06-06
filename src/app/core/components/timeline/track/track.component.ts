@@ -74,10 +74,10 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   private readonly _updateAnnotationSubj = new Subject<{hb: Handlebar, annotationIndex: number, annotationStackIndex: number}>()
   private readonly _annotationMdSubj = new Subject<{ev: MouseEvent, annotation: Record<Annotation>, annotationStackIndex: number}>()
 
-  @ViewChild('title') private readonly _titleInputRef: ElementRef
-  @ViewChild('trackOverflow') private readonly _overflowContainerRef: ElementRef
-  @ViewChild('zoomContainer') private readonly _zoomContainerRef: ElementRef
-  @ViewChild('trackBtn') private readonly _trackBtnRef: ElementRef
+  @ViewChild('title', { static: true }) private readonly _titleInputRef: ElementRef
+  @ViewChild('trackOverflow', { static: true }) private readonly _overflowContainerRef: ElementRef
+  @ViewChild('zoomContainer', { static: true }) private readonly _zoomContainerRef: ElementRef
+  @ViewChild('trackBtn', { static: true }) private readonly _trackBtnRef: ElementRef
 
   constructor(
     private readonly _elem: ElementRef,
