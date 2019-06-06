@@ -15,6 +15,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": false,
     "pretty": true,
+    "keyofStringsOnly": true,
     "target": "es2015",
     "lib": [
       "es2015",
