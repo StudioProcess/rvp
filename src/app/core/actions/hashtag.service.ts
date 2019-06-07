@@ -31,7 +31,14 @@ export class HashtagService {
     readonly _domService: DomService,
   ) {}
 
-  addHashTag(ev: KeyboardEvent) {
+  /**
+   *  entry points for new hashtags
+   *  - opens hashtag popup
+   *  - prepares for following input
+   *  - prepares for hashtag picks
+   *  - prepares for closing the popup and to process the input area
+   */
+  addHashTag(ev: KeyboardEvent): void {
     if(! this.isHashTagPopupContainerOpen) {
       // container for the hashtag popup component
       this.addHashTagPopupContainer()
@@ -59,7 +66,7 @@ export class HashtagService {
     }
   }
 
-  saveHashtags(description: string) {
+  saveHashtags(description: string): void {
     const hashtags = description.match(/#\w+/g)
     this.onHashtagsUpdate.emit({
       hashtags
@@ -71,7 +78,7 @@ export class HashtagService {
    *  which is used as the container (mainly positioning) of the tagging
    *  popup component (will be removed on any formblur, save, pick etc. event).
    */
-  addHashTagPopupContainer() {
+  addHashTagPopupContainer(): void {
     let range = document.getSelection()!.getRangeAt(0)!
     if(!range.collapsed) {
       range.deleteContents()
@@ -92,7 +99,7 @@ export class HashtagService {
     sel.addRange(range)
   }
 
-  removeHashTagPopupContainer() {
+  removeHashTagPopupContainer(): void {
     if(document.getElementById(this.tagPopupContainerId)) {
       let elem = document.getElementById(this.tagPopupContainerId)!
       if (elem.parentNode) {
@@ -237,7 +244,7 @@ export class HashtagService {
     return elem
   }
 
-  getCurrentSelectionOffsetLength(selection: Node) {
+  getCurrentSelectionOffsetLength(selection: Node): number {
     let range = document.getSelection()!.getRangeAt(0)
     let preCaretRange = range.cloneRange()
     preCaretRange.selectNodeContents(selection)
@@ -293,7 +300,7 @@ export class HashtagService {
     }
   }
 
-  htmlBr(description: string) {
+  htmlBr(description: string): string {
     const pat1 = new RegExp('<div>', 'g')
     const pat2 = new RegExp('</div>', 'g')
     return description.replace(pat1, '<br>').replace(pat2, '')
