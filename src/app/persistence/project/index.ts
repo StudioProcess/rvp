@@ -13,10 +13,11 @@ export async function extractProject(zip: JSZip, msg?: MessageService): Promise<
       .async(meta.type, (metadata) => {
         if(meta.type === 'blob') {
           let percent = metadata.percent.toFixed(2)
-          msg!.update({
-            percent: percent,
-            text: 'importing '+ meta.file +': '+ percent +'%'
-          })
+          if(msg) {            
+            msg!.update({
+              percent: percent,
+              text: 'importing '+ meta.file +': '+ percent +'%'
+            })}
         }
       })
       .then((f:any) => {
