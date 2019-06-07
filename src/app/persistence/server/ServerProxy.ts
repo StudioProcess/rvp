@@ -129,6 +129,7 @@ export class ServerProxy implements OnDestroy {
               this._store.dispatch(new project.ProjectImportError(err))
             }
 
+            this._msg!.update({percent: 0, text: 'please wait'})
             progressModal.foundation('close')
           },
           error: err => {
@@ -169,16 +170,14 @@ export class ServerProxy implements OnDestroy {
                 const zipBlob = await zip.generateAsync(_ZIP_DEFAULT_OTPIONS_, (metadata) => {
                   const percent = metadata.percent.toFixed(2)
                   const text = 'exporting '+ metadata.currentFile +' '+((parseFloat(percent) <= 50) ? '1/2' : '2/2')+' please wait'
-                  this._msg!.update({
-                    percent: percent,
-                    text: text
-                  })
+                  this._msg!.update({percent: percent, text: text})
                 }) as Blob
 
                 const export_name = ((meta.general! && meta.general!.title!) ? meta.general.title : _PROJECT_DEFAULT_TITLE_) + '.rv'
                 await saveAs(zipBlob, export_name)
 
                 setTimeout(() => {
+                  this._msg!.update({percent: 0, text: 'please wait'})
                   progressModal.foundation('close')
                 }, 1000)
 
