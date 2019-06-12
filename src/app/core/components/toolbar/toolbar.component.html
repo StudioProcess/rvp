@@ -12,6 +12,13 @@
     <button (mousedown)="actionBtnClick($event, 'paste_annotation')" [disabled]="!hasClipboardAnnotations">
       <i class="ion-md-clipboard" title="Paste Annotation"></i><span class="show-for-medium"> Paste</span>
     </button>
+    <button data-open="tag-add-modal">
+      <i>#</i> Tag
+    </button>
+    <rv-tag-add-modal class="reveal" id="tag-add-modal" data-reveal>
+    </rv-tag-add-modal>
+
+
     <button (click)="actionBtnClick($event, 'undo_action')" [disabled]="!hasUndo">
       <i class="ion-md-undo" title="Undo Action"></i><span class="show-for-medium"> Undo</span>
     </button>
@@ -28,6 +35,7 @@
       (onResetProject)="resetProject()"
       (onNewProject)="newProject()">
     </rv-projectmodal>
+
     <form class="leftForm" [formGroup]="leftForm" novalidate>
       <input formControlName="currentAnnotationsOnly" type="checkbox"/> Current <span class="show-for-large">annotations</span> only
     </form>

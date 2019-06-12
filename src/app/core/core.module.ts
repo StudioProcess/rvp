@@ -17,8 +17,9 @@ import {FooterComponent} from './components/footer/footer.component'
 import {VersionComponent} from './components/version/version.component'
 import {ToolbarComponent} from './components/toolbar/toolbar.component'
 import {ProgressModalComponent} from './components/project/progress-modal/progress-modal.component'
-import {TaggingComponent} from './components/tagging/tagging.component'
 import {TitlebarComponent} from './components/titlebar/titlebar.component'
+import {TaggingComponent} from './components/tagging/tagging.component'
+import {TagAddModalComponent} from './components/tagging/tag-add-modal/tag-add-modal.component'
 
 // Inspector components
 import {InspectorEntryComponent} from './components/inspector/inspectorEntry/inspectorEntry.component'
@@ -41,7 +42,7 @@ const _DECLS_ = [
   // Timeline
   TrackComponent, HandlebarComponent, PlayheadComponent,
   // Tagging
-  TaggingComponent
+  TaggingComponent, TagAddModalComponent
 ]
 
 @NgModule({
