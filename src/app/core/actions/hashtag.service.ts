@@ -124,7 +124,6 @@ export class HashtagService {
     if(elem) {
       let old_text = elem!.textContent
       let new_text = null
-      console.log(old_text, data.user_input)
       if(old_text!.endsWith(data!.user_input)) {
         /**
          *  hashtag at the very end

@@ -55,6 +55,6 @@ const _DECLS_ = [
   ],
   declarations: _DECLS_,
   exports: _DECLS_,
-  entryComponents: [TaggingComponent],
+  entryComponents: [TaggingComponent, TagAddModalComponent],
 })
 export class CoreModule {}
