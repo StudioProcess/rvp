@@ -221,7 +221,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       formBlur
         .pipe(
           //delay(100),
-          //tap((ev) => {console.log('TAP', ev)}),
+          //tap((ev) => {}),
           withLatestFrom(combineLatest(this.form!.valueChanges, this.form!.statusChanges), (_, [form, status]) => {
             return [form, status]
           }),

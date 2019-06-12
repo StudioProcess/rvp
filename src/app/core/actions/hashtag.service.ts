@@ -188,9 +188,13 @@ export class HashtagService {
         ev.preventDefault()
       }
       this.removeHashTagPopupContainer()
-      element!.innerHTML = this.removeNodesFromHTMLElement(element)
+      let new_text = this.removeNodesFromHTMLElement(element)
+      element!.innerHTML = new_text
+      this.form!.patchValue({
+        'description': new_text
+      })
       this.encloseHashtags()
-      //this.setCaretToPositionEnd(element)
+      this.setCaretToPositionEnd(element)
 
       return false
     } else if(ev.key == '#') {
