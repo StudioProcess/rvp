@@ -124,20 +124,38 @@ export class HashtagService {
     if(elem) {
       let old_text = elem!.textContent
       let new_text = null
-
+      console.log(old_text, data.user_input)
       if(old_text!.endsWith(data!.user_input)) {
+        /**
+         *  hashtag at the very end
+         */
         new_text = old_text!.replace(new RegExp(data!.user_input + '$'), data!.hashtag)
-      } else {
+      } else if(old_text!.indexOf(data!.user_input +"\n") > -1) {
+        /**
+         *  hashtag at the end of a line
+         */
+        new_text = old_text!.replace(data!.user_input + "\n", data!.hashtag +"\n")
+      } else if(old_text!.indexOf(data!.user_input +' ') > -1) {
+        /**
+         *  hashtag followed by whitespace
+         */
         new_text = old_text!.replace(data!.user_input + ' ', data!.hashtag)
+      } else {
+        new_text = old_text!.replace(data!.user_input, data!.hashtag)
       }
+
       elem!.textContent = new_text
       if(this._descrInputRef) {
-        // annotations input
+        /**
+         *  annotation input
+         */
         this.form!.patchValue({
           'description': new_text
         })
       } else if(this._searchRef) {
-        // search input
+        /**
+         *  search input
+         */
         this.rightForm!.patchValue({
           search: new_text
         })
@@ -178,7 +196,7 @@ export class HashtagService {
     } else if(ev.key == '#') {
       ev.preventDefault()
     } else if(ev.key == 'Backspace') {
-      // already handled via getCurrentSelectionOffsetLength check further below
+      // already handled by getCurrentSelectionOffsetLength
     }
 
     /**

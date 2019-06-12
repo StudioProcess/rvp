@@ -25,7 +25,8 @@ import {
 import {
   withLatestFrom, map, filter,
   distinctUntilChanged, buffer,
-  debounceTime
+  debounceTime,
+  // tap, delay
 } from 'rxjs/operators'
 
 import {formatDuration} from '../../../../lib/time'
@@ -219,6 +220,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     this._subs.push(
       formBlur
         .pipe(
+          //delay(100),
+          //tap((ev) => {console.log('TAP', ev)}),
           withLatestFrom(combineLatest(this.form!.valueChanges, this.form!.statusChanges), (_, [form, status]) => {
             return [form, status]
           }),
