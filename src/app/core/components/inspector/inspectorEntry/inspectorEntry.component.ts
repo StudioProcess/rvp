@@ -230,9 +230,9 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
           }))
         .subscribe(({description, utc_timestamp, duration}) => {
 
-          //description = this.htmlBr(description)
-          description = this.removeNodesFromText(description)
           //console.log('formBlur', description)
+          description = this.htmlBr(description)
+          description = this.removeNodesFromText(description)
           this.saveHashtags(description)
 
           const annotation = new AnnotationRecordFactory({

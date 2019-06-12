@@ -161,7 +161,6 @@ export class HashtagService {
   }
 
   handleHashtagInput(ev: KeyboardEvent): boolean {
-
     //console.log(ev)
     const selection = document.getSelection()!.anchorNode!
     let element = this.getCurrentFocusNativeElement()
@@ -173,7 +172,7 @@ export class HashtagService {
       this.removeHashTagPopupContainer()
       element!.innerHTML = this.removeNodesFromHTMLElement(element)
       this.encloseHashtags()
-      this.setCaretToPositionEnd(element)
+      //this.setCaretToPositionEnd(element)
 
       return false
     } else if(ev.key == '#') {
@@ -182,6 +181,9 @@ export class HashtagService {
       // already handled via getCurrentSelectionOffsetLength check further below
     }
 
+    /**
+     *  handle userinput on hashtag popup open
+     */
     if(selection.nodeType == Node.TEXT_NODE) {
       setTimeout(() => { // TODO : hacky, find another way to read nodes textcontent
         if(this.getCurrentSelectionOffsetLength(selection) == 0) {
@@ -189,11 +191,14 @@ export class HashtagService {
           return false
         }
         let hashtag = selection.textContent!
-        let hashtag_concise = hashtag
-        if(/\s/.test(hashtag)) {
-          // when empty spaces occur on textnode hashtag end on next empty space
+        let hashtag_concise = hashtag.split("\n")[0] // consider linebreak inside selection/textnode
+        hashtag_concise = hashtag_concise.trim()
+        /**
+         *  when empty spaces occur on hashtag textnode -> remove
+         */
+        /*if(/\s/.test(hashtag)) {
           hashtag_concise = hashtag.substr(0, hashtag.indexOf(' '))!
-        }
+        }*/
         this.taggingComponentRef.instance.updateHashtags(hashtag_concise)
       }, 0)
     }
@@ -206,28 +211,42 @@ export class HashtagService {
       const elemArr = Array.from(element.childNodes)
       elemArr.forEach((node: HTMLElement) => {
         if (node.nodeType === Node.TEXT_NODE) {
-          let textContent = node.textContent!.trim()
+          let textContent = node.textContent!
           if(textContent) {
-            text += textContent +' '
+            /**
+             *  re-add linebreaks
+             */
+            if(/\r|\n/.exec(textContent)) {
+              textContent.replace(/(?:\r\n|\r|\n)/g, '<br>')
+            }
+            text += textContent
           }
         } else if(node.classList.contains(this.tagContainerClass)) {
-          text += node.textContent!.trim() +' '
+          text += node.textContent!.trim()
         }
       })
-      text = text.replace(/#\s+/g, '')
+      //text = text.replace(/#\s+/g, '')
     }
     return text
   }
 
   removeNodesFromText(description: string): string {
+
+    let el = document.createElement('div')
+    el.innerHTML = description
+    //console.log(description, el.childNodes)
+
     const descriptionNode = new DOMParser().parseFromString(description, 'text/html').body.childNodes
     let descriptionText: string = ''
     const elemArr = Array.from(descriptionNode)
+    //console.log(description, elemArr)
     elemArr.forEach((item: HTMLElement) => {
       if(item.nodeType == Node.TEXT_NODE) {
-        descriptionText += item.textContent
+        descriptionText += item.textContent!.trimLeft()
+      } else if(item.nodeType == Node.ELEMENT_NODE && item.nodeName === 'BR') {
+        descriptionText += "\n"
       } else if(item.classList.contains(this.tagContainerClass)) {
-        descriptionText += item.textContent +' '
+        descriptionText += item.textContent!.trim() +' '
       }
     })
     this.isHashTagPopupContainerOpen = false
@@ -303,6 +322,6 @@ export class HashtagService {
   htmlBr(description: string): string {
     const pat1 = new RegExp('<div>', 'g')
     const pat2 = new RegExp('</div>', 'g')
-    return description.replace(pat1, '<br>').replace(pat2, '')
+    return description.replace(pat1, "\n").replace(pat2, '')
   }
 }
