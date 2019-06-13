@@ -7,7 +7,10 @@
 <div class="row">
   <div class="column">
     <ul class="tagging-list">
-      <li *ngFor="let hashtag of hashtags" [value]="hashtag" [type]="hastag">
+      <li *ngFor="let hashtag of hashtags"
+        [value]="hashtag"
+        [type]="hastag"
+        (click)="selectAddHashtag($event, hashtag)">
         {{hashtag}}
       </li>
     </ul>

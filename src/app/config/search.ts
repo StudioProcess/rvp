@@ -14,7 +14,6 @@ export const _FUSE_OPTIONS_HASHTAGS_: Fuse.FuseOptions<any> = {
   threshold: 0.2,
   tokenize: true,
   matchAllTokens: true,
-  findAllMatches: true,
   minMatchCharLength: 2,
   keys: ['annotation.fields.description'],
   id: 'annotation.id'
