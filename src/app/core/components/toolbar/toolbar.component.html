@@ -57,7 +57,13 @@
         <i class="close-icon ion-md-close" [hidden]="!(search.innerHTML.length > 0)" (click)="clearSearch()"></i>
       </div>
       <div class="applyToTimeline-wrapper">
-        <input formControlName="applyToTimeline" type="checkbox"/> Apply to timeline
+        <div class="checkbox">
+          <label>
+            <input formControlName="applyToTimeline" type="checkbox"/>
+            <span class="custom-checkbox secondary"><i class="icon-check"></i></span>
+            Apply to timeline
+          </label>
+        </div>
       </div>
     </form>
   </div>
