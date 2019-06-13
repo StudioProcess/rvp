@@ -36,7 +36,13 @@
     </rv-projectmodal>
 
     <form class="leftForm" [formGroup]="leftForm" novalidate>
-      <input formControlName="currentAnnotationsOnly" type="checkbox"/> Current <span class="show-for-large">annotations</span> only
+      <div class="checkbox">
+        <label>
+          <input formControlName="currentAnnotationsOnly" type="checkbox">
+          <span class="custom-checkbox secondary"><i class="icon-check"></i></span>
+          Current <span class="show-for-large">annotations</span> only
+        </label>
+      </div>
     </form>
   </div>
   <div class="small-12 medium-12 large-4 column">
