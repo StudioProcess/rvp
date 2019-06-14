@@ -18,12 +18,8 @@ import { AnnotationRecordFactory, AnnotationFieldsRecordFactory } from '../../..
 export class TagAddModalComponent implements OnInit {
 
   hashtags: string[] = []
-  //selectedAnnotations: any
   selectedAnnotations: Set<Record<Annotation>>
-  getAnnotationsSelections: any
-  //const initialState = new ProjectRecordFactory()
-  //export type State = Record<Project>
-  //@Output() readonly onUpdate = new EventEmitter<project.UpdateAnnotationPayload>()
+  tracks: any
 
   constructor(
     private _rootStore: Store<fromRoot.State>
@@ -32,18 +28,14 @@ export class TagAddModalComponent implements OnInit {
       if (meta !== null) {
         const tags = meta!.getIn(['hashtags', 'list'])!
         this.hashtags = (tags) ? tags : []
+        this.tracks = meta!.getIn(['timeline', 'tracks'])
       }
     })
 
     this._rootStore.select(fromProject.getSelectedAnnotations)
       .subscribe(selAnnotations => {
         this.selectedAnnotations = selAnnotations
-      })
-
-    this._rootStore.select(fromProject.getAnnotationsSelections)
-      .subscribe(selAnnotations => {
-        console.log(selAnnotations)
-        this.getAnnotationsSelections = selAnnotations
+        //console.log('this.selectedAnnotations', this.selectedAnnotations)
       })
   }
 
@@ -54,55 +46,72 @@ export class TagAddModalComponent implements OnInit {
    *  prevent annotation from de-selecting
    */
   hashtagAddModalClick($event: MouseEvent) {
-    //console.log('MouseEvent', $event)
     $event.stopPropagation()
+  }
+
+  /**
+   *  build complete path info in order to update annotation
+   *  or respectively use ProjectUpdateAnnotation method
+   */
+  getAnotationStorePathById(search_id: number|null): any {
+    let path = null
+    this.tracks!.find((track: any, trackIndex: number) => {
+      const annotationStacks = track.get('annotationStacks', null)
+      annotationStacks.forEach((annotationStack: any, annotationStackIndex: number) => {
+        annotationStack.forEach((annotation: any, annotationIndex: number) => {
+          if(annotation.id === search_id) {
+            path = {
+              'trackIndex': trackIndex,
+              'annotationStackIndex': annotationStackIndex,
+              'annotationIndex': annotationIndex,
+              'annotationId': annotation.id
+            }
+            return true
+          }
+        })
+      })
+      return false
+    })
+    return path
   }
 
   selectAddHashtag(event: any, hashtag: string) {
     //console.log('this.selectedAnnotations', this.selectedAnnotations)
 
-    /*this.selectedAnnotations.find((sel) => {
-      console.log('ID', sel, sel.get('id', null))
-      const annotation_text = sel.getIn(['fields', 'description'])
-      const annotation_text_new = annotation_text.trim() +' '+ hashtag
-      console.log(annotation_text_new)
-      let ret = sel.setIn(['fields', 'description'], annotation_text_new)
-      console.log('ret', ret)
+    /**
+     *  - go through all selected annotations
+     *  - find pathInfo in order to save (via ProjectUpdateAnnotation)
+     *  - update annotaion text with selected hashtag
+     *  - save (via ProjectUpdateAnnotation)
+     */
+    this.selectedAnnotations.find((sel) => {
+      const annotationId = sel.get('id', null)
+      //console.log('SEL', sel, 'ID', annotationId)
+      const pathInfo = this.getAnotationStorePathById(annotationId!)
+      if(pathInfo) {
+        const annotation_duration = sel.get('duration', null)
+        const annotation_timestamp = sel.get('utc_timestamp', null)
+        const annotation_text = sel.getIn(['fields', 'description'])
+        const annotation_text_new = annotation_text.trim() +' '+ hashtag
 
-      //console.log('trackIndex', sel.get('trackIndex', null))
-      //console.log('annotationStackIndex', sel.get('annotationStackIndex', null))
-      return true
-    })*/
+        const annotation = new AnnotationRecordFactory({
+          id: annotationId,
+          utc_timestamp: annotation_timestamp,
+          duration: annotation_duration,
+          fields: new AnnotationFieldsRecordFactory({description: annotation_text_new})
+        })
 
-    this.getAnnotationsSelections.find((sel: any) => {
-      console.log(sel)
-      console.log('track', sel.getIn(['track']))
-      console.log('annotationStacks', sel.getIn(['track', 'annotationStacks']))
-      const annotation_id = sel.getIn(['annotation', 'id'])
-      const annotation_duration = sel.getIn(['annotation', 'duration'])
-      const annotation_timestamp = sel.getIn(['annotation', 'utc_timestamp'])
-      const annotationStackIndex = sel.get('annotationStackIndex', null)
-      const trackIndex = sel.getIn(['track', 'id'])
-      //console.log('ID', annotation_id, annotation_duration, annotation_timestamp, annotationStackIndex, trackIndex)
+        const updateAnnotation = {
+          trackIndex: pathInfo!.trackIndex,
+          annotationStackIndex: pathInfo!.annotationStackIndex,
+          annotationIndex: pathInfo!.annotationIndex,
+          annotation
+        }
+        //console.log('updateAnnotation', updateAnnotation)
 
-      const annotation_text = sel.getIn(['annotation', 'fields', 'description'])
-      const annotation_text_new = annotation_text.trim() + ' ' + hashtag
-
-      const annotation = new AnnotationRecordFactory({
-        id: annotation_id,
-        utc_timestamp: annotation_timestamp,
-        duration: annotation_duration,
-        fields: new AnnotationFieldsRecordFactory({description: annotation_text_new})
-      })
-
-      const updateAnnotation = {
-        trackIndex: trackIndex,
-        annotationStackIndex: annotationStackIndex,
-        annotationIndex: 0, // TODO :
-        annotation
+        this._rootStore.dispatch(new project.ProjectUpdateAnnotation(updateAnnotation))
       }
-
-      this._rootStore.dispatch(new project.ProjectUpdateAnnotation(updateAnnotation))
+      return false
     })
   }
 }
