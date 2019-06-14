@@ -12,7 +12,7 @@
     <button (mousedown)="actionBtnClick($event, 'paste_annotation')" [disabled]="!hasClipboardAnnotations">
       <i class="ion-md-clipboard" title="Paste Annotation"></i><span class="show-for-medium"> Paste</span>
     </button>
-    <button data-open="tag-add-modal">
+    <button data-open="tag-add-modal" [disabled]="!hasSelectedAnnotations">
       <i>#</i> Tag
     </button>
     <rv-tag-add-modal class="reveal" id="tag-add-modal" data-reveal>

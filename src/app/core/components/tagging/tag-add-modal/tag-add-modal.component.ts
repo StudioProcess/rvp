@@ -76,8 +76,6 @@ export class TagAddModalComponent implements OnInit {
   }
 
   selectAddHashtag(event: any, hashtag: string) {
-    //console.log('this.selectedAnnotations', this.selectedAnnotations)
-
     /**
      *  - go through all selected annotations
      *  - find pathInfo in order to save (via ProjectUpdateAnnotation)
