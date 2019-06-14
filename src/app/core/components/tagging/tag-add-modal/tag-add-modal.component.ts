@@ -76,13 +76,13 @@ export class TagAddModalComponent implements OnInit {
     return path
   }
 
+  /**
+   *  - go through all selected annotations
+   *  - find pathInfo in order to save (via ProjectUpdateAnnotation)
+   *  - update annotation text with selected hashtag
+   *  - save (via ProjectUpdateAnnotation)
+   */
   addHashtag(hashtag: string) {
-    /**
-     *  - go through all selected annotations
-     *  - find pathInfo in order to save (via ProjectUpdateAnnotation)
-     *  - update annotaion text with selected hashtag
-     *  - save (via ProjectUpdateAnnotation)
-     */
     this.selectedAnnotations.find((sel) => {
       const annotationId = sel.get('id', null)
       //console.log('SEL', sel, 'ID', annotationId)
@@ -117,7 +117,12 @@ export class TagAddModalComponent implements OnInit {
   }
 
   selectAddHashtag(event: any, hashtag: string) {
-
     this.selectedHashtag = hashtag
+  }
+
+  addNewHashtag($event: any) {
+    const regexp = new RegExp('#([^\\s]*)','g')
+    $event.target.value = $event.target.value.replace(regexp, '')
+    this.selectedHashtag = '#'+ $event.target.value
   }
 }

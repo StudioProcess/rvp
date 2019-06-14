@@ -6,6 +6,7 @@
 </div>
 <div class="row">
   <div class="column">
+    #<input class="add-new-hashtag-input" placeholder="enter new hashtag" (keyup)="addNewHashtag($event)" >
     <ul class="tagging-list">
       <li *ngFor="let hashtag of hashtags"
         [value]="hashtag"
@@ -18,9 +19,9 @@
 </div>
 <div class="row" style="margin-top: 20px;">
   <div class="columns small-8">
-    <span>{{selectedHashtag}}</span>
+    <strong>{{selectedHashtag}}</strong>
   </div>
   <div class="columns">
-    <a class="button-add-hashtag" href="#" (click)="addHashtag(selectedHashtag)">Add</a>
+    <a class="button-add-hashtag" href="#" data-close (click)="addHashtag(selectedHashtag)">Add</a>
   </div>
 </div>

@@ -122,7 +122,9 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
         }))
 
     // backspace key
-    const removeAnnotationHotkey = windowKeydown.pipe(filter(e => e.keyCode === 8))
+    //const removeAnnotationHotkey = windowKeydown.pipe(filter(e => e.keyCode === 8))
+    // moved to "Delete" key
+    const removeAnnotationHotkey = windowKeydown.pipe(filter(e => e.keyCode === 46))
 
     // space key
     const togglePlayingHotkey = windowKeydown.pipe(filter(e => e.keyCode === 32))
