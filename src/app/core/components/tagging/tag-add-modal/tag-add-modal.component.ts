@@ -18,6 +18,7 @@ import { AnnotationRecordFactory, AnnotationFieldsRecordFactory } from '../../..
 export class TagAddModalComponent implements OnInit {
 
   hashtags: string[] = []
+  selectedHashtag: string = ''
   selectedAnnotations: Set<Record<Annotation>>
   tracks: any
 
@@ -75,7 +76,7 @@ export class TagAddModalComponent implements OnInit {
     return path
   }
 
-  selectAddHashtag(event: any, hashtag: string) {
+  addHashtag(hashtag: string) {
     /**
      *  - go through all selected annotations
      *  - find pathInfo in order to save (via ProjectUpdateAnnotation)
@@ -111,5 +112,12 @@ export class TagAddModalComponent implements OnInit {
       }
       return false
     })
+
+    this.selectedHashtag = ''
+  }
+
+  selectAddHashtag(event: any, hashtag: string) {
+
+    this.selectedHashtag = hashtag
   }
 }

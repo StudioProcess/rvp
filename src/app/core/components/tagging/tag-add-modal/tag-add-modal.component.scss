@@ -1,3 +1,5 @@
+@import 'mixins';
+
 :host {
   display: block;
 }
@@ -18,4 +20,9 @@ ul {
       }
     }
   }
+}
+
+.button-add-hashtag {
+  float: right;
+  @include button($process-light-gray);
 }
