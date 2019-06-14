@@ -1,3 +1,21 @@
 :host {
   display: block;
 }
+
+ul {
+
+  &.tagging-list {
+    max-height: 200px;
+    margin: 0;
+    overflow-y: scroll;
+    list-style-type: none;
+
+    li {
+      width: 100%;
+
+      &:hover {
+        background-color: #eee;
+      }
+    }
+  }
+}
