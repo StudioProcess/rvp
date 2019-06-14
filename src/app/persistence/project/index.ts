@@ -13,7 +13,7 @@ export async function extractProject(zip: JSZip, msg?: MessageService): Promise<
       .async(meta.type, (metadata) => {
         if(meta.type === 'blob') {
           let percent = metadata.percent.toFixed(2)
-          if(msg) {            
+          if(msg) {
             msg!.update({
               percent: percent,
               text: 'importing '+ meta.file +': '+ percent +'%'
@@ -21,9 +21,10 @@ export async function extractProject(zip: JSZip, msg?: MessageService): Promise<
         }
       })
       .then((f:any) => {
-        msg!.update({
-          text: 'please wait'
-        })
+        if(msg) {
+          msg!.update({
+            text: 'please wait'
+          })}
         return [meta.middleware.postLoad(f), meta]})
   })
 
