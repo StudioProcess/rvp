@@ -167,7 +167,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
             source: SelectionSource.Inspector
           })
         })
-        this.encloseHashtags()
+        //this.encloseHashtags()
       }))
 
     // Focus annotation

@@ -101,11 +101,11 @@ export class HashtagService {
 
   removeHashTagPopupContainer(): void {
     if(document.getElementById(this.tagPopupContainerId)) {
+      console.log('removeHashTagPopupContainer')
       let elem = document.getElementById(this.tagPopupContainerId)!
       if (elem.parentNode) {
         if(this.taggingComponentRef) {
           this.taggingComponentRef.destroy()
-          //this.taggingComponentRef.nativeElement.remove()
         }
         elem.remove()
         //let parent = elem.parentNode!
@@ -309,9 +309,20 @@ export class HashtagService {
   encloseHashtags(): void {
     let elem = this.getCurrentFocusNativeElement()
     if(elem) {
+      //this.removeHashTagPopupContainer()
+      //console.log('encloseHashtags', elem.textContent)
       const elemArr = Array.from(elem.childNodes)
+      //console.log('encloseHashtags', elemArr)
       elemArr.forEach((node: HTMLElement) => {
         if(node.nodeType === Node.TEXT_NODE) {
+          /*
+          let newNode = document.createElement('div')
+          newNode.innerHTML = node
+            .nodeValue
+            .replace(/(\#[a-zA-Z0-9\-\_]+)/g, '<span class="'+this.tagContainerClass+'" contenteditable="false">$&<span class="'+this.tagContainerCloseClass+' ion-ios-close-circle" contenteditable="false"></span></span>')
+          node.replaceWith(newNode)
+          console.log('newNode', newNode)
+          */
           let r = /#\w+/g
           let result = r.exec(node.nodeValue as string)
           if(!result) { return } else {
