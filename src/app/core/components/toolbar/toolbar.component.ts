@@ -121,7 +121,7 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
         this.handleHashtagInput(ev)
       } else {
         if(ev.keyCode === 191 || ev.key === '#') {
-          this.addHashTag(ev)
+          this.handleHashTag(ev)
         }
       }
     }))

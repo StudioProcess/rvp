@@ -85,7 +85,6 @@ export class TagAddModalComponent implements OnInit {
   addHashtag(hashtag: string) {
     this.selectedAnnotations.find((sel) => {
       const annotationId = sel.get('id', null)
-      //console.log('SEL', sel, 'ID', annotationId)
       const pathInfo = this.getAnotationStorePathById(annotationId!)
       if(pathInfo) {
         const annotation_duration = sel.get('duration', null)
@@ -99,17 +98,18 @@ export class TagAddModalComponent implements OnInit {
           duration: annotation_duration,
           fields: new AnnotationFieldsRecordFactory({description: annotation_text_new})
         })
-
         const updateAnnotation = {
           trackIndex: pathInfo!.trackIndex,
           annotationStackIndex: pathInfo!.annotationStackIndex,
           annotationIndex: pathInfo!.annotationIndex,
           annotation
         }
-        //console.log('updateAnnotation', updateAnnotation)
 
         this._rootStore.dispatch(new project.ProjectUpdateAnnotation(updateAnnotation))
       }
+      /**
+       *  don't break the loop until all selected annotations are updated/saved
+       */
       return false
     })
 

@@ -38,7 +38,7 @@ export class HashtagService {
    *  - prepares for hashtag picks
    *  - prepares for closing the popup and to process the input area
    */
-  addHashTag(ev: KeyboardEvent): void {
+  handleHashTag(ev: KeyboardEvent): void {
     if(! this.isHashTagPopupContainerOpen) {
       // container for the hashtag popup component
       this.addHashTagPopupContainer()
