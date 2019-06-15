@@ -103,13 +103,13 @@ export class HashtagService {
     if(document.getElementById(this.tagPopupContainerId)) {
       let elem = document.getElementById(this.tagPopupContainerId)!
       if (elem.parentNode) {
-        let parent = elem.parentNode!
-
         if(this.taggingComponentRef) {
           this.taggingComponentRef.destroy()
           //this.taggingComponentRef.nativeElement.remove()
         }
-        parent.removeChild(elem)
+        elem.remove()
+        //let parent = elem.parentNode!
+        //parent.removeChild(elem)
 
         this.taggingComponentRef = null
         this.hashtagContainer = null
@@ -252,15 +252,28 @@ export class HashtagService {
   }
 
   removeNodesFromText(description: string): string {
+    //console.log('DESC', description)
+    /**
+     *  Remove Angular/Popup Artefacts
+     */
+    description = description.replace(/<!--(.|\n)*?-->/g, '')
+    description = description.replace(/<span id=\"tag-container\".*<\/span>/ig, '')
 
+    /**
+     *  Remove HTML Elements
+     */
     let el = document.createElement('div')
     el.innerHTML = description
-    //console.log(description, el.childNodes)
+    description = el.innerText
 
-    const descriptionNode = new DOMParser().parseFromString(description, 'text/html').body.childNodes
+    /**
+     *  Still, parse for remaining HTML Objects
+     */
     let descriptionText: string = ''
+    const descriptionNode = new DOMParser().parseFromString(description, 'text/html').body.childNodes
     const elemArr = Array.from(descriptionNode)
-    //console.log(description, elemArr)
+    //console.log('DOMParser', elemArr)
+
     elemArr.forEach((item: HTMLElement) => {
       if(item.nodeType == Node.TEXT_NODE) {
         descriptionText += item.textContent!.trimLeft()

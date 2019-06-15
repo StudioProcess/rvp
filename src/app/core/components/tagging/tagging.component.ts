@@ -19,7 +19,7 @@ import * as fromProject from '../../../persistence/reducers'
   styleUrls: ['tagging.component.scss'],
   template: `
     <div class="tagging-list-container" contenteditable="false">
-      <span #tag_editable contenteditable="false" id="tag-editable">{{passed_hashtag}}</span>
+      <div #tag_editable contenteditable="false" id="tag-editable">{{passed_hashtag}}</div>
       <ul class="tagging-list" contenteditable="false">
         <li *ngFor="let option of options" [value]="option" [type]="option"
           (click)="selectHashtag($event, option)"
