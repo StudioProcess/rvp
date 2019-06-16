@@ -117,6 +117,28 @@ export class HashtagService {
     }
   }
 
+  /**
+   *  Simply Update Form Values
+   *  (depending on which Form is active annotation/search)
+   */
+  patchFormValues(text: string): void {
+    if(this._descrInputRef) {
+      /**
+       *  annotation input
+       */
+      this.form!.patchValue({
+        'description': text
+      })
+    } else if(this._searchRef) {
+      /**
+       *  search input
+       */
+      this.rightForm!.patchValue({
+        search: text
+      })
+    }
+  }
+
   swapHashtag(data: any): void {
     this.removeHashTagPopupContainer()
     let elem = this.getCurrentFocusNativeElement()
@@ -142,22 +164,12 @@ export class HashtagService {
         new_text = old_text!.replace(data!.user_input, data!.hashtag)
       }
 
+      /**
+       *  Update Content
+       */
       elem!.textContent = new_text
-      if(this._descrInputRef) {
-        /**
-         *  annotation input
-         */
-        this.form!.patchValue({
-          'description': new_text
-        })
-      } else if(this._searchRef) {
-        /**
-         *  search input
-         */
-        this.rightForm!.patchValue({
-          search: new_text
-        })
-      }
+      this.patchFormValues(new_text)
+
       setTimeout(() => {
         this.encloseHashtags()
         this.setCaretToPositionEnd(elem)
@@ -187,16 +199,10 @@ export class HashtagService {
       }
       this.removeHashTagPopupContainer()
       let new_text = this.removeNodesFromHTMLElement(element)
+
       element!.innerHTML = new_text
-      if(this._descrInputRef) {
-        this.form!.patchValue({
-          'description': new_text
-        })
-      } else if(this._searchRef) {
-        this.rightForm!.patchValue({
-          search: new_text
-        })
-      }
+      this.patchFormValues(new_text)
+
       this.encloseHashtags()
       this.setCaretToPositionEnd(element)
 
@@ -352,16 +358,8 @@ export class HashtagService {
         p.parentNode!.removeChild(p)
         this.isHashTagPopupContainerOpen = false
 
-        if(this._descrInputRef) {
-          // update FormBuilder form
-          this.form!.patchValue({
-            'description': container.textContent
-          })
-        } else if(this._searchRef) {
-          this.rightForm!.patchValue({
-            search: container.textContent
-          })
-        }
+        const new_text = container.textContent as string
+        this.patchFormValues(new_text)
 
         this.encloseHashtags()
         this.setCaretToPositionEnd(container)
