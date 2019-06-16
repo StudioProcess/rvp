@@ -101,7 +101,6 @@ export class HashtagService {
 
   removeHashTagPopupContainer(): void {
     if(document.getElementById(this.tagPopupContainerId)) {
-      console.log('removeHashTagPopupContainer')
       let elem = document.getElementById(this.tagPopupContainerId)!
       if (elem.parentNode) {
         if(this.taggingComponentRef) {
@@ -189,9 +188,15 @@ export class HashtagService {
       this.removeHashTagPopupContainer()
       let new_text = this.removeNodesFromHTMLElement(element)
       element!.innerHTML = new_text
-      this.form!.patchValue({
-        'description': new_text
-      })
+      if(this._descrInputRef) {
+        this.form!.patchValue({
+          'description': new_text
+        })
+      } else if(this._searchRef) {
+        this.rightForm!.patchValue({
+          search: new_text
+        })
+      }
       this.encloseHashtags()
       this.setCaretToPositionEnd(element)
 
