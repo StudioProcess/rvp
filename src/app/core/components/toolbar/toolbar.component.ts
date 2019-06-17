@@ -181,6 +181,7 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
   }
 
   clearSearch() {
+    this.removeHashTagPopupContainer()
     this.rightForm!.patchValue({search: null})
   }
 
