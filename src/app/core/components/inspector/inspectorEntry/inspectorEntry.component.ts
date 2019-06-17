@@ -254,7 +254,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
           setTimeout(() => {
             this.encloseHashtags()
-          }, 0)
+          }, 50)
         }))
   }
 

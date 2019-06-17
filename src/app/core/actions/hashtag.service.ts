@@ -51,7 +51,7 @@ export class HashtagService {
 
       // subscribe to tagging components onClickOutside event
       this.taggingComponentRef.instance.closeHashTagContainer.subscribe((ev: any) => {
-        this.removeHashTagPopupContainer()
+        this.removeHashTagPopupContainer().then((res) => {}, (err) => {})
       })
 
       this.taggingComponentRef.instance.passHashTagToContent.subscribe((data: any) => {
@@ -99,22 +99,35 @@ export class HashtagService {
     sel.addRange(range)
   }
 
-  removeHashTagPopupContainer(): void {
-    if(document.getElementById(this.tagPopupContainerId)) {
-      let elem = document.getElementById(this.tagPopupContainerId)!
-      if (elem.parentNode) {
+  removeHashTagPopupContainer(): Promise<any> {
+    return new Promise((resolve: any, reject: any) => {
+      if(document.getElementById(this.tagPopupContainerId)) {
         if(this.taggingComponentRef) {
           this.taggingComponentRef.destroy()
         }
+        let elem = document.getElementById(this.tagPopupContainerId)!
         elem.remove()
+
+        //if (elem.parentNode) {
         //let parent = elem.parentNode!
         //parent.removeChild(elem)
-
+        //}
         this.taggingComponentRef = null
         this.hashtagContainer = null
         this.isHashTagPopupContainerOpen = false
+
+        resolve(this.tagPopupContainerId +' removed')
       }
-    }
+      else {
+        reject('no popup element '+ this.tagPopupContainerId)
+      }
+    })
+    .then(result => {
+      return {'removed': true}
+    })
+    .catch(error => {
+      return {'removed': false, 'error': error}
+    })
   }
 
   /**
