@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core'
 import { List, Record, Set } from 'immutable'
 import { Annotation } from '../../../../persistence/model'
 import { Store } from '@ngrx/store'
@@ -17,6 +17,7 @@ import { AnnotationRecordFactory, AnnotationFieldsRecordFactory, Track } from '.
 })
 export class TagAddModalComponent implements OnInit {
 
+  @ViewChild('addHashtagInput', { static: true }) readonly addHashtagInput: ElementRef
   hashtags: string[] = []
   selectedHashtag: string = ''
   selectedAnnotations: Set<Record<Annotation>>
@@ -114,6 +115,7 @@ export class TagAddModalComponent implements OnInit {
       return false
     })
 
+    this.addHashtagInput.nativeElement.value = ''
     this.selectedHashtag = ''
   }
 
@@ -123,7 +125,7 @@ export class TagAddModalComponent implements OnInit {
 
   addNewHashtag($event: any) {
     const regexp = new RegExp('#([^\\s]*)', 'g')
-    $event.target.value = $event.target.value.replace(regexp, '')
-    this.selectedHashtag = '#' + $event.target.value
+    this.addHashtagInput.nativeElement.value = this.addHashtagInput.nativeElement.value.replace(regexp, '')
+    this.selectedHashtag = '#'+ this.addHashtagInput.nativeElement.value
   }
 }
