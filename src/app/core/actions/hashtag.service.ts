@@ -358,10 +358,10 @@ export class HashtagService {
             const replacementNodeArr = Array.from(replacementNode.childNodes)
             //console.log('replacementNodeArr', replacementNodeArr)
             replacementNodeArr.forEach((replace: HTMLElement) => {
-              node.parentNode.insertBefore(replace, node)
+              node.parentNode!.insertBefore(replace, node)
             })
             //node.parentNode.insertBefore(replacementNode, node)
-            node.parentNode.removeChild(node)
+            node.parentNode!.removeChild(node)
             //elem!.innerHTML = nodeTextUp
           }
         }
