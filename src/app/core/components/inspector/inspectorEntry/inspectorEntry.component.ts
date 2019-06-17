@@ -15,7 +15,7 @@ import {
 
 const _VALID_ = 'VALID' // not exported by @angular/forms
 
-import {Record} from 'immutable'
+import { Record } from 'immutable'
 
 import {
   Subscription, combineLatest,
@@ -29,7 +29,7 @@ import {
   // tap, delay
 } from 'rxjs/operators'
 
-import {formatDuration} from '../../../../lib/time'
+import { formatDuration } from '../../../../lib/time'
 
 import {
   AnnotationColorMap, AnnotationRecordFactory,
@@ -37,20 +37,20 @@ import {
   AnnotationSelectionRecordFactory
 } from '../../../../persistence/model'
 
-import {_MOUSE_DBLCLICK_DEBOUNCE_} from '../../../../config/form'
+import { _MOUSE_DBLCLICK_DEBOUNCE_ } from '../../../../config/form'
 
 import * as project from '../../../../persistence/actions/project'
-import {parseDuration} from '../../../../lib/time'
+import { parseDuration } from '../../../../lib/time'
 //import {TaggingComponent} from '../../tagging/tagging.component'
-import {DomService} from '../../../actions/dom.service'
-import {HashtagService} from '../../../actions/hashtag.service'
+import { DomService } from '../../../actions/dom.service'
+import  { HashtagService } from '../../../actions/hashtag.service'
 
 function durationValidatorFactory(): ValidatorFn {
   const durationRegex = /^([0-9]*:){0,2}[0-9]*(\.[0-9]*)?$/
 
-  return (control: AbstractControl): ValidationErrors|null => {
+  return (control: AbstractControl): ValidationErrors | null => {
     const valid = durationRegex.test(control.value)
-    return !valid ? {'duration': {value: control.value}} : null
+    return !valid ? { 'duration': { value: control.value } } : null
   }
 }
 
@@ -61,7 +61,7 @@ const durationValidator = Validators.compose([Validators.required, durationValid
   encapsulation: ViewEncapsulation.None,
   selector: 'rv-inspector-entry',
   templateUrl: 'inspectorEntry.component.html',
-  host: {'class': 'inspector-entry-host'},
+  host: { 'class': 'inspector-entry-host' },
   styleUrls: ['inspectorEntry.component.scss']
 })
 export class InspectorEntryComponent extends HashtagService implements OnChanges, OnInit, AfterViewInit, OnDestroy {
@@ -79,11 +79,11 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   @ViewChild('descr', { static: true }) readonly _descrInputRef: ElementRef
 
   @HostListener('click', ['$event', '$event.target'])
-    onClick(event: MouseEvent, target: HTMLElement) {
-      this.removeHashTag(target)
-    }
+  onClick(event: MouseEvent, target: HTMLElement) {
+    this.removeHashTag(target)
+  }
 
-  form: FormGroup|null = null
+  form: FormGroup | null = null
 
   private readonly _subs: Subscription[] = []
 
@@ -124,7 +124,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     })
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit()  {
 
     // add span nodes around hashtag textnodes
     this.encloseHashtags()
@@ -188,10 +188,10 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     this._subs.push(
       formKeydown.subscribe((ev: KeyboardEvent) => {
         ev.stopPropagation()
-        if(this.isHashTagPopupContainerOpen) {
+        if (this.isHashTagPopupContainerOpen) {
           this.handleHashtagInput(ev)
         } else {
-          if(ev.keyCode === 191 || ev.key === '#') {
+          if (ev.keyCode === 191 || ev.key === '#') {
             this.handleHashTag(ev)
           }
         }
@@ -215,7 +215,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     this._subs.push(
       enterHotKey.subscribe((ev: any) => {
         //if(ev.target.nodeName !== 'TEXTAREA') {
-        if(ev.target.classList.contains('contenteditable') !== true) {
+        if (ev.target.classList.contains('contenteditable') !== true) {
           ev.target.blur()
         }
       }))
@@ -234,7 +234,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
             return prev.title === cur.title && prev.description === cur.description &&
               prev.utc_timestamp === cur.utc_timestamp && prev.duration === cur.duration
           }))
-        .subscribe(({description, utc_timestamp, duration}) => {
+        .subscribe(({ description, utc_timestamp, duration }) => {
 
           description = this.htmlBr(description)
           description = this.removeNodesFromText(description)
@@ -244,7 +244,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
             id: this.entry.getIn(['annotation', 'id']),
             utc_timestamp: parseDuration(utc_timestamp),
             duration: parseDuration(duration),
-            fields: new AnnotationFieldsRecordFactory({description})
+            fields: new AnnotationFieldsRecordFactory({ description })
           })
 
           this.onUpdate.emit({
@@ -261,9 +261,9 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(this.form !== null && changes.entry !== undefined && !changes.entry.firstChange) {
-      const {previousValue, currentValue} = changes.entry
-      if(previousValue === undefined || !previousValue.equals(currentValue)) {
+    if (this.form !== null && changes.entry !== undefined && !changes.entry.firstChange) {
+      const { previousValue, currentValue } = changes.entry
+      if (previousValue === undefined || !previousValue.equals(currentValue)) {
         //console.log(previousValue, currentValue)
         this.form.setValue(this._mapModel(currentValue))
       }
