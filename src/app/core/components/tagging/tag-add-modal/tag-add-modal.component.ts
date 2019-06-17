@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core'
-import { Record, Set } from 'immutable'
+import { List, Record, Set } from 'immutable'
 import { Annotation } from '../../../../persistence/model'
 import { Store } from '@ngrx/store'
 import * as fromRoot from '../../../reducers'
 import * as fromProject from '../../../../persistence/reducers'
 import * as project from '../../../../persistence/actions/project'
-import { AnnotationRecordFactory, AnnotationFieldsRecordFactory } from '../../../../persistence/model'
+import { AnnotationRecordFactory, AnnotationFieldsRecordFactory, Track } from '../../../../persistence/model'
 
 @Component({
   selector: 'rv-tag-add-modal',
@@ -54,18 +54,19 @@ export class TagAddModalComponent implements OnInit {
    *  build complete path info in order to update annotation
    *  or respectively use ProjectUpdateAnnotation method
    */
-  getAnotationStorePathById(search_id: number|null): any {
+  getAnnotationStorePathById(search_id: number | null): any {
     let path = null
-    this.tracks!.find((track: any, trackIndex: number) => {
+    this.tracks!.find((track: Record<Track>, trackIndex: number) => {
       const annotationStacks = track.get('annotationStacks', null)
-      annotationStacks.forEach((annotationStack: any, annotationStackIndex: number) => {
-        annotationStack.forEach((annotation: any, annotationIndex: number) => {
-          if(annotation.id === search_id) {
+      annotationStacks.forEach((annotationStack: List<Record<Annotation>>, annotationStackIndex: number) => {
+        annotationStack.forEach((annotation: Record<Annotation>, annotationIndex: number) => {
+          const curId = annotation.get('id', null)
+          if (curId === search_id) {
             path = {
               'trackIndex': trackIndex,
               'annotationStackIndex': annotationStackIndex,
               'annotationIndex': annotationIndex,
-              'annotationId': annotation.id
+              'annotationId': curId
             }
             return true
           }
@@ -85,18 +86,18 @@ export class TagAddModalComponent implements OnInit {
   addHashtag(hashtag: string) {
     this.selectedAnnotations.find((sel) => {
       const annotationId = sel.get('id', null)
-      const pathInfo = this.getAnotationStorePathById(annotationId!)
-      if(pathInfo) {
+      const pathInfo = this.getAnnotationStorePathById(annotationId!)
+      if (pathInfo) {
         const annotation_duration = sel.get('duration', null)
         const annotation_timestamp = sel.get('utc_timestamp', null)
         const annotation_text = sel.getIn(['fields', 'description'])
-        const annotation_text_new = annotation_text.trim() +' '+ hashtag
+        const annotation_text_new = annotation_text.trim() + ' ' + hashtag
 
         const annotation = new AnnotationRecordFactory({
           id: annotationId,
           utc_timestamp: annotation_timestamp,
           duration: annotation_duration,
-          fields: new AnnotationFieldsRecordFactory({description: annotation_text_new})
+          fields: new AnnotationFieldsRecordFactory({ description: annotation_text_new })
         })
         const updateAnnotation = {
           trackIndex: pathInfo!.trackIndex,
@@ -121,8 +122,8 @@ export class TagAddModalComponent implements OnInit {
   }
 
   addNewHashtag($event: any) {
-    const regexp = new RegExp('#([^\\s]*)','g')
+    const regexp = new RegExp('#([^\\s]*)', 'g')
     $event.target.value = $event.target.value.replace(regexp, '')
-    this.selectedHashtag = '#'+ $event.target.value
+    this.selectedHashtag = '#' + $event.target.value
   }
 }
