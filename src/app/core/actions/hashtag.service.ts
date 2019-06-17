@@ -330,69 +330,39 @@ export class HashtagService {
     return preCaretRange.toString().length
   }
 
-  getCaretPosition(element: any) {
-
-    var caretOffset = 0
-
-      var range = window.getSelection().getRangeAt(0);
-      var preCaretRange = range.cloneRange();
-      preCaretRange.selectNodeContents(element);
-      preCaretRange.setEnd(range.endContainer, range.endOffset);
-      caretOffset = preCaretRange.toString().length;
-
-    return caretOffset
-  }
-
   encloseHashtags(): void {
     let elem = this.getCurrentFocusNativeElement()
     if (elem) {
       this.removeHashTagPopupContainer()
-      //console.log(this.getCaretPosition())
-      //console.log('encloseHashtags', elem.textContent)
-      /*let content = elem.textContent
-      content = content.replace(
-        /#\w+/g,
-        '<span class="'+this.tagContainerClass+'" contenteditable="false">'
-          +'$&'
-          +'<span class="'+this.tagContainerCloseClass+' ion-ios-close-circle" contenteditable="false"></span>'
-        +'</span>'
-      )
-      elem!.innerHTML = content
-      */
       const elemArr = Array.from(elem.childNodes)
-      //console.log('encloseHashtags', elemArr)
+      //console.log(elemArr)
       elemArr.forEach((node: HTMLElement) => {
         if (node.nodeType === Node.TEXT_NODE) {
-          /*
-          let replacementNode = document.createElement('div')
-          replacementNode.innerHTML = node.nodeValue!.replace(
-            /#\w+/g,
-            '<span class="' + this.tagContainerClass + '" contenteditable="false">'
-            + '$&'
-            + '<span class="' + this.tagContainerCloseClass + ' ion-ios-close-circle" contenteditable="false"></span>'
-            + '</span>'
-          )
-          node.parentNode.insertBefore(replacementNode, node)
-          node.parentNode.removeChild(node)
-          */
-
-          // let newNode = document.createElement('div')
-          // newNode.innerHTML = node
-          //   .nodeValue
-          //   .replace(/(\#[a-zA-Z0-9\-\_]+)/g, '<span class="'+this.tagContainerClass+'" contenteditable="false">$&<span class="'+this.tagContainerCloseClass+' ion-ios-close-circle" contenteditable="false"></span></span>')
-          // node.replaceWith(newNode)
-          // console.log('newNode', newNode)
-
-          let r = /#\w+/g
-          let result = r.exec(node.nodeValue as string)
+          let r = /#\w+/g // /(\#[a-zA-Z0-9\-\_]+)/g
+          let result = r.exec(node.textContent as string)
           if (!result) { return } else {
-            elem!.innerHTML = node.nodeValue!.replace(
+            const nodeTextUp = node.textContent!.replace(
               r,
               '<span class="' + this.tagContainerClass + '" contenteditable="false">'
               + '$&'
               + '<span class="' + this.tagContainerCloseClass + ' ion-ios-close-circle" contenteditable="false"></span>'
               + '</span>'
             )
+
+            /**
+             *  replace each textNode with all new elements
+             *  (all remaining text elements + hashtags spans)
+             */
+            let replacementNode = document.createElement('div')
+            replacementNode.innerHTML = nodeTextUp
+            const replacementNodeArr = Array.from(replacementNode.childNodes)
+            //console.log('replacementNodeArr', replacementNodeArr)
+            replacementNodeArr.forEach((replace: HTMLElement) => {
+              node.parentNode.insertBefore(replace, node)
+            })
+            //node.parentNode.insertBefore(replacementNode, node)
+            node.parentNode.removeChild(node)
+            //elem!.innerHTML = nodeTextUp
           }
         }
       })
