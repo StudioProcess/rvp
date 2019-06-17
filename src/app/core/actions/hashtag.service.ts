@@ -276,12 +276,12 @@ export class HashtagService {
   }
 
   removeNodesFromText(description: string): string {
-    //console.log('DESC', description)
     /**
      *  Remove Angular/Popup Artefacts
      */
     description = description.replace(/<!--(.|\n)*?-->/g, '')
-    description = description.replace(/<span id=\"tag-container\".*<\/span>/ig, '')
+    description = description.replace(/<rv-tagging.*<\/rv-tagging>/ig, '')
+    //description = description.replace(/<span id=\"tag-container\".*<\/span>/ig, '')
 
     /**
      *  Remove HTML Elements

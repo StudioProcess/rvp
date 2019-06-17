@@ -167,7 +167,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
             source: SelectionSource.Inspector
           })
         })
-        //this.encloseHashtags()
+        this.encloseHashtags()
       }))
 
     // Focus annotation
@@ -233,7 +233,6 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
           }))
         .subscribe(({description, utc_timestamp, duration}) => {
 
-          //console.log('formBlur', description)
           description = this.htmlBr(description)
           description = this.removeNodesFromText(description)
           this.saveHashtags(description)
