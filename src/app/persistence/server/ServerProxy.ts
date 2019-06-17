@@ -316,10 +316,14 @@ export class ServerProxy implements OnDestroy {
         projectUpdate
           .pipe(
             filter(action => {
+              /**
+               *  Project state redo/undo exception filter
+               */
               return action.type !== project.PROJECT_SET_TIMELINE_DURATION &&
                 action.type !== project.PROJECT_UNDO &&
                 action.type !== project.PROJECT_REDO &&
-                action.type !== project.PROJECT_LOAD_SUCCESS
+                action.type !== project.PROJECT_LOAD_SUCCESS &&
+                action.type !== project.PROJECT_UPDATE_HASHTAGS
             }),
             withLatestFrom(projectState.pipe(pairwise()))
           ).subscribe(([_, [prevState, __]]) => {
