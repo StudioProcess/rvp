@@ -4,8 +4,8 @@ import {
   //ElementRef,
 } from '@angular/core'
 
-import {DomService} from './dom.service'
-import {TaggingComponent} from '../components/tagging/tagging.component'
+import { DomService } from './dom.service'
+import { TaggingComponent } from '../components/tagging/tagging.component'
 
 /*@Injectable({
   providedIn: 'root',
@@ -23,13 +23,13 @@ export class HashtagService {
   readonly tagContainerClass = 'hashtag'
   readonly tagContainerCloseClass = 'hashtag-close'
   readonly tagPopupContainerId = 'tag-container'
-  hashtagContainer: HTMLElement|null = null
-  taggingComponentRef: any|null = null
+  hashtagContainer: HTMLElement | null = null
+  taggingComponentRef: any | null = null
   isHashTagPopupContainerOpen: boolean = false
 
   constructor(
     readonly _domService: DomService,
-  ) {}
+  ) { }
 
   /**
    *  entry points for new hashtags
@@ -39,7 +39,7 @@ export class HashtagService {
    *  - prepares for closing the popup and to process the input area
    */
   handleHashTag(ev: KeyboardEvent): void {
-    if(! this.isHashTagPopupContainerOpen) {
+    if (!this.isHashTagPopupContainerOpen) {
       // container for the hashtag popup component
       this.addHashTagPopupContainer()
 
@@ -51,7 +51,7 @@ export class HashtagService {
 
       // subscribe to tagging components onClickOutside event
       this.taggingComponentRef.instance.closeHashTagContainer.subscribe((ev: any) => {
-        this.removeHashTagPopupContainer().then((res) => {}, (err) => {})
+        this.removeHashTagPopupContainer().then((res) => { }, (err) => { })
       })
 
       this.taggingComponentRef.instance.passHashTagToContent.subscribe((data: any) => {
@@ -80,7 +80,7 @@ export class HashtagService {
    */
   addHashTagPopupContainer(): void {
     let range = document.getSelection()!.getRangeAt(0)!
-    if(!range.collapsed) {
+    if (!range.collapsed) {
       range.deleteContents()
     }
     //console.log(range)
@@ -101,8 +101,8 @@ export class HashtagService {
 
   removeHashTagPopupContainer(): Promise<any> {
     return new Promise((resolve: any, reject: any) => {
-      if(document.getElementById(this.tagPopupContainerId)) {
-        if(this.taggingComponentRef) {
+      if (document.getElementById(this.tagPopupContainerId)) {
+        if (this.taggingComponentRef) {
           this.taggingComponentRef.destroy()
         }
         let elem = document.getElementById(this.tagPopupContainerId)!
@@ -116,18 +116,18 @@ export class HashtagService {
         this.hashtagContainer = null
         this.isHashTagPopupContainerOpen = false
 
-        resolve(this.tagPopupContainerId +' removed')
+        resolve(this.tagPopupContainerId + ' removed')
       }
       else {
-        reject('no popup element '+ this.tagPopupContainerId)
+        reject('no popup element ' + this.tagPopupContainerId)
       }
     })
-    .then(result => {
-      return {'removed': true}
-    })
-    .catch(error => {
-      return {'removed': false, 'error': error}
-    })
+      .then(result => {
+        return { 'removed': true }
+      })
+      .catch(error => {
+        return { 'removed': false, 'error': error }
+      })
   }
 
   /**
@@ -135,14 +135,14 @@ export class HashtagService {
    *  (depending on which Form is active annotation/search)
    */
   patchFormValues(text: string): void {
-    if(this._descrInputRef) {
+    if (this._descrInputRef) {
       /**
        *  annotation input
        */
       this.form!.patchValue({
         'description': text
       })
-    } else if(this._searchRef) {
+    } else if (this._searchRef) {
       /**
        *  search input
        */
@@ -155,20 +155,20 @@ export class HashtagService {
   swapHashtag(data: any): void {
     this.removeHashTagPopupContainer()
     let elem = this.getCurrentFocusNativeElement()
-    if(elem) {
+    if (elem) {
       let old_text = elem!.textContent
       let new_text = null
-      if(old_text!.endsWith(data!.user_input)) {
+      if (old_text!.endsWith(data!.user_input)) {
         /**
          *  hashtag at the very end
          */
         new_text = old_text!.replace(new RegExp(data!.user_input + '$'), data!.hashtag)
-      } else if(old_text!.indexOf(data!.user_input +"\n") > -1) {
+      } else if (old_text!.indexOf(data!.user_input + "\n") > -1) {
         /**
          *  hashtag at the end of a line
          */
-        new_text = old_text!.replace(data!.user_input + "\n", data!.hashtag +"\n")
-      } else if(old_text!.indexOf(data!.user_input +' ') > -1) {
+        new_text = old_text!.replace(data!.user_input + "\n", data!.hashtag + "\n")
+      } else if (old_text!.indexOf(data!.user_input + ' ') > -1) {
         /**
          *  hashtag followed by whitespace
          */
@@ -191,7 +191,7 @@ export class HashtagService {
   }
 
   setCaretToPositionEnd(elem: any): void {
-    if(elem) {
+    if (elem) {
       const range = document.createRange()
       const sel = document.getSelection()
       range.selectNodeContents(elem)
@@ -206,8 +206,8 @@ export class HashtagService {
     const selection = document.getSelection()!.anchorNode!
     let element = this.getCurrentFocusNativeElement()
 
-    if(ev.key == ' ' || ev.key == 'Enter') {
-      if(ev.key == 'Enter') {
+    if (ev.key == ' ' || ev.key == 'Enter') {
+      if (ev.key == 'Enter') {
         ev.preventDefault()
       }
       this.removeHashTagPopupContainer()
@@ -220,18 +220,18 @@ export class HashtagService {
       this.setCaretToPositionEnd(element)
 
       return false
-    } else if(ev.key == '#') {
+    } else if (ev.key == '#') {
       ev.preventDefault()
-    } else if(ev.key == 'Backspace') {
+    } else if (ev.key == 'Backspace') {
       // already handled by getCurrentSelectionOffsetLength
     }
 
     /**
      *  handle userinput on hashtag popup open
      */
-    if(selection.nodeType == Node.TEXT_NODE) {
+    if (selection.nodeType == Node.TEXT_NODE) {
       setTimeout(() => { // TODO : hacky, find another way to read nodes textcontent
-        if(this.getCurrentSelectionOffsetLength(selection) == 0) {
+        if (this.getCurrentSelectionOffsetLength(selection) == 0) {
           this.removeHashTagPopupContainer()
           return false
         }
@@ -250,23 +250,23 @@ export class HashtagService {
     return true
   }
 
-  removeNodesFromHTMLElement(element: HTMLElement|null): string {
+  removeNodesFromHTMLElement(element: HTMLElement | null): string {
     let text: string = ''
-    if(element) {
+    if (element) {
       const elemArr = Array.from(element.childNodes)
       elemArr.forEach((node: HTMLElement) => {
         if (node.nodeType === Node.TEXT_NODE) {
           let textContent = node.textContent!
-          if(textContent) {
+          if (textContent) {
             /**
              *  re-add linebreaks
              */
-            if(/\r|\n/.exec(textContent)) {
+            if (/\r|\n/.exec(textContent)) {
               textContent.replace(/(?:\r\n|\r|\n)/g, '<br>')
             }
             text += textContent
           }
-        } else if(node.classList.contains(this.tagContainerClass)) {
+        } else if (node.classList.contains(this.tagContainerClass)) {
           text += node.textContent!.trim()
         }
       })
@@ -299,23 +299,23 @@ export class HashtagService {
     //console.log('DOMParser', elemArr)
 
     elemArr.forEach((item: HTMLElement) => {
-      if(item.nodeType == Node.TEXT_NODE) {
+      if (item.nodeType == Node.TEXT_NODE) {
         descriptionText += item.textContent!.trimLeft()
-      } else if(item.nodeType == Node.ELEMENT_NODE && item.nodeName === 'BR') {
+      } else if (item.nodeType == Node.ELEMENT_NODE && item.nodeName === 'BR') {
         descriptionText += "\n"
-      } else if(item.classList.contains(this.tagContainerClass)) {
-        descriptionText += item.textContent!.trim() +' '
+      } else if (item.classList.contains(this.tagContainerClass)) {
+        descriptionText += item.textContent!.trim() + ' '
       }
     })
     this.isHashTagPopupContainerOpen = false
     return descriptionText
   }
 
-  getCurrentFocusNativeElement(): HTMLElement|null {
-    let elem: HTMLElement|null = null
-    if(this._descrInputRef) {
+  getCurrentFocusNativeElement(): HTMLElement | null {
+    let elem: HTMLElement | null = null
+    if (this._descrInputRef) {
       elem = this._descrInputRef.nativeElement as HTMLElement
-    } else if(this._searchRef) {
+    } else if (this._searchRef) {
       elem = this._searchRef.nativeElement as HTMLElement
     }
     return elem
@@ -330,32 +330,68 @@ export class HashtagService {
     return preCaretRange.toString().length
   }
 
+  getCaretPosition(element: any) {
+
+    var caretOffset = 0
+
+      var range = window.getSelection().getRangeAt(0);
+      var preCaretRange = range.cloneRange();
+      preCaretRange.selectNodeContents(element);
+      preCaretRange.setEnd(range.endContainer, range.endOffset);
+      caretOffset = preCaretRange.toString().length;
+
+    return caretOffset
+  }
+
   encloseHashtags(): void {
     let elem = this.getCurrentFocusNativeElement()
-    if(elem) {
-      //this.removeHashTagPopupContainer()
+    if (elem) {
+      this.removeHashTagPopupContainer()
+      //console.log(this.getCaretPosition())
       //console.log('encloseHashtags', elem.textContent)
+      /*let content = elem.textContent
+      content = content.replace(
+        /#\w+/g,
+        '<span class="'+this.tagContainerClass+'" contenteditable="false">'
+          +'$&'
+          +'<span class="'+this.tagContainerCloseClass+' ion-ios-close-circle" contenteditable="false"></span>'
+        +'</span>'
+      )
+      elem!.innerHTML = content
+      */
       const elemArr = Array.from(elem.childNodes)
       //console.log('encloseHashtags', elemArr)
       elemArr.forEach((node: HTMLElement) => {
-        if(node.nodeType === Node.TEXT_NODE) {
+        if (node.nodeType === Node.TEXT_NODE) {
           /*
-          let newNode = document.createElement('div')
-          newNode.innerHTML = node
-            .nodeValue
-            .replace(/(\#[a-zA-Z0-9\-\_]+)/g, '<span class="'+this.tagContainerClass+'" contenteditable="false">$&<span class="'+this.tagContainerCloseClass+' ion-ios-close-circle" contenteditable="false"></span></span>')
-          node.replaceWith(newNode)
-          console.log('newNode', newNode)
+          let replacementNode = document.createElement('div')
+          replacementNode.innerHTML = node.nodeValue!.replace(
+            /#\w+/g,
+            '<span class="' + this.tagContainerClass + '" contenteditable="false">'
+            + '$&'
+            + '<span class="' + this.tagContainerCloseClass + ' ion-ios-close-circle" contenteditable="false"></span>'
+            + '</span>'
+          )
+          node.parentNode.insertBefore(replacementNode, node)
+          node.parentNode.removeChild(node)
           */
+
+          // let newNode = document.createElement('div')
+          // newNode.innerHTML = node
+          //   .nodeValue
+          //   .replace(/(\#[a-zA-Z0-9\-\_]+)/g, '<span class="'+this.tagContainerClass+'" contenteditable="false">$&<span class="'+this.tagContainerCloseClass+' ion-ios-close-circle" contenteditable="false"></span></span>')
+          // node.replaceWith(newNode)
+          // console.log('newNode', newNode)
+
           let r = /#\w+/g
           let result = r.exec(node.nodeValue as string)
-          if(!result) { return } else {
+          if (!result) { return } else {
             elem!.innerHTML = node.nodeValue!.replace(
               r,
-              '<span class="'+this.tagContainerClass+'" contenteditable="false">'
-                +'$&'
-                +'<span class="'+this.tagContainerCloseClass+' ion-ios-close-circle" contenteditable="false"></span>'
-              +'</span>'
+              '<span class="' + this.tagContainerClass + '" contenteditable="false">'
+              + '$&'
+              + '<span class="' + this.tagContainerCloseClass + ' ion-ios-close-circle" contenteditable="false"></span>'
+              + '</span>'
             )
           }
         }
@@ -364,10 +400,10 @@ export class HashtagService {
   }
 
   removeHashTag(target: HTMLElement): void {
-    if(target.classList.contains(this.tagContainerCloseClass)) {
+    if (target.classList.contains(this.tagContainerCloseClass)) {
       const p = target.parentNode as HTMLElement
       const container = target.parentNode!.parentNode! as HTMLElement
-      if(p.classList.contains(this.tagContainerClass)) {
+      if (p.classList.contains(this.tagContainerClass)) {
         p.parentNode!.removeChild(p)
         this.isHashTagPopupContainerOpen = false
 
