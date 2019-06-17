@@ -202,7 +202,6 @@ export class HashtagService {
   }
 
   handleHashtagInput(ev: KeyboardEvent): boolean {
-    //console.log(ev)
     const selection = document.getSelection()!.anchorNode!
     let element = this.getCurrentFocusNativeElement()
 
@@ -277,7 +276,7 @@ export class HashtagService {
 
   removeNodesFromText(description: string): string {
     /**
-     *  Remove Angular/Popup Artefacts
+     *  Remove possible Angular/Popup Artefacts
      */
     description = description.replace(/<!--(.|\n)*?-->/g, '')
     description = description.replace(/<rv-tagging.*<\/rv-tagging>/ig, '')
@@ -330,7 +329,7 @@ export class HashtagService {
     return preCaretRange.toString().length
   }
 
-  encloseHashtags(): void {
+  encloseHashtags(settings?: any): void {
     let elem = this.getCurrentFocusNativeElement()
     if (elem) {
       this.removeHashTagPopupContainer()
@@ -349,20 +348,26 @@ export class HashtagService {
               + '</span>'
             )
 
-            /**
-             *  replace each textNode with all new elements
-             *  (all remaining text elements + hashtags spans)
-             */
-            let replacementNode = document.createElement('div')
-            replacementNode.innerHTML = nodeTextUp
-            const replacementNodeArr = Array.from(replacementNode.childNodes)
-            //console.log('replacementNodeArr', replacementNodeArr)
-            replacementNodeArr.forEach((replace: HTMLElement) => {
-              node.parentNode!.insertBefore(replace, node)
-            })
-            //node.parentNode.insertBefore(replacementNode, node)
-            node.parentNode!.removeChild(node)
-            //elem!.innerHTML = nodeTextUp
+            if(settings && settings!.hasOwnProperty('replace')) {
+              /**
+               *  replace each textNode with all new elements
+               *  (all remaining text elements + hashtags spans)
+               */
+              let replacementNode = document.createElement('div')
+              replacementNode.innerHTML = nodeTextUp
+              const replacementNodeArr = Array.from(replacementNode.childNodes)
+              //console.log('replacementNodeArr', replacementNodeArr)
+              replacementNodeArr.forEach((replace: HTMLElement) => {
+                node.parentNode!.insertBefore(replace, node)
+              })
+              //node.parentNode.insertBefore(replacementNode, node)
+              node.parentNode!.removeChild(node)
+            } else {
+              /**
+               *  Simply replace whole textNode
+               */
+              elem!.innerHTML = nodeTextUp
+            }
           }
         }
       })
