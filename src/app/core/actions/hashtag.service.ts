@@ -174,7 +174,7 @@ export class HashtagService {
          */
         new_text = old_text!.replace(data!.user_input + ' ', data!.hashtag)
       } else {
-        new_text = old_text!.replace(data!.user_input, data!.hashtag)
+        new_text = old_text!.replace(data!.user_input +' ', data!.hashtag)
       }
 
       /**
@@ -186,7 +186,7 @@ export class HashtagService {
       setTimeout(() => {
         this.encloseHashtags()
         this.setCaretToPositionEnd(elem)
-      }, 0)
+      })
     }
   }
 

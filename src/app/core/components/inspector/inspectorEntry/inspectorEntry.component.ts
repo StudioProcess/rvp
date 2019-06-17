@@ -126,7 +126,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
   ngAfterViewInit()  {
 
-    // add span nodes around hashtag textnodes
+    // add span nodes around hashtags inside textnodes
     this.encloseHashtags()
 
     // make sure all hashtags are filtered/saved
