@@ -11,7 +11,7 @@ export const _FUSE_OPTIONS_: Fuse.FuseOptions<any> = {
 }
 
 export const _FUSE_OPTIONS_HASHTAGS_: Fuse.FuseOptions<any> = {
-  threshold: 0.2,
+  threshold: 0.1,
   tokenize: true,
   matchAllTokens: true,
   minMatchCharLength: 2,
