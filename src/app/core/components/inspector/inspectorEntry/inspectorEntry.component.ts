@@ -129,6 +129,9 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     // add span nodes around hashtag textnodes
     this.encloseHashtags()
 
+    // make sure all hashtags are filtered/saved
+    this.saveHashtags(this.entry.getIn(['annotation', 'fields', 'description']))
+
     const formClick = fromEvent(this._formRef.nativeElement, 'click')
       .pipe(filter((ev: MouseEvent) => ev.button === 0))
 
