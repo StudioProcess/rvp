@@ -1,6 +1,6 @@
 {
   "name": "rvp",
-  "version": "0.1.0",
+  "version": "0.1.3-1",
   "description": "Research Video Prototype",
   "author": "Studio Process <contact@process.studio>",
   "maintainers": [
@@ -25,6 +25,7 @@
     "start": "ng serve",
     "prebuild": "node tools/prepEnv",
     "build": "ng build",
+    "prebuild:prod": "node tools/prepEnv",
     "build:prod": "ng build --prod; open dist/",
     "build:prod-old": "ng build --prod --output-hashing none",
     "test": "ng test",
