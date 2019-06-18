@@ -10,7 +10,7 @@ const path = require('path');
 
 const version = require('../package.json').version;
 const hash = execSync('git rev-parse --short HEAD', {encoding: 'utf8'}).trim();
-console.log(`Version ${version}_${hash}`);
+console.log(`Version ${version} (${hash})`);
 
 
 // From: https://gist.github.com/victorsollozzo/4134793
@@ -24,7 +24,7 @@ function findByExt(base, ext, files = undefined, result = undefined) {
     } else {
       if ( file.substr(-1*(ext.length+1)) == '.' + ext ) {
         result.push(newbase);
-      } 
+      }
     }
   });
   return result;
