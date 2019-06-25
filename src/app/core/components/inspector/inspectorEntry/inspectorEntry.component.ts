@@ -5,7 +5,7 @@ import {
   ChangeDetectionStrategy, OnDestroy,
   SimpleChanges, HostBinding, HostListener,
   ViewEncapsulation,
-  //ChangeDetectorRef
+  // ChangeDetectorRef
 } from '@angular/core'
 
 import {
@@ -41,9 +41,8 @@ import { _MOUSE_DBLCLICK_DEBOUNCE_ } from '../../../../config/form'
 
 import * as project from '../../../../persistence/actions/project'
 import { parseDuration } from '../../../../lib/time'
-//import {TaggingComponent} from '../../tagging/tagging.component'
 import { DomService } from '../../../actions/dom.service'
-import  { HashtagService } from '../../../actions/hashtag.service'
+import { HashtagService } from '../../../actions/hashtag.service'
 
 function durationValidatorFactory(): ValidatorFn {
   const durationRegex = /^([0-9]*:){0,2}[0-9]*(\.[0-9]*)?$/
@@ -65,6 +64,10 @@ const durationValidator = Validators.compose([Validators.required, durationValid
   styleUrls: ['inspectorEntry.component.scss']
 })
 export class InspectorEntryComponent extends HashtagService implements OnChanges, OnInit, AfterViewInit, OnDestroy {
+
+  form: FormGroup | null = null
+  private readonly _subs: Subscription[] = []
+
   @Input() readonly entry: Record<AnnotationColorMap>
   @Input() @HostBinding('class.selected') readonly isSelected = false
 
@@ -82,10 +85,6 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   onClick(event: MouseEvent, target: HTMLElement) {
     this.removeHashTag(target)
   }
-
-  form: FormGroup | null = null
-
-  private readonly _subs: Subscription[] = []
 
   constructor(
     readonly elem: ElementRef,
@@ -114,9 +113,6 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       description
     } = this._mapModel(this.entry)
 
-    //console.log(this.entry)
-    //console.log (description)
-
     this.form = this._fb.group({
       utc_timestamp: [utc_timestamp, durationValidator],
       duration: [duration, durationValidator],
@@ -124,7 +120,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     })
   }
 
-  ngAfterViewInit()  {
+  ngAfterViewInit() {
 
     // add span nodes around hashtags inside textnodes
     this.encloseHashtags()
@@ -170,7 +166,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
             source: SelectionSource.Inspector
           })
         })
-        this.encloseHashtags({'replace': true})
+        this.encloseHashtags({ 'replace': true })
       }))
 
     // Focus annotation
@@ -214,7 +210,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
     this._subs.push(
       enterHotKey.subscribe((ev: any) => {
-        //if(ev.target.nodeName !== 'TEXTAREA') {
+        // if(ev.target.nodeName !== 'TEXTAREA') {
         if (ev.target.classList.contains('contenteditable') !== true) {
           ev.target.blur()
         }
@@ -223,8 +219,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     this._subs.push(
       formBlur
         .pipe(
-          //delay(100),
-          //tap((ev) => {}),
+          // delay(100),
+          // tap((ev) => {}),
           withLatestFrom(combineLatest(this.form!.valueChanges, this.form!.statusChanges), (_, [form, status]) => {
             return [form, status]
           }),
@@ -264,7 +260,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     if (this.form !== null && changes.entry !== undefined && !changes.entry.firstChange) {
       const { previousValue, currentValue } = changes.entry
       if (previousValue === undefined || !previousValue.equals(currentValue)) {
-        //console.log(previousValue, currentValue)
+        // console.log(previousValue, currentValue)
         this.form.setValue(this._mapModel(currentValue))
       }
     }

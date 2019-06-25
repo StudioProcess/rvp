@@ -10,7 +10,7 @@ import { TaggingComponent } from '../components/tagging/tagging.component'
 /*@Injectable({
   providedIn: 'root',
 })*/
-export class HashtagService {
+export abstract class HashtagService {
 
   // Placeholders
   onHashtagsUpdate: any
