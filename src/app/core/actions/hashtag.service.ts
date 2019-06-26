@@ -1,7 +1,7 @@
 import {
-  //Injectable,
-  //ViewChild,
-  //ElementRef,
+  // Injectable,
+  // ViewChild,
+  // ElementRef,
 } from '@angular/core'
 
 import { DomService } from './dom.service'
@@ -25,7 +25,7 @@ export abstract class HashtagService {
   readonly tagPopupContainerId = 'tag-container'
   hashtagContainer: HTMLElement | null = null
   taggingComponentRef: any | null = null
-  isHashTagPopupContainerOpen: boolean = false
+  isHashTagPopupContainerOpen = false
 
   constructor(
     readonly _domService: DomService,
@@ -43,14 +43,14 @@ export abstract class HashtagService {
       // container for the hashtag popup component
       this.addHashTagPopupContainer()
 
-      //let elem = ev.target as HTMLElement
+      // let elem = ev.target as HTMLElement
       this.hashtagContainer = document.getElementById(this.tagPopupContainerId)! as HTMLElement
 
-      //const componentRef = this._domService.instantiateComponent(TaggingComponent)
+      // const componentRef = this._domService.instantiateComponent(TaggingComponent)
       this.taggingComponentRef = this._domService.instantiateComponent(TaggingComponent)
 
       // subscribe to tagging components onClickOutside event
-      this.taggingComponentRef.instance.closeHashTagContainer.subscribe((ev: any) => {
+      this.taggingComponentRef.instance.closeHashTagContainer.subscribe(() => {
         this.removeHashTagPopupContainer().then((res) => { }, (err) => { })
       })
 
@@ -59,7 +59,7 @@ export abstract class HashtagService {
       })
 
       this.taggingComponentRef.instance.passed_hashtag = '#'
-      //const componentRefInstance = this._domService.getInstance(componentRef)
+      // const componentRefInstance = this._domService.getInstance(componentRef)
       this._domService.attachComponent(this.taggingComponentRef, this.hashtagContainer)
 
       this.isHashTagPopupContainerOpen = true
@@ -83,15 +83,15 @@ export abstract class HashtagService {
     if (!range.collapsed) {
       range.deleteContents()
     }
-    //console.log(range)
-    let hashtag_popup_container_span = document.createElement('span')
+    // console.log(range)
+    const hashtag_popup_container_span = document.createElement('span')
     hashtag_popup_container_span.id = this.tagPopupContainerId
     hashtag_popup_container_span.style.display = 'inline-block'
     hashtag_popup_container_span.contentEditable = 'false'
 
     range.insertNode(hashtag_popup_container_span)
 
-    let sel = document.getSelection()!
+    const sel = document.getSelection()!
     range = range!.cloneRange()
     range!.setStartAfter(hashtag_popup_container_span)
     range!.collapse(true)
@@ -105,20 +105,19 @@ export abstract class HashtagService {
         if (this.taggingComponentRef) {
           this.taggingComponentRef.destroy()
         }
-        let elem = document.getElementById(this.tagPopupContainerId)!
+        const elem = document.getElementById(this.tagPopupContainerId)!
         elem.remove()
 
-        //if (elem.parentNode) {
-        //let parent = elem.parentNode!
-        //parent.removeChild(elem)
-        //}
+        // if (elem.parentNode) {
+        // let parent = elem.parentNode!
+        // parent.removeChild(elem)
+        // }
         this.taggingComponentRef = null
         this.hashtagContainer = null
         this.isHashTagPopupContainerOpen = false
 
         resolve(this.tagPopupContainerId + ' removed')
-      }
-      else {
+      } else {
         reject('no popup element ' + this.tagPopupContainerId)
       }
     })
@@ -154,20 +153,20 @@ export abstract class HashtagService {
 
   swapHashtag(data: any): void {
     this.removeHashTagPopupContainer()
-    let elem = this.getCurrentFocusNativeElement()
+    const elem = this.getCurrentFocusNativeElement()
     if (elem) {
-      let old_text = elem!.textContent
+      const old_text = elem!.textContent
       let new_text = null
       if (old_text!.endsWith(data!.user_input)) {
         /**
          *  hashtag at the very end
          */
         new_text = old_text!.replace(new RegExp(data!.user_input + '$'), data!.hashtag)
-      } else if (old_text!.indexOf(data!.user_input + "\n") > -1) {
+      } else if (old_text!.indexOf(data!.user_input + '\n') > -1) {
         /**
          *  hashtag at the end of a line
          */
-        new_text = old_text!.replace(data!.user_input + "\n", data!.hashtag + "\n")
+        new_text = old_text!.replace(data!.user_input + '\n', data!.hashtag + '\n')
       } else if (old_text!.indexOf(data!.user_input + ' ') > -1) {
         /**
          *  hashtag followed by whitespace
@@ -203,14 +202,14 @@ export abstract class HashtagService {
 
   handleHashtagInput(ev: KeyboardEvent): boolean {
     const selection = document.getSelection()!.anchorNode!
-    let element = this.getCurrentFocusNativeElement()
+    const element = this.getCurrentFocusNativeElement()
 
-    if (ev.key == ' ' || ev.key == 'Enter') {
-      if (ev.key == 'Enter') {
+    if (ev.key === ' ' || ev.key === 'Enter') {
+      if (ev.key === 'Enter') {
         ev.preventDefault()
       }
       this.removeHashTagPopupContainer()
-      let new_text = this.removeNodesFromHTMLElement(element)
+      const new_text = this.removeNodesFromHTMLElement(element)
 
       element!.innerHTML = new_text
       this.patchFormValues(new_text)
@@ -219,23 +218,23 @@ export abstract class HashtagService {
       this.setCaretToPositionEnd(element)
 
       return false
-    } else if (ev.key == '#') {
+    } else if (ev.key === '#') {
       ev.preventDefault()
-    } else if (ev.key == 'Backspace') {
+    } else if (ev.key === 'Backspace') {
       // already handled by getCurrentSelectionOffsetLength
     }
 
     /**
      *  handle userinput on hashtag popup open
      */
-    if (selection.nodeType == Node.TEXT_NODE) {
+    if (selection.nodeType === Node.TEXT_NODE) {
       setTimeout(() => { // TODO : hacky, find another way to read nodes textcontent
-        if (this.getCurrentSelectionOffsetLength(selection) == 0) {
+        if (this.getCurrentSelectionOffsetLength(selection) === 0) {
           this.removeHashTagPopupContainer()
           return false
         }
-        let hashtag = selection.textContent!
-        let hashtag_concise = hashtag.split("\n")[0] // consider linebreak inside selection/textnode
+        const hashtag = selection.textContent!
+        let hashtag_concise = hashtag.split('\n')[0] // consider linebreak inside selection/textnode
         hashtag_concise = hashtag_concise.trim()
         /**
          *  when empty spaces occur on hashtag textnode -> remove
@@ -250,12 +249,12 @@ export abstract class HashtagService {
   }
 
   removeNodesFromHTMLElement(element: HTMLElement | null): string {
-    let text: string = ''
+    let text = ''
     if (element) {
       const elemArr = Array.from(element.childNodes)
       elemArr.forEach((node: HTMLElement) => {
         if (node.nodeType === Node.TEXT_NODE) {
-          let textContent = node.textContent!
+          const textContent = node.textContent!
           if (textContent) {
             /**
              *  re-add linebreaks
@@ -269,7 +268,7 @@ export abstract class HashtagService {
           text += node.textContent!.trim()
         }
       })
-      //text = text.replace(/#\s+/g, '')
+      // text = text.replace(/#\s+/g, '')
     }
     return text
   }
@@ -280,28 +279,28 @@ export abstract class HashtagService {
      */
     description = description.replace(/<!--(.|\n)*?-->/g, '')
     description = description.replace(/<rv-tagging.*<\/rv-tagging>/ig, '')
-    //description = description.replace(/<span id=\"tag-container\".*<\/span>/ig, '')
+    // description = description.replace(/<span id=\"tag-container\".*<\/span>/ig, '')
 
     /**
      *  Remove HTML Elements
      */
-    let el = document.createElement('div')
+    const el = document.createElement('div')
     el.innerHTML = description
     description = el.innerText
 
     /**
      *  Still, parse for remaining HTML Objects
      */
-    let descriptionText: string = ''
+    let descriptionText = ''
     const descriptionNode = new DOMParser().parseFromString(description, 'text/html').body.childNodes
     const elemArr = Array.from(descriptionNode)
-    //console.log('DOMParser', elemArr)
+    // console.log('DOMParser', elemArr)
 
     elemArr.forEach((item: HTMLElement) => {
-      if (item.nodeType == Node.TEXT_NODE) {
+      if (item.nodeType === Node.TEXT_NODE) {
         descriptionText += item.textContent!.trimLeft()
-      } else if (item.nodeType == Node.ELEMENT_NODE && item.nodeName === 'BR') {
-        descriptionText += "\n"
+      } else if (item.nodeType === Node.ELEMENT_NODE && item.nodeName === 'BR') {
+        descriptionText += '\n'
       } else if (item.classList.contains(this.tagContainerClass)) {
         descriptionText += item.textContent!.trim() + ' '
       }
@@ -321,8 +320,8 @@ export abstract class HashtagService {
   }
 
   getCurrentSelectionOffsetLength(selection: Node): number {
-    let range = document.getSelection()!.getRangeAt(0)
-    let preCaretRange = range.cloneRange()
+    const range = document.getSelection()!.getRangeAt(0)
+    const preCaretRange = range.cloneRange()
     preCaretRange.selectNodeContents(selection)
     preCaretRange.setEnd(range.endContainer, range.endOffset)
 
@@ -330,15 +329,15 @@ export abstract class HashtagService {
   }
 
   encloseHashtags(settings?: any): void {
-    let elem = this.getCurrentFocusNativeElement()
+    const elem = this.getCurrentFocusNativeElement()
     if (elem) {
       this.removeHashTagPopupContainer()
       const elemArr = Array.from(elem.childNodes)
-      //console.log(elemArr)
+      // console.log(elemArr)
       elemArr.forEach((node: HTMLElement) => {
         if (node.nodeType === Node.TEXT_NODE) {
-          let r = /#\w+/g // /(\#[a-zA-Z0-9\-\_]+)/g
-          let result = r.exec(node.textContent as string)
+          const r = /#\w+/g // /(\#[a-zA-Z0-9\-\_]+)/g
+          const result = r.exec(node.textContent as string)
           if (!result) { return } else {
             const nodeTextUp = node.textContent!.replace(
               r,
@@ -353,14 +352,14 @@ export abstract class HashtagService {
                *  replace each textNode with all new elements
                *  (all remaining text elements + hashtags spans)
                */
-              let replacementNode = document.createElement('div')
+              const replacementNode = document.createElement('div')
               replacementNode.innerHTML = nodeTextUp
               const replacementNodeArr = Array.from(replacementNode.childNodes)
-              //console.log('replacementNodeArr', replacementNodeArr)
+              // console.log('replacementNodeArr', replacementNodeArr)
               replacementNodeArr.forEach((replace: HTMLElement) => {
                 node.parentNode!.insertBefore(replace, node)
               })
-              //node.parentNode.insertBefore(replacementNode, node)
+              // node.parentNode.insertBefore(replacementNode, node)
               node.parentNode!.removeChild(node)
             } else {
               /**
@@ -394,6 +393,6 @@ export abstract class HashtagService {
   htmlBr(description: string): string {
     const pat1 = new RegExp('<div>', 'g')
     const pat2 = new RegExp('</div>', 'g')
-    return description.replace(pat1, "\n").replace(pat2, '')
+    return description.replace(pat1, '\n').replace(pat2, '')
   }
 }
