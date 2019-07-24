@@ -51,7 +51,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     this._rootStore.select(fromProject.getProjectMeta).subscribe(meta => {
       if(meta !== null) {
         const title = meta.getIn(['general', 'title'])! as string
-        this.titleService.setTitle(title);
+        this.titleService.setTitle(title)
       }
     })
 
@@ -122,7 +122,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
         }))
 
     // backspace key
-    //const removeAnnotationHotkey = windowKeydown.pipe(filter(e => e.keyCode === 8))
+    // const removeAnnotationHotkey = windowKeydown.pipe(filter(e => e.keyCode === 8))
     // moved to shift + "Delete" key
     const removeAnnotationHotkey = windowKeydown.pipe(filter(e => {
       return e.keyCode === 46 && e.shiftKey // shift + del
@@ -263,7 +263,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   updateProjectTitle (updateTitle: project.ProjectUpdateTitle) {
-    //console.log ('updateProjectTitle', updateTitle);
+    // console.log ('updateProjectTitle', updateTitle);
     this._rootStore.dispatch (new project.ProjectUpdateTitle(updateTitle))
   }
 
