@@ -106,6 +106,7 @@
 
         &:focus {
           height: auto;
+          background-color: $description-focus-bg;
 
           .hashtag {
             color: #000000;
