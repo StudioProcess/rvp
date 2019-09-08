@@ -93,7 +93,8 @@ export function reducer(state: State = initialState, action: project.Actions): S
         player: state.get('player', new ProjectPlayerStateRecordFactory()),
         meta: ProjectMetaRecordFactory({
           id,
-          video: videoMeta === null ? prevVideoMeta : (videoMeta.type === VIDEO_TYPE_BLOB ? BlobVideoRecordFactory(videoMeta) : UrlVideoRecordFactory(videoMeta)),
+          video: videoMeta === null ? prevVideoMeta :
+            (videoMeta.type === VIDEO_TYPE_BLOB ? BlobVideoRecordFactory(videoMeta) : UrlVideoRecordFactory(videoMeta)),
           timeline: TimelineRecordFactory({
             ...timeline,
             tracks: List(timeline.tracks.map((track: any) => {
@@ -174,7 +175,12 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const prevAnnotation: Record<Annotation> = annotationStacks.getIn([annotationStackIndex, annotationIndex])
       const timelineDuration = state.getIn(['meta', 'timeline', 'duration'])
 
-      const stacksWithEmbedded = embedAnnotations(timelineDuration, annotationStacks, annotationStackIndex, List([annotation]), List([prevAnnotation]))
+      const stacksWithEmbedded = embedAnnotations(
+        timelineDuration,
+        annotationStacks,
+        annotationStackIndex,
+        List([annotation]),
+        List([prevAnnotation]))
 
       const annotationId = annotation.get('id', null)!
       const singleSel: Record<AnnotationSelection> = state.getIn(['selection', 'annotation', 'selected'])
@@ -343,7 +349,6 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state
     }
     case project.PROJECT_SELECT_ANNOTATION: {
-      //console.log(action)
       const {type, selection} = action.payload
       switch(type) {
         case project.AnnotationSelectionType.Default: {
@@ -452,7 +457,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       if (new_hashtags) {
         let hashtags = new_hashtags.concat(prev_hashtags)
         hashtags = prepareHashTagList(hashtags)
-        //console.log('PROJECT_UPDATE_HASHTAGS', hashtags)
+        // console.log('PROJECT_UPDATE_HASHTAGS', hashtags)
         return state.setIn(['meta', 'hashtags', 'list'], hashtags)
       }
       return state
