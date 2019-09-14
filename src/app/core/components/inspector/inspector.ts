@@ -37,7 +37,7 @@ import {InspectorEntryComponent} from './inspectorEntry/inspectorEntry.component
   styles: [`
     .wrapper {
       position: relative;
-      overflow-y: hidden;
+      overflow-y: scroll;
     }
   `]
 })
