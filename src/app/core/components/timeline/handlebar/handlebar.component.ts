@@ -7,7 +7,7 @@ import {
   SimpleChanges, EventEmitter
 } from '@angular/core'
 
-import { DOCUMENT } from "@angular/common";
+import { DOCUMENT } from '@angular/common'
 
 import {
   Observable, ReplaySubject, Subject, Subscription,
@@ -48,6 +48,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   @Input() readonly containerRect: Observable<ClientRect>
   @Input() @HostBinding('class.selected') readonly isSelected = false
   @Input() @HostBinding('style.opacity') readonly opacity: string = '1'
+  @Input() @HostBinding('style.display') readonly display: string = 'block'
   @Input() @HostBinding('style.pointerEvents') readonly pointerEvents: string = 'auto'
 
   // Input left and width

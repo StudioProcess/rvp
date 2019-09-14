@@ -292,6 +292,10 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     return Math.min(Math.max(_HANDLEBAR_MIN_WIDTH_, annotation.duration / this.totalDuration * 100), 100)
   }
 
+  getIsDisplayed(annotation: Record<Annotation>) {
+    return annotation.get('isShown', true) ? 'block' : 'none'
+  }
+
   getAnnotationOpacity(annotation: Record<Annotation>) {
     return annotation.get('isShown', true) ? '1' : '0.2'
   }
