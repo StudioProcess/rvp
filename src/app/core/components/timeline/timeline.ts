@@ -5,11 +5,11 @@ import {
   AfterViewInit, Inject
 } from '@angular/core'
 
-import { DOCUMENT } from "@angular/common";
+import { DOCUMENT } from '@angular/common'
 
-import {Store} from '@ngrx/store'
+import { Store } from '@ngrx/store'
 
-import {Record, Set} from 'immutable'
+import { Record, Set } from 'immutable'
 
 import {
   Observable, ReplaySubject, Subscription, combineLatest,
@@ -24,10 +24,10 @@ import {
 
 import * as fromProject from '../../../persistence/reducers'
 import * as project from '../../../persistence/actions/project'
-import {Timeline, Track, Annotation} from '../../../persistence/model'
-import {HandlebarComponent} from '../../components/timeline/handlebar/handlebar.component'
-import {_SCROLLBAR_CAPTION_} from '../../../config/timeline/scrollbar'
-import {rndColor} from '../../../lib/color'
+import { Timeline, Track, Annotation } from '../../../persistence/model'
+import { HandlebarComponent } from '../../components/timeline/handlebar/handlebar.component'
+import { _SCROLLBAR_CAPTION_ } from '../../../config/timeline/scrollbar'
+import { rndColor } from '../../../lib/color'
 
 export interface ScrollSettings {
   readonly zoom: number
@@ -64,7 +64,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private readonly _cdr: ChangeDetectorRef,
     private readonly _store: Store<fromProject.State>,
-    @Inject(DOCUMENT) private readonly _document: any) {}
+    @Inject(DOCUMENT) private readonly _document: any) { }
 
   ngOnInit() {
     this._subs.push(
@@ -83,13 +83,13 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     this._subs.push(
       this._store.select(fromProject.getCurrentTime)
         .pipe(
-          withLatestFrom(this._timelineSubj, (currentTime, timeline) => {
+          withLatestFrom(this._timelineSubj, (currentTime, timeline) => {
             return {
               currentTime,
               progress: currentTime / timeline!.get('duration', null)
             }
           }))
-        .subscribe(({currentTime, progress}) => {
+        .subscribe(({ currentTime, progress }) => {
           this.playerPos = progress
           this.playerCurrentTime = currentTime
           this._cdr.markForCheck()
@@ -121,11 +121,11 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
     const handlebarSettings = this._handlebarRef.onHandlebarUpdate.pipe(
       startWith(initHB),
       map(hb => {
-        const zoom = 100/hb.width
-        return {zoom, scrollLeft: hb.left}
+        const zoom = 100 / hb.width
+        return { zoom, scrollLeft: hb.left }
       }))
 
-    const winResize: Observable<Event|null> = fromEvent(window, 'resize')
+    const winResize: Observable<Event | null> = fromEvent(window, 'resize')
 
     this._subs.push(
       winResize.pipe(startWith(null)).subscribe(() => {
@@ -135,18 +135,18 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
 
     this._subs.push(combineLatest(
       this.timelineWrapperRect, handlebarSettings,
-      (rect, {zoom, scrollLeft}) => {
-        const zoomContainerWidth = zoom*rect.width
-        const maxLeft = zoomContainerWidth-rect.width
-        return {zoom, left: Math.max(0, Math.min(zoomContainerWidth*scrollLeft/100, maxLeft))}
+      (rect, { zoom, scrollLeft }) => {
+        const zoomContainerWidth = zoom * rect.width
+        const maxLeft = zoomContainerWidth - rect.width
+        return { zoom, left: Math.max(0, Math.min(zoomContainerWidth * scrollLeft / 100, maxLeft)) }
       }).pipe(distinctUntilChanged((prev, cur) => {
         return prev.left === cur.left && prev.zoom === cur.zoom
-      })).subscribe(({zoom, left}) => {
-        this.scrollSettings.next({zoom, scrollLeft: left})
+      })).subscribe(({ zoom, left }) => {
+        this.scrollSettings.next({ zoom, scrollLeft: left })
       }))
 
     this._subs.push(
-      this.scrollSettings.subscribe(({zoom, scrollLeft}) => {
+      this.scrollSettings.subscribe(({ zoom, scrollLeft }) => {
         this.pZoom = zoom
         this._playheadOverflowRef.nativeElement.scrollLeft = scrollLeft
 
@@ -165,24 +165,24 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
 
     const zoomContainer = combineLatest(
       this.timelineWrapperRect, this.scrollSettings,
-      (rect, {zoom, scrollLeft}) => {
-        return {x: rect.left-scrollLeft, width: zoom*rect.width}
+      (rect, { zoom, scrollLeft }) => {
+        return { x: rect.left - scrollLeft, width: zoom * rect.width }
       })
 
     this._subs.push(placeHeadMd
       .pipe(
         switchMap(md => {
-          const init = {clientX: md.clientX}
+          const init = { clientX: md.clientX }
           return concat(
             of(init),
             mousemove.pipe(
               map(mmEvent => {
-                const {clientX, clientY} = mmEvent
-                return {clientX, clientY}
+                const { clientX, clientY } = mmEvent
+                return { clientX, clientY }
               }),
               takeUntil(mouseup)))
         }),
-        withLatestFrom(zoomContainer, (ev: MouseEvent, {x, width}) => {
+        withLatestFrom(zoomContainer, (ev: MouseEvent, { x, width }) => {
           const localX = ev.clientX - x
           return localX / width
         }),
@@ -194,18 +194,18 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
           const totalTime = tl!.get('duration', null)
           return {
             progress,
-            currentTime: progress*totalTime
+            currentTime: progress * totalTime
           }
         }))
-      .subscribe(({progress, currentTime}) => {
+      .subscribe(({ progress, currentTime }) => {
         this.playerPos = progress
         this.playerCurrentTime = currentTime
         this._cdr.markForCheck()
-        this._store.dispatch(new project.PlayerRequestCurrentTime({currentTime}))
+        this._store.dispatch(new project.PlayerRequestCurrentTime({ currentTime }))
       }))
   }
 
-  trackByFunc(_: number, track: Record<Track>) {
+  trackByFunc(_: number, track: Record<Track>) {
     return track.get('id', null)
   }
 
@@ -222,7 +222,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   }
 
   addTrack() {
-    this._store.dispatch(new project.ProjectAddTrack({color: rndColor()}))
+    this._store.dispatch(new project.ProjectAddTrack({ color: rndColor() }))
   }
 
   updateTrack(payload: project.UpdateTrackPayload) {
