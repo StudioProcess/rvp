@@ -60,7 +60,7 @@
     "localforage": "^1.7.3",
     "moment": "^2.24.0",
     "natives": "^1.1.6",
-    "ngx-autosize-input": "^2.2.2",
+    "ngx-autosize-input": "^2.3.6",
     "pace-progress": "^1.0.2",
     "rxjs": "~6.5.3",
     "rxjs-tslint": "^0.1.7",
@@ -68,7 +68,7 @@
     "video.js": "^5.20.5",
     "videojs-vimeo": "github:dinony/videojs-vimeo#patch-1",
     "videojs-youtube": "^2.6.0",
-    "what-input": "^5.2.3",
+    "what-input": "^5.2.6",
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
@@ -80,7 +80,7 @@
     "@types/jszip": "^3.1.6",
     "@types/node": "~8.9.4",
     "@types/video.js": "^5.16",
-    "codelyzer": "^5.0.1",
+    "codelyzer": "^5.1.2",
     "tslint": "~5.11.0",
     "typescript": "~3.5.3"
   }
