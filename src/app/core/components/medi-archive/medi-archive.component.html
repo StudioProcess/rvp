@@ -7,11 +7,22 @@
 <div class="row">
   <div class="column">
     <div [formGroup]="mediaArchiveForm">
-        <label for="videourl">Video</label>
-        <input type="url" required aria-required="true" name="videourl" formControlName="video" />
-        <br>
-        <label for="videourl">Annotations</label>
-        <input type="url" required aria-required="true" name="annotationsurl" formControlName="annotations" />
+      <div class="grid-container">
+        <div class="grid-x grid-padding-x">
+          <div class="cell">
+            <label>Video
+              <input type="url" class="input-group-field" required aria-required="true" name="videourl"
+                formControlName="video" />
+            </label>
+          </div>
+          <div class="cell">
+            <label>Annotations
+              <input type="url" required aria-required="true" name="annotationsurl" formControlName="annotations" />
+            </label>
+          </div>
+          <a type="submit" class="button button-media-archive" (click)="loadProjectFromUrl()">Load Project</a>
+        </div>
       </div>
+    </div>
   </div>
 </div>

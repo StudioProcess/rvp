@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { FormGroup, FormControl } from '@angular/forms'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
+// import { Observable } from 'rxjs'
+
+import { from } from 'rxjs'
 
 @Component({
   selector: 'rv-medi-archive',
@@ -16,7 +20,8 @@ export class MediArchiveComponent implements OnInit {
   })
 
   constructor(
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private http: HttpClient
   ) { }
 
   ngOnInit() {
@@ -29,5 +34,40 @@ export class MediArchiveComponent implements OnInit {
         })
       }
     })
+  }
+
+  loadProjectFromUrl() {
+    console.log(this.mediaArchiveForm.value)
+
+    // console.log(this.http.get(this.mediaArchiveForm.value.video))
+    /*this.sendGetRequest().subscribe(data => {
+      console.log(data)
+    })*/
+
+    this.fetchGetRequest(this.mediaArchiveForm.value.video).subscribe(data => {
+      console.log(data)
+    })
+  }
+
+  public sendGetRequest() {
+    const headers = new HttpHeaders({ 'Content-Type': 'text/plain', 'Access-Control-Allow-Origin': '*' })
+    return this.http.get(this.mediaArchiveForm.value.video, { responseType: 'text', headers })
+  }
+
+  public fetchGetRequest(url : string) {
+    return from(
+      fetch(
+        url,
+        {
+          // body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'text/plain',
+            'Access-Control-Allow-Origin': '*'
+          },
+          method: 'GET',
+          mode: 'no-cors'
+        }
+      )
+    )
   }
 }

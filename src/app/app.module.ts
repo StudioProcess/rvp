@@ -20,6 +20,8 @@ import { MainContainer } from './core/components/main/main'
 import { MessageService } from './core/actions/message.service';
 // import { MediArchiveComponent } from './medi-archive/medi-archive.component'
 
+import { HttpClientModule } from '@angular/common/http'
+
 
 @NgModule({
   imports: [
@@ -32,7 +34,8 @@ import { MessageService } from './core/actions/message.service';
 
     CoreModule,
     PersistenceModule,
-    PlayerModule
+    PlayerModule,
+    HttpClientModule,
   ],
   // declarations: [AppShellContainer],
   bootstrap: [MainContainer],
