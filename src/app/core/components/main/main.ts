@@ -52,7 +52,6 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
     this.activatedRoute.queryParams.subscribe(params => {
       if(params.hasOwnProperty('video') && params.hasOwnProperty('annotations')) {
-        console.log(params)
         const mediArchiveModal = $('#medi-archive-modal') as any
         mediArchiveModal.foundation('open')
       }
