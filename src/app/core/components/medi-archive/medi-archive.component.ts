@@ -39,19 +39,21 @@ export class MediArchiveComponent implements OnInit {
   loadProjectFromUrl() {
     console.log(this.mediaArchiveForm.value)
 
-    // console.log(this.http.get(this.mediaArchiveForm.value.video))
-    /*this.sendGetRequest().subscribe(data => {
-      console.log(data)
-    })*/
+    /*this.http.jsonp(this.mediaArchiveForm.value.video, 'callback').pipe(
+    )*/
 
-    this.fetchGetRequest(this.mediaArchiveForm.value.video).subscribe(data => {
+    this.sendGetRequest(this.mediaArchiveForm.value.video).subscribe(data => {
       console.log(data)
     })
+
+    /*this.fetchGetRequest(this.mediaArchiveForm.value.video).subscribe(data => {
+      console.log(data)
+    })*/
   }
 
-  public sendGetRequest() {
+  public sendGetRequest(url : string) {
     const headers = new HttpHeaders({ 'Content-Type': 'text/plain', 'Access-Control-Allow-Origin': '*' })
-    return this.http.get(this.mediaArchiveForm.value.video, { responseType: 'text', headers })
+    return this.http.get(url, { responseType: 'text', headers })
   }
 
   public fetchGetRequest(url : string) {

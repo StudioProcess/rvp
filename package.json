@@ -23,6 +23,7 @@
     "ng": "ng",
     "prestart": "node tools/prepEnv",
     "start": "ng serve",
+    "_comment": "start: ng serve --proxy-config proxy.conf.json",
     "prebuild": "node tools/prepEnv",
     "build": "ng build",
     "prebuild:prod": "node tools/prepEnv",
