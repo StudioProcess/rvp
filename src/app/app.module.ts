@@ -17,7 +17,8 @@ import { reducers, metaReducers } from './core/reducers'
 
 // import {AppShellContainer} from './shell'
 import { MainContainer } from './core/components/main/main'
-import { MessageService } from './core/actions/message.service'
+import { MessageService } from './core/actions/message.service';
+// import { MediArchiveComponent } from './medi-archive/medi-archive.component'
 
 
 @NgModule({
@@ -36,5 +37,6 @@ import { MessageService } from './core/actions/message.service'
   // declarations: [AppShellContainer],
   bootstrap: [MainContainer],
   providers: [MessageService],
+  // declarations: [MediArchiveComponent],
 })
 export class AppModule { }

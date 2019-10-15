@@ -44,13 +44,20 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     private readonly _rootStore: Store<fromRoot.State>,
     private titleService: Title,
     private activatedRoute: ActivatedRoute
-  ) {
-    this.activatedRoute.queryParams.subscribe(params => {
-      console.log(params)
-    })
-  }
+  ) {}
 
   ngOnInit() {
+
+    $(document).foundation()
+
+    this.activatedRoute.queryParams.subscribe(params => {
+      if(params.hasOwnProperty('video') && params.hasOwnProperty('annotations')) {
+        console.log(params)
+        const mediArchiveModal = $('#medi-archive-modal') as any
+        mediArchiveModal.foundation('open')
+      }
+    })
+
     this._rootStore.dispatch(new project.ProjectLoad())
 
     // set document title
@@ -322,7 +329,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    $(document).foundation()
+    // $(document).foundation()
   }
 
   ngOnDestroy() {
