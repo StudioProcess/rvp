@@ -4,19 +4,20 @@ import {
   ChangeDetectorRef
 } from '@angular/core'
 
-import {Title} from '@angular/platform-browser'
+import { Title } from '@angular/platform-browser'
 
-import {Store} from '@ngrx/store'
+import { Store } from '@ngrx/store'
+import { ActivatedRoute } from '@angular/router'
 
-import {Observable, Subscription, fromEvent} from 'rxjs'
-import {filter, pairwise, withLatestFrom} from 'rxjs/operators'
+import { Observable, Subscription, fromEvent } from 'rxjs'
+import { filter, pairwise, withLatestFrom } from 'rxjs/operators'
 
 import * as fromRoot from '../../reducers'
 import * as project from '../../../persistence/actions/project'
 import * as fromProject from '../../../persistence/reducers'
-import {rndColor} from '../../../lib/color'
-import {AnnotationRecordFactory, AnnotationFieldsRecordFactory} from '../../../persistence/model'
-import {_EMPTY_PROJECT_} from '../../../config/project'
+import { rndColor } from '../../../lib/color'
+import { AnnotationRecordFactory, AnnotationFieldsRecordFactory } from '../../../persistence/model'
+import { _EMPTY_PROJECT_ } from '../../../config/project'
 
 declare var $: any
 
@@ -34,22 +35,27 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   hasTracks: boolean = false
   hasActiveTrack: boolean = false
   currentAnnotationsOnly: boolean = false // show current annotations only
-  search: string|null = null
+  search: string | null = null
   applyToTimeline: boolean = false
   private readonly _subs: Subscription[] = []
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
     private readonly _rootStore: Store<fromRoot.State>,
-    private titleService: Title
-  ) {}
+    private titleService: Title,
+    private activatedRoute: ActivatedRoute
+  ) {
+    this.activatedRoute.queryParams.subscribe(params => {
+      console.log(params)
+    })
+  }
 
   ngOnInit() {
     this._rootStore.dispatch(new project.ProjectLoad())
 
     // set document title
     this._rootStore.select(fromProject.getProjectMeta).subscribe(meta => {
-      if(meta !== null) {
+      if (meta !== null) {
         const title = meta.getIn(['general', 'title'])! as string
         this.titleService.setTitle(title)
       }
@@ -65,7 +71,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     }))
 
     this._subs.push(this._rootStore.select(fromProject.getProjectTimeline).subscribe(timeline => {
-      if(timeline !== null) {
+      if (timeline !== null) {
         const tracks = timeline.get('tracks', null)
         this.hasTracks = tracks.size > 0
       } else {
@@ -97,7 +103,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     }))
 
     const windowMousedown = fromEvent(window, 'mousedown') as Observable<MouseEvent>
-    const windowKeydown = fromEvent(window,  'keydown') as Observable<KeyboardEvent>
+    const windowKeydown = fromEvent(window, 'keydown') as Observable<KeyboardEvent>
 
     const windowKeydownPairs = windowKeydown.pipe(pairwise())
 
@@ -139,7 +145,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     }))
 
     // cmd z
-    const undoHotkey = windowKeydown.pipe(filter(e => {
+    const undoHotkey = windowKeydown.pipe(filter(e => {
       return e.keyCode === 90 && e.metaKey && !e.shiftKey // cmd z (make sure shiftKey is not pressed)
     }))
 
@@ -157,9 +163,9 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       addAnnotationHotkey.pipe(
         withLatestFrom(hasActiveTrack),
         filter(([, hasActiveTrack]) => hasActiveTrack === true))
-      .subscribe(() => {
-        this.addAnnotation()
-      }))
+        .subscribe(() => {
+          this.addAnnotation()
+        }))
 
     this._subs.push(
       pasteHotkey
@@ -183,7 +189,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       addTrackHotkey.subscribe(ev => {
         ev.preventDefault()
         ev.stopPropagation()
-        this._rootStore.dispatch(new project.ProjectAddTrack({color: rndColor()}))
+        this._rootStore.dispatch(new project.ProjectAddTrack({ color: rndColor() }))
       }))
 
     this._subs.push(
@@ -221,7 +227,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   exportProject() {
-    if(window.confirm('Export an archive of the project?')) {
+    if (window.confirm('Export an archive of the project?')) {
       this._rootStore.dispatch(new project.ProjectExport())
     }
   }
@@ -231,14 +237,14 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   resetProject() {
-    if(window.confirm('Reset the whole project? All data will be lost.')) {
+    if (window.confirm('Reset the whole project? All data will be lost.')) {
       this._rootStore.dispatch(new project.ProjectReset())
       this.closeProjectModal()
     }
   }
 
   newProject() {
-    if(window.confirm('Create a new (empty) project? All data will be lost.')) {
+    if (window.confirm('Create a new (empty) project? All data will be lost.')) {
       this._rootStore.dispatch(new project.ProjectLoadSuccess(_EMPTY_PROJECT_))
       this.closeProjectModal()
     }
@@ -257,14 +263,14 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       annotation: AnnotationRecordFactory({
         utc_timestamp: 0,
         duration: 1,
-        fields: AnnotationFieldsRecordFactory({description: ''})
+        fields: AnnotationFieldsRecordFactory({ description: '' })
       })
     }))
   }
 
-  updateProjectTitle (updateTitle: project.ProjectUpdateTitle) {
+  updateProjectTitle(updateTitle: project.ProjectUpdateTitle) {
     // console.log ('updateProjectTitle', updateTitle);
-    this._rootStore.dispatch (new project.ProjectUpdateTitle(updateTitle))
+    this._rootStore.dispatch(new project.ProjectUpdateTitle(updateTitle))
   }
 
   private dispatchDeleteAnnotation() {
@@ -279,7 +285,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     this._rootStore.dispatch(new project.ProjectUndo())
   }
 
-  private dispatchRedoAction() {
+  private dispatchRedoAction() {
     this._rootStore.dispatch(new project.ProjectRedo())
   }
 
@@ -307,7 +313,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     this._rootStore.dispatch(new project.ProjectSettingsSetCurrentAnnotationsOnly(currentAnnotationsOnly))
   }
 
-  searchChange(search: string|null) {
+  searchChange(search: string | null) {
     this._rootStore.dispatch(new project.ProjectSettingsSetSearch(search))
   }
 
