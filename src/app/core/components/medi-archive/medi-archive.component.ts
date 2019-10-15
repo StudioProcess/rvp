@@ -16,6 +16,8 @@ export class MediArchiveComponent implements OnInit {
 
   response_video: any
   response_annotations: any
+  response_video_header: string
+  response_annotations_header: string
 
   mediaArchiveForm = new FormGroup({
     video: new FormControl(),
@@ -52,17 +54,34 @@ export class MediArchiveComponent implements OnInit {
   loadProjectFromUrl() {
     // console.log(this.mediaArchiveForm.value)
 
-    this.sendGetRequest(this.mediaArchiveForm.value.video).subscribe(response => {
-      console.log(response)
-      this.response_video = response
-      this.changeDetectorRef.detectChanges()
-    })
+    this.sendGetRequest(this.mediaArchiveForm.value.video)
+      .subscribe(
+        response => {
+          // console.log(response)
+          this.response_video_header= 'SUCCESS'
+          this.response_video = response
+          this.changeDetectorRef.detectChanges()
+        },
+        error => {
+          this.response_video_header = 'ERROR'
+          this.response_video = error
+          this.changeDetectorRef.detectChanges()
+        })
 
-    this.sendGetRequest(this.mediaArchiveForm.value.annotations).subscribe(response => {
-      console.log(response)
-      this.response_annotations = response
-      this.changeDetectorRef.detectChanges()
-    })
+    this.sendGetRequest(this.mediaArchiveForm.value.annotations)
+    .subscribe(
+      response => {
+        // console.log(response)
+
+        this.response_annotations_header = 'SUCCESS'
+        this.response_annotations = response
+        this.changeDetectorRef.detectChanges()
+      },
+      error => {
+        this.response_annotations_header = 'ERROR'
+        this.response_annotations = error
+        this.changeDetectorRef.detectChanges()
+      })
 
     /*this.fetchGetRequest(this.mediaArchiveForm.value.video).subscribe(data => {
       console.log(data)

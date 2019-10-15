@@ -28,6 +28,9 @@
 </div>
 <div class="row">
   <div class="column">
-    <pre>{{ response_video | json }}{{ response_annotations | json }}</pre>
+    {{ response_video_header }}
+    <pre>{{ response_video | json }}</pre>
+    {{ response_annotations_header }}
+    <pre>{{ response_annotations | json }}</pre>
   </div>
 </div>
