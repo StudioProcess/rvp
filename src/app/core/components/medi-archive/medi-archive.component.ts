@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { FormGroup, FormControl } from '@angular/forms'
-import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { HttpClient/*, HttpHeaders*/ } from '@angular/common/http'
 // import { Observable } from 'rxjs'
 
 import { from } from 'rxjs'
@@ -36,14 +36,26 @@ export class MediArchiveComponent implements OnInit {
     })
   }
 
+  /**
+   *  CORS has to be set up on the server in order
+   *  to get a response into the browser
+   *
+   *  testurls:
+   *  http://localhost:4200/?video=https:%2F%2Fshowcase.rocks%2Fcors%2Fvideo&annotations=https:%2F%2Fshowcase.rocks%2Fcors%2Fjson
+   *  https://showcase.rocks/cors/video
+   *  https://showcase.rocks/cors/json
+   */
   loadProjectFromUrl() {
-    console.log(this.mediaArchiveForm.value)
+    // console.log(this.mediaArchiveForm.value)
 
-    /*this.http.jsonp(this.mediaArchiveForm.value.video, 'callback').pipe(
-    )*/
+    this.sendGetRequest(this.mediaArchiveForm.value.video).subscribe(response => {
+      console.log(response)
+      console.log(response.status)
+    })
 
-    this.sendGetRequest(this.mediaArchiveForm.value.video).subscribe(data => {
-      console.log(data)
+    this.sendGetRequest(this.mediaArchiveForm.value.annotations).subscribe(response => {
+      console.log(response)
+      console.log(response.status)
     })
 
     /*this.fetchGetRequest(this.mediaArchiveForm.value.video).subscribe(data => {
@@ -51,12 +63,14 @@ export class MediArchiveComponent implements OnInit {
     })*/
   }
 
-  public sendGetRequest(url : string) {
-    const headers = new HttpHeaders({ 'Content-Type': 'text/plain', 'Access-Control-Allow-Origin': '*' })
-    return this.http.get(url, { responseType: 'text', headers })
+  protected sendGetRequest(url : string) {
+    return this.http.get(url, {
+      responseType: 'text',
+      observe: 'response'
+    })
   }
 
-  public fetchGetRequest(url : string) {
+  protected fetchGetRequest(url : string) {
     return from(
       fetch(
         url,
