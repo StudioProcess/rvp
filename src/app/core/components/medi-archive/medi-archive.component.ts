@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { FormGroup, FormControl } from '@angular/forms'
 import { HttpClient/*, HttpHeaders*/ } from '@angular/common/http'
@@ -14,12 +14,16 @@ import { from } from 'rxjs'
 })
 export class MediArchiveComponent implements OnInit {
 
+  response_video: any
+  response_annotations: any
+
   mediaArchiveForm = new FormGroup({
     video: new FormControl(),
     annotations: new FormControl()
   })
 
   constructor(
+    private readonly changeDetectorRef: ChangeDetectorRef,
     private activatedRoute: ActivatedRoute,
     private http: HttpClient
   ) { }
@@ -50,12 +54,14 @@ export class MediArchiveComponent implements OnInit {
 
     this.sendGetRequest(this.mediaArchiveForm.value.video).subscribe(response => {
       console.log(response)
-      console.log(response.status)
+      this.response_video = response
+      this.changeDetectorRef.detectChanges()
     })
 
     this.sendGetRequest(this.mediaArchiveForm.value.annotations).subscribe(response => {
       console.log(response)
-      console.log(response.status)
+      this.response_annotations = response
+      this.changeDetectorRef.detectChanges()
     })
 
     /*this.fetchGetRequest(this.mediaArchiveForm.value.video).subscribe(data => {
