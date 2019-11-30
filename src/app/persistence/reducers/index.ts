@@ -152,7 +152,7 @@ function searchAnnotations(search: string|null, annotations: List<Record<Annotat
   if(search !== null) {
     const jsAnnotations = annotations.toJS()
     const hashtags = search.match(/#\w+/g)
-    let res: string[] = []
+    let res: any[] = []
 
     if(hashtags) {
       let regexp = new RegExp('#([^\\s]*)','g')
@@ -163,8 +163,8 @@ function searchAnnotations(search: string|null, annotations: List<Record<Annotat
       res = fuse.search(search)
     }
     if(hashtags) {
-      let res_hash: string[] = []
-      let res_tmp: string[] = []
+      let res_hash: any[] = []
+      let res_tmp: any[] = []
       const fuse_hashtags = new Fuse(jsAnnotations, _FUSE_OPTIONS_HASHTAGS_)
       hashtags.forEach((tag: string) => {
         res_tmp = fuse_hashtags.search(tag)
