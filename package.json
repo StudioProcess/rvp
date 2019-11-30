@@ -45,7 +45,7 @@
     "@angular/forms": "^8.2.14",
     "@angular/platform-browser": "^8.2.14",
     "@angular/platform-browser-dynamic": "^8.2.14",
-    "@angular/router": "^8.2.10",
+    "@angular/router": "^8.2.14",
     "@ng-stack/contenteditable": "^1.0.1",
     "@ngrx/effects": "^8.5.2",
     "@ngrx/store": "^8.5.2",
