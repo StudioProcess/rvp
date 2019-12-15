@@ -1,8 +1,8 @@
-import {Record, List, Set} from 'immutable'
+import { Record, List, Set } from 'immutable'
 
 import * as project from '../actions/project'
 
-import {_SNAPSHOTS_MAX_STACKSIZE_} from '../../config/snapshots'
+import { _SNAPSHOTS_MAX_STACKSIZE_ } from '../../config/snapshots'
 
 import {
   Project, TimelineRecordFactory, ProjectRecordFactory,
@@ -21,8 +21,8 @@ import {
   _PROJECT_DEFAULT_TITLE_
 } from '../../config/project'
 
-import {embedAnnotations} from '../../lib/annotationStack'
-import {prepareHashTagList} from '../../lib/hashtags'
+import { embedAnnotations } from '../../lib/annotationStack'
+import { prepareHashTagList } from '../../lib/hashtags'
 
 const initialState = new ProjectRecordFactory()
 
@@ -33,12 +33,12 @@ function nextTrackId(timeline: Record<Timeline>): number {
   const tracks = timeline.get('tracks', [])
   tracks.forEach(track => {
     const curId = track.get('id', -1) as number
-    if(curId > maxId) {
+    if (curId > maxId) {
       maxId = curId
     }
   })
 
-  return maxId+1
+  return maxId + 1
 }
 
 function nextAnnotationId(timeline: Record<Timeline>): number {
@@ -49,14 +49,14 @@ function nextAnnotationId(timeline: Record<Timeline>): number {
     annotationStacks.forEach(annotations => {
       annotations.forEach(annotation => {
         const curId = annotation.get('id', -1) as number
-        if(curId > maxId) {
+        if (curId > maxId) {
           maxId = curId
         }
       })
     })
   })
 
-  return maxId+1
+  return maxId + 1
 }
 
 function getAllSelections(state: State): Set<Record<AnnotationSelection>> {
@@ -68,7 +68,7 @@ function getAllSelections(state: State): Set<Record<AnnotationSelection>> {
 }
 
 export function reducer(state: State = initialState, action: project.Actions): State {
-  switch(action.type) {
+  switch (action.type) {
     case project.PROJECT_LOAD_SUCCESS: {
       /* Handle new project:
        * For `new project` there is no defined video, therefore
@@ -78,18 +78,18 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const prevVideoMeta = state.getIn(['meta', 'video'])
       const prevVideoBlob = state.get('videoBlob', null)
 
-      const {meta: {id, timeline, video:videoMeta, general, hashtags}, video} = action.payload
+      const { meta: { id, timeline, video: videoMeta, general, hashtags }, video } = action.payload
 
-      if(videoMeta === null) {
+      if (videoMeta === null) {
         timeline.duration = prevDuration
       }
 
-      if(videoMeta && videoMeta.type === VIDEO_TYPE_URL) {
+      if (videoMeta && videoMeta.type === VIDEO_TYPE_URL) {
         videoMeta.url = new URL(videoMeta.url)
       }
       // Create immutable representation
       return new ProjectRecordFactory({
-        videoBlob: video === null ? prevVideoBlob: video,
+        videoBlob: video === null ? prevVideoBlob : video,
         player: state.get('player', new ProjectPlayerStateRecordFactory()),
         meta: ProjectMetaRecordFactory({
           id,
@@ -98,16 +98,16 @@ export function reducer(state: State = initialState, action: project.Actions): S
           timeline: TimelineRecordFactory({
             ...timeline,
             tracks: List(timeline.tracks.map((track: any) => {
-              const {title: trackTitle} = track.fields
+              const { title: trackTitle } = track.fields
               return new TrackRecordFactory({
                 ...track,
-                fields: TrackFieldsRecordFactory({title: trackTitle}),
+                fields: TrackFieldsRecordFactory({ title: trackTitle }),
                 annotationStacks: List(track.annotationStacks.map((annotations: any) => {
                   return List(annotations.map((annotation: any) => {
-                    const {description} = annotation.fields
+                    const { description } = annotation.fields
                     return new AnnotationRecordFactory({
                       ...annotation,
-                      fields: new AnnotationFieldsRecordFactory({description}),
+                      fields: new AnnotationFieldsRecordFactory({ description }),
                     })
                   }))
                 }))
@@ -125,12 +125,12 @@ export function reducer(state: State = initialState, action: project.Actions): S
     }
     case project.PROJECT_IMPORT_VIDEO_SUCCESS: {
       const payload = action.payload
-      switch(payload.type) {
+      switch (payload.type) {
         case VIDEO_TYPE_BLOB: {
-          const blobVideo = payload.data as File|Blob
+          const blobVideo = payload.data as File | Blob
           return state
             .set('videoBlob', blobVideo)
-            .setIn(['meta', 'video'], BlobVideoRecordFactory({type: VIDEO_TYPE_BLOB}))
+            .setIn(['meta', 'video'], BlobVideoRecordFactory({ type: VIDEO_TYPE_BLOB }))
         }
         case VIDEO_TYPE_URL: {
           const videoMeta = {
@@ -149,11 +149,11 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state.setIn(['meta', 'timeline', 'duration'], action.payload.duration)
     }
     case project.PROJECT_ADD_ANNOTATION: {
-      const {trackIndex, annotationStackIndex, annotation, source} = action.payload
+      const { trackIndex, annotationStackIndex, annotation, source } = action.payload
 
       let placedTrackIndex = trackIndex
       let placedAnnotation = annotation
-      if(source === 'toolbar') {
+      if (source === 'toolbar') {
         const tracks = state.getIn(['meta', 'timeline', 'tracks']) as List<Record<Track>>
         placedTrackIndex = tracks.findIndex(track => track.get('isActive', false))
         placedAnnotation = annotation.set('utc_timestamp', state.getIn(['player', 'currentTime']))
@@ -168,7 +168,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state.setIn(['meta', 'timeline', 'tracks', placedTrackIndex, 'annotationStacks'], stacksWithEmbedded)
     }
     case project.PROJECT_UPDATE_ANNOTATION: {
-      const {trackIndex, annotationIndex, annotationStackIndex, annotation} = action.payload
+      const { trackIndex, annotationIndex, annotationStackIndex, annotation } = action.payload
 
       const path = ['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks']
       const annotationStacks: List<List<Record<Annotation>>> = state.getIn(path)
@@ -187,7 +187,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const inSelection = singleSel !== null && singleSel.getIn(['annotation', 'id']) === annotationId ? singleSel : null
 
       let updatedState = state
-      if(inSelection) {
+      if (inSelection) {
         const updatedSingleSel = inSelection.set('annotation', annotation)
         updatedState = state.setIn(['selection', 'annotation', 'selected'], updatedSingleSel)
       }
@@ -201,7 +201,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
 
       // const selectedAnnotationsList = selectedAnnotations.toList()
 
-      if(!all.isEmpty()) {
+      if (!all.isEmpty()) {
         const firstSelAnnotation = all.first() as Record<AnnotationSelection>
         const selectedTrack = firstSelAnnotation.get('track', null)!
         const tracks: List<Record<Track>> = state.getIn(['meta', 'timeline', 'tracks'])
@@ -230,7 +230,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
         })
 
         // remove stacks without annotations
-        const cleanedStacks = updatedStacks.size > 1 ? updatedStacks.filter(stack => stack.size > 0): updatedStacks
+        const cleanedStacks = updatedStacks.size > 1 ? updatedStacks.filter(stack => stack.size > 0) : updatedStacks
 
         return state.setIn(['meta', 'timeline', 'tracks', trackIndex, 'annotationStacks'], cleanedStacks)
           .setIn(['selection', 'annotation', 'range'], Set())
@@ -251,19 +251,19 @@ export function reducer(state: State = initialState, action: project.Actions): S
       })
     }
     case project.PROJECT_UPDATE_TRACK: {
-      const {trackIndex, track} = action.payload
+      const { trackIndex, track } = action.payload
       return state.setIn(['meta', 'timeline', 'tracks', trackIndex], track)
     }
     case project.PROJECT_DELETE_TRACK: {
-      const {trackIndex} = action.payload
+      const { trackIndex } = action.payload
       const track: Record<Track> = state.getIn(['meta', 'timeline', 'tracks', trackIndex])
       const allSelections = getAllSelections(state)
 
       // Deleted track is track with selections? If so, clear selection
-      if(!allSelections.isEmpty()) {
+      if (!allSelections.isEmpty()) {
         const fs = allSelections.first() as Record<AnnotationSelection>
         const trackWithSelections = fs.get('track', null)!
-        if(track.get('id', null) === trackWithSelections.get('id', null)) {
+        if (track.get('id', null) === trackWithSelections.get('id', null)) {
           return state.setIn(['selection', 'annotation', 'range'], Set())
             .setIn(['selection', 'annotation', 'pick'], Set())
             .setIn(['selection', 'annotation', 'selected'], null)
@@ -274,7 +274,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state.deleteIn(['meta', 'timeline', 'tracks', trackIndex])
     }
     case project.PROJECT_DUPLICATE_TRACK: {
-      const {trackIndex} = action.payload
+      const { trackIndex } = action.payload
       const timeline = state.getIn(['meta', 'timeline'])
       const track = state.getIn(['meta', 'timeline', 'tracks', trackIndex])
       const duplicate = track.withMutations((mutableTrack: any) => {
@@ -284,17 +284,17 @@ export function reducer(state: State = initialState, action: project.Actions): S
         let annotationCounter = 0
         mutableTrack.set('annotationStacks', mutableTrack.get('annotationStacks').map((stack: any) => {
           return stack.map((annotation: any) => {
-            return annotation.set('id', nextAnnotationId(timeline)+(annotationCounter++))
+            return annotation.set('id', nextAnnotationId(timeline) + (annotationCounter++))
           })
         }))
       })
 
       return state.updateIn(['meta', 'timeline', 'tracks'], tracks => {
-        return tracks.insert(trackIndex+1, duplicate)
+        return tracks.insert(trackIndex + 1, duplicate)
       })
     }
     case project.PROJECT_INSERTAT_TRACK: {
-      const {currentTrackIndex, insertAtIndex} = action.payload
+      const { currentTrackIndex, insertAtIndex } = action.payload
       const tracks = state.getIn(['meta', 'timeline', 'tracks'])
       const swapped = tracks.withMutations((mTracks: any) => {
         // mTracks ~ mutableTracks
@@ -309,10 +309,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const updatedRedo = state.setIn(['snapshots', 'redo'], List())
       return updatedRedo.updateIn(['snapshots', 'undo'], (undoList: List<Record<ProjectSnapshot>>) => {
         // Ensure max snapshot stack size
-        if(undoList.size < _SNAPSHOTS_MAX_STACKSIZE_) {
+        if (undoList.size < _SNAPSHOTS_MAX_STACKSIZE_) {
           // Insert first
           return undoList.unshift(action.payload)
-        } else {
+        } else {
           // Remove last, insert first
           return undoList.pop().unshift(action.payload)
         }
@@ -321,7 +321,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
     case project.PROJECT_UNDO: {
       const undoList: List<Record<ProjectSnapshot>> = state.getIn(['snapshots', 'undo'])
       const redoList: List<Record<ProjectSnapshot>> = state.getIn(['snapshots', 'redo'])
-      if(undoList.size > 0) {
+      if (undoList.size > 0) {
         const undoSnapshot = undoList.first() as Record<ProjectSnapshot>
         const currentSnapshot = new ProjectSnapshotRecordFactory({
           timestamp: Date.now(),
@@ -336,7 +336,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
     case project.PROJECT_REDO: {
       const undoList: List<Record<ProjectSnapshot>> = state.getIn(['snapshots', 'undo'])
       const redoList: List<Record<ProjectSnapshot>> = state.getIn(['snapshots', 'redo'])
-      if(redoList.size > 0) {
+      if (redoList.size > 0) {
         const redoSnapshot = redoList.first() as Record<ProjectSnapshot>
         const currentSnapshot = new ProjectSnapshotRecordFactory({
           timestamp: Date.now(),
@@ -349,8 +349,8 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state
     }
     case project.PROJECT_SELECT_ANNOTATION: {
-      const {type, selection} = action.payload
-      switch(type) {
+      const { type, selection } = action.payload
+      switch (type) {
         case project.AnnotationSelectionType.Default: {
           return state.withMutations(mState => {
             mState.setIn(['selection', 'annotation', 'range'], Set())
@@ -368,21 +368,21 @@ export function reducer(state: State = initialState, action: project.Actions): S
             state.getIn(['selection', 'annotation', 'range']).filter(filterByTrackFunc)
           const pickSelections: Set<Record<AnnotationSelection>> =
             state.getIn(['selection', 'annotation', 'pick']).filter(filterByTrackFunc)
-          const peekSelected: Record<AnnotationSelection>|null = state.getIn(['selection', 'annotation', 'selected'])
+          const peekSelected: Record<AnnotationSelection> | null = state.getIn(['selection', 'annotation', 'selected'])
           const isAlreadyPicked = rangeSelections.has(selection) || pickSelections.has(selection)
 
           return state.withMutations(mState => {
-            if(isAlreadyPicked) {
+            if (isAlreadyPicked) {
               mState.setIn(['selection', 'annotation', 'range'], rangeSelections.delete(selection))
               mState.setIn(['selection', 'annotation', 'pick'], pickSelections.delete(selection))
 
-              if(peekSelected && peekSelected.getIn(['annotation', 'id']) === selection.getIn(['annotation', 'id'])) {
+              if (peekSelected && peekSelected.getIn(['annotation', 'id']) === selection.getIn(['annotation', 'id'])) {
                 mState.setIn(['selection', 'annotation', 'selected'], null)
               }
             } else {
               // Set range, might be different due to filter
               mState.setIn(['selection', 'annotation', 'range'], rangeSelections)
-              if(peekSelected && peekSelected.getIn(['track', 'id']) === track.get('id', null) && rangeSelections.isEmpty()) {
+              if (peekSelected && peekSelected.getIn(['track', 'id']) === track.get('id', null) && rangeSelections.isEmpty()) {
                 mState.setIn(['selection', 'annotation', 'pick'], pickSelections.add(selection).add(peekSelected))
               } else {
                 mState.setIn(['selection', 'annotation', 'pick'], pickSelections.add(selection))
@@ -404,7 +404,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
             return a1.get('utc_timestamp', null)! - a2.get('utc_timestamp', null)!
           }
           const sortedAnnotations = annotations.sort(sortFunc)
-          const peekSelected: Record<AnnotationSelection>|null = state.getIn(['selection', 'annotation', 'selected'])
+          const peekSelected: Record<AnnotationSelection> | null = state.getIn(['selection', 'annotation', 'selected'])
           const fa: Record<Annotation> = sortedAnnotations.first() as Record<Annotation> // fa ~ first annotation in current track
 
           const pivot: Record<Annotation> = peekSelected && peekSelected.getIn(['track', 'id']) === track.get('id', null) ?
@@ -415,11 +415,11 @@ export function reducer(state: State = initialState, action: project.Actions): S
           const limitKey = sortedAnnotations.findIndex(a => a.get('id', null) === limit.get('id', null))!
 
           const range = pivotKey < limitKey ?
-            sortedAnnotations.slice(pivotKey, limitKey+1):
-            sortedAnnotations.slice(limitKey, pivotKey+1)
+            sortedAnnotations.slice(pivotKey, limitKey + 1) :
+            sortedAnnotations.slice(limitKey, pivotKey + 1)
 
           const rangeSelectionRecords = range.map(aRec => {
-            return AnnotationSelectionRecordFactory({track, annotation: aRec, source})
+            return AnnotationSelectionRecordFactory({ track, annotation: aRec, source })
           })
 
           return state.withMutations(mState => {
@@ -429,7 +429,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
             const rangeSelection = rangeSelectionRecords.toSet()
             mState.setIn(['selection', 'annotation', 'range'], rangeSelection)
 
-            if(peekSelected === null || peekSelected.getIn(['track', 'id']) !== track.get('id', null)) {
+            if (peekSelected === null || peekSelected.getIn(['track', 'id']) !== track.get('id', null)) {
               const newSelectionRecord = AnnotationSelectionRecordFactory({
                 track, annotation: fa, source
               })
@@ -470,7 +470,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
     }
     case project.PROJECT_PASTE_CLIPBOARD: {
       const all = state.get('clipboard', null)!
-      if(!all.isEmpty()) {
+      if (!all.isEmpty()) {
         const timeline = state.getIn(['meta', 'timeline'])
 
         const tracks = state.getIn(['meta', 'timeline', 'tracks']) as List<Record<Track>>
@@ -480,18 +480,18 @@ export function reducer(state: State = initialState, action: project.Actions): S
         const idOffset = nextAnnotationId(timeline)
         const newAnnotations = all.toList().map((annotationSelection, i) => {
           const annotation = annotationSelection.get('annotation', null)!
-          return annotation.set('id', idOffset+i)
+          return annotation.set('id', idOffset + i)
         })
         const timelineDuration = state.getIn(['meta', 'timeline', 'duration'])
 
         const sortedNewAnnotations = newAnnotations.sort((a1, a2) => {
           const a1Start = a1.get('utc_timestamp', 0)
           const a2Start = a2.get('utc_timestamp', 0)
-          if(a1Start < a2Start) {
+          if (a1Start < a2Start) {
             return -1
-          } else if(a1Start > a2Start) {
+          } else if (a1Start > a2Start) {
             return 1
-          } else {
+          } else {
             return 0
           }
         })
@@ -500,10 +500,10 @@ export function reducer(state: State = initialState, action: project.Actions): S
 
         const duration = state.getIn(['meta', 'timeline', 'duration']) as number
         const currentTime = state.getIn(['player', 'currentTime']) as number
-        const playHeadDiff = currentTime-firstNewAnnotation.get('utc_timestamp', 0)
+        const playHeadDiff = currentTime - firstNewAnnotation.get('utc_timestamp', 0)
 
         const placedNewAnnotations = sortedNewAnnotations.map(a => {
-          return a.set('utc_timestamp', Math.min(a.get('utc_timestamp', 0)+playHeadDiff, duration-a.get('duration', 0)))
+          return a.set('utc_timestamp', Math.min(a.get('utc_timestamp', 0) + playHeadDiff, duration - a.get('duration', 0)))
         })
 
         const stacksWithEmbedded = embedAnnotations(timelineDuration, placedAnnotationStacks, 0, placedNewAnnotations, List([]))
@@ -520,7 +520,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
     }
     case project.PROJECT_SETTINGS_SET_SEARCH: {
       return action.payload !== '' ?
-        state.setIn(['settings', 'search'], action.payload):
+        state.setIn(['settings', 'search'], action.payload) :
         state.setIn(['settings', 'search'], null)
     }
     case project.PROJECT_SETTINGS_SET_APPLY_TO_TIMELINE: {
@@ -532,7 +532,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const numTracks = tracks.size
 
       return state.withMutations(mState => {
-        for(let i = 0; i < numTracks; i++) {
+        for (let i = 0; i < numTracks; i++) {
           mState.setIn(['meta', 'timeline', 'tracks', i, 'isActive'], i === activeTrackIndex)
         }
       })

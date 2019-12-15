@@ -257,7 +257,6 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   importProjectMeta(metaData: any) {
-    // console.log(metaData)
     this._rootStore.dispatch(new project.ProjectLoadSuccess(metaData))
   }
 

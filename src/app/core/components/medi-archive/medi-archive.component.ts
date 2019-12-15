@@ -53,32 +53,13 @@ export class MediArchiveComponent implements OnInit {
    *  to get a response into the browser
    *
    *  testurls:
-   *  http://localhost:4200/?video=https:%2F%2Fshowcase.rocks%2Fcors%2Fvideo&annotations=https:%2F%2Fshowcase.rocks%2Fcors%2Fjson
-   *  https://showcase.rocks/cors/video
-   *  https://showcase.rocks/cors/json
-   *
    *  http://localhost:4200/?video=https:%2F%2Fmedienarchiv.zhdk.ch%2Fapi%2Fmedia-entries%2Ff5b78e56-a229-4295-a4cc-0311e6534207%2Fmedia-file%2Fdata-stream&annotations=https:%2F%2Fmedienarchiv.zhdk.ch%2Fapi%2Fmedia-entries%2Ff5b78e56-a229-4295-a4cc-0311e6534207%2Fmeta-data%2Fresearch_video:rv_annotations%2Fdata-stream
+   *
+   *  (deprecated) http://localhost:4200/?video=https:%2F%2Fshowcase.rocks%2Fcors%2Fvideo&annotations=https:%2F%2Fshowcase.rocks%2Fcors%2Fjson
    */
   loadProjectFromUrl() {
-    // console.log(this.mediaArchiveForm.value)
 
-
-    /*
-    this.sendGetRequest(this.mediaArchiveForm.value.video)
-      .subscribe(
-        response => {
-          // console.log(response)
-          this.response_video_header= 'SUCCESS'
-          this.response_video = response
-          this.changeDetectorRef.detectChanges()
-        },
-        error => {
-          this.response_video_header = 'ERROR'
-          this.response_video = error
-          this.changeDetectorRef.detectChanges()
-        })
-    */
-
+    // Import Metadata frmo URL
     this.sendGetRequest(this.mediaArchiveForm.value.annotations)
     .subscribe(
       (response: any) => {
@@ -96,14 +77,14 @@ export class MediArchiveComponent implements OnInit {
           data: new URL(this.mediaArchiveForm.value.video)
         })
 
-        this.response_video_header= 'VIDEO LOAD SUCCESS'
         this.response_annotations_header = 'METADATA LOAD SUCCESS'
+        this.response_video_header= 'VIDEO LOADED'
 
         // this.response_annotations = response
         this.changeDetectorRef.detectChanges()
       },
       error => {
-        this.response_annotations_header = 'ERROR'
+        this.response_annotations_header = 'METADATA LOAD ERROR'
         this.response_annotations = error
         this.changeDetectorRef.detectChanges()
       })
