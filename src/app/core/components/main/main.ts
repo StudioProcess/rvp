@@ -44,14 +44,14 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     private readonly _rootStore: Store<fromRoot.State>,
     private titleService: Title,
     private activatedRoute: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit() {
 
     $(document).foundation()
 
     this.activatedRoute.queryParams.subscribe(params => {
-      if(params.hasOwnProperty('video') && params.hasOwnProperty('annotations')) {
+      if (params.hasOwnProperty('video') && params.hasOwnProperty('annotations')) {
         const mediArchiveModal = $('#medi-archive-modal') as any
         mediArchiveModal.foundation('open')
       }
@@ -254,6 +254,9 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       this._rootStore.dispatch(new project.ProjectLoadSuccess(_EMPTY_PROJECT_))
       this.closeProjectModal()
     }
+  }
+
+  loadProjectMeta() {
   }
 
   closeProjectModal() {

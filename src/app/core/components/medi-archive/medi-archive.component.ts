@@ -7,7 +7,7 @@ import { HttpClient/*, HttpHeaders*/ } from '@angular/common/http'
 import { VIDEO_TYPE_URL, VIDEO_URL_SOURCE_CUSTOM } from '../../../persistence/model'
 import { ImportVideoPayload } from '../../../persistence/actions/project'
 
-import { from } from 'rxjs'
+// import { from } from 'rxjs'
 
 @Component({
   selector: 'rv-medi-archive',
@@ -85,8 +85,9 @@ export class MediArchiveComponent implements OnInit {
 
     this.sendGetRequest(this.mediaArchiveForm.value.annotations)
     .subscribe(
-      response => {
-        // console.log(response)
+      (response: any) => {
+        //  console.log(response)
+        console.log(JSON.parse(response.body))
 
         this.response_annotations_header = 'SUCCESS'
         this.response_annotations = response
@@ -110,6 +111,7 @@ export class MediArchiveComponent implements OnInit {
     })
   }
 
+  /*
   protected fetchGetRequest(url : string) {
     return from(
       fetch(
@@ -126,4 +128,5 @@ export class MediArchiveComponent implements OnInit {
       )
     )
   }
+  */
 }
