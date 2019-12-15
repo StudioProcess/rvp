@@ -23,6 +23,7 @@ export class MediArchiveComponent implements OnInit {
   response_annotations_header: string
 
   @Output() readonly onImportVideo = new EventEmitter<ImportVideoPayload>()
+  @Output() readonly onImportProjectMeta = new EventEmitter()
 
   mediaArchiveForm = new FormGroup({
     video: new FormControl(),
@@ -61,11 +62,6 @@ export class MediArchiveComponent implements OnInit {
   loadProjectFromUrl() {
     // console.log(this.mediaArchiveForm.value)
 
-    this.onImportVideo.emit({
-      type: VIDEO_TYPE_URL,
-      source: VIDEO_URL_SOURCE_CUSTOM,
-      data: new URL(this.mediaArchiveForm.value.video)
-    })
 
     /*
     this.sendGetRequest(this.mediaArchiveForm.value.video)
@@ -86,11 +82,24 @@ export class MediArchiveComponent implements OnInit {
     this.sendGetRequest(this.mediaArchiveForm.value.annotations)
     .subscribe(
       (response: any) => {
-        //  console.log(response)
-        console.log(JSON.parse(response.body))
 
-        this.response_annotations_header = 'SUCCESS'
-        this.response_annotations = response
+        const metaData = {
+          meta: JSON.parse(response.body),
+          video: null
+        }
+        this.onImportProjectMeta.emit(metaData)
+
+        // Import Video from URL
+        this.onImportVideo.emit({
+          type: VIDEO_TYPE_URL,
+          source: VIDEO_URL_SOURCE_CUSTOM,
+          data: new URL(this.mediaArchiveForm.value.video)
+        })
+
+        this.response_video_header= 'VIDEO LOAD SUCCESS'
+        this.response_annotations_header = 'METADATA LOAD SUCCESS'
+
+        // this.response_annotations = response
         this.changeDetectorRef.detectChanges()
       },
       error => {
