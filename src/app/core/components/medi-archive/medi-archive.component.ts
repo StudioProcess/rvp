@@ -1,8 +1,11 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'
+import { Component, OnInit, ChangeDetectorRef, EventEmitter, Output } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { FormGroup, FormControl } from '@angular/forms'
 import { HttpClient/*, HttpHeaders*/ } from '@angular/common/http'
 // import { Observable } from 'rxjs'
+
+import { VIDEO_TYPE_URL, VIDEO_URL_SOURCE_CUSTOM } from '../../../persistence/model'
+import { ImportVideoPayload } from '../../../persistence/actions/project'
 
 import { from } from 'rxjs'
 
@@ -19,6 +22,8 @@ export class MediArchiveComponent implements OnInit {
   response_video_header: string
   response_annotations_header: string
 
+  @Output() readonly onImportVideo = new EventEmitter<ImportVideoPayload>()
+
   mediaArchiveForm = new FormGroup({
     video: new FormControl(),
     annotations: new FormControl()
@@ -33,7 +38,7 @@ export class MediArchiveComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(params => {
       if (params.hasOwnProperty('video') && params.hasOwnProperty('annotations')) {
-        console.log(params)
+        // console.log(params)
         this.mediaArchiveForm.setValue({
           video: params.video,
           annotations: params.annotations
@@ -50,10 +55,19 @@ export class MediArchiveComponent implements OnInit {
    *  http://localhost:4200/?video=https:%2F%2Fshowcase.rocks%2Fcors%2Fvideo&annotations=https:%2F%2Fshowcase.rocks%2Fcors%2Fjson
    *  https://showcase.rocks/cors/video
    *  https://showcase.rocks/cors/json
+   *
+   *  http://localhost:4200/?video=https:%2F%2Fmedienarchiv.zhdk.ch%2Fapi%2Fmedia-entries%2Ff5b78e56-a229-4295-a4cc-0311e6534207%2Fmedia-file%2Fdata-stream&annotations=https:%2F%2Fmedienarchiv.zhdk.ch%2Fapi%2Fmedia-entries%2Ff5b78e56-a229-4295-a4cc-0311e6534207%2Fmeta-data%2Fresearch_video:rv_annotations%2Fdata-stream
    */
   loadProjectFromUrl() {
     // console.log(this.mediaArchiveForm.value)
 
+    this.onImportVideo.emit({
+      type: VIDEO_TYPE_URL,
+      source: VIDEO_URL_SOURCE_CUSTOM,
+      data: new URL(this.mediaArchiveForm.value.video)
+    })
+
+    /*
     this.sendGetRequest(this.mediaArchiveForm.value.video)
       .subscribe(
         response => {
@@ -67,6 +81,7 @@ export class MediArchiveComponent implements OnInit {
           this.response_video = error
           this.changeDetectorRef.detectChanges()
         })
+    */
 
     this.sendGetRequest(this.mediaArchiveForm.value.annotations)
     .subscribe(

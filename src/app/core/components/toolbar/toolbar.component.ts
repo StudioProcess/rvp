@@ -161,6 +161,7 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
   }
 
   importVideo(videoImport: project.ImportVideoPayload) {
+    // console.log(videoImport)
     this.onImportVideo.emit(videoImport)
   }
 

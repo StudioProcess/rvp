@@ -52,4 +52,4 @@
   </div>
 </div>
 <rv-progress-modal class="reveal" id="progress-modal" data-reveal data-close-on-click="false" data-close-on-esc="false"></rv-progress-modal>
-<rv-medi-archive class="reveal" id="medi-archive-modal" data-reveal data-close-on-click="false" data-close-on-esc="false"></rv-medi-archive>
+<rv-medi-archive (onImportVideo)="importVideo($event)" class="reveal" id="medi-archive-modal" data-reveal data-close-on-click="false" data-close-on-esc="false"></rv-medi-archive>
