@@ -12,10 +12,17 @@ import {
   ProjectSnapshotRecordFactory, Track, Annotation,
   AnnotationSelection, AnnotationSelectionRecordFactory,
   BlobVideoRecordFactory, UrlVideoRecordFactory,
-  VIDEO_TYPE_BLOB, VIDEO_TYPE_URL, VideoUrlSource, ProjectPlayerStateRecordFactory
+  ProjectHashtagsRecordFactory,
+  VIDEO_TYPE_BLOB, VIDEO_TYPE_URL, VideoUrlSource, ProjectPlayerStateRecordFactory,
+  ProjectGeneralDataRecordFactory,
 } from '../model'
 
+import {
+  _PROJECT_DEFAULT_TITLE_
+} from '../../config/project'
+
 import {embedAnnotations} from '../../lib/annotationStack'
+import {prepareHashTagList} from '../../lib/hashtags'
 
 const initialState = new ProjectRecordFactory()
 
@@ -88,7 +95,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const prevVideoMeta = state.getIn(['meta', 'video'])
       const prevVideoBlob = state.get('videoBlob', null)
 
-      const {meta: {id, timeline, video:videoMeta}, video} = action.payload
+      const {meta: {id, timeline, video:videoMeta, general, hashtags}, video} = action.payload
 
       if(videoMeta === null) {
         timeline.duration = prevDuration
@@ -103,7 +110,8 @@ export function reducer(state: State = initialState, action: project.Actions): S
         player: state.get('player', new ProjectPlayerStateRecordFactory()),
         meta: ProjectMetaRecordFactory({
           id,
-          video: videoMeta === null ? prevVideoMeta : (videoMeta.type === VIDEO_TYPE_BLOB ? BlobVideoRecordFactory(videoMeta) : UrlVideoRecordFactory(videoMeta)),
+          video: videoMeta === null ? prevVideoMeta :
+            (videoMeta.type === VIDEO_TYPE_BLOB ? BlobVideoRecordFactory(videoMeta) : UrlVideoRecordFactory(videoMeta)),
           timeline: TimelineRecordFactory({
             ...timeline,
             tracks: List(timeline.tracks.map((track: any) => {
@@ -122,6 +130,12 @@ export function reducer(state: State = initialState, action: project.Actions): S
                 }))
               })
             }))
+          }),
+          hashtags: ProjectHashtagsRecordFactory({
+            list: (hashtags! && hashtags!.list) ? hashtags.list : null
+          }),
+          general: ProjectGeneralDataRecordFactory({
+            title: (general! && general!.title) ? general.title : _PROJECT_DEFAULT_TITLE_
           })
         })
       })
@@ -178,7 +192,12 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const prevAnnotation: Record<Annotation> = annotationStacks.getIn([annotationStackIndex, annotationIndex])
       const timelineDuration = state.getIn(['meta', 'timeline', 'duration'])
 
-      const stacksWithEmbedded = embedAnnotations(timelineDuration, annotationStacks, annotationStackIndex, List([annotation]), List([prevAnnotation]))
+      const stacksWithEmbedded = embedAnnotations(
+        timelineDuration,
+        annotationStacks,
+        annotationStackIndex,
+        List([annotation]),
+        List([prevAnnotation]))
 
       const annotationId = annotation.get('id', null)!
       const singleSel: Record<AnnotationSelection> = state.getIn(['selection', 'annotation', 'selected'])
@@ -449,6 +468,23 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const all = getAllSelections(state)
       return state.set('clipboard', all)
     }
+    case project.PROJECT_UPDATE_HASHTAGS: {
+      const prev_hashtags = state.getIn(['meta', 'hashtags', 'list'])
+      const new_hashtags = action.payload!.hashtags!
+      if (new_hashtags) {
+        let hashtags = new_hashtags.concat(prev_hashtags)
+        hashtags = prepareHashTagList(hashtags)
+        // console.log('PROJECT_UPDATE_HASHTAGS', hashtags)
+        return state.setIn(['meta', 'hashtags', 'list'], hashtags)
+      }
+      return state
+    }
+    case project.PROJECT_UPDATE_TITLE: {
+      if (state.getIn(['meta', 'general'])!.title !== action!.payload!.title || action!.payload!.title !== _PROJECT_DEFAULT_TITLE_) {
+        return state.setIn(['meta', 'general'], action.payload)
+      }
+      return state
+    }
     case project.PROJECT_PASTE_CLIPBOARD: {
       const all = state.get('clipboard', null)!
       if(!all.isEmpty()) {
@@ -556,6 +592,7 @@ export const getProjectSettings = (state: State) => {
 export const getProjectMeta = (state: State) => {
   return state.get('meta', null)
 }
+
 export const getProjectVideoBlob = (state: State) => state.get('videoBlob', null)
 
 export const getProjectSelection = (state: State) => {

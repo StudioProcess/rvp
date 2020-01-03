@@ -1,6 +1,8 @@
 import {NgModule} from '@angular/core'
 import {CommonModule} from '@angular/common'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
+import {ContenteditableModule} from '@ng-stack/contenteditable'
+import {AutoSizeInputModule} from 'ngx-autosize-input';
 
 import {MainContainer} from './components/main/main'
 import {PlayerContainer} from './components/player/player'
@@ -16,6 +18,10 @@ import {VersionComponent} from './components/version/version.component'
 import {ToolbarComponent} from './components/toolbar/toolbar.component'
 import {PointerElementComponent} from './components/pointer-element/pointer-element.component'
 import {DragDropModule} from '@angular/cdk/drag-drop'
+import {ProgressModalComponent} from './components/project/progress-modal/progress-modal.component'
+import {TitlebarComponent} from './components/titlebar/titlebar.component'
+import {TaggingComponent} from './components/tagging/tagging.component'
+import {TagAddModalComponent} from './components/tagging/tag-add-modal/tag-add-modal.component'
 
 // Inspector components
 import {InspectorEntryComponent} from './components/inspector/inspectorEntry/inspectorEntry.component'
@@ -34,19 +40,27 @@ const _DECLS_ = [
   // Components
   NotFoundComponent, LogoComponent, VersionComponent,
   ProjectBtnComponent, ProjectModalComponent, FooterComponent,
-  ToolbarComponent,
-  PointerElementComponent,
+  ToolbarComponent, ProgressModalComponent, TitlebarComponent,
   // Inspector
   InspectorEntryComponent,
   // Timeline
-  TrackComponent, HandlebarComponent, PlayheadComponent
+  TrackComponent, HandlebarComponent, PlayheadComponent,
+  // Tagging
+  TaggingComponent, TagAddModalComponent
 ]
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, DragDropModule],
+  //providers: [DomService]
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ContenteditableModule,
+    AutoSizeInputModule,
+    DragDropModule
+  ],
   declarations: _DECLS_,
   exports: _DECLS_,
-  entryComponents: [PointerElementComponent],
-  //providers: [DomService]
+  entryComponents: [PointerElementComponent, TaggingComponent, TagAddModalComponent],
 })
 export class CoreModule {}

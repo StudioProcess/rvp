@@ -1,3 +1,13 @@
+<div class="nav-top">
+  <div class="row">
+    <div class="column">
+      <rv-titlebar
+        (onTitleUpdate)="updateProjectTitle($event)"
+      >
+      </rv-titlebar>
+    </div>
+  </div>
+</div>
 <div class="nav-wrapper">
   <div class="row">
     <div class="column">
@@ -41,3 +51,4 @@
     <rv-footer></rv-footer>
   </div>
 </div>
+<rv-progress-modal class="reveal" id="progress-modal" data-reveal data-close-on-click="false" data-close-on-esc="false"></rv-progress-modal>

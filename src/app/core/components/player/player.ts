@@ -39,7 +39,7 @@ import {
   //styles: [`:host {display: block;}`],
 })
 export class PlayerContainer implements AfterViewInit, OnDestroy {
-  @ViewChild('video') private readonly _videoElemRef: ElementRef
+  @ViewChild('video', { static: true }) private readonly _videoElemRef: ElementRef
 
   private readonly _subs: Subscription[] = []
 

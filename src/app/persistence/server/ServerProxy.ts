@@ -18,8 +18,8 @@ import {VIDEO_TYPE_BLOB} from '../../persistence/model'
 
 import {
   _PROJECT_DEFAULT_PATH_, _PROJECT_METADATA_PATH_,
-  _PROJECT_VIDEODATA_PATH_, _PROJECT_EXPORT_NAME_,
-  _PROJECT_AUTOSAVE_DEBOUNCE_
+  _PROJECT_VIDEODATA_PATH_, _PROJECT_AUTOSAVE_DEBOUNCE_,
+  _PROJECT_DEFAULT_TITLE_
 } from '../../config/project'
 import {_ZIP_DEFAULT_OTPIONS_} from '../../config/zip'
 import {LFCache} from '../cache/LFCache'
@@ -29,6 +29,11 @@ import {loadZip} from '../zip'
 import {ProjectSnapshotRecordFactory} from '../model'
 import {formatDuration} from '../../lib/time'
 
+declare var $: any
+
+//import {BehaviorSubject} from 'rxjs/BehaviorSubject'
+import {MessageService} from '../../core/actions/message.service'
+
 @Injectable()
 export class ServerProxy implements OnDestroy {
   private readonly _subs: Subscription[] = []
@@ -36,7 +41,8 @@ export class ServerProxy implements OnDestroy {
   constructor(
     private readonly _actions: Actions,
     private readonly _cache: LFCache,
-    private readonly _store: Store<fromProject.State>) {
+    private readonly _store: Store<fromProject.State>,
+    private readonly _msg: MessageService) {
       const projectState = this._store.select(fromProject.getProjectState)
         .pipe(
           filter(proj => proj.get('meta', null) !== null),
@@ -67,6 +73,7 @@ export class ServerProxy implements OnDestroy {
 
                 // mutates project data
                 ensureValidProjectData(projectData)
+                //console.log(/*projectData,*/ meta)
 
                 this._store.dispatch(new project.ProjectLoadSuccess({meta, video}))
               } else {
@@ -74,6 +81,7 @@ export class ServerProxy implements OnDestroy {
 
                 // mutates project data
                 ensureValidProjectData(projectData)
+                //console.log (projectData);
 
                 const cachePromises = [
                   this._cache.cache('meta', projectData.meta),
@@ -97,9 +105,13 @@ export class ServerProxy implements OnDestroy {
         this.importProject.subscribe({
           //next: async (payload:any) => {
           next: async ({payload}) => {
+
+            const progressModal = $('#progress-modal') as any
+            progressModal.foundation('open')
+
             try {
               const zip = await loadZip(payload)
-              const projectData = await extractProject(zip)
+              const projectData = await extractProject(zip, this._msg)
 
               // mutates project data
               ensureValidProjectData(projectData)
@@ -117,6 +129,9 @@ export class ServerProxy implements OnDestroy {
             } catch(err) {
               this._store.dispatch(new project.ProjectImportError(err))
             }
+
+            this._msg!.update({percent: 0, text: 'please wait'})
+            progressModal.foundation('close')
           },
           error: (err: any) => {
             this._store.dispatch(new project.ProjectImportError(err))
@@ -147,12 +162,27 @@ export class ServerProxy implements OnDestroy {
           .subscribe({
             next: async ({meta, video}) => {
               try {
+                const progressModal = $('#progress-modal') as any
+                progressModal.foundation('open')
+
                 const zip = new JSZip()
                 zip.file(`${_PROJECT_METADATA_PATH_}`, JSON.stringify(meta))
                 zip.file(`${_PROJECT_VIDEODATA_PATH_}`, video as Blob)
 
-                const zipBlob = await zip.generateAsync(_ZIP_DEFAULT_OTPIONS_) as Blob
-                saveAs(zipBlob, _PROJECT_EXPORT_NAME_)
+                const zipBlob = await zip.generateAsync(_ZIP_DEFAULT_OTPIONS_, (metadata) => {
+                  const percent = metadata.percent.toFixed(2)
+                  const text = 'exporting '+ metadata.currentFile +' '+((parseFloat(percent) <= 50) ? '1/2' : '2/2')+' please wait'
+                  this._msg!.update({percent: percent, text: text})
+                }) as Blob
+
+                const export_name = ((meta.general! && meta.general!.title!) ? meta.general.title : _PROJECT_DEFAULT_TITLE_) + '.rv'
+                await saveAs(zipBlob, export_name)
+
+                setTimeout(() => {
+                  this._msg!.update({percent: 0, text: 'please wait'})
+                  progressModal.foundation('close')
+                }, 1000)
+
               } catch(err) {
                 this._store.dispatch(new project.ProjectExportError(err))
               }
@@ -251,6 +281,7 @@ export class ServerProxy implements OnDestroy {
 
       const projectUpdate =
         this._actions.pipe(filter(action => {
+          //console.log(action)
           return action.type === project.PROJECT_UPDATE_ANNOTATION ||
             action.type === project.PROJECT_ADD_ANNOTATION ||
             action.type === project.PROJECT_DELETE_SELECTED_ANNOTATIONS ||
@@ -266,6 +297,8 @@ export class ServerProxy implements OnDestroy {
             action.type === project.PROJECT_IMPORT_VIDEO_SUCCESS ||
             action.type === project.PROJECT_LOAD_SUCCESS ||
             action.type === project.PROJECT_ANNOTATION_ADD_POINTER
+            action.type === project.PROJECT_UPDATE_HASHTAGS ||
+            action.type === project.PROJECT_UPDATE_TITLE
         }))
 
       this._subs.push(
@@ -286,10 +319,14 @@ export class ServerProxy implements OnDestroy {
         projectUpdate
           .pipe(
             filter(action => {
+              /**
+               *  Project state redo/undo exception filter
+               */
               return action.type !== project.PROJECT_SET_TIMELINE_DURATION &&
                 action.type !== project.PROJECT_UNDO &&
                 action.type !== project.PROJECT_REDO &&
-                action.type !== project.PROJECT_LOAD_SUCCESS
+                action.type !== project.PROJECT_LOAD_SUCCESS &&
+                action.type !== project.PROJECT_UPDATE_HASHTAGS
             }),
             withLatestFrom(projectState.pipe(pairwise()))
           ).subscribe(([_, [prevState, __]]) => {
@@ -299,6 +336,7 @@ export class ServerProxy implements OnDestroy {
               timestamp: Date.now(),
               state: projState
             })
+            //console.log (projState, snapshot);
             this._store.dispatch(new project.ProjectPushUndo(snapshot))
           }))
     }

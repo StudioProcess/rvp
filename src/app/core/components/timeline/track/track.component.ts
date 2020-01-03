@@ -5,11 +5,11 @@ import {
   ElementRef, ChangeDetectorRef, AfterViewInit
 } from '@angular/core'
 
-import {FormGroup, FormBuilder, Validators} from '@angular/forms'
+import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 
 const _VALID_ = 'VALID' // not exported by @angular/forms
 
-import {Record, Set} from 'immutable'
+import { Record, Set } from 'immutable'
 
 import {
   Observable, Subject, ReplaySubject,
@@ -27,12 +27,12 @@ import {
   TrackRecordFactory, TrackFieldsRecordFactory,
   AnnotationSelectionRecordFactory, SelectionSource
 } from '../../../../persistence/model'
-import {_FORM_INPUT_DEBOUNCE_} from '../../../../config/form'
-import {_HANDLEBAR_MIN_WIDTH_} from '../../../../config/timeline/handlebar'
-import {coordTransform} from '../../../../lib/coords'
-import {Handlebar} from '../handlebar/handlebar.component'
+import { _FORM_INPUT_DEBOUNCE_ } from '../../../../config/form'
+import { _HANDLEBAR_MIN_WIDTH_ } from '../../../../config/timeline/handlebar'
+import { coordTransform } from '../../../../lib/coords'
+import { Handlebar } from '../handlebar/handlebar.component'
 import * as project from '../../../../persistence/actions/project'
-import {ScrollSettings} from '../timeline'
+import { ScrollSettings } from '../timeline'
 
 interface EmitAnnotationSelectionArgs {
   readonly track: Record<Track>
@@ -55,7 +55,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   @Input() readonly selectedAnnotations: Set<Record<Annotation>>
   @Input() readonly scrollSettings: Observable<ScrollSettings>
 
-  form: FormGroup|null = null
+  form: FormGroup | null = null
   zoom: number
   readonly zoomContainerRect = new ReplaySubject<ClientRect>(1)
 
@@ -70,19 +70,19 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   @Output() readonly onDblClickAnnotation = new EventEmitter<project.PlayerRequestCurrentTimePayload>()
 
   private readonly _subs: Subscription[] = []
-  private readonly _addAnnotationClick = new Subject<{ev: MouseEvent, annotationStackIndex: number}>()
-  private readonly _updateAnnotationSubj = new Subject<{hb: Handlebar, annotationIndex: number, annotationStackIndex: number}>()
-  private readonly _annotationMdSubj = new Subject<{ev: MouseEvent, annotation: Record<Annotation>, annotationStackIndex: number}>()
+  private readonly _addAnnotationClick = new Subject<{ ev: MouseEvent, annotationStackIndex: number }>()
+  private readonly _updateAnnotationSubj = new Subject<{ hb: Handlebar, annotationIndex: number, annotationStackIndex: number }>()
+  private readonly _annotationMdSubj = new Subject<{ ev: MouseEvent, annotation: Record<Annotation>, annotationStackIndex: number }>()
 
-  @ViewChild('title') private readonly _titleInputRef: ElementRef
-  @ViewChild('trackOverflow') private readonly _overflowContainerRef: ElementRef
-  @ViewChild('zoomContainer') private readonly _zoomContainerRef: ElementRef
-  @ViewChild('trackBtn') private readonly _trackBtnRef: ElementRef
+  @ViewChild('title', { static: true }) private readonly _titleInputRef: ElementRef
+  @ViewChild('trackOverflow', { static: true }) private readonly _overflowContainerRef: ElementRef
+  @ViewChild('zoomContainer', { static: true }) private readonly _zoomContainerRef: ElementRef
+  @ViewChild('trackBtn', { static: true }) private readonly _trackBtnRef: ElementRef
 
   constructor(
     private readonly _elem: ElementRef,
     private readonly _fb: FormBuilder,
-    private readonly _cdr: ChangeDetectorRef) {}
+    private readonly _cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.form = this._fb.group({
@@ -99,17 +99,17 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
 
     this._subs.push(trackBtnMd.subscribe((ev: KeyboardEvent) => {
       ev.stopPropagation()
-      this.onSetActiveTrack.emit({trackIndex: this.trackIndex})
+      this.onSetActiveTrack.emit({ trackIndex: this.trackIndex })
     }))
 
     this._subs.push(trackMd.subscribe(() => {
-      this.onSetActiveTrack.emit({trackIndex: this.trackIndex})
+      this.onSetActiveTrack.emit({ trackIndex: this.trackIndex })
     }))
 
     this._subs.push(
       titleInputMd.subscribe((ev: KeyboardEvent) => {
         ev.stopPropagation()
-        this.onSetActiveTrack.emit({trackIndex: this.trackIndex})
+        this.onSetActiveTrack.emit({ trackIndex: this.trackIndex })
       }))
 
     this._subs.push(
@@ -126,40 +126,40 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
 
     this._subs.push(
       formBlur.pipe(
-          withLatestFrom(combineLatest(this.form.valueChanges, this.form.statusChanges), (_, [form, status]) => {
-            return [form, status]
-          }),
-          filter(([_, status]) => status === _VALID_),
-          map(([formData, _]) => formData),
-          distinctUntilChanged((prev, cur) => {
-            return prev.title === cur.title
+        withLatestFrom(combineLatest(this.form.valueChanges, this.form.statusChanges), (_, [form, status]) => {
+          return [form, status]
+        }),
+        filter(([_, status]) => status === _VALID_),
+        map(([formData, _]) => formData),
+        distinctUntilChanged((prev, cur) => {
+          return prev.title === cur.title
+        })
+      ).subscribe(({ title }) => {
+        const updateTrackPayload = {
+          trackIndex: this.trackIndex,
+          track: new TrackRecordFactory({
+            id: this.data.get('id', null),
+            color: this.data.get('color', null),
+            fields: new TrackFieldsRecordFactory({ title }),
+            annotationStacks: this.data.get('annotationStacks', null)
           })
-        ).subscribe(({title}) => {
-          const updateTrackPayload = {
-            trackIndex: this.trackIndex,
-            track: new TrackRecordFactory({
-              id: this.data.get('id', null),
-              color: this.data.get('color', null),
-              fields: new TrackFieldsRecordFactory({title}),
-              annotationStacks: this.data.get('annotationStacks', null)
-            })
-          }
-          this.onUpdateTrack.emit(updateTrackPayload)
-        }))
+        }
+        this.onUpdateTrack.emit(updateTrackPayload)
+      }))
 
     this._subs.push(
       this._addAnnotationClick
         .pipe(
-          withLatestFrom(this.zoomContainerRect, ({ev, annotationStackIndex}, rect) => {
+          withLatestFrom(this.zoomContainerRect, ({ ev, annotationStackIndex }, rect) => {
             const localX = coordTransform(ev.clientX, rect)
-            const perc = localX/rect.width*100
-            const tPerc = this.totalDuration/100
+            const perc = localX / rect.width * 100
+            const tPerc = this.totalDuration / 100
             return {
               source: 'timeline',
               trackIndex: this.trackIndex,
               annotationStackIndex,
               annotation: new AnnotationRecordFactory({
-                utc_timestamp: perc*tPerc,
+                utc_timestamp: perc * tPerc,
                 duration: 2
               })
             } as project.AddAnnotationPayload
@@ -169,18 +169,18 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     this._subs.push(
       this._updateAnnotationSubj
         .pipe(debounceTime(_FORM_INPUT_DEBOUNCE_, animationScheduler))
-        .subscribe(({hb, annotationIndex, annotationStackIndex}) => {
+        .subscribe(({ hb, annotationIndex, annotationStackIndex }) => {
           const oldAnnotation: Record<Annotation> = this.data.getIn(['annotationStacks', annotationStackIndex, annotationIndex])
 
-          const tPerc = this.totalDuration/100
-          const newStart = tPerc*hb.left
+          const tPerc = this.totalDuration / 100
+          const newStart = tPerc * hb.left
 
           let newDuration = null
-          if(hb.move === 'middleMove') {
+          if (hb.move === 'middleMove') {
             // Keep duration for translation
             newDuration = oldAnnotation.get('duration', null)
           } else {
-            newDuration = tPerc*hb.width
+            newDuration = tPerc * hb.width
           }
 
           this.onUpdateAnnotation.emit({
@@ -196,11 +196,11 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
           })
         }))
 
-    const defaultClick = this._annotationMdSubj.pipe(filter(({ev}) => !ev.shiftKey && !ev.metaKey))
-    const rangeClick = this._annotationMdSubj.pipe(filter(({ev}) => ev.shiftKey && !ev.metaKey))
-    const pickClick = this._annotationMdSubj.pipe(filter(({ev}) => !ev.shiftKey && ev.metaKey))
+    const defaultClick = this._annotationMdSubj.pipe(filter(({ ev }) => !ev.shiftKey && !ev.metaKey))
+    const rangeClick = this._annotationMdSubj.pipe(filter(({ ev }) => ev.shiftKey && !ev.metaKey))
+    const pickClick = this._annotationMdSubj.pipe(filter(({ ev }) => !ev.shiftKey && ev.metaKey))
 
-    defaultClick.subscribe(({annotationStackIndex, annotation}) => {
+    defaultClick.subscribe(({ annotationStackIndex, annotation }) => {
       this._emitSelectAnnotation({
         annotationStackIndex,
         type: project.AnnotationSelectionType.Default,
@@ -208,7 +208,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
       })
     })
 
-    rangeClick.subscribe(({annotationStackIndex, annotation}) => {
+    rangeClick.subscribe(({ annotationStackIndex, annotation }) => {
       this._emitSelectAnnotation({
         annotationStackIndex,
         type: project.AnnotationSelectionType.Range,
@@ -216,7 +216,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
       })
     })
 
-    pickClick.subscribe(({annotationStackIndex, annotation}) => {
+    pickClick.subscribe(({ annotationStackIndex, annotation }) => {
       this._emitSelectAnnotation({
         annotationStackIndex,
         type: project.AnnotationSelectionType.Pick,
@@ -225,12 +225,12 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     })
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit() {
     const getZoomContainerRect = () => {
       return this._zoomContainerRef.nativeElement.getBoundingClientRect()
     }
 
-    const winResize: Observable<Event|null> = fromEvent(window, 'resize')
+    const winResize: Observable<Event | null> = fromEvent(window, 'resize')
 
     this._subs.push(
       winResize.pipe(startWith(null)).subscribe(() => {
@@ -238,7 +238,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
       }))
 
     this._subs.push(
-      this.scrollSettings.subscribe(({zoom, scrollLeft}) => {
+      this.scrollSettings.subscribe(({ zoom, scrollLeft }) => {
         this.zoom = zoom
         this._overflowContainerRef.nativeElement.scrollLeft = scrollLeft
 
@@ -259,7 +259,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
       }))
   }
 
-  private _emitSelectAnnotation({track, annotationStackIndex, annotation, type}: EmitAnnotationSelectionArgs) {
+  private _emitSelectAnnotation({ track, annotationStackIndex, annotation, type }: EmitAnnotationSelectionArgs) {
     this.onSelectAnnotation.emit({
       type,
       selection: AnnotationSelectionRecordFactory({
@@ -270,9 +270,9 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(this.form !== null && changes.data !== undefined && !changes.data.firstChange) {
-      const {previousValue, currentValue} = changes.data
-      if(previousValue === undefined || !previousValue.equals(currentValue)) {
+    if (this.form !== null && changes.data !== undefined && !changes.data.firstChange) {
+      const { previousValue, currentValue } = changes.data
+      if (previousValue === undefined || !previousValue.equals(currentValue)) {
         this.form.setValue({
           title: currentValue.getIn(['fields', 'title'])
         })
@@ -292,12 +292,16 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     return Math.min(Math.max(_HANDLEBAR_MIN_WIDTH_, annotation.duration / this.totalDuration * 100), 100)
   }
 
+  getIsDisplayed(annotation: Record<Annotation>) {
+    return annotation.get('isShown', true) ? 'block' : 'none'
+  }
+
   getAnnotationOpacity(annotation: Record<Annotation>) {
-    return annotation.get('isShown', true) ? '1': '0.2'
+    return annotation.get('isShown', true) ? '1' : '0.2'
   }
 
   getAnnotationPointerEvents(annotation: Record<Annotation>) {
-    return annotation.get('isShown', true) ? 'auto': 'none'
+    return annotation.get('isShown', true) ? 'auto' : 'none'
   }
 
   isSelectedAnnotation(annotation: Record<Annotation>) {
@@ -316,44 +320,44 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
 
   deleteTrackHandler(ev: MouseEvent) {
     ev.stopPropagation()
-    if(ev.button !== 0) {return}
-    if(window.confirm('Really delete track? All annotations will be deleted too.')) {
-      this.onDeleteTrack.emit({trackIndex: this.trackIndex})
+    if (ev.button !== 0) { return }
+    if (window.confirm('Really delete track? All annotations will be deleted too.')) {
+      this.onDeleteTrack.emit({ trackIndex: this.trackIndex })
     }
   }
 
   annotationClick(ev: MouseEvent, annotation: Record<Annotation>, annotationStackIndex: number) {
     ev.stopPropagation()
-    if(ev.button !== 0) {return}
-    this.onSetActiveTrack.emit({trackIndex: this.trackIndex})
-    this._annotationMdSubj.next({ev, annotation, annotationStackIndex})
+    if (ev.button !== 0) { return }
+    this.onSetActiveTrack.emit({ trackIndex: this.trackIndex })
+    this._annotationMdSubj.next({ ev, annotation, annotationStackIndex })
   }
 
   addAnnotation(ev: MouseEvent, annotationStackIndex: number) {
-    this._addAnnotationClick.next({ev, annotationStackIndex})
+    this._addAnnotationClick.next({ ev, annotationStackIndex })
   }
 
   updateHandlebar(hb: Handlebar, annotationIndex: number, annotationStackIndex: number) {
-    this._updateAnnotationSubj.next({hb, annotationIndex, annotationStackIndex})
+    this._updateAnnotationSubj.next({ hb, annotationIndex, annotationStackIndex })
   }
 
-  moveTrack($event: MouseEvent, trackIndex: number, direction: 'up'|'down') {
+  moveTrack($event: MouseEvent, trackIndex: number, direction: 'up' | 'down') {
     $event.stopPropagation()
-    if($event.button !== 0) {return}
+    if ($event.button !== 0) { return }
     this.onInsertAtTrack.emit({
       currentTrackIndex: trackIndex,
-      insertAtIndex: direction === 'up' ? trackIndex-1 : trackIndex+1
+      insertAtIndex: direction === 'up' ? trackIndex - 1 : trackIndex + 1
     })
   }
 
   duplicateTrack($event: MouseEvent, trackIndex: number) {
     $event.stopPropagation()
-    if($event.button !== 0) {return}
-    this.onDuplicateTrack.emit({trackIndex})
+    if ($event.button !== 0) { return }
+    this.onDuplicateTrack.emit({ trackIndex })
   }
 
   dblClick(annotation: Record<Annotation>) {
-    this.onDblClickAnnotation.emit({currentTime: annotation.get('utc_timestamp', null)})
+    this.onDblClickAnnotation.emit({ currentTime: annotation.get('utc_timestamp', null) })
   }
 
   ngOnDestroy() {

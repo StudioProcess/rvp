@@ -8,7 +8,7 @@ import * as fromProject from './project'
 
 import {findVerticalCollisionsWithCursor} from '../../lib/annotationStack'
 
-import {_FUSE_OPTIONS_} from '../../config/search'
+import {_FUSE_OPTIONS_, _FUSE_OPTIONS_HASHTAGS_} from '../../config/search'
 
 import {
   AnnotationColorMapRecordFactory, AnnotationSelection,
@@ -56,6 +56,10 @@ export const getProjectMeta = createSelector(getProjectState, fromProject.getPro
 
 export const getProjectId = createSelector(getProjectMeta, meta => {
   return meta ? meta.get('id', null): null
+})
+
+export const getProjectGeneralData = createSelector(getProjectMeta, meta => {
+  return meta ? meta.get('general', null): null
 })
 
 export const getProjectVideoMeta = createSelector(getProjectMeta, meta => {
@@ -147,8 +151,29 @@ export const getCurrentFlattenedAnnotations = createSelector(
 function searchAnnotations(search: string|null, annotations: List<Record<AnnotationColorMap>>) {
   if(search !== null) {
     const jsAnnotations = annotations.toJS()
-    const fuse = new Fuse(jsAnnotations, _FUSE_OPTIONS_)
-    const res: string[] = fuse.search(search)
+    const hashtags = search.match(/#\w+/g)
+    let res: any[] = []
+
+    if(hashtags) {
+      let regexp = new RegExp('#([^\\s]*)','g')
+      search = search.replace(regexp, '').trim()
+    }
+    if(search) {
+      const fuse = new Fuse(jsAnnotations, _FUSE_OPTIONS_)
+      res = fuse.search(search)
+    }
+    if(hashtags) {
+      let res_hash: any[] = []
+      let res_tmp: any[] = []
+      const fuse_hashtags = new Fuse(jsAnnotations, _FUSE_OPTIONS_HASHTAGS_)
+      hashtags.forEach((tag: string) => {
+        res_tmp = fuse_hashtags.search(tag)
+        res_hash = res_hash.concat(res_tmp)
+        res_hash = res.concat(res_hash)
+      })
+      res_hash = res_hash.filter((e, i, arr) => arr.indexOf(e) == i) // unique
+      res = res_hash
+    }
     return annotations.filter(ann => {
       const aId = ann.getIn(['annotation', 'id'])
       return res.find(id => parseInt(id) === aId)
@@ -245,4 +270,3 @@ export const getProjectClipboard = createSelector(getProjectState, fromProject.g
 // Snapshots
 
 export const getProjectSnapshots = createSelector(getProjectState, fromProject.getProjectSnapshots)
-

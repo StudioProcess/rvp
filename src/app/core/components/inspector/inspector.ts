@@ -32,6 +32,7 @@ import {InspectorEntryComponent} from './inspectorEntry/inspectorEntry.component
         (onSelectAnnotation)="selectAnnotation($event)"
         (onFocusAnnotation)="focusAnnotation($event)"
         (onAddAnnotationPointer)="addAnnotationPointer($event)">
+        (onHashtagsUpdate)="hashtagsUpdate($event)">
       </rv-inspector-entry>
     </div>`,
   styles: [`
@@ -42,7 +43,7 @@ import {InspectorEntryComponent} from './inspectorEntry/inspectorEntry.component
   `]
 })
 export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('wrapper') private readonly _scrollWrapperRef: ElementRef
+  @ViewChild('wrapper', { static: false }) private readonly _scrollWrapperRef: ElementRef
   @ViewChildren(InspectorEntryComponent) private readonly _entries: QueryList<InspectorEntryComponent>
   private readonly _subs: Subscription[] = []
   annotations: List<Record<AnnotationColorMap>>
@@ -114,6 +115,7 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateAnnotation(updateAnnotation: project.UpdateAnnotationPayload) {
+    //console.log ('updateAnnotation', updateAnnotation)
     this._store.dispatch(new project.ProjectUpdateAnnotation(updateAnnotation))
   }
 
@@ -127,6 +129,10 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
 
   addAnnotationPointer(addAnnotationPointer: project.UpdateAnnotationPointerPayload) {
     this._store.dispatch(new project.ProjectAnnotationAddPointer(addAnnotationPointer))
+  }
+
+  hashtagsUpdate(hashtags: Array<String>) {
+    this._store.dispatch(new project.ProjectUpdateHashtags(hashtags))
   }
 
   stopPropagation(ev: MouseEvent) {

@@ -7,7 +7,7 @@ import {
   SimpleChanges, EventEmitter
 } from '@angular/core'
 
-import {DOCUMENT} from '@angular/platform-browser'
+import { DOCUMENT } from '@angular/common'
 
 import {
   Observable, ReplaySubject, Subject, Subscription,
@@ -48,6 +48,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   @Input() readonly containerRect: Observable<ClientRect>
   @Input() @HostBinding('class.selected') readonly isSelected = false
   @Input() @HostBinding('style.opacity') readonly opacity: string = '1'
+  @Input() @HostBinding('style.display') readonly display: string = 'block'
   @Input() @HostBinding('style.pointerEvents') readonly pointerEvents: string = 'auto'
 
   // Input left and width
@@ -58,9 +59,9 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   @HostBinding('style.left.%') internLeft: number
   @HostBinding('style.width.%') internWidth: number
 
-  @ViewChild('leftHandle') private readonly _leftHandleRef: ElementRef
-  @ViewChild('middleHandle') private readonly _middleHandleRef: ElementRef
-  @ViewChild('rightHandle') private readonly _rightHandleRef: ElementRef
+  @ViewChild('leftHandle', { static: true }) private readonly _leftHandleRef: ElementRef
+  @ViewChild('middleHandle', { static: true }) private readonly _middleHandleRef: ElementRef
+  @ViewChild('rightHandle', { static: true }) private readonly _rightHandleRef: ElementRef
 
   private readonly _syncValueSubj = new Subject<Handlebar>()
   private readonly _handlebarSubj = new ReplaySubject<Handlebar>(1)

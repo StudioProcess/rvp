@@ -3,7 +3,9 @@
 
 :host {
   display: block;
+}
 
+.inspector-entry-host {
   .entry-container {
     background-color: $process-super-light-gray3;
 
@@ -11,22 +13,20 @@
       background-color: $white;
     }
   }
-
-  &.selected {
+  &:nth-child(even) {
     .entry-container {
       background-color: $process-super-light-gray;
-      outline-offset: (-$selection-outlinewidth);
-      outline: $selection-outlinewidth solid $black;
 
       &:hover {
         background-color: $white;
       }
     }
   }
-
-  &:nth-child(even) {
+  &.selected {
     .entry-container {
       background-color: $process-super-light-gray;
+      outline-offset: (-$selection-outlinewidth);
+      outline: $selection-outlinewidth solid $black;
 
       &:hover {
         background-color: $white;
@@ -85,22 +85,42 @@
     }
 
     .description {
-      font-size: 14px;
-      line-height: 15px;
-      resize: vertical;
+      width: 100%;
       margin: 0;
       padding: 0.1em;
+      font-size: 14px;
+      line-height: 18px;
+      resize: vertical;
       outline: none;
       border-color: transparent;
       box-shadow: 0 0 0 $white;
       background-color: inherit;
-      width: 100%;
 
+      &.contenteditable {
+        min-height: 22px;
+        padding: 3px 8px 3px 5px;
+        margin: 4px 0 8px 0;
+        overflow: hidden;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+
+        &:focus {
+          height: auto;
+          background-color: $description-focus-bg;
+
+          .hashtag {
+            color: #000000;
+          }
+        }
+        &[placeholder]:empty:not(:focus):before {
+          content: attr(placeholder);
+          color: #CCC;
+        }
+      }
       &:focus {
         color: $black;
       }
     }
-
     .duration {
       font-size: 13px; // TODO: 14px needed to be set explicitly
       font-weight: 400;

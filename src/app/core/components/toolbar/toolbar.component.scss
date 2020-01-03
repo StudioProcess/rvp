@@ -8,6 +8,7 @@ form {
 
 .leftForm {
   padding: 5px;
+  margin-left: 5px;
 }
 
 .modalButton:focus {
@@ -30,41 +31,57 @@ button {
 
 .searchBox-wrapper {
   display: inline-block;
+  float: left;
   position: relative;
   margin-right: 5px;
   margin-top: 2px;
 
   i {
-    font-size: 15px;
+    font-size: 18px;
   }
-
   .search-icon {
     position: absolute;
     top: 5px;
     left: 10px;
   }
-
   input:focus + .search-icon {
-    opacity: 0;
+    /*opacity: 0;*/
+    visibility: hidden;
   }
-
   .close-icon {
-    position: absolute;
     position: absolute;
     top: 5px;
     right: 10px;
+    cursor: pointer;
   }
-
   .searchBox {
-    border: none;
-    background-color: $process-super-light-gray4;
+    min-width: 225px;
     padding: 8px 30px;
     outline: none;
-    min-width: 225px;
-  }
+    border: none;
+    background-color: $process-super-light-gray4;
 
+    &.contenteditable {
+      display: block;
+      height: 33px;
+      padding: 6px 32px;
+    }
+    &:focus + .search-icon {
+      /*opacity: 0;*/
+      visibility: hidden;
+    }
+    &[placeholder]:empty:not(:focus):before {
+      content: attr(placeholder);
+      color: #CCC;
+    }
+  }
   .searchBox::placeholder {
     color: black;
     opacity: 1;
   }
+}
+.applyToTimeline-wrapper {
+  display: inline-block;
+  float: left;
+  margin: 10px 0 0 5px;
 }

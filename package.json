@@ -1,13 +1,14 @@
 {
   "name": "rvp",
-  "version": "0.1.0",
+  "version": "0.7.0",
   "description": "Research Video Prototype",
   "author": "Studio Process <contact@process.studio>",
   "maintainers": [
     "Studio Process <contact@process.studio>"
   ],
   "contributors": [
-    "Onur Dogangönül <contact@dinony.com>"
+    "Onur Dogangönül <contact@dinony.com>",
+    "Adrian Soluch <adrian@soluch.at>"
   ],
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
     "start": "ng serve",
     "prebuild": "node tools/prepEnv",
     "build": "ng build",
+    "prebuild:prod": "node tools/prepEnv",
     "build:prod": "ng build --prod; open dist/",
     "build:prod-old": "ng build --prod --output-hashing none",
     "test": "ng test",
@@ -36,53 +38,50 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "~7.2.11",
-    "@angular/cdk": "~7.3.6",
-    "@angular/common": "~7.2.11",
-    "@angular/compiler": "~7.2.11",
-    "@angular/core": "~7.2.11",
-    "@angular/forms": "~7.2.11",
-    "@angular/http": "~7.2.11",
-    "@angular/material": "^7.3.6",
-    "@angular/platform-browser": "~7.2.11",
-    "@angular/platform-browser-dynamic": "~7.2.11",
-    "@ngrx/effects": "^7.4.0",
-    "@ngrx/store": "^7.4.0",
-    "@ngrx/store-devtools": "^7.4.0",
-    "core-js": "^2.6.5",
+    "@angular/common": "^8.2.14",
+    "@angular/compiler": "^8.2.14",
+    "@angular/core": "^8.2.14",
+    "@angular/forms": "^8.2.14",
+    "@angular/platform-browser": "^8.2.14",
+    "@angular/platform-browser-dynamic": "^8.2.14",
+    "@ng-stack/contenteditable": "^1.0.1",
+    "@ngrx/effects": "^8.6.0",
+    "@ngrx/store": "^8.6.0",
+    "@ngrx/store-devtools": "^8.6.0",
+    "core-js": "^2.6.11",
     "file-saver": "^1.3.8",
-    "foundation-sites": "^6.5.3",
-    "fuse.js": "^3.4.4",
+    "foundation-sites": "^6.6.1",
+    "fuse.js": "^3.4.6",
     "immutable": "4.0.0-rc.9",
-    "ionicons": "^4.5.5",
-    "jquery": "^3.3.1",
-    "jszip": "^3.2.1",
+    "ionicons": "^4.6.3",
+    "jquery": "^3.4.1",
+    "jszip": "3.1.5",
     "jszip-utils": "0.0.2",
     "localforage": "^1.7.3",
     "moment": "^2.24.0",
     "natives": "^1.1.6",
+    "ngx-autosize-input": "^2.3.6",
     "pace-progress": "^1.0.2",
-    "rxjs": "~6.4.0",
-    "tslib": "^1.9.0",
+    "rxjs": "^6.5.4",
+    "rxjs-tslint": "^0.1.7",
+    "tslib": "^1.10.0",
     "video.js": "^5.20.5",
     "videojs-vimeo": "github:dinony/videojs-vimeo#patch-1",
     "videojs-youtube": "^2.6.0",
-    "zone.js": "^0.8.29"
+    "what-input": "^5.2.6",
+    "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.13.0",
-    "@angular/cli": "~7.3.7",
-    "@angular/compiler-cli": "~7.2.11",
-    "@angular/language-service": "~7.2.11",
+    "@angular-devkit/build-angular": "^0.803.21",
+    "@angular/cli": "^8.3.21",
+    "@angular/compiler-cli": "^8.2.14",
+    "@angular/language-service": "^8.2.14",
     "@types/file-saver": "^1.3.1",
-    "@types/jszip": "^3.1.5",
+    "@types/jszip": "^3.1.6",
     "@types/node": "~8.9.4",
     "@types/video.js": "^5.16",
-    "codelyzer": "~4.5.0",
+    "codelyzer": "^5.2.1",
     "tslint": "~5.11.0",
-    "typescript": "~3.2.4"
-  },
-  "browserslist": [
-    "> 1%"
-  ]
+    "typescript": "~3.5.3"
+  }
 }

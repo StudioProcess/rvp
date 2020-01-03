@@ -3,7 +3,9 @@ import {
   OnInit, OnChanges, AfterViewInit,
   EventEmitter, ViewChild, ElementRef,
   ChangeDetectionStrategy, OnDestroy,
-  SimpleChanges, HostBinding,
+  SimpleChanges, HostBinding, HostListener,
+  ViewEncapsulation,
+  // ChangeDetectorRef
 } from '@angular/core'
 
 import {
@@ -13,7 +15,7 @@ import {
 
 const _VALID_ = 'VALID' // not exported by @angular/forms
 
-import {Record} from 'immutable'
+import { Record } from 'immutable'
 
 import {
   Subscription, combineLatest,
@@ -23,10 +25,11 @@ import {
 import {
   withLatestFrom, map, filter,
   distinctUntilChanged, buffer,
-  debounceTime
+  debounceTime,
+  // tap, delay
 } from 'rxjs/operators'
 
-import {formatDuration} from '../../../../lib/time'
+import { formatDuration } from '../../../../lib/time'
 
 import {
   AnnotationColorMap, AnnotationRecordFactory,
@@ -35,19 +38,20 @@ import {
   PointerElement
 } from '../../../../persistence/model'
 
-import {_MOUSE_DBLCLICK_DEBOUNCE_} from '../../../../config/form'
+import { _MOUSE_DBLCLICK_DEBOUNCE_ } from '../../../../config/form'
 
 import * as project from '../../../../persistence/actions/project'
-import {parseDuration} from '../../../../lib/time'
-import {PointerElementComponent} from '../../pointer-element/pointer-element.component'
-import {DomService} from '../../../actions/dom.service'
+import { PointerElementComponent } from '../../pointer-element/pointer-element.component'
+import { parseDuration } from '../../../../lib/time'
+import { DomService } from '../../../actions/dom.service'
+import { HashtagService } from '../../../actions/hashtag.service'
 
 function durationValidatorFactory(): ValidatorFn {
   const durationRegex = /^([0-9]*:){0,2}[0-9]*(\.[0-9]*)?$/
 
-  return (control: AbstractControl): ValidationErrors|null => {
+  return (control: AbstractControl): ValidationErrors | null => {
     const valid = durationRegex.test(control.value)
-    return !valid ? {'duration': {value: control.value}} : null
+    return !valid ? { 'duration': { value: control.value } } : null
   }
 }
 
@@ -55,11 +59,17 @@ const durationValidator = Validators.compose([Validators.required, durationValid
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
   selector: 'rv-inspector-entry',
   templateUrl: 'inspectorEntry.component.html',
+  host: { 'class': 'inspector-entry-host' },
   styleUrls: ['inspectorEntry.component.scss']
 })
-export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
+export class InspectorEntryComponent extends HashtagService implements OnChanges, OnInit, AfterViewInit, OnDestroy {
+
+  form: FormGroup | null = null
+  private readonly _subs: Subscription[] = []
+
   @Input() readonly entry: Record<AnnotationColorMap>
   @Input() @HostBinding('class.selected') readonly isSelected = false
 
@@ -67,11 +77,12 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   @Output() readonly onSelectAnnotation = new EventEmitter<project.SelectAnnotationPayload>()
   @Output() readonly onFocusAnnotation = new EventEmitter<project.PlayerRequestCurrentTimePayload>()
   @Output() readonly onAddAnnotationPointer = new EventEmitter<project.UpdateAnnotationPointerPayload>()
+  @Output() readonly onHashtagsUpdate = new EventEmitter<project.UpdateProjectHashtagsPayload>()
 
-  @ViewChild('formWrapper') private readonly _formRef: ElementRef
-  @ViewChild('start') private readonly _startInputRef: ElementRef
-  @ViewChild('duration') private readonly _durationInputRef: ElementRef
-  @ViewChild('descr') private readonly _descrInputRef: ElementRef
+  @ViewChild('formWrapper', { static: true }) private readonly _formRef: ElementRef
+  @ViewChild('start', { static: true }) private readonly _startInputRef: ElementRef
+  @ViewChild('duration', { static: true }) private readonly _durationInputRef: ElementRef
+  @ViewChild('descr', { static: true }) readonly _descrInputRef: ElementRef
 
   form: FormGroup|null = null
 
@@ -79,12 +90,18 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
   private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
   //private readonly _video_elem = document.querySelector('.video-main-elem video') as HTMLElement
   //private readonly domService = new domService()
+  @HostListener('click', ['$event', '$event.target'])
+  onClick(event: MouseEvent, target: HTMLElement) {
+    this.removeHashTag(target)
+  }
 
   constructor(
     readonly elem: ElementRef,
     private readonly _fb: FormBuilder,
-    private readonly _domService: DomService
-  ) {}
+    readonly _domService: DomService,
+  ) {
+    super(_domService)
+  }
 
   private _mapModel(entry: Record<AnnotationColorMap>) {
     const utc_timestamp = entry.getIn(['annotation', 'utc_timestamp'])
@@ -100,7 +117,8 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
   ngOnInit() {
     const {
-      utc_timestamp, duration,
+      utc_timestamp,
+      duration,
       description
     } = this._mapModel(this.entry)
 
@@ -111,7 +129,14 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     })
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit() {
+
+    // add span nodes around hashtags inside textnodes
+    this.encloseHashtags()
+
+    // make sure all hashtags are filtered/saved
+    this.saveHashtags(this.entry.getIn(['annotation', 'fields', 'description']))
+
     const formClick = fromEvent(this._formRef.nativeElement, 'click')
       .pipe(filter((ev: MouseEvent) => ev.button === 0))
 
@@ -120,6 +145,8 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
         buffer(formClick.pipe(debounceTime(_MOUSE_DBLCLICK_DEBOUNCE_))),
         map(clicksInBuffer => clicksInBuffer.length),
         filter(clicksInBuffer => clicksInBuffer === 2))
+
+    const formKeyUp = fromEvent(this._descrInputRef.nativeElement, 'keyup')
 
     const durationKeydown = merge(
       fromEvent(this._startInputRef.nativeElement, 'keydown'),
@@ -148,6 +175,7 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
             source: SelectionSource.Inspector
           })
         })
+        this.encloseHashtags({ 'replace': true })
       }))
 
     // Focus annotation
@@ -159,8 +187,19 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
       }))
 
     this._subs.push(
+      formKeyUp.subscribe((ev: KeyboardEvent) => {
+      }))
+
+    this._subs.push(
       formKeydown.subscribe((ev: KeyboardEvent) => {
         ev.stopPropagation()
+        if (this.isHashTagPopupContainerOpen) {
+          this.handleHashtagInput(ev)
+        } else {
+          if (ev.keyCode === 191 || ev.key === '#') {
+            this.handleHashTag(ev)
+          }
+        }
       }))
 
     const validDurationInputKey = (keyCode: number) => {
@@ -180,7 +219,8 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
 
     this._subs.push(
       enterHotKey.subscribe((ev: any) => {
-        if(ev.target.nodeName !== 'TEXTAREA') {
+        // if(ev.target.nodeName !== 'TEXTAREA') {
+        if (ev.target.classList.contains('contenteditable') !== true) {
           ev.target.blur()
         }
       }))
@@ -188,6 +228,8 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
     this._subs.push(
       formBlur
         .pipe(
+          // delay(100),
+          // tap((ev) => {}),
           withLatestFrom(combineLatest(this.form!.valueChanges, this.form!.statusChanges), (_, [form, status]) => {
             return [form, status]
           }),
@@ -197,12 +239,17 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
             return prev.title === cur.title && prev.description === cur.description &&
               prev.utc_timestamp === cur.utc_timestamp && prev.duration === cur.duration
           }))
-        .subscribe(({description, utc_timestamp, duration}) => {
+        .subscribe(({ description, utc_timestamp, duration }) => {
+
+          description = this.htmlBr(description)
+          description = this.removeNodesFromText(description)
+          this.saveHashtags(description)
+
           const annotation = new AnnotationRecordFactory({
             id: this.entry.getIn(['annotation', 'id']),
             utc_timestamp: parseDuration(utc_timestamp),
             duration: parseDuration(duration),
-            fields: new AnnotationFieldsRecordFactory({description})
+            fields: new AnnotationFieldsRecordFactory({ description })
           })
 
           this.onUpdate.emit({
@@ -211,13 +258,18 @@ export class InspectorEntryComponent implements OnChanges, OnInit, AfterViewInit
             annotationIndex: this.entry.get('annotationIndex', null),
             annotation
           })
+
+          setTimeout(() => {
+            this.encloseHashtags()
+          }, 50)
         }))
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(this.form !== null && changes.entry !== undefined && !changes.entry.firstChange) {
-      const {previousValue, currentValue} = changes.entry
-      if(previousValue === undefined || !previousValue.equals(currentValue)) {
+    if (this.form !== null && changes.entry !== undefined && !changes.entry.firstChange) {
+      const { previousValue, currentValue } = changes.entry
+      if (previousValue === undefined || !previousValue.equals(currentValue)) {
+        // console.log(previousValue, currentValue)
         this.form.setValue(this._mapModel(currentValue))
       }
     }

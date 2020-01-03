@@ -15,8 +15,9 @@ import {PlayerModule} from './player/player.module'
 import {reducers, metaReducers} from './core/reducers'
 
 // import {AppShellContainer} from './shell'
-import {MainContainer} from './core/components/main/main';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MainContainer} from './core/components/main/main'
+import {MessageService} from './core/actions/message.service'
 
 // import {appRoutes} from './routes'
 
@@ -35,5 +36,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   ],
   // declarations: [AppShellContainer],
   bootstrap: [MainContainer],
+  providers: [MessageService],
 })
 export class AppModule {}

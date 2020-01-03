@@ -30,7 +30,9 @@ $rvp-theme: mat-light-theme($rvp-primary, $rvp-accent, $rvp-warn);
 
 @import 'settings';
 @import 'foundation';
+@import 'forms-plus';
 @import 'custom-global';
+@import 'hashtags-global';
 
 @include foundation-global-styles;
 // @include foundation-xy-grid-classes;

@@ -2,7 +2,8 @@ import {
   Component, Input, OnInit,
   Output, ChangeDetectionStrategy,
   AfterViewInit, ViewChild,
-  ElementRef, EventEmitter
+  ElementRef, EventEmitter,
+  HostListener
 } from '@angular/core'
 import {FormBuilder, FormGroup} from '@angular/forms'
 
@@ -11,8 +12,11 @@ import {debounceTime, pluck} from 'rxjs/operators'
 
 import {_FORM_INPUT_DEBOUNCE_} from '../../../config/form'
 
+
 import * as project from '../../../persistence/actions/project'
 import {ImportVideoPayload} from '../../../persistence/actions/project'
+import {DomService} from '../../actions/dom.service'
+import {HashtagService} from '../../actions/hashtag.service'
 
 @Component({
   selector: 'rv-toolbar',
@@ -20,7 +24,7 @@ import {ImportVideoPayload} from '../../../persistence/actions/project'
   styleUrls: ['toolbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ToolbarComponent implements OnInit, AfterViewInit {
+export class ToolbarComponent extends HashtagService implements OnInit, AfterViewInit {
   @Input('currentAnnotationsOnly') readonly currentAnnotationsOnlyIn: boolean
   @Input('search') readonly searchIn: string
   @Input('applyToTimeline') readonly applyToTimelineIn: boolean
@@ -52,11 +56,21 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
   @Output() readonly onResetProject = new EventEmitter()
   @Output() readonly onNewProject = new EventEmitter()
 
-  @ViewChild('search') private readonly _searchRef: ElementRef
+  @ViewChild('search', { static: true }) readonly _searchRef: ElementRef
+
+  @HostListener('click', ['$event', '$event.target'])
+    onClick(event: MouseEvent, target: HTMLElement) {
+      this.removeHashTag(target)
+    }
 
   private readonly _subs: Subscription[] = []
 
-  constructor(private readonly _fb: FormBuilder) {}
+  constructor(
+    private readonly _fb: FormBuilder,
+    readonly _domService: DomService
+  ) {
+    super(_domService)
+  }
 
   private _mapLeftModel() {
     return {currentAnnotationsOnly: this.currentAnnotationsOnlyIn}
@@ -100,6 +114,16 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this._subs.push(fromEvent(this._searchRef.nativeElement, 'keydown').subscribe((ev: KeyboardEvent) => {
       ev.stopPropagation()
+      if(ev.key == 'Enter') {
+        ev.preventDefault()
+      }
+      if(this.isHashTagPopupContainerOpen) {
+        this.handleHashtagInput(ev)
+      } else {
+        if(ev.keyCode === 191 || ev.key === '#') {
+          this.handleHashTag(ev)
+        }
+      }
     }))
   }
 
@@ -157,6 +181,7 @@ export class ToolbarComponent implements OnInit, AfterViewInit {
   }
 
   clearSearch() {
+    this.removeHashTagPopupContainer()
     this.rightForm!.patchValue({search: null})
   }
 

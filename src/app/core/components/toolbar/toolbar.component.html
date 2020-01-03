@@ -1,6 +1,5 @@
 <div class="row toolbar-color" (mousedown)="toolbarClick($event)">
   <div class="small-12 medium-12 large-8 column">
-    <rv-logo></rv-logo>
     <button (click)="actionBtnClick($event, 'add_annotation')" [disabled]="!hasTracks || !hasActiveTrack">
       <i class="ion-md-add-circle-outline" title="Add Annotation"></i><span class="show-for-medium"> Add</span>
     </button>
@@ -13,6 +12,12 @@
     <button (mousedown)="actionBtnClick($event, 'paste_annotation')" [disabled]="!hasClipboardAnnotations">
       <i class="ion-md-clipboard" title="Paste Annotation"></i><span class="show-for-medium"> Paste</span>
     </button>
+    <button data-open="tag-add-modal" [disabled]="!hasSelectedAnnotations">
+      <i>#</i> Tag
+    </button>
+    <rv-tag-add-modal class="reveal" id="tag-add-modal" data-reveal>
+    </rv-tag-add-modal>
+
     <button (click)="actionBtnClick($event, 'undo_action')" [disabled]="!hasUndo">
       <i class="ion-md-undo" title="Undo Action"></i><span class="show-for-medium"> Undo</span>
     </button>
@@ -29,18 +34,37 @@
       (onResetProject)="resetProject()"
       (onNewProject)="newProject()">
     </rv-projectmodal>
+
     <form class="leftForm" [formGroup]="leftForm" novalidate>
-      <input formControlName="currentAnnotationsOnly" type="checkbox"/> Current <span class="show-for-large">annotations</span> only
+      <div class="checkbox">
+        <label>
+          <input formControlName="currentAnnotationsOnly" type="checkbox">
+          <span class="custom-checkbox secondary"><i class="icon-check"></i></span>
+          Current <span class="show-for-large">annotations</span> only
+        </label>
+      </div>
     </form>
   </div>
   <div class="small-12 medium-12 large-4 column">
     <form [formGroup]="rightForm" novalidate>
       <div class="searchBox-wrapper">
+        <!--
         <input class="searchBox" #search formControlName="search" type="text" placeholder="Search..." (focus)="search.placeholder=''" (blur)="search.placeholder='Search...'"/>
-        <i class="search-icon ion-md-search"></i>
         <i class="close-icon ion-md-close" [hidden]="!(search.value.length > 0)" (click)="clearSearch()"></i>
+        -->
+        <div #search contenteditable="true" class="searchBox contenteditable" formControlName="search" placeholder="Search..." (focus)="search.placeholder=''" placeholder="Search..."></div>
+        <i class="search-icon ion-md-search"></i>
+        <i class="close-icon ion-md-close" [hidden]="!(search.innerHTML.length > 0)" (click)="clearSearch()"></i>
       </div>
-      <input formControlName="applyToTimeline" type="checkbox"/> Apply to timeline
+      <div class="applyToTimeline-wrapper">
+        <div class="checkbox">
+          <label>
+            <input formControlName="applyToTimeline" type="checkbox"/>
+            <span class="custom-checkbox secondary"><i class="icon-check"></i></span>
+            Apply to timeline
+          </label>
+        </div>
+      </div>
     </form>
   </div>
 </div>

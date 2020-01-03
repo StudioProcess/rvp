@@ -8,6 +8,11 @@ const execSync = require('child_process').execSync;
 const fs = require('fs');
 const path = require('path');
 
+const version = require('../package.json').version;
+const hash = execSync('git rev-parse --short HEAD', {encoding: 'utf8'}).trim();
+console.log(`Version ${version} (${hash})`);
+
+
 // From: https://gist.github.com/victorsollozzo/4134793
 function findByExt(base, ext, files = undefined, result = undefined) {
   files = files || fs.readdirSync(base);
@@ -19,19 +24,17 @@ function findByExt(base, ext, files = undefined, result = undefined) {
     } else {
       if ( file.substr(-1*(ext.length+1)) == '.' + ext ) {
         result.push(newbase);
-      } 
+      }
     }
   });
   return result;
 }
 
-
-const commitHash = execSync('git rev-parse --short HEAD', {encoding: 'utf8'}).trim();
-
 const processFile = function(filepath) {
   let str = fs.readFileSync(filepath, 'utf8');
-  str = str.replace(/%COMMIT%/g, commitHash);
-  
+  str = str.replace(/%VERSION%/g, version);
+  str = str.replace(/%COMMIT%/g, hash);
+
   let pathObj = path.parse(filepath);
   pathObj.ext = '.ts';
   delete pathObj.base; // .base overrides .name + .ext if present, so delete it

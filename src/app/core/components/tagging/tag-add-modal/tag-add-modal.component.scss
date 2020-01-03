@@ -1,0 +1,33 @@
+@import 'mixins';
+
+:host {
+  display: block;
+}
+
+.add-new-hashtag-input {
+  border: none;
+  padding: 3px 0 3px 0;
+}
+
+ul {
+
+  &.tagging-list {
+    max-height: 200px;
+    margin: 0;
+    overflow-y: scroll;
+    list-style-type: none;
+
+    li {
+      width: 100%;
+
+      &:hover {
+        background-color: #eee;
+      }
+    }
+  }
+}
+
+.button-add-hashtag {
+  float: right;
+  @include button($process-light-gray);
+}
