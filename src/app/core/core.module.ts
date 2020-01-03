@@ -40,6 +40,7 @@ const _DECLS_ = [
   // Components
   NotFoundComponent, LogoComponent, VersionComponent,
   ProjectBtnComponent, ProjectModalComponent, FooterComponent,
+  PointerElementComponent,
   ToolbarComponent, ProgressModalComponent, TitlebarComponent,
   // Inspector
   InspectorEntryComponent,
