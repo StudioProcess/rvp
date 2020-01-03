@@ -69,6 +69,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
   form: FormGroup | null = null
   private readonly _subs: Subscription[] = []
+  private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
 
   @Input() readonly entry: Record<AnnotationColorMap>
   @Input() @HostBinding('class.selected') readonly isSelected = false
@@ -84,10 +85,6 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   @ViewChild('duration', { static: true }) private readonly _durationInputRef: ElementRef
   @ViewChild('descr', { static: true }) readonly _descrInputRef: ElementRef
 
-  form: FormGroup|null = null
-
-  private readonly _subs: Subscription[] = []
-  private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
   //private readonly _video_elem = document.querySelector('.video-main-elem video') as HTMLElement
   //private readonly domService = new domService()
   @HostListener('click', ['$event', '$event.target'])
