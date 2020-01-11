@@ -288,6 +288,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     const componentWidth = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetWidth
     const componentHeight = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetHeight
 
+    // console.log('ENTRY', this.entry)
+
     let options = {
       video_width: this._video_elem_container.offsetWidth,
       video_height: this._video_elem_container.offsetHeight,
@@ -296,6 +298,10 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       bgcolor: this.entry.get('color', null),
       active: true,
       zIndex: 1,
+      trackIndex: this.entry.get('trackIndex', null),
+      annotationStackIndex: this.entry.get('annotationStackIndex', null),
+      annotationIndex: this.entry.get('annotationIndex', null),
+      annotation_id: this.entry.getIn(['annotation', 'id']) as number,
     } as PointerElement
 
     componentRefInstance.setPointerTraits(<PointerElement>options)

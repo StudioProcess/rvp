@@ -93,6 +93,7 @@ export class PointerElementComponent implements OnInit {
   }
 
   dragEnded(event: any) {
+    console.log(event)
     this.getPosition(event)
     /*console.log('CdkDragEnd', this.offset)
     console.log('initialPosition', this.initialPosition)*/
