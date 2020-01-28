@@ -1,5 +1,10 @@
 # Changelog
 
+# 0.7.1 (2020-01-28) Visual Improvements
+
+* Timeline time label does not overflow
+* Allow user to view durations in Seconds for short Videos
+
 # 0.2.0 (2017-12-07) Undo/Redo, Offline, Manage tracks, Select/Copy/Paste Annotations, Stacking Annotations, Video Sources
 
 * Stacking annotations

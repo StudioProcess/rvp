@@ -50,6 +50,7 @@ export const getProjectSettings = createSelector(getProjectState, fromProject.ge
 export const getProjectSettingsShowCurrentAnnotationsOnly = createSelector(getProjectSettings, settings => settings.get('currentAnnotationsOnly', false))
 export const getProjectSettingsSearch = createSelector(getProjectSettings, settings => settings.get('search', null))
 export const getProjectSettingsApplyToTimeline = createSelector(getProjectSettings, settings => settings.get('applyToTimeline', false))
+export const getProjectSettingsFormatSeconds = createSelector(getProjectSettings, settings => settings.get('secondFormat', false))
 // Project meta
 
 export const getProjectMeta = createSelector(getProjectState, fromProject.getProjectMeta)

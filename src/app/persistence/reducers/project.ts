@@ -518,6 +518,9 @@ export function reducer(state: State = initialState, action: project.Actions): S
     case project.PROJECT_SETTINGS_SET_SHOW_CURRENT_ANNOTATIONS_ONLY: {
       return state.setIn(['settings', 'currentAnnotationsOnly'], action.payload)
     }
+    case project.PROJECT_SETTINGS_SET_SECOND_FORMAT: {
+      return state.setIn(['settings', 'secondFormat'], action.payload)
+    }
     case project.PROJECT_SETTINGS_SET_SEARCH: {
       return action.payload !== '' ?
         state.setIn(['settings', 'search'], action.payload):

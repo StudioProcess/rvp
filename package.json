@@ -1,6 +1,6 @@
 {
   "name": "rvp",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Research Video Prototype",
   "author": "Studio Process <contact@process.studio>",
   "maintainers": [
@@ -8,7 +8,8 @@
   ],
   "contributors": [
     "Onur Dogangönül <contact@dinony.com>",
-    "Adrian Soluch <adrian@soluch.at>"
+    "Adrian Soluch <adrian@soluch.at>",
+    "Manuel Meister <manuel@meister.io"
   ],
   "repository": {
     "type": "git",

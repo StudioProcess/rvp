@@ -34,6 +34,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   hasTracks: boolean = false
   hasActiveTrack: boolean = false
   currentAnnotationsOnly: boolean = false // show current annotations only
+  secondFormat: boolean = false
   search: string|null = null
   applyToTimeline: boolean = false
   private readonly _subs: Subscription[] = []
@@ -86,6 +87,10 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
     this._subs.push(this._rootStore.select(fromProject.getProjectSettingsShowCurrentAnnotationsOnly).subscribe(currentAnnotationsOnly => {
       this.currentAnnotationsOnly = currentAnnotationsOnly
+    }))
+
+    this._subs.push(this._rootStore.select(fromProject.getProjectSettingsFormatSeconds).subscribe(secondFormat => {
+      this.secondFormat = secondFormat
     }))
 
     this._subs.push(this._rootStore.select(fromProject.getProjectSettingsSearch).subscribe(search => {
@@ -305,6 +310,10 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
   currentAnnotationsOnlyChange(currentAnnotationsOnly: boolean) {
     this._rootStore.dispatch(new project.ProjectSettingsSetCurrentAnnotationsOnly(currentAnnotationsOnly))
+  }
+
+  secondFormatChange(secondFormat: boolean) {
+    this._rootStore.dispatch(new project.ProjectSettingsSetSecondFormat(secondFormat))
   }
 
   searchChange(search: string|null) {

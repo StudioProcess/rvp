@@ -45,7 +45,8 @@ export interface ProjectMeta {
 export interface ProjectSettings {
   readonly currentAnnotationsOnly: boolean,
   readonly search: string|null,
-  readonly applyToTimeline: boolean
+  readonly applyToTimeline: boolean,
+  readonly secondFormat: boolean
 }
 
 export interface ProjectPlayerState {
@@ -162,7 +163,8 @@ export const ProjectMetaRecordFactory = Record<ProjectMeta>({
 export const ProjectSettingsRecordFactory = Record<ProjectSettings>({
   currentAnnotationsOnly: false,
   search: null,
-  applyToTimeline: false
+  applyToTimeline: false,
+  secondFormat: false
 })
 
 export const ProjectSnapshotRecordFactory = Record<ProjectSnapshot>({

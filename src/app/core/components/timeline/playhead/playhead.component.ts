@@ -1,6 +1,9 @@
-import {Component, ChangeDetectionStrategy, Input, HostBinding} from '@angular/core'
+import {Component, ChangeDetectionStrategy, Input, HostBinding, OnInit, ChangeDetectorRef} from '@angular/core'
 
-import {formatDuration} from '../../../../lib/time'
+import {formatDurationCombined} from '../../../../lib/time'
+import {Store} from '@ngrx/store'
+import * as fromRoot from '../../../reducers'
+import * as fromProject from '../../../../persistence/reducers'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -8,7 +11,7 @@ import {formatDuration} from '../../../../lib/time'
   template: `<span class="timelabel" #label [ngStyle]="{'left': 'calc(-'+label.offsetWidth/2.05+' * '+left+'%)'}">{{format(currentTime)}}</span>`,
   styleUrls: ['playhead.component.scss']
 })
-export class PlayheadComponent {
+export class PlayheadComponent implements OnInit {
   @Input() readonly currentTime: number
   @Input() readonly left: number
 
@@ -17,5 +20,22 @@ export class PlayheadComponent {
     return this.left
   }
 
-  format = formatDuration
+  private formatSecond: boolean
+  constructor(
+    private readonly _cdr: ChangeDetectorRef,
+    private readonly _store: Store<fromRoot.State>,
+  ) {
+  }
+
+  format(time: number) {
+    return formatDurationCombined(time, this.formatSecond)
+  }
+
+  ngOnInit(): void {
+    this._store.select(fromProject.getProjectSettingsFormatSeconds)
+      .subscribe(formatSecond => {
+        this.formatSecond = formatSecond
+        this._cdr.markForCheck()
+      })
+  }
 }

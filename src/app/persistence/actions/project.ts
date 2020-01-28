@@ -52,6 +52,7 @@ export const PROJECT_UNDO = '[Project] Undo'
 export const PROJECT_REDO = '[Project] Redo'
 
 export const PROJECT_SETTINGS_SET_SHOW_CURRENT_ANNOTATIONS_ONLY = '[PROJECT] Set Current Annotations Only Setting'
+export const PROJECT_SETTINGS_SET_SECOND_FORMAT = '[PROJECT] Set second format'
 export const PROJECT_SETTINGS_SET_SEARCH = '[PROJECT] Set Search Setting'
 export const PROJECT_SETTINGS_SET_APPLY_TO_TIMELINE = '[PROJECT] Apply To Timeline Setting'
 
@@ -273,6 +274,11 @@ export class ProjectSettingsSetCurrentAnnotationsOnly implements Action {
   constructor(readonly payload: boolean) {}
 }
 
+export class ProjectSettingsSetSecondFormat implements Action {
+  readonly type = PROJECT_SETTINGS_SET_SECOND_FORMAT
+  constructor(readonly payload: boolean) {}
+}
+
 export class ProjectSettingsSetSearch implements Action {
   readonly type = PROJECT_SETTINGS_SET_SEARCH
   constructor(readonly payload: string|null) {}
@@ -406,7 +412,7 @@ export type Actions =
   ProjectUpdateHashtags| ProjectUpdateTitle|
   ProjectSetTimelineDuration|
   ProjectPushUndo|ProjectUndo|ProjectRedo|
-  ProjectSettingsSetCurrentAnnotationsOnly|ProjectSettingsSetSearch|ProjectSettingsSetApplyToTimeline|
+  ProjectSettingsSetCurrentAnnotationsOnly|ProjectSettingsSetSecondFormat|ProjectSettingsSetSearch|ProjectSettingsSetApplyToTimeline|
   ProjectSetActiveTrack|
   // PLAYER ACTIONS
   PlayerCreate|PlayerCreateError|PlayerCreateSuccess|

@@ -36,11 +36,18 @@
     </rv-projectmodal>
 
     <form class="leftForm" [formGroup]="leftForm" novalidate>
-      <div class="checkbox">
+      <div class="checkbox inline">
         <label>
           <input formControlName="currentAnnotationsOnly" type="checkbox">
           <span class="custom-checkbox secondary"><i class="icon-check"></i></span>
           Current <span class="show-for-large">annotations</span> only
+        </label>
+      </div>
+      <div class="checkbox">
+        <label>
+          <input formControlName="secondFormat" type="checkbox">
+          <span class="custom-checkbox secondary"><i class="icon-check"></i></span>
+          Second format
         </label>
       </div>
     </form>

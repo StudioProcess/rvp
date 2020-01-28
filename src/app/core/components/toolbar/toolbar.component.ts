@@ -26,6 +26,7 @@ import {HashtagService} from '../../actions/hashtag.service'
 })
 export class ToolbarComponent extends HashtagService implements OnInit, AfterViewInit {
   @Input('currentAnnotationsOnly') readonly currentAnnotationsOnlyIn: boolean
+  @Input('secondFormat') readonly secondFormatIn: boolean
   @Input('search') readonly searchIn: string
   @Input('applyToTimeline') readonly applyToTimelineIn: boolean
   @Input() readonly hasSelectedAnnotations: boolean
@@ -46,6 +47,7 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
   @Output() readonly onRedoAction = new EventEmitter()
 
   @Output() readonly onCurrentAnnotationsOnlyChange = new EventEmitter<boolean>()
+  @Output() readonly onSecondFormatChange = new EventEmitter<boolean>()
   @Output() readonly onSearchChange = new EventEmitter<string>()
   @Output() readonly onApplyToTimelineChange = new EventEmitter<boolean>()
 
@@ -73,7 +75,10 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
   }
 
   private _mapLeftModel() {
-    return {currentAnnotationsOnly: this.currentAnnotationsOnlyIn}
+    return {
+      currentAnnotationsOnly: this.currentAnnotationsOnlyIn,
+      secondFormat: this.secondFormatIn
+    }
   }
 
   private _mapRightModel() {
@@ -93,6 +98,14 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
         pluck('currentAnnotationsOnly'))
       .subscribe((value: boolean) => {
         this.onCurrentAnnotationsOnlyChange.emit(value)
+      }))
+
+    this._subs.push(
+      this.leftForm.valueChanges
+      .pipe(
+        pluck('secondFormat'))
+      .subscribe((value: boolean) => {
+        this.onSecondFormatChange.emit(value)
       }))
 
     this._subs.push(

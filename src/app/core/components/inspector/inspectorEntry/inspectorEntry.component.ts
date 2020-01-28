@@ -4,18 +4,17 @@ import {
   EventEmitter, ViewChild, ElementRef,
   ChangeDetectionStrategy, OnDestroy,
   SimpleChanges, HostBinding, HostListener,
-  ViewEncapsulation,
+  ViewEncapsulation, ChangeDetectorRef,
   // ChangeDetectorRef
 } from '@angular/core'
 
 import {
-  FormGroup, FormBuilder, AbstractControl,
-  Validators, ValidatorFn, ValidationErrors
+  FormGroup, FormBuilder, FormControl
 } from '@angular/forms'
 
 const _VALID_ = 'VALID' // not exported by @angular/forms
 
-import { Record } from 'immutable'
+import {Record} from 'immutable'
 
 import {
   Subscription, combineLatest,
@@ -29,7 +28,7 @@ import {
   // tap, delay
 } from 'rxjs/operators'
 
-import { formatDuration } from '../../../../lib/time'
+import {formatDuration} from '../../../../lib/time'
 
 import {
   AnnotationColorMap, AnnotationRecordFactory,
@@ -37,35 +36,29 @@ import {
   AnnotationSelectionRecordFactory
 } from '../../../../persistence/model'
 
-import { _MOUSE_DBLCLICK_DEBOUNCE_ } from '../../../../config/form'
+import {_MOUSE_DBLCLICK_DEBOUNCE_} from '../../../../config/form'
 
 import * as project from '../../../../persistence/actions/project'
-import { parseDuration } from '../../../../lib/time'
-import { DomService } from '../../../actions/dom.service'
-import { HashtagService } from '../../../actions/hashtag.service'
-
-function durationValidatorFactory(): ValidatorFn {
-  const durationRegex = /^([0-9]*:){0,2}[0-9]*(\.[0-9]*)?$/
-
-  return (control: AbstractControl): ValidationErrors | null => {
-    const valid = durationRegex.test(control.value)
-    return !valid ? { 'duration': { value: control.value } } : null
-  }
-}
-
-const durationValidator = Validators.compose([Validators.required, durationValidatorFactory()])
+import {parseDuration} from '../../../../lib/time'
+import {DomService} from '../../../actions/dom.service'
+import {HashtagService} from '../../../actions/hashtag.service'
+import {Store} from '@ngrx/store'
+import * as fromRoot from '../../../reducers'
+import * as fromProject from '../../../../persistence/reducers'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   selector: 'rv-inspector-entry',
   templateUrl: 'inspectorEntry.component.html',
-  host: { 'class': 'inspector-entry-host' },
+  host: {'class': 'inspector-entry-host'},
   styleUrls: ['inspectorEntry.component.scss']
 })
 export class InspectorEntryComponent extends HashtagService implements OnChanges, OnInit, AfterViewInit, OnDestroy {
 
   form: FormGroup | null = null
+  formatSecond = false
+  lastFormatSecond = false
   private readonly _subs: Subscription[] = []
 
   @Input() readonly entry: Record<AnnotationColorMap>
@@ -76,10 +69,10 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   @Output() readonly onFocusAnnotation = new EventEmitter<project.PlayerRequestCurrentTimePayload>()
   @Output() readonly onHashtagsUpdate = new EventEmitter<project.UpdateProjectHashtagsPayload>()
 
-  @ViewChild('formWrapper', { static: true }) private readonly _formRef: ElementRef
-  @ViewChild('start', { static: true }) private readonly _startInputRef: ElementRef
-  @ViewChild('duration', { static: true }) private readonly _durationInputRef: ElementRef
-  @ViewChild('descr', { static: true }) readonly _descrInputRef: ElementRef
+  @ViewChild('formWrapper', {static: true}) private readonly _formRef: ElementRef
+  @ViewChild('start', {static: true}) private readonly _startInputRef: ElementRef
+  @ViewChild('duration', {static: true}) private readonly _durationInputRef: ElementRef
+  @ViewChild('descr', {static: true}) readonly _descrInputRef: ElementRef
 
   @HostListener('click', ['$event', '$event.target'])
   onClick(event: MouseEvent, target: HTMLElement) {
@@ -89,6 +82,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   constructor(
     readonly elem: ElementRef,
     private readonly _fb: FormBuilder,
+    private readonly _store: Store<fromRoot.State>,
+    private readonly _cdr: ChangeDetectorRef,
     readonly _domService: DomService,
   ) {
     super(_domService)
@@ -100,8 +95,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     const description = entry.getIn(['annotation', 'fields', 'description'])
 
     return {
-      utc_timestamp: formatDuration(utc_timestamp),
-      duration: formatDuration(duration),
+      utc_timestamp: formatDuration(utc_timestamp, this.formatSecond),
+      duration: formatDuration(duration, this.formatSecond),
       description
     }
   }
@@ -113,9 +108,16 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       description
     } = this._mapModel(this.entry)
 
+    this._subs.push(
+      this._store.select(fromProject.getProjectSettingsFormatSeconds)
+        .subscribe(formatSecond => {
+          this.formatSecond = formatSecond
+          this._cdr.markForCheck()
+        }))
+
     this.form = this._fb.group({
-      utc_timestamp: [utc_timestamp, durationValidator],
-      duration: [duration, durationValidator],
+      utc_timestamp: [utc_timestamp, this.validateDuration.bind(this)],
+      duration: [duration, this.validateDuration.bind(this)],
       description
     })
   }
@@ -150,6 +152,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     const enterHotKey = formKeydown.pipe(filter((ev: KeyboardEvent) => ev.keyCode === 13))
 
     const formBlur = merge(
+      this._store.select(fromProject.getProjectSettingsFormatSeconds),
       fromEvent(this._startInputRef.nativeElement, 'blur'),
       fromEvent(this._durationInputRef.nativeElement, 'blur'),
       fromEvent(this._descrInputRef.nativeElement, 'blur'))
@@ -166,7 +169,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
             source: SelectionSource.Inspector
           })
         })
-        this.encloseHashtags({ 'replace': true })
+        this.encloseHashtags({'replace': true})
       }))
 
     // Focus annotation
@@ -199,7 +202,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
         keyCode === 186 ||                       // :
         keyCode === 190 ||                       // .
         keyCode === 37 ||                        // left arrow
-        keyCode === 39                           // right arrow
+        keyCode === 39 ||                        // right arrow
+        (this.formatSecond && keyCode === 32)   // space
     }
 
     this._subs.push(
@@ -230,7 +234,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
             return prev.title === cur.title && prev.description === cur.description &&
               prev.utc_timestamp === cur.utc_timestamp && prev.duration === cur.duration
           }))
-        .subscribe(({ description, utc_timestamp, duration }) => {
+        .subscribe(({description, utc_timestamp, duration}) => {
 
           description = this.htmlBr(description)
           description = this.removeNodesFromText(description)
@@ -238,9 +242,9 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
           const annotation = new AnnotationRecordFactory({
             id: this.entry.getIn(['annotation', 'id']),
-            utc_timestamp: parseDuration(utc_timestamp),
-            duration: parseDuration(duration),
-            fields: new AnnotationFieldsRecordFactory({ description })
+            utc_timestamp: parseDuration(utc_timestamp, this.lastFormatSecond),
+            duration: parseDuration(duration, this.lastFormatSecond),
+            fields: new AnnotationFieldsRecordFactory({description})
           })
 
           this.onUpdate.emit({
@@ -256,12 +260,20 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
         }))
   }
 
+  validateDuration(control: FormControl) {
+    const durationRegex = /^([0-9]*:){0,2}[0-9]*(\.[0-9]*)?$/
+    const secondsRegex = /^([0-9]+)?$/
+    const valid = this.formatSecond && secondsRegex.test(control.value) || durationRegex.test(control.value)
+    return !valid ? {'duration': {value: control.value}} : null
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     if (this.form !== null && changes.entry !== undefined && !changes.entry.firstChange) {
-      const { previousValue, currentValue } = changes.entry
-      if (previousValue === undefined || !previousValue.equals(currentValue)) {
+      const {previousValue, currentValue} = changes.entry
+      if (previousValue === undefined || !previousValue.equals(currentValue) || this.formatSecond !== this.lastFormatSecond) {
         // console.log(previousValue, currentValue)
         this.form.setValue(this._mapModel(currentValue))
+        this.lastFormatSecond = this.formatSecond
       }
     }
   }
