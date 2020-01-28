@@ -4,7 +4,7 @@ import {Component} from '@angular/core'
   selector: 'rv-logo',
   template: `
     <div class="logo">
-      <img src="/assets/img/rv-logo_1000px.png" alt="Research Video Logo" title="Research Video">
+      <img src="assets/img/rv-logo_1000px.png" alt="Research Video Logo" title="Research Video">
     </div>
   `,
   styles: [`
