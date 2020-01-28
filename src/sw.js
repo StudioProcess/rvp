@@ -2,18 +2,18 @@ self.addEventListener('install', function(e) {
   e.waitUntil(
     caches.open('rvp').then(function(cache) {
       return cache.addAll([
-        '/',
-        '/index.html',
+        './',
+        './index.html',
         // '/inline.js',
-        '/polyfills.js',
-        '/scripts.js',
-        '/styles.css',
+        './polyfills.js',
+        './scripts.js',
+        './styles.css',
         // '/vendor.js',
-        '/main.js',
-        '/assets/img/rv_animation.gif',
-        '/ionicons.ttf',
-        '/assets/img/rv-logo_1000px.png',
-        '/assets/projects/default.rv'
+        './main.js',
+        './assets/img/rv_animation.gif',
+        './ionicons.ttf',
+        './assets/img/rv-logo_1000px.png',
+        './assets/projects/default.rv'
       ]);
     })
   );
