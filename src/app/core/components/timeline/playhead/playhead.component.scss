@@ -14,10 +14,11 @@
     color: $white;
     display: inline-block;
     background-color: $black;
-    position: relative;
+    position: absolute;
     top: -$playhead-height;
     height: $playhead-height;
     padding-left: 0.2em;
     padding-right: 0.2em;
+    white-space: nowrap;
   }
 }
