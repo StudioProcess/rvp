@@ -5,18 +5,18 @@ import {
   ElementRef, EventEmitter,
   HostListener
 } from '@angular/core'
-import {FormBuilder, FormGroup} from '@angular/forms'
+import { FormBuilder, FormGroup } from '@angular/forms'
 
-import {fromEvent, Subscription} from 'rxjs'
-import {debounceTime, pluck} from 'rxjs/operators'
+import { fromEvent, Subscription } from 'rxjs'
+import { debounceTime, pluck } from 'rxjs/operators'
 
-import {_FORM_INPUT_DEBOUNCE_} from '../../../config/form'
+import { _FORM_INPUT_DEBOUNCE_ } from '../../../config/form'
 
 
 import * as project from '../../../persistence/actions/project'
-import {ImportVideoPayload} from '../../../persistence/actions/project'
-import {DomService} from '../../actions/dom.service'
-import {HashtagService} from '../../actions/hashtag.service'
+import { ImportVideoPayload } from '../../../persistence/actions/project'
+import { DomService } from '../../actions/dom.service'
+import { HashtagService } from '../../actions/hashtag.service'
 
 @Component({
   selector: 'rv-toolbar',
@@ -35,8 +35,8 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
   @Input() readonly hasTracks: boolean
   @Input() readonly hasActiveTrack: boolean
 
-  leftForm: FormGroup|null = null
-  rightForm: FormGroup|null = null
+  leftForm: FormGroup | null = null
+  rightForm: FormGroup | null = null
 
   @Output() readonly onAddAnnotation = new EventEmitter()
   @Output() readonly onDeleteAnnotation = new EventEmitter()
@@ -59,9 +59,9 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
   @ViewChild('search', { static: true }) readonly _searchRef: ElementRef
 
   @HostListener('click', ['$event', '$event.target'])
-    onClick(event: MouseEvent, target: HTMLElement) {
-      this.removeHashTag(target)
-    }
+  onClick(event: MouseEvent, target: HTMLElement) {
+    this.removeHashTag(target)
+  }
 
   private readonly _subs: Subscription[] = []
 
@@ -73,7 +73,7 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
   }
 
   private _mapLeftModel() {
-    return {currentAnnotationsOnly: this.currentAnnotationsOnlyIn}
+    return { currentAnnotationsOnly: this.currentAnnotationsOnlyIn }
   }
 
   private _mapRightModel() {
@@ -89,19 +89,19 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
 
     this._subs.push(
       this.leftForm.valueChanges
-      .pipe(
-        pluck('currentAnnotationsOnly'))
-      .subscribe((value: boolean) => {
-        this.onCurrentAnnotationsOnlyChange.emit(value)
-      }))
+        .pipe(
+          pluck('currentAnnotationsOnly'))
+        .subscribe((value: boolean) => {
+          this.onCurrentAnnotationsOnlyChange.emit(value)
+        }))
 
     this._subs.push(
       this.rightForm.valueChanges
-      .pipe(
-        pluck('search'), debounceTime(_FORM_INPUT_DEBOUNCE_))
-      .subscribe((value: string) => {
-        this.onSearchChange.emit(value)
-      }))
+        .pipe(
+          pluck('search'), debounceTime(_FORM_INPUT_DEBOUNCE_))
+        .subscribe((value: string) => {
+          this.onSearchChange.emit(value)
+        }))
 
     this._subs.push(
       this.rightForm.valueChanges
@@ -111,16 +111,16 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
         }))
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit() {
     this._subs.push(fromEvent(this._searchRef.nativeElement, 'keydown').subscribe((ev: KeyboardEvent) => {
       ev.stopPropagation()
-      if(ev.key == 'Enter') {
+      if (ev.key == 'Enter') {
         ev.preventDefault()
       }
-      if(this.isHashTagPopupContainerOpen) {
+      if (this.isHashTagPopupContainerOpen) {
         this.handleHashtagInput(ev)
       } else {
-        if(ev.keyCode === 191 || ev.key === '#') {
+        if (ev.keyCode === 191 || ev.key === '#') {
           this.handleHashTag(ev)
         }
       }
@@ -134,25 +134,25 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
   actionBtnClick($event: MouseEvent, btnId: string) {
     // $event.preventDefault()
     // $event.stopPropagation()
-    switch(btnId) {
+    switch (btnId) {
       case 'add_annotation':
         this.onAddAnnotation.emit()
-      break
+        break
       case 'delete_annotation':
         this.onDeleteAnnotation.emit()
-      break
+        break
       case 'copy_annotation':
         this.onCopyAnnotation.emit()
-      break
+        break
       case 'paste_annotation':
         this.onPasteAnnotation.emit()
-      break
+        break
       case 'undo_action':
         this.onUndoAction.emit()
-      break
+        break
       case 'redo_action':
         this.onRedoAction.emit()
-      break
+        break
     }
   }
 
@@ -161,7 +161,6 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
   }
 
   importVideo(videoImport: project.ImportVideoPayload) {
-    // console.log(videoImport)
     this.onImportVideo.emit(videoImport)
   }
 
@@ -183,7 +182,7 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
 
   clearSearch() {
     this.removeHashTagPopupContainer()
-    this.rightForm!.patchValue({search: null})
+    this.rightForm!.patchValue({ search: null })
   }
 
   ngOnDestroy() {

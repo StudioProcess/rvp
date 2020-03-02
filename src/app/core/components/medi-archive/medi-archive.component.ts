@@ -1,11 +1,11 @@
 import { Component, OnInit, ChangeDetectorRef, EventEmitter, Output } from '@angular/core'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { FormGroup, FormControl } from '@angular/forms'
 import { HttpClient/*, HttpHeaders*/ } from '@angular/common/http'
 // import { Observable } from 'rxjs'
 
 import { VIDEO_TYPE_URL, VIDEO_URL_SOURCE_CUSTOM } from '../../../persistence/model'
-import { ImportVideoPayload } from '../../../persistence/actions/project'
+import { ImportVideoPayload } from '../../../persistence/actions/project'
 
 // import { from } from 'rxjs'
 
@@ -25,6 +25,8 @@ export class MediArchiveComponent implements OnInit {
   @Output() readonly onImportVideo = new EventEmitter<ImportVideoPayload>()
   @Output() readonly onImportProjectMeta = new EventEmitter()
 
+  mediArchiveModal = $('#medi-archive-modal') as any
+
   mediaArchiveForm = new FormGroup({
     video: new FormControl(),
     annotations: new FormControl()
@@ -33,6 +35,7 @@ export class MediArchiveComponent implements OnInit {
   constructor(
     private readonly changeDetectorRef: ChangeDetectorRef,
     private activatedRoute: ActivatedRoute,
+    private router: Router,
     private http: HttpClient
   ) { }
 
@@ -44,6 +47,8 @@ export class MediArchiveComponent implements OnInit {
           video: params.video,
           annotations: params.annotations
         })
+
+        this.loadProjectFromUrl()
       }
     })
   }
@@ -53,21 +58,20 @@ export class MediArchiveComponent implements OnInit {
    *  to get a response into the browser
    *
    *  testurls:
-   *  http://localhost:4200/?video=https:%2F%2Fmedienarchiv.zhdk.ch%2Fapi%2Fmedia-entries%2Ff5b78e56-a229-4295-a4cc-0311e6534207%2Fmedia-file%2Fdata-stream&annotations=https:%2F%2Fmedienarchiv.zhdk.ch%2Fapi%2Fmedia-entries%2Ff5b78e56-a229-4295-a4cc-0311e6534207%2Fmeta-data%2Fresearch_video:rv_annotations%2Fdata-stream
-   *
-   *  (deprecated) http://localhost:4200/?video=https:%2F%2Fshowcase.rocks%2Fcors%2Fvideo&annotations=https:%2F%2Fshowcase.rocks%2Fcors%2Fjson
+   *  https://docs.google.com/spreadsheets/d/1LhBoUU3YH7EPGdOI-4jv7BlkU9Fi8gvY-dmHgcooBbg/edit?usp=sharing
    */
   loadProjectFromUrl() {
 
     // Import Metadata frmo URL
-    this.sendGetRequest(this.mediaArchiveForm.value.annotations)
-    .subscribe(
+    this.sendGetRequest(this.mediaArchiveForm.value.annotations).subscribe(
       (response: any) => {
 
+        // console.log(response)
         const metaData = {
           meta: JSON.parse(response.body),
           video: null
         }
+        // console.log(metaData)
         this.onImportProjectMeta.emit(metaData)
 
         // Import Video from URL
@@ -78,10 +82,17 @@ export class MediArchiveComponent implements OnInit {
         })
 
         this.response_annotations_header = 'METADATA LOAD SUCCESS'
-        this.response_video_header= 'VIDEO LOADED'
+        this.response_video_header = 'VIDEO LOADED'
 
         // this.response_annotations = response
         this.changeDetectorRef.detectChanges()
+
+        this.mediArchiveModal.foundation('close')
+
+        // Reload
+        this.router.navigate([''])
+        // window.location.reload()
+
       },
       error => {
         this.response_annotations_header = 'METADATA LOAD ERROR'
@@ -94,7 +105,7 @@ export class MediArchiveComponent implements OnInit {
     })*/
   }
 
-  protected sendGetRequest(url : string) {
+  protected sendGetRequest(url: string) {
     return this.http.get(url, {
       responseType: 'text',
       observe: 'response'

@@ -31,7 +31,7 @@ import {formatDuration} from '../../lib/time'
 
 declare var $: any
 
-//import {BehaviorSubject} from 'rxjs/BehaviorSubject'
+// import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 import {MessageService} from '../../core/actions/message.service'
 
 @Injectable()
