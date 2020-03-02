@@ -7,5 +7,8 @@
       "stream": ["../node_modules/readable-stream/readable.js"]
     }
   },
-  "files": ["main.ts", "types/declarations.d.ts", "polyfills.ts"]
+  "files": ["main.ts", "types/declarations.d.ts", "polyfills.ts"],
+  "include": [
+    "src/**/*.d.ts"
+  ]
 }

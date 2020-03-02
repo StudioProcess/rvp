@@ -42,7 +42,7 @@ import {InspectorEntryComponent} from './inspectorEntry/inspectorEntry.component
   `]
 })
 export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('wrapper', { static: false }) private readonly _scrollWrapperRef: ElementRef
+  @ViewChild('wrapper') private readonly _scrollWrapperRef: ElementRef
   @ViewChildren(InspectorEntryComponent) private readonly _entries: QueryList<InspectorEntryComponent>
   private readonly _subs: Subscription[] = []
   annotations: List<Record<AnnotationColorMap>>
