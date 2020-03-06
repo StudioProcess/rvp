@@ -24,7 +24,6 @@
               ]
             },
             "assets": [
-              "src/sw.js",
               "src/assets",
               "src/favicon.ico",
               "src/apple-touch-icon.png",
