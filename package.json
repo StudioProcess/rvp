@@ -23,7 +23,9 @@
   "scripts": {
     "ng": "ng",
     "prestart": "node tools/prepEnv",
+    "prestart:prod": "node tools/prepEnv",
     "start": "ng serve",
+    "start:prod": "ng serve --prod",
     "prebuild": "node tools/prepEnv",
     "build": "ng build",
     "prebuild:prod": "node tools/prepEnv",

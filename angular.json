@@ -24,7 +24,7 @@
               ]
             },
             "assets": [
-              "src/assets",
+              { "input": "src/assets/", "glob": "**/*", "ignore": ["fonts/**/*"], "output": "assets/" },
               "src/favicon.ico",
               "src/apple-touch-icon.png",
               "src/.htaccess"
