@@ -145,12 +145,15 @@ export class ServerProxy implements OnDestroy {
               await this._cache.cache('video', payload.type === VIDEO_TYPE_BLOB ? payload.data: null)
 
               this._store.dispatch(new project.ProjectImportVideoSuccess(payload))
+              this._msg!.update({videoImportSuccess: true})
             } catch(err) {
               this._store.dispatch(new project.ProjectImportVideoError(err))
+              this._msg!.update({videoImportSuccess: false, error: err})
             }
           },
           error: err => {
             this._store.dispatch(new project.ProjectImportVideoError(err))
+            this._msg!.update({videoImportSuccess: false, error: err})
           }
         }))
 

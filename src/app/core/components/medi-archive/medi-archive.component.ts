@@ -9,6 +9,8 @@ import { ImportVideoPayload } from '../../../persistence/actions/project'
 
 // import { from } from 'rxjs'
 
+import { MessageService } from '../../actions/message.service'
+
 @Component({
   selector: 'rv-medi-archive',
   templateUrl: './medi-archive.component.html',
@@ -36,7 +38,8 @@ export class MediArchiveComponent implements OnInit {
     private readonly changeDetectorRef: ChangeDetectorRef,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private _msg: MessageService
   ) { }
 
   ngOnInit() {
@@ -71,9 +74,6 @@ export class MediArchiveComponent implements OnInit {
           meta: JSON.parse(response.body),
           video: null
         }
-        // console.log(metaData)
-        this.onImportProjectMeta.emit(metaData)
-
         // Import Video from URL
         this.onImportVideo.emit({
           type: VIDEO_TYPE_URL,
@@ -81,18 +81,28 @@ export class MediArchiveComponent implements OnInit {
           data: new URL(this.mediaArchiveForm.value.video)
         })
 
-        this.response_annotations_header = 'METADATA LOAD SUCCESS'
-        this.response_video_header = 'VIDEO LOADED'
+        this._msg.msgData.subscribe((res: any) => {
+          // console.log('MSG', res)
+          if(res.hasOwnProperty('videoImportSuccess')) {
 
-        // this.response_annotations = response
-        this.changeDetectorRef.detectChanges()
+            if(res.videoImportSuccess === true) {
+              // console.log(metaData)
+              this.onImportProjectMeta.emit(metaData)
 
-        this.mediArchiveModal.foundation('close')
+              // this.response_annotations_header = 'METADATA LOAD SUCCESS'
+              this.response_annotations = response
+              // this.changeDetectorRef.detectChanges()
+              this.response_video_header = 'VIDEO LOADED'
+              this.mediArchiveModal.foundation('close')
 
-        // Reload
-        this.router.navigate([''])
-        // window.location.reload()
-
+              // Reload
+              // window.location.reload()
+              this.router.navigate([''])
+            } else {
+              // TODO : ERRORHANDLING
+            }
+          }
+        })
       },
       error => {
         this.response_annotations_header = 'METADATA LOAD ERROR'
