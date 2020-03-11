@@ -24,8 +24,9 @@ export class MediArchiveComponent implements OnInit {
   response_video_header: string
   response_annotations_header: string
 
-  @Output() readonly onImportVideo = new EventEmitter<ImportVideoPayload>()
+  @Output() readonly onResetProject = new EventEmitter()
   @Output() readonly onImportProjectMeta = new EventEmitter()
+  @Output() readonly onImportVideo = new EventEmitter<ImportVideoPayload>()
 
   mediArchiveModal = $('#medi-archive-modal') as any
 
@@ -69,50 +70,49 @@ export class MediArchiveComponent implements OnInit {
     this.sendGetRequest(this.mediaArchiveForm.value.annotations).subscribe(
       (response: any) => {
 
-        // console.log(response)
-        const metaData = {
-          meta: JSON.parse(response.body),
-          video: null
-        }
-        // Import Video from URL
-        this.onImportVideo.emit({
-          type: VIDEO_TYPE_URL,
-          source: VIDEO_URL_SOURCE_CUSTOM,
-          data: new URL(this.mediaArchiveForm.value.video)
-        })
+        // complete project reset before
+        this.onResetProject.emit(false)
 
-        this._msg.msgData.subscribe((res: any) => {
-          // console.log('MSG', res)
-          if(res.hasOwnProperty('videoImportSuccess')) {
-
-            if(res.videoImportSuccess === true) {
-              // console.log(metaData)
-              this.onImportProjectMeta.emit(metaData)
-
-              // this.response_annotations_header = 'METADATA LOAD SUCCESS'
-              this.response_annotations = response
-              // this.changeDetectorRef.detectChanges()
-              this.response_video_header = 'VIDEO LOADED'
-              this.mediArchiveModal.foundation('close')
-
-              // Reload
-              // window.location.reload()
-              this.router.navigate([''])
-            } else {
-              // TODO : ERRORHANDLING
-            }
+        // after reset, load metada/video
+        setTimeout(() => {
+          const metaData = {
+            meta: JSON.parse(response.body),
+            video: null
           }
-        })
+          this.onImportProjectMeta.emit(metaData)
+
+          // Import Video from URL
+          this.onImportVideo.emit({
+            type: VIDEO_TYPE_URL,
+            source: VIDEO_URL_SOURCE_CUSTOM,
+            data: new URL(this.mediaArchiveForm.value.video)
+          })
+
+          this._msg.msgData.subscribe((res: any) => {
+            // console.log('MSG', res)
+            if (res.hasOwnProperty('videoImportSuccess')) {
+
+              if (res.videoImportSuccess === true) {
+                // this.response_annotations_header = 'METADATA LOAD SUCCESS'
+                this.response_annotations = response
+                // this.changeDetectorRef.detectChanges()
+                this.response_video_header = 'VIDEO LOADED'
+                this.mediArchiveModal.foundation('close')
+
+                // Reload
+                this.router.navigate(['/'])
+              } else {
+                // TODO : ERRORHANDLING
+              }
+            }
+          })
+        }, 500)
       },
       error => {
         this.response_annotations_header = 'METADATA LOAD ERROR'
         this.response_annotations = error
         this.changeDetectorRef.detectChanges()
       })
-
-    /*this.fetchGetRequest(this.mediaArchiveForm.value.video).subscribe(data => {
-      console.log(data)
-    })*/
   }
 
   protected sendGetRequest(url: string) {
@@ -121,23 +121,4 @@ export class MediArchiveComponent implements OnInit {
       observe: 'response'
     })
   }
-
-  /*
-  protected fetchGetRequest(url : string) {
-    return from(
-      fetch(
-        url,
-        {
-          // body: JSON.stringify(data),
-          headers: {
-            'Content-Type': 'text/plain',
-            'Access-Control-Allow-Origin': '*'
-          },
-          method: 'GET',
-          mode: 'no-cors'
-        }
-      )
-    )
-  }
-  */
 }
