@@ -106,7 +106,7 @@ export class MediArchiveComponent implements OnInit {
               }
             }
           })
-        }, 500)
+        }, 1000)
       },
       error => {
         this.response_annotations_header = 'METADATA LOAD ERROR'

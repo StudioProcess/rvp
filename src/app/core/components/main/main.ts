@@ -243,7 +243,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   resetProject(info?: boolean) {
-    if (info === false) {
+    if (typeof info !== 'undefined' && info === false) {
       this._rootStore.dispatch(new project.ProjectReset())
     } else {
       if (window.confirm('Reset the whole project? All data will be lost.')) {
