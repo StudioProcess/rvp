@@ -118,8 +118,8 @@ export class MediArchiveComponent implements OnInit {
   protected sendGetRequest(url: string) {
     return this.http.get(url, {
       responseType: 'text',
-      observe: 'response',
-      withCredentials: true
+      observe: 'response'
+      // withCredentials: true
     })
   }
 }
