@@ -28,7 +28,12 @@ import { HttpClientModule } from '@angular/common/http'
     BrowserModule,
     RouterModule.forRoot([]),
     // RouterModule.forRoot(appRoutes/*, {enableTracing: !environment.production}*/),
-    StoreModule.forRoot(reducers, { metaReducers }),
+    StoreModule.forRoot(reducers, {
+      metaReducers, runtimeChecks: {
+        strictStateImmutability: false,
+        strictActionImmutability: false,
+      }
+    }),
     EffectsModule.forRoot([]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
 
