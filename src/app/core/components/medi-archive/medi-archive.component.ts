@@ -23,6 +23,7 @@ export class MediArchiveComponent implements OnInit {
   response_annotations: any
   response_video_header: string
   response_annotations_header: string
+  withCredentialsSetting: boolean
 
   @Output() readonly onResetProject = new EventEmitter()
   @Output() readonly onImportProjectMeta = new EventEmitter()
@@ -52,7 +53,7 @@ export class MediArchiveComponent implements OnInit {
           annotations: params.annotations
         })
 
-        this.loadProjectFromUrl()
+        this.probeUrlIfAuthorized()
       }
     })
   }
@@ -115,11 +116,32 @@ export class MediArchiveComponent implements OnInit {
       })
   }
 
-  protected sendGetRequest(url: string) {
-    return this.http.get(url, {
+  /**
+   *  test if URL needs authorization
+   *  if so http headers withCredentials
+   *  must be sent along
+   */
+  probeUrlIfAuthorized() {
+    this.withCredentialsSetting = false
+    return this.http.get(this.mediaArchiveForm.value.annotations, {
       responseType: 'text',
       observe: 'response'
-      // withCredentials: true
+    }).toPromise().then((res: any) => {
+      this.loadProjectFromUrl()
+    }).catch((err: any) => {
+      if (err.status === 401) {
+        this.withCredentialsSetting = true
+      }
+      this.loadProjectFromUrl()
+    })
+  }
+
+  protected sendGetRequest(url: string) {
+
+    return this.http.get(url, {
+      responseType: 'text',
+      observe: 'response',
+      withCredentials: this.withCredentialsSetting
     })
   }
 }
