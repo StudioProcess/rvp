@@ -1,0 +1,9 @@
+@import 'mixins';
+
+:host {
+  display: block;
+}
+
+.button-media-archive {
+  @include button($process-light-gray);
+}
