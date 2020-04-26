@@ -41,11 +41,8 @@ import { HttpClientModule } from '@angular/common/http'
     CoreModule,
     PersistenceModule,
     PlayerModule,
-<<<<<<< HEAD
-    BrowserAnimationsModule
-=======
+    BrowserAnimationsModule,
     HttpClientModule,
->>>>>>> master
   ],
   // declarations: [AppShellContainer],
   bootstrap: [MainContainer],
