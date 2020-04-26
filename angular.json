@@ -24,12 +24,20 @@
               ]
             },
             "assets": [
-              { "input": "src/assets/", "glob": "**/*", "ignore": ["fonts/**/*"], "output": "assets/" },
+              {
+                "input": "src/assets/",
+                "glob": "**/*",
+                "ignore": [
+                  "fonts/**/*"
+                ],
+                "output": "assets/"
+              },
               "src/favicon.ico",
               "src/apple-touch-icon.png",
               "src/.htaccess"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "node_modules/video.js/dist/video-js.min.css",
               "src/assets/fonts/space_mono/SpaceMono.css",
               "src/assets/fonts/roboto/Roboto.css",
