@@ -21,7 +21,7 @@
   </rv-track>
   <div #playheadOverflow class="playhead-wrapper">
     <div #playheadZoom class="playhead-zoom" [style.width.%]="pZoom*100">
-      <rv-playhead [style.left.%]="playerPos*100" [currentTime]="playerCurrentTime"></rv-playhead>
+      <rv-playhead [left]="playerPos*100" [currentTime]="playerCurrentTime"></rv-playhead>
     </div>
   </div>
 </div>

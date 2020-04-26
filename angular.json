@@ -11,6 +11,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -23,8 +24,7 @@
               ]
             },
             "assets": [
-              "src/sw.js",
-              "src/assets",
+              { "input": "src/assets/", "glob": "**/*", "ignore": ["fonts/**/*"], "output": "assets/" },
               "src/favicon.ico",
               "src/apple-touch-icon.png",
               "src/.htaccess"
@@ -44,6 +44,12 @@
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -100,7 +106,7 @@
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "rv",
-      "styleext": "scss"
+      "style": "scss"
     },
     "@schematics/angular:directive": {
       "prefix": "rv"

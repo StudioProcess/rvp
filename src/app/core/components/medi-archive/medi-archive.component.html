@@ -1,0 +1,36 @@
+<div>
+  <h4>Media Archive</h4>
+  <button class="close-button" data-close aria-label="Close modal" type="button">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="row">
+  <div class="column">
+    <div [formGroup]="mediaArchiveForm">
+      <div class="grid-container">
+        <div class="grid-x grid-padding-x">
+          <div class="cell">
+            <label>Video
+              <input type="url" class="input-group-field" required aria-required="true" name="videourl"
+                formControlName="video" />
+            </label>
+          </div>
+          <div class="cell">
+            <label>Annotations
+              <input type="url" required aria-required="true" name="annotationsurl" formControlName="annotations" />
+            </label>
+          </div>
+          <a type="submit" class="button button-media-archive" (click)="loadProjectFromUrl()">Load Project</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="column">
+    {{ response_video_header }}
+    <pre>{{ response_video | json }}</pre>
+    {{ response_annotations_header }}
+    <pre>{{ response_annotations | json }}</pre>
+  </div>
+</div>
