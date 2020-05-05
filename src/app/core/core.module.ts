@@ -27,9 +27,9 @@ import { TagAddModalComponent } from './components/tagging/tag-add-modal/tag-add
 import { InspectorEntryComponent } from './components/inspector/inspectorEntry/inspectorEntry.component'
 
 // Timeline components
-import {TrackComponent} from './components/timeline/track/track.component'
-import {HandlebarComponent} from './components/timeline/handlebar/handlebar.component'
-import {PlayheadComponent} from './components/timeline/playhead/playhead.component'
+import { TrackComponent } from './components/timeline/track/track.component'
+import { HandlebarComponent } from './components/timeline/handlebar/handlebar.component'
+import { PlayheadComponent } from './components/timeline/playhead/playhead.component'
 import { MediArchiveComponent } from './components/medi-archive/medi-archive.component'
 
 const _DECLS_ = [

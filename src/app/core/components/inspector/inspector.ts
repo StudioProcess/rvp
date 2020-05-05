@@ -31,7 +31,7 @@ import {InspectorEntryComponent} from './inspectorEntry/inspectorEntry.component
         (onUpdate)="updateAnnotation($event)"
         (onSelectAnnotation)="selectAnnotation($event)"
         (onFocusAnnotation)="focusAnnotation($event)"
-        (onAddAnnotationPointer)="addAnnotationPointer($event)">
+        (onAddAnnotationPointer)="addAnnotationPointer($event)"
         (onHashtagsUpdate)="hashtagsUpdate($event)">
       </rv-inspector-entry>
     </div>`,
