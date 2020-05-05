@@ -6,6 +6,7 @@
     <div class="column annotation-info">
       <div class="row time-row">
         <div class="column">
+          <button (click)="pointerAction($event)" title="Add Pointer" class="annotation-pointer-ctrl"></button>
           <i class="ion-md-time"></i>
           <input #start formControlName="utc_timestamp" class="duration" title="Start Time">
           <i class="ion-ios-time"></i>

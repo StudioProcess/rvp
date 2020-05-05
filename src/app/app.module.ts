@@ -16,8 +16,9 @@ import { PlayerModule } from './player/player.module'
 import { reducers, metaReducers } from './core/reducers'
 
 // import {AppShellContainer} from './shell'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MainContainer } from './core/components/main/main'
-import { MessageService } from './core/actions/message.service';
+import { MessageService } from './core/actions/message.service'
 // import { MediArchiveComponent } from './medi-archive/medi-archive.component'
 
 import { HttpClientModule } from '@angular/common/http'
@@ -40,6 +41,7 @@ import { HttpClientModule } from '@angular/common/http'
     CoreModule,
     PersistenceModule,
     PlayerModule,
+    BrowserAnimationsModule,
     HttpClientModule,
   ],
   // declarations: [AppShellContainer],

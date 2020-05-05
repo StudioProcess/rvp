@@ -155,5 +155,19 @@
       min-height: 18px !important;
       //max-height: 20px;
     }
+
+    .annotation-pointer-ctrl {
+      margin: 6px 0 0 3px;
+      float: left;
+      height: 10px;
+      width: 10px;
+      background-color: #bbb;
+      border-radius: 50%;
+      cursor: pointer;
+
+      &:focus {
+        outline: none !important;
+      }
+    }
   }
 }

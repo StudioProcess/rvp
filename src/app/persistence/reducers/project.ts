@@ -59,6 +59,23 @@ function nextAnnotationId(timeline: Record<Timeline>): number {
   return maxId + 1
 }
 
+function getAnnotationById(state: State, id: number): Record<Annotation>|null {
+  const timeline = state.getIn(['meta', 'timeline'])
+  const tracks = timeline.get('tracks', [])
+  let ret = null
+  tracks.forEach((track: any) => {
+    const annotationStacks = track.get('annotationStacks', null)
+    annotationStacks.forEach((annotations: any) => {
+      annotations.forEach((annotation: any) => {
+        if (annotation.get('id', null) === id) {
+          ret = annotation
+        }
+      })
+    })
+  })
+  return ret
+}
+
 function getAllSelections(state: State): Set<Record<AnnotationSelection>> {
   const rangeSelections = state.getIn(['selection', 'annotation', 'range'])
   const pickSelections = state.getIn(['selection', 'annotation', 'pick'])
@@ -536,6 +553,22 @@ export function reducer(state: State = initialState, action: project.Actions): S
           mState.setIn(['meta', 'timeline', 'tracks', i, 'isActive'], i === activeTrackIndex)
         }
       })
+    }
+    case project.PROJECT_ANNOTATION_ADD_POINTER: {
+
+      //const annotationId = annotation.get('id', null)!
+      //const s: Record<AnnotationSelection> = state.getIn(['selection', 'annotation', 'selected'])
+      //const annotations = track.get('annotationStacks', null).flatMap(stack => stack)
+      //const {trackIndex, annotationIndex, annotationStackIndex, annotation} = action.payload
+      const annotation = getAnnotationById(state, action.payload.annotation_id)
+      const annotationCp = { ...annotation };
+      //annotationCp.pointerElement = action.payload.pointerPayload
+      console.log('PROJECT_ANNOTATION_ADD_POINTER', action.payload, annotation, annotationCp)
+
+      const path = ['meta', 'timeline', 'tracks', action.payload.path.trackIndex, 'annotationStacks', action.payload.path.annotationStackIndex, action.payload.path.annotationIndex]
+      let s = state.getIn(path)
+      console.log('PATH', s, action.payload.path.annotationIndex, action.payload.annotation_id)
+
     }
     case project.PLAYER_CREATE_SUCCESS:
     case project.PLAYER_DESTROY_SUCCESS:

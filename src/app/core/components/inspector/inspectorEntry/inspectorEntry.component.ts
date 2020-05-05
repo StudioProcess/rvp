@@ -34,12 +34,14 @@ import { formatDuration } from '../../../../lib/time'
 import {
   AnnotationColorMap, AnnotationRecordFactory,
   AnnotationFieldsRecordFactory, SelectionSource,
-  AnnotationSelectionRecordFactory
+  AnnotationSelectionRecordFactory,
+  PointerElement
 } from '../../../../persistence/model'
 
 import { _MOUSE_DBLCLICK_DEBOUNCE_ } from '../../../../config/form'
 
 import * as project from '../../../../persistence/actions/project'
+import { PointerElementComponent } from '../../pointer-element/pointer-element.component'
 import { parseDuration } from '../../../../lib/time'
 import { DomService } from '../../../actions/dom.service'
 import { HashtagService } from '../../../actions/hashtag.service'
@@ -67,6 +69,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
   form: FormGroup | null = null
   private readonly _subs: Subscription[] = []
+  private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
 
   @Input() readonly entry: Record<AnnotationColorMap>
   @Input() @HostBinding('class.selected') readonly isSelected = false
@@ -74,6 +77,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   @Output() readonly onUpdate = new EventEmitter<project.UpdateAnnotationPayload>()
   @Output() readonly onSelectAnnotation = new EventEmitter<project.SelectAnnotationPayload>()
   @Output() readonly onFocusAnnotation = new EventEmitter<project.PlayerRequestCurrentTimePayload>()
+  @Output() readonly onAddAnnotationPointer = new EventEmitter<project.UpdateAnnotationPointerPayload>()
   @Output() readonly onHashtagsUpdate = new EventEmitter<project.UpdateProjectHashtagsPayload>()
 
   @ViewChild('formWrapper', { static: true }) private readonly _formRef: ElementRef
@@ -268,5 +272,57 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
+  }
+
+  pointerAction($event: MouseEvent) {
+    //$event.preventDefault()
+    //$event.stopPropagation()
+    console.log (this._video_elem_container.offsetWidth, this._video_elem_container.offsetHeight)
+
+    const componentRef = this._domService.instantiateComponent(PointerElementComponent)
+    const componentRefInstance = this._domService.getInstance(componentRef)
+    this._domService.attachComponent(componentRef, this._video_elem_container)
+
+    const componentWidth = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetWidth
+    const componentHeight = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetHeight
+
+    // console.log('ENTRY', this.entry)
+
+    let options = {
+      video_width: this._video_elem_container.offsetWidth,
+      video_height: this._video_elem_container.offsetHeight,
+      left: ((this._video_elem_container.offsetWidth/2)-(componentWidth/2)),
+      top: ((this._video_elem_container.offsetHeight/2)-(componentHeight/2)),
+      bgcolor: this.entry.get('color', null),
+      active: true,
+      zIndex: 1,
+      trackIndex: this.entry.get('trackIndex', null),
+      annotationStackIndex: this.entry.get('annotationStackIndex', null),
+      annotationIndex: this.entry.get('annotationIndex', null),
+      annotation_id: this.entry.getIn(['annotation', 'id']) as number,
+    } as PointerElement
+
+    componentRefInstance.setPointerTraits(<PointerElement>options)
+    console.log(options, componentRef.instance, this.entry.getIn(['annotation', 'id']), this.entry.get('color', null))
+
+    let path = {
+      trackIndex: this.entry.get('trackIndex', null),
+      annotationStackIndex: this.entry.get('annotationStackIndex', null),
+      annotationIndex: this.entry.get('annotationIndex', null),
+      annotation_id: this.entry.getIn(['annotation', 'id']) as number,
+    }
+    //console.log('Path', path)
+
+    //componentRef.instance.left = options.left
+    //componentRef.instance.top = options.top
+    //componentRef.changeDetectorRef.detectChanges();
+    let g = {
+      annotation_id: this.entry.getIn(['annotation', 'id']) as number,
+      pointerPayload: options,
+      path: path
+      //annotation: this.entry.get('annotation', null)
+    }
+
+    this.onAddAnnotationPointer.emit(g)
   }
 }
