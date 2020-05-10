@@ -59,7 +59,7 @@ function nextAnnotationId(timeline: Record<Timeline>): number {
   return maxId + 1
 }
 
-function getAnnotationById(state: State, id: number): Record<Annotation>|null {
+/*function getAnnotationById(state: State, id: number): Record<Annotation>|null {
   const timeline = state.getIn(['meta', 'timeline'])
   const tracks = timeline.get('tracks', [])
   let ret = null
@@ -74,7 +74,7 @@ function getAnnotationById(state: State, id: number): Record<Annotation>|null {
     })
   })
   return ret
-}
+}*/
 
 function getAllSelections(state: State): Set<Record<AnnotationSelection>> {
   const rangeSelections = state.getIn(['selection', 'annotation', 'range'])

@@ -13,9 +13,9 @@ import {
   CdkDragDrop
 } from '@angular/cdk/drag-drop'
 
-import {
+/*import {
   PointerElement
-} from '../../../persistence/model'
+} from '../../../persistence/model'*/
 
 @Component({
   selector: 'rv-pointer-element',
@@ -62,8 +62,7 @@ export class PointerElementComponent implements OnInit {
   public width: number
   public height: number
   public bgcolor: string
-  public pointer_id: number
-
+  // public pointer_id: number
 
 
   /*@HostListener('window:mouseup', ['$event']) mouseUp(event: any) {
@@ -82,7 +81,7 @@ export class PointerElementComponent implements OnInit {
   ngOnInit() {
   }
 
-  setPointerTraits(options: PointerElement) {
+  setPointerTraits(options: any /*PointerElement*/) {
     this.pointer_id = options.annotation_id
     this.top = options.top
     this.left = options.left

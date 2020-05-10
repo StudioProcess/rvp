@@ -157,7 +157,9 @@ export interface PointerElement {
   readonly zIndex: number
   readonly bgcolor: string
   readonly video_width: number  // initial video width for scaling
-  readonly video_height: number // initial video height for scaling 
+  readonly video_height: number // initial video height for scaling
+  // readonly annotation_id: number
+  // readonly pointer_id: number
 }
 
 // Record factories

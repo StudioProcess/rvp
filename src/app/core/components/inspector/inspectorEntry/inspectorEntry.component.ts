@@ -339,8 +339,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
        *  Check if pointer element for this ref already displayed
        */
       let pointer_already_displayed = false
-      let all_pointer_refs = this._video_elem_container.querySelectorAll('rv-pointer-element') as PointerElementComponent
-      all_pointer_refs.forEach((e) => {
+      let all_pointer_refs = this._video_elem_container.querySelectorAll('rv-pointer-element')
+      all_pointer_refs.forEach((e : any) => {
         let pointer_id = e.getAttribute('pointer_id')
         if (pointer_id == annotation_id) {
           pointer_already_displayed = true
