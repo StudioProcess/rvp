@@ -208,6 +208,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
         const updatedSingleSel = inSelection.set('annotation', annotation)
         updatedState = state.setIn(['selection', 'annotation', 'selected'], updatedSingleSel)
       }
+
       return updatedState.setIn(path, stacksWithEmbedded)
     }
     case project.PROJECT_DELETE_SELECTED_ANNOTATIONS: {
@@ -556,19 +557,12 @@ export function reducer(state: State = initialState, action: project.Actions): S
     }
     case project.PROJECT_ANNOTATION_ADD_POINTER: {
 
-      //const annotationId = annotation.get('id', null)!
-      //const s: Record<AnnotationSelection> = state.getIn(['selection', 'annotation', 'selected'])
-      //const annotations = track.get('annotationStacks', null).flatMap(stack => stack)
-      //const {trackIndex, annotationIndex, annotationStackIndex, annotation} = action.payload
-      const annotation = getAnnotationById(state, action.payload.annotation_id)
-      const annotationCp = { ...annotation };
-      //annotationCp.pointerElement = action.payload.pointerPayload
-      console.log('PROJECT_ANNOTATION_ADD_POINTER', action.payload, annotation, annotationCp)
-
+      // const annotation = getAnnotationById(state, action.payload.annotation_id)
+      // console.log('PROJECT_ANNOTATION_ADD_POINTER', action.payload, annotation)
       const path = ['meta', 'timeline', 'tracks', action.payload.path.trackIndex, 'annotationStacks', action.payload.path.annotationStackIndex, action.payload.path.annotationIndex]
-      let s = state.getIn(path)
-      console.log('PATH', s, action.payload.path.annotationIndex, action.payload.annotation_id)
+      const path_pointer_element = path.concat(['pointerElement'])
 
+      return state.setIn(path_pointer_element, action.payload.pointerPayload)
     }
     case project.PLAYER_CREATE_SUCCESS:
     case project.PLAYER_DESTROY_SUCCESS:

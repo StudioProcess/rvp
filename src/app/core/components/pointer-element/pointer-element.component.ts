@@ -7,11 +7,11 @@ import {
   //EventEmitter,
   //HostListener,
   //ViewEncapsulation
-} from '@angular/core';
+} from '@angular/core'
 
 import {
   CdkDragDrop
-} from '@angular/cdk/drag-drop';
+} from '@angular/cdk/drag-drop'
 
 import {
   PointerElement
@@ -85,7 +85,7 @@ export class PointerElementComponent implements OnInit {
     this.zIndex = options.zIndex
     this.position.top = options.top
     this.position.left = options.left
-    this.initialPosition = {...this.position}
+    this.initialPosition = { ...this.position }
     this.element.nativeElement.querySelector('.annotation-pointer-element').style.backgroundColor = options.bgcolor
   }
 
@@ -98,18 +98,18 @@ export class PointerElementComponent implements OnInit {
     /*console.log('CdkDragEnd', this.offset)
     console.log('initialPosition', this.initialPosition)*/
     console.log('position', this.position)
-    this.zIndex -= 10; // TODO :
+    this.zIndex -= 10 // TODO :
   }
 
   dragReleased(event: any) {
   }
 
   mousedown() {
-    this.zIndex += 10; // TODO :
+    this.zIndex += 10 // TODO :
   }
 
   getPosition(event: any) {
-    this.offset = {...(<any>event.source._dragRef)._passiveTransform}
+    this.offset = { ...(<any>event.source._dragRef)._passiveTransform }
     this.position.left = this.initialPosition.left + this.offset.x
     this.position.top = this.initialPosition.top + this.offset.y
   }
@@ -123,6 +123,6 @@ export class PointerElementComponent implements OnInit {
     /**
      * make it so new drag starts from same origin
      */
-    source._passiveTransform = {x: 0, y: 0}
+    source._passiveTransform = { x: 0, y: 0 }
   }
 }

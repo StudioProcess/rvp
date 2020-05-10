@@ -279,7 +279,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   pointerAction($event: MouseEvent) {
     //$event.preventDefault()
     //$event.stopPropagation()
-    console.log (this._video_elem_container.offsetWidth, this._video_elem_container.offsetHeight)
+    console.log ('pointerAction', this._video_elem_container.offsetWidth, this._video_elem_container.offsetHeight)
 
     const componentRef = this._domService.instantiateComponent(PointerElementComponent)
     const componentRefInstance = this._domService.getInstance(componentRef)
@@ -305,7 +305,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     } as PointerElement
 
     componentRefInstance.setPointerTraits(<PointerElement>options)
-    console.log(options, componentRef.instance, this.entry.getIn(['annotation', 'id']), this.entry.get('color', null))
+    console.log('componentRefInstance.setPointerTraits', options, componentRef.instance, this.entry.getIn(['annotation', 'id']), this.entry.get('color', null))
 
     let path = {
       trackIndex: this.entry.get('trackIndex', null),
