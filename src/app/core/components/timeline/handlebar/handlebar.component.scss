@@ -45,15 +45,28 @@ $text-color: $black;
       }
     }
 
+    .handlebarPointerMarker {
+      position: absolute;
+      top: 5px;
+      left: 4px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: rgb(224, 224, 224);
+      z-index: 1;
+    }
+
     .content {
       width: $handlebar-content-width;
       padding-top: $handlebar-handle-padding;
+      padding-left: 2px;
       text-align: center;
       cursor: all-scroll;
       overflow: hidden;
       word-break: break-all;
       color: $text-color;
       font-size: $handlebar-content-fontsize;
+      z-index: 2;
     }
 
     .right-handle {

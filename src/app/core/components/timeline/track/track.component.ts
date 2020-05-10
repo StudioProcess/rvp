@@ -310,6 +310,10 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
       null
   }
 
+  hasPointerElement(annotation: any) {
+    return ((annotation.get('pointerElement', true) !== null) ? true : false)
+  }
+
   outerTrackByFunc(index: number) {
     return index
   }
