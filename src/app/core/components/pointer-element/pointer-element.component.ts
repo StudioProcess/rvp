@@ -53,6 +53,7 @@ export class PointerElementComponent implements OnInit {
   @HostBinding('style.top.px') top: number
   @HostBinding('style.left.px') left: number
   @HostBinding('style.zIndex') zIndex: number
+  @HostBinding('attr.pointer_id') pointer_id: number
 
   public active: boolean
   public offset: any
@@ -61,6 +62,9 @@ export class PointerElementComponent implements OnInit {
   public width: number
   public height: number
   public bgcolor: string
+  public pointer_id: number
+
+
 
   /*@HostListener('window:mouseup', ['$event']) mouseUp(event: any) {
     console.log('mouseup')
@@ -79,6 +83,7 @@ export class PointerElementComponent implements OnInit {
   }
 
   setPointerTraits(options: PointerElement) {
+    this.pointer_id = options.annotation_id
     this.top = options.top
     this.left = options.left
     this.active = options.active

@@ -1,10 +1,10 @@
 import {
-    Injectable,
-    Injector,
-    ComponentFactoryResolver,
-    ApplicationRef,
-    EmbeddedViewRef,
-} from '@angular/core';
+  Injectable,
+  Injector,
+  ComponentFactoryResolver,
+  ApplicationRef,
+  EmbeddedViewRef,
+} from '@angular/core'
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +12,9 @@ import {
 export class DomService {
 
   constructor(
-      private componentFactoryResolver: ComponentFactoryResolver,
-      private appRef: ApplicationRef,
-      private injector: Injector
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private appRef: ApplicationRef,
+    private injector: Injector
   ) { }
 
   instantiateComponent(component: any) {
@@ -31,7 +31,6 @@ export class DomService {
   attachComponent(componentRef: any, attachTo: HTMLElement) {
     // Get DOM element from component
     let domElem = (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
-    //console.log(domElem)
     // Append DOM element
     return attachTo.appendChild(domElem);
   }

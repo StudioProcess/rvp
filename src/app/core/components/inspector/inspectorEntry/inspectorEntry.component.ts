@@ -279,52 +279,81 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   pointerAction($event: MouseEvent) {
     //$event.preventDefault()
     //$event.stopPropagation()
-    console.log ('pointerAction', this._video_elem_container.offsetWidth, this._video_elem_container.offsetHeight)
+    const annotation_id = this.entry.getIn(['annotation', 'id']) as number
 
-    const componentRef = this._domService.instantiateComponent(PointerElementComponent)
-    const componentRefInstance = this._domService.getInstance(componentRef)
-    this._domService.attachComponent(componentRef, this._video_elem_container)
 
-    const componentWidth = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetWidth
-    const componentHeight = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetHeight
+    // console.log ('VIDEOELEM', this._video_elem_container)
+    //console.log (componentRef, this._video_elem_container)
+    //console.log ('componentRefInstance', componentRefInstance)
 
-    // console.log('ENTRY', this.entry)
+    const entries_pointer_element = this.entry.getIn(['annotation', 'pointerElement'])
+    if (entries_pointer_element === null) {
 
-    let options = {
-      video_width: this._video_elem_container.offsetWidth,
-      video_height: this._video_elem_container.offsetHeight,
-      left: ((this._video_elem_container.offsetWidth/2)-(componentWidth/2)),
-      top: ((this._video_elem_container.offsetHeight/2)-(componentHeight/2)),
-      bgcolor: this.entry.get('color', null),
-      active: true,
-      zIndex: 1,
-      trackIndex: this.entry.get('trackIndex', null),
-      annotationStackIndex: this.entry.get('annotationStackIndex', null),
-      annotationIndex: this.entry.get('annotationIndex', null),
-      annotation_id: this.entry.getIn(['annotation', 'id']) as number,
-    } as PointerElement
+      const componentRef = this._domService.instantiateComponent(PointerElementComponent)
+      const componentRefInstance = this._domService.getInstance(componentRef)
+      this._domService.attachComponent(componentRef, this._video_elem_container)
 
-    componentRefInstance.setPointerTraits(<PointerElement>options)
-    console.log('componentRefInstance.setPointerTraits', options, componentRef.instance, this.entry.getIn(['annotation', 'id']), this.entry.get('color', null))
+      // console.log('pointerAction', this._video_elem_container.offsetWidth, this._video_elem_container.offsetHeight)
+      const componentWidth = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetWidth
+      const componentHeight = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetHeight
 
-    let path = {
-      trackIndex: this.entry.get('trackIndex', null),
-      annotationStackIndex: this.entry.get('annotationStackIndex', null),
-      annotationIndex: this.entry.get('annotationIndex', null),
-      annotation_id: this.entry.getIn(['annotation', 'id']) as number,
+      let options = {
+        video_width: this._video_elem_container.offsetWidth,
+        video_height: this._video_elem_container.offsetHeight,
+        left: ((this._video_elem_container.offsetWidth / 2) - (componentWidth / 2)),
+        top: ((this._video_elem_container.offsetHeight / 2) - (componentHeight / 2)),
+        bgcolor: this.entry.get('color', null),
+        active: true,
+        zIndex: 1,
+        trackIndex: this.entry.get('trackIndex', null),
+        annotationStackIndex: this.entry.get('annotationStackIndex', null),
+        annotationIndex: this.entry.get('annotationIndex', null),
+        annotation_id: this.entry.getIn(['annotation', 'id']) as number,
+      } as PointerElement
+
+      componentRefInstance.setPointerTraits(<PointerElement>options)
+      console.log('componentRefInstance.setPointerTraits', options, componentRef.instance, this.entry.getIn(['annotation', 'id']), this.entry.get('color', null))
+
+      let path = {
+        trackIndex: this.entry.get('trackIndex', null),
+        annotationStackIndex: this.entry.get('annotationStackIndex', null),
+        annotationIndex: this.entry.get('annotationIndex', null),
+        annotation_id: this.entry.getIn(['annotation', 'id']) as number,
+      }
+      //console.log('Path', path)
+
+      //componentRef.instance.left = options.left
+      //componentRef.instance.top = options.top
+      //componentRef.changeDetectorRef.detectChanges();
+      let g = {
+        annotation_id: this.entry.getIn(['annotation', 'id']) as number,
+        pointerPayload: options,
+        path: path
+        //annotation: this.entry.get('annotation', null)
+      }
+
+      this.onAddAnnotationPointer.emit(g)
+    } else {
+
+      /**
+       *  Check if pointer element for this ref already displayed
+       */
+      let pointer_already_displayed = false
+      let all_pointer_refs = this._video_elem_container.querySelectorAll('rv-pointer-element') as PointerElementComponent
+      all_pointer_refs.forEach((e) => {
+        let pointer_id = e.getAttribute('pointer_id')
+        if (pointer_id == annotation_id) {
+          pointer_already_displayed = true
+        }
+      })
+
+      if (!pointer_already_displayed) {
+        const componentRef = this._domService.instantiateComponent(PointerElementComponent)
+        const componentRefInstance = this._domService.getInstance(componentRef)
+        this._domService.attachComponent(componentRef, this._video_elem_container)
+        componentRefInstance.setPointerTraits(<PointerElement>entries_pointer_element)
+      }
     }
-    //console.log('Path', path)
-
-    //componentRef.instance.left = options.left
-    //componentRef.instance.top = options.top
-    //componentRef.changeDetectorRef.detectChanges();
-    let g = {
-      annotation_id: this.entry.getIn(['annotation', 'id']) as number,
-      pointerPayload: options,
-      path: path
-      //annotation: this.entry.get('annotation', null)
-    }
-
-    this.onAddAnnotationPointer.emit(g)
   }
+
 }
