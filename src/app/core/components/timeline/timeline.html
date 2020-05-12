@@ -9,6 +9,7 @@
     [data]="track" [trackIndex]="i" [numTracks]="getNumTracks()" [totalDuration]="timeline.duration"
     [scrollSettings]="scrollSettings"
     [selectedAnnotations]="selectedAnnotations"
+    [playerCurrentTime]="playerCurrentTime"
     (onUpdateTrack)="updateTrack($event)"
     (onDeleteTrack)="deleteTrack($event)"
     (onDuplicateTrack)="duplicateTrack($event)"

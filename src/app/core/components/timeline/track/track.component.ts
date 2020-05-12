@@ -2,7 +2,7 @@ import {
   Component, Input, ChangeDetectionStrategy,
   OnInit, OnDestroy, EventEmitter, Output,
   OnChanges, SimpleChanges, ViewChild,
-  ElementRef, ChangeDetectorRef, AfterViewInit
+  ElementRef, ChangeDetectorRef, AfterViewInit/*, ComponentFactoryResolver*/
 } from '@angular/core'
 
 import { FormGroup, FormBuilder, Validators } from '@angular/forms'
@@ -54,6 +54,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   @Input() readonly totalDuration: number
   @Input() readonly selectedAnnotations: Set<Record<Annotation>>
   @Input() readonly scrollSettings: Observable<ScrollSettings>
+  @Input() readonly playerCurrentTime: number
 
   form: FormGroup | null = null
   zoom: number
@@ -312,6 +313,14 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
 
   hasPointerElement(annotation: any) {
     return ((annotation.get('pointerElement', true) !== null) ? true : false)
+  }
+
+  getAnnotationStartTime (annotation: Record<Annotation>) {
+    return annotation.get('utc_timestamp', true)
+  }
+
+  getAnnotationEndTime (annotation: Record<Annotation>) {
+    return annotation.get('utc_timestamp', true) + annotation.get('duration', true)
   }
 
   outerTrackByFunc(index: number) {

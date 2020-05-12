@@ -46,6 +46,9 @@ export interface Handlebar {
 })
 export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() readonly hasPointerElement: boolean
+  @Input() readonly playerCurrentTime: number
+  @Input() readonly annotationStartTime: number
+  @Input() readonly annotationEndTime: number
   @Input() readonly caption: string
   @Input() readonly containerRect: Observable<ClientRect>
   @Input() @HostBinding('class.selected') readonly isSelected = false
@@ -220,6 +223,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
         this._syncValueSubj.next({ source: 'extern', left: this.internLeft, width: newWidth, move: 'noopMove' })
       }
     }
+    // console.log(this.playerCurrentTime, this.annotationStartTime, this.annotationEndTime)
   }
 
   dblClick(ev: MouseEvent) {
