@@ -21,10 +21,15 @@ $text-color: $black;
   position: absolute;
   height: $handlebar-height;
   min-width: $handlebar-minwidth;
+  transition: all 0.4s;
 
   &.selected {
     outline-offset: (-$selection-outlinewidth);
     outline: $selection-outlinewidth solid $black;
+  }
+
+  &.playercurrenttime {
+    background-color: rgb(255, 209, 109);
   }
 
   .handlebar {

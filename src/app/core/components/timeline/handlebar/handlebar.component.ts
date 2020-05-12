@@ -52,6 +52,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   @Input() readonly caption: string
   @Input() readonly containerRect: Observable<ClientRect>
   @Input() @HostBinding('class.selected') readonly isSelected = false
+  @Input() @HostBinding('class.playercurrenttime') _isPlayerCurrentTime = false
   @Input() @HostBinding('style.opacity') readonly opacity: string = '1'
   @Input() @HostBinding('style.display') readonly display: string = 'block'
   @Input() @HostBinding('style.pointerEvents') readonly pointerEvents: string = 'auto'
@@ -100,6 +101,13 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
     this._subs.push(
       this._handlebarSubj.pipe(filter(hb => hb.source !== 'extern'))
         .subscribe(this.onHandlebarUpdate))
+
+    this._isPlayerCurrentTime = this.isPlayerCurrentTime()
+  }
+
+  isPlayerCurrentTime() {
+    // console.log(this.playerCurrentTime, this.annotationStartTime, this.annotationEndTime)
+    return ((this.playerCurrentTime >= this.annotationStartTime) && (this.playerCurrentTime <= this.annotationEndTime) ? true : false)
   }
 
   ngAfterViewInit() {
@@ -223,7 +231,8 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
         this._syncValueSubj.next({ source: 'extern', left: this.internLeft, width: newWidth, move: 'noopMove' })
       }
     }
-    // console.log(this.playerCurrentTime, this.annotationStartTime, this.annotationEndTime)
+
+    this._isPlayerCurrentTime = this.isPlayerCurrentTime()
   }
 
   dblClick(ev: MouseEvent) {
