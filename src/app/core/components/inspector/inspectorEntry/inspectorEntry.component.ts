@@ -291,7 +291,6 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     //$event.stopPropagation()
     const annotation_id = this.entry.getIn(['annotation', 'id']) as number
 
-
     // console.log ('VIDEOELEM', this._video_elem_container)
     //console.log (componentRef, this._video_elem_container)
     //console.log ('componentRefInstance', componentRefInstance)
@@ -299,13 +298,11 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     const entries_pointer_element = this.entry.getIn(['annotation', 'pointerElement'])
     if (entries_pointer_element === null) {
 
-      const componentRef = this._domService.instantiateComponent(PointerElementComponent)
-      const componentRefInstance = this._domService.getInstance(componentRef)
-      this._domService.attachComponent(componentRef, this._video_elem_container)
+      // const componentWidth = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetWidth
+      // const componentHeight = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetHeight
 
-      // console.log('pointerAction', this._video_elem_container.offsetWidth, this._video_elem_container.offsetHeight)
-      const componentWidth = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetWidth
-      const componentHeight = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetHeight
+      const componentWidth = 20
+      const componentHeight = 20
 
       let options = {
         video_width: this._video_elem_container.offsetWidth,
@@ -321,8 +318,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
         annotation_id: this.entry.getIn(['annotation', 'id']) as number,
       } as PointerElement
 
-      componentRefInstance.setPointerTraits(<PointerElement>options)
-      console.log('componentRefInstance.setPointerTraits', options, componentRef.instance, this.entry.getIn(['annotation', 'id']), this.entry.get('color', null))
+      this._instantiatePointer(<PointerElement>options)
+      // console.log('componentRefInstance.setPointerTraits', options, componentRef.instance, this.entry.getIn(['annotation', 'id']), this.entry.get('color', null))
 
       let path = {
         trackIndex: this.entry.get('trackIndex', null),
@@ -344,26 +341,32 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
       this.onAddAnnotationPointer.emit(g)
     } else {
-
       /**
        *  Check if pointer element for this ref already displayed
        */
-      let pointer_already_displayed = false
-      let all_pointer_refs = this._video_elem_container.querySelectorAll('rv-pointer-element')
-      all_pointer_refs.forEach((e : any) => {
-        let pointer_id = e.getAttribute('pointer_id')
-        if (pointer_id == annotation_id) {
-          pointer_already_displayed = true
-        }
-      })
-
-      if (!pointer_already_displayed) {
-        const componentRef = this._domService.instantiateComponent(PointerElementComponent)
-        const componentRefInstance = this._domService.getInstance(componentRef)
-        this._domService.attachComponent(componentRef, this._video_elem_container)
-        componentRefInstance.setPointerTraits(<PointerElement>entries_pointer_element)
+      if (!this._isPointerAlreadyDisplayed(annotation_id)) {
+        this._instantiatePointer(<PointerElement>entries_pointer_element)
       }
     }
+  }
+
+  private _isPointerAlreadyDisplayed(annotation_id: number) {
+    let pointer_already_displayed = false
+    let all_pointer_refs = this._video_elem_container.querySelectorAll('rv-pointer-element')
+    all_pointer_refs.forEach((e: any) => {
+      let pointer_id = e.getAttribute('pointer_id')
+      if (pointer_id == annotation_id) {
+        pointer_already_displayed = true
+      }
+    })
+    return pointer_already_displayed
+  }
+
+  private _instantiatePointer(options: PointerElement) {
+    const componentRef = this._domService.instantiateComponent(PointerElementComponent)
+    const componentRefInstance = this._domService.getInstance(componentRef)
+    this._domService.attachComponent(componentRef, this._video_elem_container)
+    componentRefInstance.setPointerTraits(<PointerElement>options)
   }
 
 }
