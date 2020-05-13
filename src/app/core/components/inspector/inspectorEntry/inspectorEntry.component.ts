@@ -70,7 +70,6 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   form: FormGroup | null = null
   private readonly _subs: Subscription[] = []
   private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
-  private _displayed_pointer_element_refs: any[] = []
   private annotation_id: number
 
   @Input() readonly entry: Record<AnnotationColorMap>
@@ -280,18 +279,24 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     const entries_pointer_element = this.entry.getIn(['annotation', 'pointerElement'])
     this._isPlayerCurrentTime = this.isPlayerCurrentTime()
     if(this._isPlayerCurrentTime) {
-      // console.log('active', annotation_id)
       if (entries_pointer_element !== null) {
-        // const annotation_id = this.entry.getIn(['annotation', 'id']) as number
-        if (!this._isPointerDisplayed(this.annotation_id)) {
+        if (! this._isPointerDisplayed(this.annotation_id)) {
           this._instantiatePointer(<PointerElement>entries_pointer_element)
         }
       }
     } else {
-      if (entries_pointer_element !== null) {
+      if (entries_pointer_element !== null && ! this.isSelected) {
         if (this._isPointerDisplayed(this.annotation_id)) {
           let pointer_elem = this._video_elem_container.querySelector('[pointer_id="'+ this.annotation_id +'"]')
           pointer_elem.remove()
+        }
+      }
+    }
+
+    if(this.isSelected) {
+      if (entries_pointer_element !== null) {
+        if (! this._isPointerDisplayed(this.annotation_id)) {
+          this._instantiatePointer(<PointerElement>entries_pointer_element)
         }
       }
     }
@@ -383,11 +388,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   private _instantiatePointer(options: any) {
     const componentRef = this._domService.instantiateComponent(PointerElementComponent)
     const componentRefInstance = this._domService.getInstance(componentRef)
-    this._displayed_pointer_element_refs[options.annotation_id] = componentRef
-    // this._displayed_pointer_element_refs[options.annotation_id] = componentRefInstance
     this._domService.attachComponent(componentRef, this._video_elem_container)
     componentRefInstance.setPointerTraits(<PointerElement>options)
-    // return componentRefInstance
   }
 
 }
