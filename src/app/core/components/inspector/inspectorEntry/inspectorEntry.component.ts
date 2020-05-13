@@ -72,7 +72,11 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
 
   @Input() readonly entry: Record<AnnotationColorMap>
+  @Input() readonly playerCurrentTime: number
+  @Input() readonly annotationStartTime: number
+  @Input() readonly annotationEndTime: number
   @Input() @HostBinding('class.selected') readonly isSelected = false
+  @Input() @HostBinding('class.playercurrenttime') _isPlayerCurrentTime: boolean = false
 
   @Output() readonly onUpdate = new EventEmitter<project.UpdateAnnotationPayload>()
   @Output() readonly onSelectAnnotation = new EventEmitter<project.SelectAnnotationPayload>()
@@ -85,8 +89,6 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   @ViewChild('duration', { static: true }) private readonly _durationInputRef: ElementRef
   @ViewChild('descr', { static: true }) readonly _descrInputRef: ElementRef
 
-  //private readonly _video_elem = document.querySelector('.video-main-elem video') as HTMLElement
-  //private readonly domService = new domService()
   @HostListener('click', ['$event', '$event.target'])
   onClick(event: MouseEvent, target: HTMLElement) {
     this.removeHashTag(target)
@@ -270,10 +272,18 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
         this.form.setValue(this._mapModel(currentValue))
       }
     }
+
+    this._isPlayerCurrentTime = this.isPlayerCurrentTime()
   }
 
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
+  }
+
+
+  isPlayerCurrentTime() {
+    console.log(this.playerCurrentTime, this.annotationStartTime, this.annotationEndTime)
+    return ((this.playerCurrentTime >= this.annotationStartTime) && (this.playerCurrentTime <= this.annotationEndTime) ? true : false)
   }
 
   pointerAction($event: MouseEvent) {

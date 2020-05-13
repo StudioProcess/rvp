@@ -29,7 +29,7 @@ $text-color: $black;
   }
 
   &.playercurrenttime {
-    background-color: rgb(255, 209, 109);
+    background-color: $timeline-playercurrenttime-bgcolor;
   }
 
   .handlebar {

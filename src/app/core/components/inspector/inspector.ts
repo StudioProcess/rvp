@@ -1,15 +1,15 @@
 import {
   Component, OnInit, OnDestroy, AfterViewInit,
   ChangeDetectionStrategy, ChangeDetectorRef,
- ElementRef, QueryList, ViewChild, ViewChildren
+  ElementRef, QueryList, ViewChild, ViewChildren
 } from '@angular/core'
 
-import {List, Record, Set} from 'immutable'
+import { List, Record, Set } from 'immutable'
 
-import {Subscription} from 'rxjs'
-import {filter, withLatestFrom, map} from 'rxjs/operators'
+import { Subscription } from 'rxjs'
+import { filter, withLatestFrom, map } from 'rxjs/operators'
 
-import {Store} from '@ngrx/store'
+import { Store } from '@ngrx/store'
 
 import * as project from '../../../persistence/actions/project'
 import * as fromProject from '../../../persistence/reducers'
@@ -17,7 +17,7 @@ import {
   AnnotationColorMap, Annotation,
   SelectionSource, AnnotationSelection
 } from '../../../persistence/model'
-import {InspectorEntryComponent} from './inspectorEntry/inspectorEntry.component'
+import { InspectorEntryComponent } from './inspectorEntry/inspectorEntry.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,6 +28,9 @@ import {InspectorEntryComponent} from './inspectorEntry/inspectorEntry.component
         *ngFor="let annotation of annotations; trackBy: trackByFunc;"
         [entry]="annotation"
         [isSelected]="isSelectedAnnotation(annotation.annotation)"
+        [playerCurrentTime]="playerCurrentTime"
+        [annotationStartTime]="getAnnotationStartTime(annotation)"
+        [annotationEndTime]="getAnnotationEndTime(annotation)"
         (onUpdate)="updateAnnotation($event)"
         (onSelectAnnotation)="selectAnnotation($event)"
         (onFocusAnnotation)="focusAnnotation($event)"
@@ -47,14 +50,15 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren(InspectorEntryComponent) private readonly _entries: QueryList<InspectorEntryComponent>
   private readonly _subs: Subscription[] = []
   annotations: List<Record<AnnotationColorMap>>
-  height = this._store.select(fromProject.getDimensions).pipe(map(({height}) => height))
+  height = this._store.select(fromProject.getDimensions).pipe(map(({ height }) => height))
   selectedAnnotations: Set<Record<Annotation>>
+  playerCurrentTime: number
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
-    private readonly _store: Store<fromProject.State>) {}
+    private readonly _store: Store<fromProject.State>) { }
 
-  trackByFunc(_: number, annotation: Record<AnnotationColorMap>) {
+  trackByFunc(_: number, annotation: Record<AnnotationColorMap>) {
     return annotation.getIn(['annotation', 'id'])
   }
 
@@ -72,16 +76,23 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
           this.annotations = annotations
           this._cdr.markForCheck()
         }))
+
+    this._subs.push(
+      this._store.select(fromProject.getCurrentTime)
+      .subscribe(currentTime => {
+        this.playerCurrentTime = currentTime
+        console.log(this.playerCurrentTime)
+      }))
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit() {
     type annotationSelectionWithEntries = [Record<AnnotationSelection>, QueryList<InspectorEntryComponent>]
 
     this._subs.push(
       this._store.select(fromProject.getProjectFocusAnnotationSelection)
         .pipe(
           filter(annotationSelection => {
-            if(annotationSelection !== null) {
+            if (annotationSelection !== null) {
               return annotationSelection.get('source', null) === SelectionSource.Timeline
             } else {
               return false
@@ -95,17 +106,25 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
             return item.entry.getIn(['annotation', 'id']) === selectedId
           })
 
-          if(entry) {
+          if (entry) {
             setTimeout(() => {
               const wrapper = this._scrollWrapperRef.nativeElement
               const e = entry.elem.nativeElement
 
               // Position centered
-              wrapper.scrollTop = e.offsetTop - ((wrapper.offsetHeight - e.offsetHeight)/2)
+              wrapper.scrollTop = e.offsetTop - ((wrapper.offsetHeight - e.offsetHeight) / 2)
               this._cdr.markForCheck()
             })
           }
         }))
+  }
+
+  getAnnotationStartTime (annotation: Record<Annotation>) {
+    return annotation.getIn(['annotation', 'utc_timestamp'])
+  }
+
+  getAnnotationEndTime (annotation: Record<Annotation>) {
+    return annotation.getIn(['annotation', 'utc_timestamp']) + annotation.getIn(['annotation', 'duration'])
   }
 
   isSelectedAnnotation(annotation: Record<Annotation>) {
@@ -114,8 +133,7 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
       null
   }
 
-  updateAnnotation(updateAnnotation: project.UpdateAnnotationPayload) {
-    //console.log ('updateAnnotation', updateAnnotation)
+  updateAnnotation(updateAnnotation: project.UpdateAnnotationPayload) {
     this._store.dispatch(new project.ProjectUpdateAnnotation(updateAnnotation))
   }
 
@@ -127,7 +145,7 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
     this._store.dispatch(new project.PlayerRequestCurrentTime(focusAnnotation))
   }
 
-  addAnnotationPointer(addAnnotationPointer: project.UpdateAnnotationPointerPayload) {
+  addAnnotationPointer(addAnnotationPointer: project.UpdateAnnotationPointerPayload) {
     this._store.dispatch(new project.ProjectAnnotationAddPointer(addAnnotationPointer))
   }
 
