@@ -70,6 +70,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   form: FormGroup | null = null
   private readonly _subs: Subscription[] = []
   private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
+  private _displayed_pointer_element_refs: any[] = []
+  private annotation_id: number
 
   @Input() readonly entry: Record<AnnotationColorMap>
   @Input() readonly playerCurrentTime: number
@@ -126,6 +128,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       duration: [duration, durationValidator],
       description
     })
+
+    this.annotation_id = this.entry.getIn(['annotation', 'id']) as number
   }
 
   ngAfterViewInit() {
@@ -273,7 +277,24 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       }
     }
 
+    const entries_pointer_element = this.entry.getIn(['annotation', 'pointerElement'])
     this._isPlayerCurrentTime = this.isPlayerCurrentTime()
+    if(this._isPlayerCurrentTime) {
+      // console.log('active', annotation_id)
+      if (entries_pointer_element !== null) {
+        // const annotation_id = this.entry.getIn(['annotation', 'id']) as number
+        if (!this._isPointerAlreadyDisplayed(this.annotation_id)) {
+          this._instantiatePointer(<PointerElement>entries_pointer_element)
+        }
+      }
+    } else {
+      if (entries_pointer_element !== null) {
+        if (this._isPointerAlreadyDisplayed(this.annotation_id)) {
+          // TODO : either destroy instance via domservice or remove via query/domelement
+          // this._domService.destroyComponent(this._displayed_pointer_element_refs[this.annotation_id])
+        }
+      }
+    }
   }
 
   ngOnDestroy() {
@@ -290,11 +311,6 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     //$event.preventDefault()
     //$event.stopPropagation()
     const annotation_id = this.entry.getIn(['annotation', 'id']) as number
-
-    // console.log ('VIDEOELEM', this._video_elem_container)
-    //console.log (componentRef, this._video_elem_container)
-    //console.log ('componentRefInstance', componentRefInstance)
-
     const entries_pointer_element = this.entry.getIn(['annotation', 'pointerElement'])
     if (entries_pointer_element === null) {
 
@@ -315,7 +331,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
         trackIndex: this.entry.get('trackIndex', null),
         annotationStackIndex: this.entry.get('annotationStackIndex', null),
         annotationIndex: this.entry.get('annotationIndex', null),
-        annotation_id: this.entry.getIn(['annotation', 'id']) as number,
+        annotation_id: annotation_id
       } as PointerElement
 
       this._instantiatePointer(<PointerElement>options)
@@ -362,11 +378,14 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     return pointer_already_displayed
   }
 
-  private _instantiatePointer(options: PointerElement) {
+  private _instantiatePointer(options: any) {
     const componentRef = this._domService.instantiateComponent(PointerElementComponent)
     const componentRefInstance = this._domService.getInstance(componentRef)
+    this._displayed_pointer_element_refs[options.annotation_id] = componentRef
+    // this._displayed_pointer_element_refs[options.annotation_id] = componentRefInstance
     this._domService.attachComponent(componentRef, this._video_elem_container)
     componentRefInstance.setPointerTraits(<PointerElement>options)
+    // return componentRefInstance
   }
 
 }
