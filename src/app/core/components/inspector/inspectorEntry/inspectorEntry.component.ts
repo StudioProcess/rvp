@@ -283,15 +283,15 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       // console.log('active', annotation_id)
       if (entries_pointer_element !== null) {
         // const annotation_id = this.entry.getIn(['annotation', 'id']) as number
-        if (!this._isPointerAlreadyDisplayed(this.annotation_id)) {
+        if (!this._isPointerDisplayed(this.annotation_id)) {
           this._instantiatePointer(<PointerElement>entries_pointer_element)
         }
       }
     } else {
       if (entries_pointer_element !== null) {
-        if (this._isPointerAlreadyDisplayed(this.annotation_id)) {
-          // TODO : either destroy instance via domservice or remove via query/domelement
-          // this._domService.destroyComponent(this._displayed_pointer_element_refs[this.annotation_id])
+        if (this._isPointerDisplayed(this.annotation_id)) {
+          let pointer_elem = this._video_elem_container.querySelector('[pointer_id="'+ this.annotation_id +'"]')
+          pointer_elem.remove()
         }
       }
     }
@@ -360,14 +360,14 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       /**
        *  Check if pointer element for this ref already displayed
        */
-      if (!this._isPointerAlreadyDisplayed(annotation_id)) {
+      if (!this._isPointerDisplayed(annotation_id)) {
         this._instantiatePointer(<PointerElement>entries_pointer_element)
       }
     }
   }
 
-  private _isPointerAlreadyDisplayed(annotation_id: number) {
-    let pointer_already_displayed = false
+  private _isPointerDisplayed(annotation_id: number) {
+    /*let pointer_already_displayed = false
     let all_pointer_refs = this._video_elem_container.querySelectorAll('rv-pointer-element')
     all_pointer_refs.forEach((e: any) => {
       let pointer_id = e.getAttribute('pointer_id')
@@ -375,7 +375,9 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
         pointer_already_displayed = true
       }
     })
-    return pointer_already_displayed
+    return pointer_already_displayed*/
+    let pointer_elem = this._video_elem_container.querySelector('[pointer_id="'+ annotation_id +'"]')
+    return ((pointer_elem !== null) ? true : false)
   }
 
   private _instantiatePointer(options: any) {
