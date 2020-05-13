@@ -282,7 +282,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
 
   isPlayerCurrentTime() {
-    console.log(this.playerCurrentTime, this.annotationStartTime, this.annotationEndTime)
+    // console.log(this.playerCurrentTime, this.annotationStartTime, this.annotationEndTime)
     return ((this.playerCurrentTime >= this.annotationStartTime) && (this.playerCurrentTime <= this.annotationEndTime) ? true : false)
   }
 

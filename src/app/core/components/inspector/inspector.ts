@@ -79,10 +79,9 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
 
     this._subs.push(
       this._store.select(fromProject.getCurrentTime)
-      .subscribe(currentTime => {
-        this.playerCurrentTime = currentTime
-        console.log(this.playerCurrentTime)
-      }))
+        .subscribe(currentTime => {
+          this.playerCurrentTime = currentTime
+        }))
   }
 
   ngAfterViewInit() {
@@ -119,11 +118,11 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
         }))
   }
 
-  getAnnotationStartTime (annotation: Record<Annotation>) {
+  getAnnotationStartTime(annotation: Record<Annotation>) {
     return annotation.getIn(['annotation', 'utc_timestamp'])
   }
 
-  getAnnotationEndTime (annotation: Record<Annotation>) {
+  getAnnotationEndTime(annotation: Record<Annotation>) {
     return annotation.getIn(['annotation', 'utc_timestamp']) + annotation.getIn(['annotation', 'duration'])
   }
 
