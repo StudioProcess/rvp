@@ -278,24 +278,26 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
     const entries_pointer_element = this.entry.getIn(['annotation', 'pointerElement'])
     this._isPlayerCurrentTime = this.isPlayerCurrentTime()
-    if(this._isPlayerCurrentTime) {
+    if (this._isPlayerCurrentTime) {
       if (entries_pointer_element !== null) {
-        if (! this._isPointerDisplayed(this.annotation_id)) {
+        if (!this._isPointerDisplayed(this.annotation_id)) {
           this._instantiatePointer(<PointerElement>entries_pointer_element)
         }
       }
     } else {
-      if (entries_pointer_element !== null && ! this.isSelected) {
+      if (entries_pointer_element !== null && !this.isSelected) {
         if (this._isPointerDisplayed(this.annotation_id)) {
-          let pointer_elem = this._video_elem_container.querySelector('[pointer_id="'+ this.annotation_id +'"]')
-          pointer_elem.remove()
+          let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + this.annotation_id + '"]')
+          if (pointer_elem !== null) {
+            pointer_elem.remove()
+          }
         }
       }
     }
 
-    if(this.isSelected) {
+    if (this.isSelected) {
       if (entries_pointer_element !== null) {
-        if (! this._isPointerDisplayed(this.annotation_id)) {
+        if (!this._isPointerDisplayed(this.annotation_id)) {
           this._instantiatePointer(<PointerElement>entries_pointer_element)
         }
       }
@@ -381,7 +383,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       }
     })
     return pointer_already_displayed*/
-    let pointer_elem = this._video_elem_container.querySelector('[pointer_id="'+ annotation_id +'"]')
+    let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + annotation_id + '"]')
     return ((pointer_elem !== null) ? true : false)
   }
 
@@ -389,6 +391,19 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     const componentRef = this._domService.instantiateComponent(PointerElementComponent)
     const componentRefInstance = this._domService.getInstance(componentRef)
     this._domService.attachComponent(componentRef, this._video_elem_container)
+
+    if ((this._video_elem_container.offsetWidth !== options.video_width) || (this._video_elem_container.offsetHeight !== options.video_height)) {
+      // reset widht/height ratio
+      // console.log(this._video_elem_container.offsetWidth, this._video_elem_container.offsetHeight)
+      // console.log(options.video_width, options.video_height)
+      const componentWidth = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetWidth
+      const componentHeight = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetHeight
+
+      options.left = ((this._video_elem_container.offsetWidth / 2) - (componentWidth / 2))
+      options.top = ((this._video_elem_container.offsetHeight / 2) - (componentHeight / 2))
+      // TODO : persist?
+    }
+
     componentRefInstance.setPointerTraits(<PointerElement>options)
   }
 
