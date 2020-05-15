@@ -3,8 +3,8 @@ import {
   OnInit,
   ElementRef,
   HostBinding,
-  //Output,
-  //EventEmitter,
+  Output,
+  EventEmitter,
   //HostListener,
   //ViewEncapsulation
 } from '@angular/core'
@@ -13,9 +13,7 @@ import {
   CdkDragDrop
 } from '@angular/cdk/drag-drop'
 
-/*import {
-  PointerElement
-} from '../../../persistence/model'*/
+import * as project from '../../../persistence/actions/project'
 
 @Component({
   selector: 'rv-pointer-element',
@@ -50,6 +48,8 @@ import {
 })
 export class PointerElementComponent implements OnInit {
 
+  @Output() readonly onUpdateAnnotationPointer = new EventEmitter<project.UpdateAnnotationPointerPayload>()
+
   @HostBinding('style.top.px') top: number
   @HostBinding('style.left.px') left: number
   @HostBinding('style.zIndex') zIndex: number
@@ -82,7 +82,8 @@ export class PointerElementComponent implements OnInit {
   }
 
   setPointerTraits(options: any /*PointerElement*/) {
-    this.pointer_id = options.annotation_id
+    // console.log(options)
+    this.pointer_id = options.annotation_path.annotation_id
     this.top = options.top
     this.left = options.left
     this.active = options.active
@@ -101,7 +102,7 @@ export class PointerElementComponent implements OnInit {
     this.getPosition(event)
     /*console.log('CdkDragEnd', this.offset)
     console.log('initialPosition', this.initialPosition)*/
-    console.log('position', this.position)
+    console.log('position', this.position, this.pointer_id)
     this.zIndex -= 10 // TODO :
   }
 

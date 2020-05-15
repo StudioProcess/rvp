@@ -168,12 +168,13 @@ export interface AnnotationPointerPayload {
   readonly bgcolor: string
   readonly video_width: number
   readonly video_height: number
+  readonly annotation_path: any // Record<UpdateAnnotationPayload>
 }
 
 export interface UpdateAnnotationPointerPayload {
   readonly annotation_id: number
-  readonly pointerPayload: AnnotationPointerPayload
-  readonly path: any
+  readonly pointer_payload: AnnotationPointerPayload
+  // readonly path: any
 }
 
 export class ProjectAnnotationAddPointer implements Action {

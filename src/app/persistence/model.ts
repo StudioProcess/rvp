@@ -158,6 +158,7 @@ export interface PointerElement {
   readonly bgcolor: string
   readonly video_width: number  // initial video width for scaling
   readonly video_height: number // initial video height for scaling
+  readonly annotation_path: any // TODO : annotation_path record factory
   // readonly annotation_id: number
   // readonly pointer_id: number
 }
@@ -283,4 +284,5 @@ export const PointerElementRecordFactory = Record<PointerElement>({
   bgcolor: '#000000',
   video_width: 0,
   video_height: 0,
+  annotation_path: {}
 })

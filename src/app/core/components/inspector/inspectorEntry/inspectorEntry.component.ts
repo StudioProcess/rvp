@@ -321,6 +321,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     const entries_pointer_element = this.entry.getIn(['annotation', 'pointerElement'])
     if (entries_pointer_element === null) {
 
+      console.log('here')
+
       // const componentWidth = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetWidth
       // const componentHeight = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetHeight
 
@@ -335,34 +337,22 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
         bgcolor: this.entry.get('color', null),
         active: true,
         zIndex: 1,
-        trackIndex: this.entry.get('trackIndex', null),
-        annotationStackIndex: this.entry.get('annotationStackIndex', null),
-        annotationIndex: this.entry.get('annotationIndex', null),
-        annotation_id: annotation_id
+        annotation_path : {
+          trackIndex: this.entry.get('trackIndex', null),
+          annotationStackIndex: this.entry.get('annotationStackIndex', null),
+          annotationIndex: this.entry.get('annotationIndex', null),
+          annotation_id: annotation_id
+          // annotation_id: this.entry.getIn(['annotation', 'id']) as number,
+        }
       } as PointerElement
 
       this._instantiatePointer(<PointerElement>options)
-      // console.log('componentRefInstance.setPointerTraits', options, componentRef.instance, this.entry.getIn(['annotation', 'id']), this.entry.get('color', null))
 
-      let path = {
-        trackIndex: this.entry.get('trackIndex', null),
-        annotationStackIndex: this.entry.get('annotationStackIndex', null),
-        annotationIndex: this.entry.get('annotationIndex', null),
-        annotation_id: this.entry.getIn(['annotation', 'id']) as number,
-      }
-      //console.log('Path', path)
-
-      //componentRef.instance.left = options.left
-      //componentRef.instance.top = options.top
-      //componentRef.changeDetectorRef.detectChanges();
-      let g = {
-        annotation_id: this.entry.getIn(['annotation', 'id']) as number,
-        pointerPayload: options,
-        path: path
-        //annotation: this.entry.get('annotation', null)
-      }
-
-      this.onAddAnnotationPointer.emit(g)
+      // save
+      this.onAddAnnotationPointer.emit({
+        annotation_id: annotation_id,
+        pointer_payload: options
+      })
     } else {
       /**
        *  Check if pointer element for this ref already displayed
@@ -381,9 +371,10 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       if (pointer_id == annotation_id) {
         pointer_already_displayed = true
       }
-    })
-    return pointer_already_displayed*/
+    })*/
+    // return pointer_already_displayed
     let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + annotation_id + '"]')
+    // console.log(pointer_elem)
     return ((pointer_elem !== null) ? true : false)
   }
 
