@@ -321,8 +321,6 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     const entries_pointer_element = this.entry.getIn(['annotation', 'pointerElement'])
     if (entries_pointer_element === null) {
 
-      console.log('here')
-
       // const componentWidth = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetWidth
       // const componentHeight = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetHeight
 
@@ -342,7 +340,6 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
           annotationStackIndex: this.entry.get('annotationStackIndex', null),
           annotationIndex: this.entry.get('annotationIndex', null),
           annotation_id: annotation_id
-          // annotation_id: this.entry.getIn(['annotation', 'id']) as number,
         }
       } as PointerElement
 

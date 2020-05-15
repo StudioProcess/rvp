@@ -557,9 +557,6 @@ export function reducer(state: State = initialState, action: project.Actions): S
     }
     case project.PROJECT_ANNOTATION_ADD_POINTER: {
 
-      // const annotation = getAnnotationById(state, action.payload.annotation_id)
-      // console.log('PROJECT_ANNOTATION_ADD_POINTER', action.payload, annotation)
-      //const path = ['meta', 'timeline', 'tracks', action.payload.path.trackIndex, 'annotationStacks', action.payload.path.annotationStackIndex, action.payload.path.annotationIndex]
       const path = [
         'meta',
         'timeline',
@@ -570,9 +567,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
         action.payload.pointer_payload.annotation_path.annotationIndex,
         'pointerElement'
       ]
-      // const path_pointer_element = path.concat(['pointerElement'])
-      console.log(path)
-
+      // console.log(path)
       return state.setIn(path, action.payload.pointer_payload)
     }
     case project.PLAYER_CREATE_SUCCESS:

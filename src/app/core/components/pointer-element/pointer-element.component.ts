@@ -3,17 +3,19 @@ import {
   OnInit,
   ElementRef,
   HostBinding,
-  Output,
-  EventEmitter,
-  //HostListener,
-  //ViewEncapsulation
+  // Output,
+  // EventEmitter,
+  // HostListener,
+  // ViewEncapsulation
 } from '@angular/core'
 
 import {
   CdkDragDrop
 } from '@angular/cdk/drag-drop'
 
+import { Store } from '@ngrx/store'
 import * as project from '../../../persistence/actions/project'
+import * as fromProject from '../../../persistence/reducers'
 
 @Component({
   selector: 'rv-pointer-element',
@@ -48,7 +50,7 @@ import * as project from '../../../persistence/actions/project'
 })
 export class PointerElementComponent implements OnInit {
 
-  @Output() readonly onUpdateAnnotationPointer = new EventEmitter<project.UpdateAnnotationPointerPayload>()
+  // @Output() readonly updateAnnotationPointer = new EventEmitter<project.UpdateAnnotationPointerPayload>()
 
   @HostBinding('style.top.px') top: number
   @HostBinding('style.left.px') left: number
@@ -62,8 +64,9 @@ export class PointerElementComponent implements OnInit {
   public width: number
   public height: number
   public bgcolor: string
-  // public pointer_id: number
+  public options: any
 
+  private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
 
   /*@HostListener('window:mouseup', ['$event']) mouseUp(event: any) {
     console.log('mouseup')
@@ -72,7 +75,11 @@ export class PointerElementComponent implements OnInit {
     console.log('mousedown')
   }*/
 
-  constructor(private element: ElementRef) {
+
+  constructor(
+    private element: ElementRef,
+    private readonly _store: Store<fromProject.State>
+  ) {
     this.height = this.element.nativeElement.offsetHeight
     this.width = this.element.nativeElement.offsetWidth
     this.position = {}
@@ -84,6 +91,7 @@ export class PointerElementComponent implements OnInit {
   setPointerTraits(options: any /*PointerElement*/) {
     // console.log(options)
     this.pointer_id = options.annotation_path.annotation_id
+    this.options = options
     this.top = options.top
     this.left = options.left
     this.active = options.active
@@ -98,12 +106,23 @@ export class PointerElementComponent implements OnInit {
   }
 
   dragEnded(event: any) {
-    console.log(event)
+    // console.log(event)
     this.getPosition(event)
     /*console.log('CdkDragEnd', this.offset)
     console.log('initialPosition', this.initialPosition)*/
-    console.log('position', this.position, this.pointer_id)
     this.zIndex -= 10 // TODO :
+    this.options.top = this.position.top
+    this.options.left = this.position.left
+    this.options.video_width = this._video_elem_container.offsetWidth
+    this.options.video_height = this._video_elem_container.offsetHeight
+    // console.log('position', this.position, this.options)
+
+    let opts = this.options
+
+    this._store.dispatch(new project.ProjectAnnotationAddPointer({
+      annotation_id: this.options.annotation_path.annotation_id,
+      pointer_payload: opts
+    }))
   }
 
   dragReleased(event: any) {
