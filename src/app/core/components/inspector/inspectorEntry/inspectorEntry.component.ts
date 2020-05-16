@@ -76,7 +76,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   @Input() readonly playerCurrentTime: number
   @Input() readonly annotationStartTime: number
   @Input() readonly annotationEndTime: number
-  @Input() @HostBinding('class.selected') readonly isSelected
+  @Input() @HostBinding('class.selected') readonly isSelected: boolean = false
   @Input() @HostBinding('class.playercurrenttime') _isPlayerCurrentTime: boolean = false
 
   @Output() readonly onUpdate = new EventEmitter<project.UpdateAnnotationPayload>()
@@ -314,8 +314,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   }
 
   pointerAction($event: MouseEvent) {
-    //$event.preventDefault()
-    //$event.stopPropagation()
+    // $event.preventDefault()
+    // $event.stopPropagation()
     const annotation_id = this.entry.getIn(['annotation', 'id']) as number
     const entries_pointer_element = this.entry.getIn(['annotation', 'pointerElement'])
     if (entries_pointer_element === null) {
@@ -327,10 +327,10 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       const componentHeight = 20
 
       let options = {
-        video_width: this._video_elem_container.offsetWidth,
-        video_height: this._video_elem_container.offsetHeight,
-        left: ((this._video_elem_container.offsetWidth / 2) - (componentWidth / 2)),
-        top: ((this._video_elem_container.offsetHeight / 2) - (componentHeight / 2)),
+        video_width: this._video_elem_container.offsetWidth as number,
+        video_height: this._video_elem_container.offsetHeight as number,
+        left: ((this._video_elem_container.offsetWidth / 2) - (componentWidth / 2)) as number,
+        top: ((this._video_elem_container.offsetHeight / 2) - (componentHeight / 2)) as number,
         bgcolor: this.entry.get('color', null),
         active: true,
         zIndex: 1,
@@ -382,8 +382,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
     if ((this._video_elem_container.offsetWidth !== options.video_width) || (this._video_elem_container.offsetHeight !== options.video_height)) {
       // reset widht/height ratio
-      const ratio_width = Number.parseFloat(this._video_elem_container.offsetWidth / options.video_width).toFixed(2)
-      const ratio_height = Number.parseFloat(this._video_elem_container.offsetHeight / options.video_height).toFixed(2)
+      const ratio_width: number = (this._video_elem_container.offsetWidth / options.video_width).toFixed(2) as unknown as number
+      const ratio_height: number = (this._video_elem_container.offsetHeight / options.video_height).toFixed(2) as unknown as number
       options.left = (options.left * ratio_width)
       options.top = (options.top * ratio_height)
       options.video_height = this._video_elem_container.offsetHeight
