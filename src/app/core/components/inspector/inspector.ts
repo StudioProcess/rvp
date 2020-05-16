@@ -127,6 +127,11 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
   }
 
   isSelectedAnnotation(annotation: Record<Annotation>) {
+    /*let selected_annotations_id = this.selectedAnnotations.find(sel => {
+      if (sel.get('id', null) === annotation.get('id', null)) {
+        console.log('found ID', sel.get('id', null))
+      }
+    })*/
     return this.selectedAnnotations ?
       this.selectedAnnotations.find(sel => sel.get('id', null) === annotation.get('id', null)) !== undefined :
       null

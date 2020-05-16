@@ -76,7 +76,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   @Input() readonly playerCurrentTime: number
   @Input() readonly annotationStartTime: number
   @Input() readonly annotationEndTime: number
-  @Input() @HostBinding('class.selected') readonly isSelected = false
+  @Input() @HostBinding('class.selected') readonly isSelected
   @Input() @HostBinding('class.playercurrenttime') _isPlayerCurrentTime: boolean = false
 
   @Output() readonly onUpdate = new EventEmitter<project.UpdateAnnotationPayload>()
@@ -276,7 +276,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       }
     }
 
-    // pointer instances show
+    // pointer instances
     const entries_pointer_element = this.entry.getIn(['annotation', 'pointerElement'])
     this._isPlayerCurrentTime = this.isPlayerCurrentTime()
     if (this._isPlayerCurrentTime) {
@@ -286,20 +286,21 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
         }
       }
     } else {
+      console.log('selected',this.isSelected)
       if (entries_pointer_element !== null && !this.isSelected) {
-        if (this._isPointerDisplayed(this.annotation_id)) {
+        if (this.annotation_id !== undefined && this._isPointerDisplayed(this.annotation_id)) {
           let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + this.annotation_id + '"]')
           if (pointer_elem !== null) {
+            console.log('here',this.annotation_id)
             pointer_elem.remove()
           }
         }
-      }
-    }
-
-    if (this.isSelected) {
-      if (entries_pointer_element !== null) {
-        if (!this._isPointerDisplayed(this.annotation_id)) {
-          this._instantiatePointer(<PointerElement>entries_pointer_element)
+      } else if (this.isSelected) {
+        if (entries_pointer_element !== null) {
+          if (!this._isPointerDisplayed(this.annotation_id)) {
+            console.log('else', this.annotation_id)
+            this._instantiatePointer(<PointerElement>entries_pointer_element)
+          }
         }
       }
     }
@@ -363,18 +364,18 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   }
 
   private _isPointerDisplayed(annotation_id: number) {
-    /*let pointer_already_displayed = false
+    let pointer_already_displayed = false
     let all_pointer_refs = this._video_elem_container.querySelectorAll('rv-pointer-element')
+    // console.log(all_pointer_refs)
     all_pointer_refs.forEach((e: any) => {
       let pointer_id = e.getAttribute('pointer_id')
       if (pointer_id == annotation_id) {
         pointer_already_displayed = true
       }
-    })*/
-    // return pointer_already_displayed
-    let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + annotation_id + '"]')
-    // console.log(pointer_elem)
-    return ((pointer_elem !== null) ? true : false)
+    })
+    return pointer_already_displayed
+    /*let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + annotation_id + '"]')
+    return ((pointer_elem !== null) ? true : false)*/
   }
 
   private _instantiatePointer(options: any) {
@@ -384,11 +385,17 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
     if ((this._video_elem_container.offsetWidth !== options.video_width) || (this._video_elem_container.offsetHeight !== options.video_height)) {
       // reset widht/height ratio
-      const componentWidth = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetWidth
-      const componentHeight = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetHeight
+      const ratio_width = Number.parseFloat(this._video_elem_container.offsetWidth / options.video_width).toFixed(2)
+      const ratio_height = Number.parseFloat(this._video_elem_container.offsetHeight / options.video_height).toFixed(2)
+      console.log('ratio', ratio_width, ratio_height)
+      options.left = (options.left * ratio_width)
+      options.top = (options.top * ratio_height)
 
-      options.left = ((this._video_elem_container.offsetWidth / 2) - (componentWidth / 2))
-      options.top = ((this._video_elem_container.offsetHeight / 2) - (componentHeight / 2))
+      // centered
+      // const componentWidth = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetWidth
+      // const componentHeight = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetHeight
+      // options.left = ((this._video_elem_container.offsetWidth / 2) - (componentWidth / 2))
+      // options.top = ((this._video_elem_container.offsetHeight / 2) - (componentHeight / 2))
       // TODO : persist?
     }
 
