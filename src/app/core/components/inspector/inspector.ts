@@ -86,7 +86,6 @@ export class InspectorContainer implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     type annotationSelectionWithEntries = [Record<AnnotationSelection>, QueryList<InspectorEntryComponent>]
-
     this._subs.push(
       this._store.select(fromProject.getProjectFocusAnnotationSelection)
         .pipe(

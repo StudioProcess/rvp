@@ -286,19 +286,16 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
         }
       }
     } else {
-      console.log('selected',this.isSelected)
       if (entries_pointer_element !== null && !this.isSelected) {
         if (this.annotation_id !== undefined && this._isPointerDisplayed(this.annotation_id)) {
           let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + this.annotation_id + '"]')
           if (pointer_elem !== null) {
-            console.log('here',this.annotation_id)
             pointer_elem.remove()
           }
         }
       } else if (this.isSelected) {
         if (entries_pointer_element !== null) {
           if (!this._isPointerDisplayed(this.annotation_id)) {
-            console.log('else', this.annotation_id)
             this._instantiatePointer(<PointerElement>entries_pointer_element)
           }
         }
@@ -364,7 +361,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   }
 
   private _isPointerDisplayed(annotation_id: number) {
-    let pointer_already_displayed = false
+    /*let pointer_already_displayed = false
     let all_pointer_refs = this._video_elem_container.querySelectorAll('rv-pointer-element')
     // console.log(all_pointer_refs)
     all_pointer_refs.forEach((e: any) => {
@@ -373,9 +370,9 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
         pointer_already_displayed = true
       }
     })
-    return pointer_already_displayed
-    /*let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + annotation_id + '"]')
-    return ((pointer_elem !== null) ? true : false)*/
+    return pointer_already_displayed/*/
+    let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + annotation_id + '"]')
+    return ((pointer_elem !== null) ? true : false)
   }
 
   private _instantiatePointer(options: any) {
@@ -387,9 +384,10 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       // reset widht/height ratio
       const ratio_width = Number.parseFloat(this._video_elem_container.offsetWidth / options.video_width).toFixed(2)
       const ratio_height = Number.parseFloat(this._video_elem_container.offsetHeight / options.video_height).toFixed(2)
-      console.log('ratio', ratio_width, ratio_height)
       options.left = (options.left * ratio_width)
       options.top = (options.top * ratio_height)
+      options.video_height = this._video_elem_container.offsetHeight
+      options.video_width = this._video_elem_container.offsetWidth
 
       // centered
       // const componentWidth = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetWidth
