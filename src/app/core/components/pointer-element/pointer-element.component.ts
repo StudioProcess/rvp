@@ -68,13 +68,6 @@ export class PointerElementComponent implements OnInit {
 
   private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
 
-  /*@HostListener('window:mouseup', ['$event']) mouseUp(event: any) {
-    console.log('mouseup')
-  }
-  @HostListener('window:mousedown', ['$event']) onMouseDown(event: any) {
-    console.log('mousedown')
-  }*/
-
 
   constructor(
     private element: ElementRef,
@@ -117,11 +110,9 @@ export class PointerElementComponent implements OnInit {
     this.options.video_height = this._video_elem_container.offsetHeight
     // console.log('position', this.position, this.options)
 
-    let opts = this.options
-
     this._store.dispatch(new project.ProjectAnnotationAddPointer({
       annotation_id: this.options.annotation_path.annotation_id,
-      pointer_payload: opts
+      pointer_payload: this.options
     }))
   }
 

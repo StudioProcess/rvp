@@ -276,6 +276,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       }
     }
 
+    // pointer instances show
     const entries_pointer_element = this.entry.getIn(['annotation', 'pointerElement'])
     this._isPlayerCurrentTime = this.isPlayerCurrentTime()
     if (this._isPlayerCurrentTime) {
@@ -343,13 +344,14 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
         }
       } as PointerElement
 
-      this._instantiatePointer(<PointerElement>options)
+      // this._instantiatePointer(<PointerElement>options)
 
       // save
       this.onAddAnnotationPointer.emit({
         annotation_id: annotation_id,
         pointer_payload: options
       })
+
     } else {
       /**
        *  Check if pointer element for this ref already displayed
@@ -382,8 +384,6 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
     if ((this._video_elem_container.offsetWidth !== options.video_width) || (this._video_elem_container.offsetHeight !== options.video_height)) {
       // reset widht/height ratio
-      // console.log(this._video_elem_container.offsetWidth, this._video_elem_container.offsetHeight)
-      // console.log(options.video_width, options.video_height)
       const componentWidth = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetWidth
       const componentHeight = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetHeight
 
