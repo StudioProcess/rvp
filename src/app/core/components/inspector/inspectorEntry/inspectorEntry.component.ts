@@ -296,14 +296,13 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   }
 
   pointerAction($event: MouseEvent) {
-    // $event.preventDefault()
-    // $event.stopPropagation()
+
     const annotation_id = this.entry.getIn(['annotation', 'id']) as number
     const entries_pointer_element = this.entry.getIn(['annotation', 'pointerElement'])
+    /**
+     *  check if new pointerelement
+     */
     if (entries_pointer_element === null) {
-
-      // const componentWidth = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetWidth
-      // const componentHeight = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetHeight
 
       const componentWidth = 20
       const componentHeight = 20
@@ -331,19 +330,13 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
         annotation_id: annotation_id,
         pointer_payload: options
       })
-
-    } else {
-      /**
-       *  Check if pointer element for this ref already displayed
-       */
-      if (!this._isPointerDisplayed(annotation_id)) {
-        this._instantiatePointer(<PointerElement>entries_pointer_element)
-      }
     }
   }
 
+  /**
+   *  check if pointer to instantiate
+   */
   private _setPointers() {
-    // pointer instances
     const entries_pointer_element = this.entry.getIn(['annotation', 'pointerElement'])
     this._isPlayerCurrentTime = this.isPlayerCurrentTime()
     if (this._isPlayerCurrentTime) {
@@ -377,20 +370,10 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     })
     setTimeout(() => {
       this._setPointers()
-    }, 30)
+    }, 50)
   }
 
   private _isPointerDisplayed(annotation_id: number) {
-    /*let pointer_already_displayed = false
-    let all_pointer_refs = this._video_elem_container.querySelectorAll('rv-pointer-element')
-    // console.log(all_pointer_refs)
-    all_pointer_refs.forEach((e: any) => {
-      let pointer_id = e.getAttribute('pointer_id')
-      if (pointer_id == annotation_id) {
-        pointer_already_displayed = true
-      }
-    })
-    return pointer_already_displayed/*/
     let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + annotation_id + '"]')
     return ((pointer_elem !== null) ? true : false)
   }
@@ -414,7 +397,11 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       // const componentHeight = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetHeight
       // options.left = ((this._video_elem_container.offsetWidth / 2) - (componentWidth / 2))
       // options.top = ((this._video_elem_container.offsetHeight / 2) - (componentHeight / 2))
-      // TODO : persist?
+
+      /*this.onAddAnnotationPointer.emit({
+        annotation_id: this.entry.getIn(['annotation', 'id']) as number,
+        pointer_payload: options
+      })*/
     }
 
     componentRefInstance.setPointerTraits(<PointerElement>options)
