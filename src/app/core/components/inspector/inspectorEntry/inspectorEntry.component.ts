@@ -95,6 +95,12 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     this.removeHashTag(target)
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    // console.log(event.target.innerWidth)
+    this._resetPointerTraits()
+  }
+
   constructor(
     readonly elem: ElementRef,
     private readonly _fb: FormBuilder,
@@ -276,31 +282,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       }
     }
 
-    // pointer instances
-    const entries_pointer_element = this.entry.getIn(['annotation', 'pointerElement'])
-    this._isPlayerCurrentTime = this.isPlayerCurrentTime()
-    if (this._isPlayerCurrentTime) {
-      if (entries_pointer_element !== null) {
-        if (!this._isPointerDisplayed(this.annotation_id)) {
-          this._instantiatePointer(<PointerElement>entries_pointer_element)
-        }
-      }
-    } else {
-      if (entries_pointer_element !== null && !this.isSelected) {
-        if (this.annotation_id !== undefined && this._isPointerDisplayed(this.annotation_id)) {
-          let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + this.annotation_id + '"]')
-          if (pointer_elem !== null) {
-            pointer_elem.remove()
-          }
-        }
-      } else if (this.isSelected) {
-        if (entries_pointer_element !== null) {
-          if (!this._isPointerDisplayed(this.annotation_id)) {
-            this._instantiatePointer(<PointerElement>entries_pointer_element)
-          }
-        }
-      }
-    }
+    this._setPointers()
   }
 
   ngOnDestroy() {
@@ -331,15 +313,15 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
         video_height: this._video_elem_container.offsetHeight as number,
         left: ((this._video_elem_container.offsetWidth / 2) - (componentWidth / 2)) as number,
         top: ((this._video_elem_container.offsetHeight / 2) - (componentHeight / 2)) as number,
-        bgcolor: this.entry.get('color', null),
-        active: true,
-        zIndex: 1,
-        annotation_path : {
+        bgcolor: this.entry.get('color', null) as string,
+        active: true as boolean,
+        zIndex: 1 as number,
+        annotation_path: {
           trackIndex: this.entry.get('trackIndex', null),
           annotationStackIndex: this.entry.get('annotationStackIndex', null),
           annotationIndex: this.entry.get('annotationIndex', null),
           annotation_id: annotation_id
-        }
+        } as any
       } as PointerElement
 
       // this._instantiatePointer(<PointerElement>options)
@@ -358,6 +340,44 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
         this._instantiatePointer(<PointerElement>entries_pointer_element)
       }
     }
+  }
+
+  private _setPointers() {
+    // pointer instances
+    const entries_pointer_element = this.entry.getIn(['annotation', 'pointerElement'])
+    this._isPlayerCurrentTime = this.isPlayerCurrentTime()
+    if (this._isPlayerCurrentTime) {
+      if (entries_pointer_element !== null) {
+        if (!this._isPointerDisplayed(this.annotation_id)) {
+          this._instantiatePointer(<PointerElement>entries_pointer_element)
+        }
+      }
+    } else {
+      if (entries_pointer_element !== null && !this.isSelected) {
+        if (this.annotation_id !== undefined && this._isPointerDisplayed(this.annotation_id)) {
+          let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + this.annotation_id + '"]')
+          if (pointer_elem !== null) {
+            pointer_elem.remove()
+          }
+        }
+      } else if (this.isSelected) {
+        if (entries_pointer_element !== null) {
+          if (!this._isPointerDisplayed(this.annotation_id)) {
+            this._instantiatePointer(<PointerElement>entries_pointer_element)
+          }
+        }
+      }
+    }
+  }
+
+  private _resetPointerTraits() {
+    let all_pointer_refs = this._video_elem_container.querySelectorAll('rv-pointer-element')
+    all_pointer_refs.forEach((e: any) => {
+      e.remove()
+    })
+    setTimeout(() => {
+      this._setPointers()
+    }, 30)
   }
 
   private _isPointerDisplayed(annotation_id: number) {
