@@ -45,6 +45,9 @@ import * as fromProject from '../../../persistence/reducers'
       border-radius: 50%;
       cursor: move;
     }
+    .annotation-pointer-element.annotation-selected {
+      box-shadow: 0px 0px 10px #fff;
+    }
   `],
   //encapsulation: ViewEncapsulation.Native
 })

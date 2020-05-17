@@ -365,6 +365,11 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
         }
       }
     }
+    if (this.isSelected) {
+      this._addSelectedAnnotationPointerClass(this.annotation_id)
+    } else {
+      this._removeSelectedAnnotationPointerClass(this.annotation_id)
+    }
   }
 
   private _resetPointerTraits() {
@@ -377,8 +382,24 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     }, 50)
   }
 
+  private _addSelectedAnnotationPointerClass(annotation_id: number) {
+    setTimeout(() => {
+      if (this._isPointerDisplayed(this.annotation_id)) {
+        const pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + annotation_id + '"] .annotation-pointer-element')
+        pointer_elem!.classList.add('annotation-selected')
+      }
+    }, 0)
+  }
+
+  private _removeSelectedAnnotationPointerClass(annotation_id: number) {
+    if (this._isPointerDisplayed(this.annotation_id)) {
+      const pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + annotation_id + '"] .annotation-pointer-element')
+      pointer_elem!.classList.remove('annotation-selected')
+    }
+  }
+
   private _isPointerDisplayed(annotation_id: number) {
-    let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + annotation_id + '"]')
+    const pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + annotation_id + '"]')
     return ((pointer_elem !== null) ? true : false)
   }
 

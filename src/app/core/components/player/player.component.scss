@@ -8,11 +8,8 @@
   .annotation-pointer-element {
 
     &.annotation-pointer-dot {
-      height: 20px;
-      width: 20px;
-      background-color: #bbb;
-      border-radius: 50%;
-      cursor: pointer;
+      &.annotation-selected {
+      }
     }
   }
 }
