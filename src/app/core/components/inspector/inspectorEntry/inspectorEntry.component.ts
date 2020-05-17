@@ -68,6 +68,7 @@ const durationValidator = Validators.compose([Validators.required, durationValid
 export class InspectorEntryComponent extends HashtagService implements OnChanges, OnInit, AfterViewInit, OnDestroy {
 
   form: FormGroup | null = null
+  annotation_pointer_color: string = '#bbb'
   private readonly _subs: Subscription[] = []
   private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
   private annotation_id: number
@@ -343,6 +344,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       if (entries_pointer_element !== null) {
         if (!this._isPointerDisplayed(this.annotation_id)) {
           this._instantiatePointer(<PointerElement>entries_pointer_element)
+          this.annotation_pointer_color = this.entry.get('color', null) as string
         }
       }
     } else {
@@ -351,12 +353,14 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
           let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + this.annotation_id + '"]')
           if (pointer_elem !== null) {
             pointer_elem.remove()
+            this.annotation_pointer_color = '#bbb'
           }
         }
       } else if (this.isSelected) {
         if (entries_pointer_element !== null) {
           if (!this._isPointerDisplayed(this.annotation_id)) {
             this._instantiatePointer(<PointerElement>entries_pointer_element)
+            this.annotation_pointer_color = this.entry.get('color', null) as string
           }
         }
       }
