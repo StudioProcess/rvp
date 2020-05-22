@@ -201,5 +201,23 @@
         outline: none !important;
       }
     }
+    .annotation-pointer-delete {
+      float: left;
+      display: inline-block;
+      margin-top: 2px;
+      margin-left: 8px;
+      outline: 0;
+
+      i {
+        font-size: 20px;
+        color: rgb(170, 170, 170);
+        cursor: pointer;
+      }
+      &:hover {
+        i {
+          color: $process-dark-gray2;
+        }
+      }
+    }
   }
 }

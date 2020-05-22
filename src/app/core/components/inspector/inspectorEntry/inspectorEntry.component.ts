@@ -334,6 +334,12 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     }
   }
 
+
+  removePointerAction($event: MouseEvent) {
+    console.log('remove')
+  }
+
+
   /**
    *  check if pointer to instantiate
    */

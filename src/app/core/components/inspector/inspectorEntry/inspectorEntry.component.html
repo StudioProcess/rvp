@@ -7,6 +7,9 @@
       <div class="row time-row">
         <div class="column">
           <button (click)="pointerAction($event)" title="Pointer" class="annotation-pointer-ctrl" [style.backgroundColor]="annotation_pointer_color"></button>
+          <button *ngIf="(entry.getIn(['annotation', 'pointerElement']) !== null)" (click)="removePointerAction($event)" title="Remove Pointer" class="annotation-pointer-delete">
+            <i class="ion-ios-close"></i>
+          </button>
           <i class="ion-md-time"></i>
           <input #start formControlName="utc_timestamp" class="duration" title="Start Time">
           <i class="ion-ios-time"></i>
