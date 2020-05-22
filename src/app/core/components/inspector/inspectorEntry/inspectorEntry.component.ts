@@ -68,6 +68,7 @@ const durationValidator = Validators.compose([Validators.required, durationValid
 export class InspectorEntryComponent extends HashtagService implements OnChanges, OnInit, AfterViewInit, OnDestroy {
 
   form: FormGroup | null = null
+  mouse_overed: boolean = false
   annotation_pointer_color: string = '#bbb'
   private readonly _subs: Subscription[] = []
   private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
@@ -336,7 +337,22 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
 
   removePointerAction($event: MouseEvent) {
-    console.log('remove')
+    const annotation_id = this.entry.getIn(['annotation', 'id']) as number
+    let options = {
+      annotation_path: {
+        trackIndex: this.entry.get('trackIndex', null),
+        annotationStackIndex: this.entry.get('annotationStackIndex', null),
+        annotationIndex: this.entry.get('annotationIndex', null),
+        annotation_id: annotation_id
+      } as any
+    } as PointerElement
+    this.onAddAnnotationPointer.emit({
+      annotation_id: annotation_id,
+      pointer_payload: options,
+      remove: true
+    })
+    this._resetPointerTraits()
+    this.annotation_pointer_color = '#bbb'
   }
 
 

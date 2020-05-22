@@ -174,6 +174,7 @@ export interface AnnotationPointerPayload {
 export interface UpdateAnnotationPointerPayload {
   readonly annotation_id: number
   readonly pointer_payload: AnnotationPointerPayload
+  readonly remove?: boolean
 }
 
 export class ProjectAnnotationAddPointer implements Action {

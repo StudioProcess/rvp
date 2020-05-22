@@ -567,8 +567,8 @@ export function reducer(state: State = initialState, action: project.Actions): S
         action.payload.pointer_payload.annotation_path.annotationIndex,
         'pointerElement'
       ]
-      // console.log(path, action.payload.pointer_payload)
-      return state.setIn(path, action.payload.pointer_payload)
+      const payload = ((!!action.payload.remove) ? null : action.payload.pointer_payload)
+      return state.setIn(path, payload)
     }
     case project.PLAYER_CREATE_SUCCESS:
     case project.PLAYER_DESTROY_SUCCESS:

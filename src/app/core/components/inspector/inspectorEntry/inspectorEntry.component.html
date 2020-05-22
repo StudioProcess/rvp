@@ -6,7 +6,7 @@
     <div class="column annotation-info">
       <div class="row time-row">
         <div class="column">
-          <div class="pointer-actions" [class.mouse-over]="mouseOvered" (mouseover)="mouseOvered=true" (mouseout)="mouseOvered=false">
+          <div class="pointer-actions" [class.mouse-over]="mouse_overed" (mouseover)="mouse_overed=true" (mouseout)="mouse_overed=false">
             <button (click)="pointerAction($event)" title="Pointer" class="annotation-pointer-ctrl" [style.backgroundColor]="annotation_pointer_color"></button>
             <button *ngIf="(entry.getIn(['annotation', 'pointerElement']) !== null)" (click)="removePointerAction($event)" title="Remove Pointer" class="annotation-pointer-delete">
               <i class="ion-ios-close"></i>
