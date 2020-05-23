@@ -79,24 +79,28 @@ export abstract class HashtagService {
    *  popup component (will be removed on any formblur, save, pick etc. event).
    */
   addHashTagPopupContainer(): void {
-    let range = document.getSelection()!.getRangeAt(0)!
-    if (!range.collapsed) {
-      range.deleteContents()
+    // console.log(document.getSelection())
+    const selected = document.getSelection()!
+    if (selected.rangeCount) {
+      let range = selected!.getRangeAt(0)!
+      if (!range.collapsed) {
+        range.deleteContents()
+      }
+      // console.log(range)
+      const hashtag_popup_container_span = document.createElement('span')
+      hashtag_popup_container_span.id = this.tagPopupContainerId
+      hashtag_popup_container_span.style.display = 'inline-block'
+      hashtag_popup_container_span.contentEditable = 'false'
+
+      range.insertNode(hashtag_popup_container_span)
+
+      const sel = document.getSelection()!
+      range = range!.cloneRange()
+      range!.setStartAfter(hashtag_popup_container_span)
+      range!.collapse(true)
+      sel.removeAllRanges()
+      sel.addRange(range)
     }
-    // console.log(range)
-    const hashtag_popup_container_span = document.createElement('span')
-    hashtag_popup_container_span.id = this.tagPopupContainerId
-    hashtag_popup_container_span.style.display = 'inline-block'
-    hashtag_popup_container_span.contentEditable = 'false'
-
-    range.insertNode(hashtag_popup_container_span)
-
-    const sel = document.getSelection()!
-    range = range!.cloneRange()
-    range!.setStartAfter(hashtag_popup_container_span)
-    range!.collapse(true)
-    sel.removeAllRanges()
-    sel.addRange(range)
   }
 
   removeHashTagPopupContainer(): Promise<any> {
@@ -173,7 +177,7 @@ export abstract class HashtagService {
          */
         new_text = old_text!.replace(data!.user_input + ' ', data!.hashtag)
       } else {
-        new_text = old_text!.replace(data!.user_input +' ', data!.hashtag)
+        new_text = old_text!.replace(data!.user_input + ' ', data!.hashtag)
       }
 
       /**
@@ -347,7 +351,7 @@ export abstract class HashtagService {
               + '</span>'
             )
 
-            if(settings && settings!.hasOwnProperty('replace')) {
+            if (settings && settings!.hasOwnProperty('replace')) {
               /**
                *  replace each textNode with all new elements
                *  (all remaining text elements + hashtags spans)
