@@ -285,7 +285,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       }
     }
 
-    this._setPointers()
+    // this._setPointers()
+    this._resetPointerTraits()
   }
 
   ngOnDestroy() {
@@ -353,7 +354,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       remove: true
     })
     this._resetPointerTraits()
-    this.annotation_pointer_color = '#bbb'
+    // this.annotation_pointer_color = '#bbb'
   }
 
 
@@ -396,13 +397,19 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   }
 
   private _resetPointerTraits() {
+    let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + this.annotation_id + '"]')
+    if (pointer_elem !== null) {
+      pointer_elem.remove()
+      this.annotation_pointer_color = '#bbb'
+    }
+
+    /*
     let all_pointer_refs = this._video_elem_container.querySelectorAll('rv-pointer-element')
     all_pointer_refs.forEach((e: any) => {
       e.remove()
     })
-    setTimeout(() => {
-      this._setPointers()
-    }, 50)
+    */
+    this._setPointers()
   }
 
   private _addSelectedAnnotationPointerClass(annotation_id: number) {
