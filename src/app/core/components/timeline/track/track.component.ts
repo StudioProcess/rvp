@@ -192,7 +192,8 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
               id: oldAnnotation.get('id', null),
               fields: oldAnnotation.get('fields', null),
               utc_timestamp: newStart,
-              duration: newDuration
+              duration: newDuration,
+              pointerElement: oldAnnotation.get('pointerElement', null),
             })
           })
         }))

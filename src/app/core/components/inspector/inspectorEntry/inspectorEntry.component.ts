@@ -259,7 +259,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
             id: this.entry.getIn(['annotation', 'id']),
             utc_timestamp: parseDuration(utc_timestamp),
             duration: parseDuration(duration),
-            fields: new AnnotationFieldsRecordFactory({ description })
+            fields: new AnnotationFieldsRecordFactory({ description }),
+            pointerElement: this.entry.getIn(['annotation', 'pointerElement'])
           })
 
           this.onUpdate.emit({
