@@ -1,33 +1,34 @@
-import {NgModule} from '@angular/core'
-import {CommonModule} from '@angular/common'
-import {FormsModule, ReactiveFormsModule} from '@angular/forms'
-import {ContenteditableModule} from '@ng-stack/contenteditable'
-import {AutoSizeInputModule} from 'ngx-autosize-input';
+import { NgModule } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { ContenteditableModule } from '@ng-stack/contenteditable'
+import { AutoSizeInputModule } from 'ngx-autosize-input';
 
-import {MainContainer} from './components/main/main'
-import {PlayerContainer} from './components/player/player'
-import {InspectorContainer} from './components/inspector/inspector'
-import {TimelineContainer} from './components/timeline/timeline'
+import { MainContainer } from './components/main/main'
+import { PlayerContainer } from './components/player/player'
+import { InspectorContainer } from './components/inspector/inspector'
+import { TimelineContainer } from './components/timeline/timeline'
 
-import {NotFoundComponent} from './components/notFound.component'
-import {LogoComponent} from './components/logo.component'
-import {ProjectBtnComponent} from './components/project/projectBtn/projectBtn.component'
-import {ProjectModalComponent} from './components/project/projectModal/projectModal.component'
-import {FooterComponent} from './components/footer/footer.component'
-import {VersionComponent} from './components/version/version.component'
-import {ToolbarComponent} from './components/toolbar/toolbar.component'
-import {ProgressModalComponent} from './components/project/progress-modal/progress-modal.component'
-import {TitlebarComponent} from './components/titlebar/titlebar.component'
-import {TaggingComponent} from './components/tagging/tagging.component'
-import {TagAddModalComponent} from './components/tagging/tag-add-modal/tag-add-modal.component'
+import { NotFoundComponent } from './components/notFound.component'
+import { LogoComponent } from './components/logo.component'
+import { ProjectBtnComponent } from './components/project/projectBtn/projectBtn.component'
+import { ProjectModalComponent } from './components/project/projectModal/projectModal.component'
+import { FooterComponent } from './components/footer/footer.component'
+import { VersionComponent } from './components/version/version.component'
+import { ToolbarComponent } from './components/toolbar/toolbar.component'
+import { ProgressModalComponent } from './components/project/progress-modal/progress-modal.component'
+import { TitlebarComponent } from './components/titlebar/titlebar.component'
+import { TaggingComponent } from './components/tagging/tagging.component'
+import { TagAddModalComponent } from './components/tagging/tag-add-modal/tag-add-modal.component'
+import { ViewmodeComponent } from './components/viewmode.component'
 
 // Inspector components
-import {InspectorEntryComponent} from './components/inspector/inspectorEntry/inspectorEntry.component'
+import { InspectorEntryComponent } from './components/inspector/inspectorEntry/inspectorEntry.component'
 
 // Timeline components
-import {TrackComponent} from './components/timeline/track/track.component'
-import {HandlebarComponent} from './components/timeline/handlebar/handlebar.component'
-import {PlayheadComponent} from './components/timeline/playhead/playhead.component'
+import { TrackComponent } from './components/timeline/track/track.component'
+import { HandlebarComponent } from './components/timeline/handlebar/handlebar.component'
+import { PlayheadComponent } from './components/timeline/playhead/playhead.component'
 import { MediArchiveComponent } from './components/medi-archive/medi-archive.component'
 
 const _DECLS_ = [
@@ -38,6 +39,7 @@ const _DECLS_ = [
   NotFoundComponent, LogoComponent, VersionComponent,
   ProjectBtnComponent, ProjectModalComponent, FooterComponent,
   ToolbarComponent, ProgressModalComponent, TitlebarComponent,
+  ViewmodeComponent,
   // Inspector
   InspectorEntryComponent,
   // Timeline
@@ -60,4 +62,4 @@ const _DECLS_ = [
   exports: _DECLS_,
   entryComponents: [TaggingComponent, TagAddModalComponent],
 })
-export class CoreModule {}
+export class CoreModule { }
