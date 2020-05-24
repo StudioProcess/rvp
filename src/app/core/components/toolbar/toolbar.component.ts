@@ -12,11 +12,11 @@ import { debounceTime, pluck } from 'rxjs/operators'
 
 import { _FORM_INPUT_DEBOUNCE_ } from '../../../config/form'
 
-
 import * as project from '../../../persistence/actions/project'
 import { ImportVideoPayload } from '../../../persistence/actions/project'
 import { DomService } from '../../actions/dom.service'
 import { HashtagService } from '../../actions/hashtag.service'
+import { Globals } from '../../../common/globals'
 
 @Component({
   selector: 'rv-toolbar',
@@ -37,6 +37,7 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
 
   leftForm: FormGroup | null = null
   rightForm: FormGroup | null = null
+  viewmode_active: boolean = false
 
   @Output() readonly onAddAnnotation = new EventEmitter()
   @Output() readonly onDeleteAnnotation = new EventEmitter()
@@ -109,6 +110,8 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
         .subscribe((value: boolean) => {
           this.onApplyToTimelineChange.emit(value)
         }))
+
+    this.viewmode_active = Globals.viewmode_active
   }
 
   ngAfterViewInit() {

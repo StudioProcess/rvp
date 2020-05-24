@@ -4,15 +4,21 @@
   </rv-handlebar>
 </div>
 <div #timelineWrapper class="timeline-wrapper">
-  <rv-track *ngFor="let track of timeline?.get('tracks', []); index as i; trackBy: trackByFunc;" [data]="track"
-    [trackIndex]="i" [numTracks]="getNumTracks()" [totalDuration]="timeline.duration" [scrollSettings]="scrollSettings"
-    [selectedAnnotations]="selectedAnnotations" (onUpdateTrack)="!viewmode_active && updateTrack($event)"
+  <rv-track *ngFor="let track of timeline?.get('tracks', []); index as i; trackBy: trackByFunc;"
+    [data]="track"
+    [trackIndex]="i"
+    [numTracks]="getNumTracks()"
+    [totalDuration]="timeline.duration"
+    [scrollSettings]="scrollSettings"
+    [selectedAnnotations]="selectedAnnotations"
+    (onUpdateTrack)="!viewmode_active && updateTrack($event)"
     (onDeleteTrack)="!viewmode_active && deleteTrack($event)"
     (onDuplicateTrack)="!viewmode_active && duplicateTrack($event)"
     (onInsertAtTrack)="!viewmode_active && insertTrackAt($event)"
     (onSetActiveTrack)="!viewmode_active && setActiveTrack($event)"
     (onAddAnnotation)="!viewmode_active && addAnnotation($event)"
-    (onUpdateAnnotation)="!viewmode_active && updateAnnotation($event)" (onSelectAnnotation)="selectAnnotation($event)"
+    (onUpdateAnnotation)="!viewmode_active && updateAnnotation($event)"
+    (onSelectAnnotation)="selectAnnotation($event)"
     (onDblClickAnnotation)="focusAnnotation($event)">
   </rv-track>
   <div #playheadOverflow class="playhead-wrapper">
@@ -21,7 +27,8 @@
     </div>
   </div>
 </div>
-<button class="ion-md-add add-track" title="Add new Track" alt="Add new Track" [ngStyle]="{'color': (!viewmode_active) ? '' : '#CCC' }" (click)="!viewmode_active && addTrack()">
+<button class="ion-md-add add-track" title="Add new Track" alt="Add new Track"
+  [ngStyle]="{'color': (!viewmode_active) ? '' : '#CCC' }" (click)="!viewmode_active && addTrack()">
   Add Track</button>
 <!-- {{selectedAnnotationId}} -->
 <!-- <pre>{{timeline?.tracks|json}}</pre> -->

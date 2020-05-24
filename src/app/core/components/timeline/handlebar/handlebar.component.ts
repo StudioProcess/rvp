@@ -102,7 +102,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   }
 
   ngAfterViewInit() {
-    if (!this.viewmode_active) {
+    if (!Globals.viewmode_active) {
 
       const isLeftBtn = (ev: MouseEvent) => ev.button === 0
 
