@@ -37,9 +37,9 @@ export interface Handlebar {
   selector: 'rv-handlebar',
   template: `
     <div class="handlebar" (dblclick)="dblClick($event)">
-      <div #leftHandle class="left-handle"><i class="ion-md-arrow-dropright"></i></div>
+      <div #leftHandle class="left-handle" *ngIf="!viewmode_active"><i class="ion-md-arrow-dropright"></i></div>
       <div #middleHandle class="content">{{caption}}</div>
-      <div #rightHandle class="right-handle"><i class="ion-md-arrow-dropleft"></i></div>
+      <div #rightHandle class="right-handle" *ngIf="!viewmode_active"><i class="ion-md-arrow-dropleft"></i></div>
     </div>
   `,
   styleUrls: ['handlebar.component.scss']
