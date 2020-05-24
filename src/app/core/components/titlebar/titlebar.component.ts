@@ -7,7 +7,7 @@ import {
   EventEmitter,
   ElementRef,
   //ChangeDetectionStrategy,
-} from '@angular/core';
+} from '@angular/core'
 
 import {
   FormGroup,
@@ -35,6 +35,7 @@ import {Store} from '@ngrx/store'
 import {Record} from 'immutable'
 import * as project from '../../../persistence/actions/project'
 import * as fromProject from '../../../persistence/reducers'
+import { Globals } from '../../../common/globals'
 
 
 @Component({
@@ -55,6 +56,7 @@ export class TitlebarComponent implements OnInit {
   @ViewChild('projecttitle', { static: true }) private readonly _projecttitleInputRef: ElementRef
 
   pnform: FormGroup | null = null
+  viewmode_active: boolean = false
   private readonly _subs: Subscription[] = []
 
   constructor(
@@ -83,6 +85,8 @@ export class TitlebarComponent implements OnInit {
         ])
       ]
     })
+
+    this.viewmode_active = Globals.viewmode_active
   }
 
   ngAfterViewInit() {

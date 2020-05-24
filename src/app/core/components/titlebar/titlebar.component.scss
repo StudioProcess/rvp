@@ -31,12 +31,25 @@ form {
         &:hover {
           border-color: #CCC;
         }
+
         &:focus {
           border-color: #000000;
         }
 
         &.initial-title {
           color: #CCC;
+        }
+
+        &:read-only {
+          background-color: #FFF;
+
+          &:hover {
+            border-color: #FFF;
+          }
+
+          &:focus {
+            border-color: #FFF;
+          }
         }
       }
     }
