@@ -47,7 +47,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     private activatedRoute: ActivatedRoute
   ) {
     // TODO : check whether viewmode is active
-    Globals.viewmode_active = false
+    Globals.viewmode_active = true
   }
 
   ngOnInit() {
