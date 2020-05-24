@@ -6,7 +6,7 @@
     </div>
     <input #title class="title-input" placeholder="Track Title" title="Track Title" formControlName="title">
   </div>
-  <div class="column shrink track-options">
+  <div class="column shrink track-options" *ngIf="!viewmode_active">
     <i class="ion-md-copy track-copy-icon" title="Duplicate" alt="Duplicate" (mousedown)="duplicateTrack($event, trackIndex)"></i>
     <i *ngIf="trackIndex > 0" class="ion-ios-arrow-up" title="Move Up" alt="Move Up" (mousedown)="moveTrack($event, trackIndex, 'up')"></i>
     <i *ngIf="trackIndex < numTracks-1" class="ion-ios-arrow-down" title="Move Down" alt="Move Down" (mousedown)="moveTrack($event, trackIndex, 'down')"></i>

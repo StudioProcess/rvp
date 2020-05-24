@@ -28,6 +28,7 @@ import { Timeline, Track, Annotation } from '../../../persistence/model'
 import { HandlebarComponent } from '../../components/timeline/handlebar/handlebar.component'
 import { _SCROLLBAR_CAPTION_ } from '../../../config/timeline/scrollbar'
 import { rndColor } from '../../../lib/color'
+import { Globals } from '../../../common/globals'
 
 export interface ScrollSettings {
   readonly zoom: number
@@ -48,6 +49,7 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   playerCurrentTime = 0
   scrollbarLeft = 0
   scrollbarWidth = 100
+  viewmode_active: boolean = false
   readonly scrollbarCaption = _SCROLLBAR_CAPTION_
   readonly scrollbarRect = new ReplaySubject<ClientRect>(1)
   readonly timelineWrapperRect = new ReplaySubject<ClientRect>(1)
@@ -94,6 +96,8 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
           this.playerCurrentTime = currentTime
           this._cdr.markForCheck()
         }))
+
+    this.viewmode_active = Globals.viewmode_active
   }
 
   ngAfterViewInit() {

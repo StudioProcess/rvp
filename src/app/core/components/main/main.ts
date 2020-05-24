@@ -45,12 +45,12 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     private readonly _rootStore: Store<fromRoot.State>,
     private titleService: Title,
     private activatedRoute: ActivatedRoute
-  ) { }
-
-  ngOnInit() {
-
+  ) {
     // TODO : check whether viewmode is active
     Globals.viewmode_active = true
+  }
+
+  ngOnInit() {
 
     $(document).foundation()
 

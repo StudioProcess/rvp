@@ -67,7 +67,7 @@ const durationValidator = Validators.compose([Validators.required, durationValid
 export class InspectorEntryComponent extends HashtagService implements OnChanges, OnInit, AfterViewInit, OnDestroy {
 
   form: FormGroup | null = null
-  private viewmode_active: boolean = false
+  viewmode_active: boolean = false
   private readonly _subs: Subscription[] = []
 
   @Input() readonly entry: Record<AnnotationColorMap>

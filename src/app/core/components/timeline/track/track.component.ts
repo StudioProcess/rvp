@@ -33,6 +33,7 @@ import { coordTransform } from '../../../../lib/coords'
 import { Handlebar } from '../handlebar/handlebar.component'
 import * as project from '../../../../persistence/actions/project'
 import { ScrollSettings } from '../timeline'
+import { Globals } from '../../../../common/globals'
 
 interface EmitAnnotationSelectionArgs {
   readonly track: Record<Track>
@@ -57,6 +58,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
 
   form: FormGroup | null = null
   zoom: number
+  viewmode_active: boolean = false
   readonly zoomContainerRect = new ReplaySubject<ClientRect>(1)
 
   @Output() readonly onUpdateTrack = new EventEmitter<project.UpdateTrackPayload>()
@@ -223,6 +225,8 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
         track: this.data, annotation
       })
     })
+
+    this.viewmode_active = Globals.viewmode_active
   }
 
   ngAfterViewInit() {

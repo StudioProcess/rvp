@@ -23,7 +23,7 @@ import { Globals } from '../../common/globals'
 })
 export class ViewmodeComponent {
 
-  private viewmode_active: boolean = false
+  viewmode_active: boolean = false
 
   constructor() {
   }
