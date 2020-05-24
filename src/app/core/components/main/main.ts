@@ -18,6 +18,7 @@ import * as fromProject from '../../../persistence/reducers'
 import { rndColor } from '../../../lib/color'
 import { AnnotationRecordFactory, AnnotationFieldsRecordFactory } from '../../../persistence/model'
 import { _EMPTY_PROJECT_ } from '../../../config/project'
+import { Globals } from '../../../common/globals'
 
 declare var $: any
 
@@ -47,6 +48,9 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   ) { }
 
   ngOnInit() {
+
+    // TODO : check whether viewmode is active
+    Globals.viewmode_active = true
 
     $(document).foundation()
 

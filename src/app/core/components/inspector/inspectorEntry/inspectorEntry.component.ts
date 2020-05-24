@@ -43,6 +43,7 @@ import * as project from '../../../../persistence/actions/project'
 import { parseDuration } from '../../../../lib/time'
 import { DomService } from '../../../actions/dom.service'
 import { HashtagService } from '../../../actions/hashtag.service'
+import { Globals } from '../../../../common/globals'
 
 function durationValidatorFactory(): ValidatorFn {
   const durationRegex = /^([0-9]*:){0,2}[0-9]*(\.[0-9]*)?$/
@@ -66,6 +67,7 @@ const durationValidator = Validators.compose([Validators.required, durationValid
 export class InspectorEntryComponent extends HashtagService implements OnChanges, OnInit, AfterViewInit, OnDestroy {
 
   form: FormGroup | null = null
+  private viewmode_active: boolean = false
   private readonly _subs: Subscription[] = []
 
   @Input() readonly entry: Record<AnnotationColorMap>
@@ -118,6 +120,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       duration: [duration, durationValidator],
       description
     })
+
+    this.viewmode_active = Globals.viewmode_active
   }
 
   ngAfterViewInit() {

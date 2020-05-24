@@ -1,4 +1,5 @@
 <form #formWrapper class="entry-container" [formGroup]="form" novalidate>
+  <div *ngIf="viewmode_active" class="viewmode-blocking-overlay"></div>
   <div class="row collapse">
     <div class="column shrink">
       <div class="annotation-color" [style.backgroundColor]="entry.get('color', null)"></div>
