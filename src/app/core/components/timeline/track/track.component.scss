@@ -38,11 +38,19 @@
       &:hover {
         color: $dark-gray;
       }
-
       &:focus {
         color: $white;
         background-color: $highlight-color;
         outline: none;
+      }
+      &:read-only {
+        &:hover {
+          color: $black;
+        }
+        &:focus {
+          color: $black;
+          background-color: inherit;
+        }
       }
     }
   }
