@@ -4,7 +4,7 @@
     <div #trackBtn class="track-color" [style.color]="data.get('color', null)">
       <i class="ion-ios-disc" title="Track Color"></i>
     </div>
-    <input #title class="title-input" placeholder="Track Title" title="Track Title" formControlName="title" [attr.readonly]="viewmode_active">
+    <input #title class="title-input" placeholder="Track Title" title="Track Title" formControlName="title" [readonly]="viewmode_active">
   </div>
   <div class="column shrink track-options" *ngIf="!viewmode_active">
     <i class="ion-md-copy track-copy-icon" title="Duplicate" alt="Duplicate" (mousedown)="duplicateTrack($event, trackIndex)"></i>

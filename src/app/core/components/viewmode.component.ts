@@ -1,10 +1,10 @@
-import { Component, SimpleChanges } from '@angular/core'
+import { Component } from '@angular/core'
 import { Globals } from '../../common/globals'
 
 @Component({
   selector: 'rv-viewmode',
   template: `
-    <div class="viewmode-wrapper" *ngIf="viewmode_active">
+    <div class="viewmode-wrapper" *ngIf="viewmode_active" (click)="toggleViewMode($event)">
       <i class="ion-md-eye"></i>
     </div>
   `,
@@ -29,10 +29,12 @@ export class ViewmodeComponent {
   }
 
   ngOnInit() {
-    // console.log(Globals.viewmode_active)
     this.viewmode_active = Globals.viewmode_active
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  toggleViewMode($event: MouseEvent) {
+    console.log('toggle', Globals.viewmode_active)
+    Globals.viewmode_active = ((Globals.viewmode_active) ? false : true)
+
   }
 }
