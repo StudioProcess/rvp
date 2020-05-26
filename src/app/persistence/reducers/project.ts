@@ -468,6 +468,11 @@ export function reducer(state: State = initialState, action: project.Actions): S
       }
       return state
     }
+    case project.PROJECT_UPDATE_VIEWMODE: {
+      console.log('PROJECT_UPDATE_VIEWMODE', action.payload)
+
+      return state
+    }
     case project.PROJECT_PASTE_CLIPBOARD: {
       const all = state.get('clipboard', null)!
       if (!all.isEmpty()) {

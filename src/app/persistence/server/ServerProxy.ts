@@ -298,7 +298,8 @@ export class ServerProxy implements OnDestroy {
             action.type === project.PROJECT_IMPORT_VIDEO_SUCCESS ||
             action.type === project.PROJECT_LOAD_SUCCESS ||
             action.type === project.PROJECT_UPDATE_HASHTAGS ||
-            action.type === project.PROJECT_UPDATE_TITLE
+            action.type === project.PROJECT_UPDATE_TITLE ||
+            action.type === project.PROJECT_UPDATE_VIEWMODE
         }))
 
       this._subs.push(

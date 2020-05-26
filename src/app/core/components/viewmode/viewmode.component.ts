@@ -1,5 +1,8 @@
-import { Component } from '@angular/core'
-import { Globals } from '../../common/globals'
+import { Component /*, EventEmitter, Output*/ } from '@angular/core'
+import { Store } from '@ngrx/store'
+import * as project from '../../../persistence/actions/project'
+import * as fromRoot from '../../reducers'
+import { Globals } from '../../../common/globals'
 
 @Component({
   selector: 'rv-viewmode',
@@ -24,8 +27,12 @@ import { Globals } from '../../common/globals'
 export class ViewmodeComponent {
 
   viewmode_active: boolean = false
+  // @Output() readonly onViewmodeUpdate = new EventEmitter<project.UpdateProjectViewmodePayload>()
+  // readonly onViewmodeUpdate = new EventEmitter<project.UpdateProjectViewmodePayload>()
 
-  constructor() {
+  constructor(
+    private _rootStore: Store<fromRoot.State>
+  ) {
   }
 
   ngOnInit() {
@@ -33,8 +40,8 @@ export class ViewmodeComponent {
   }
 
   toggleViewMode($event: MouseEvent) {
-    console.log('toggle', Globals.viewmode_active)
+    // console.log('toggle', Globals.viewmode_active)
     Globals.viewmode_active = ((Globals.viewmode_active) ? false : true)
-
+    this._rootStore.dispatch(new project.ProjectUpdateViewmode(Globals.viewmode_active))
   }
 }

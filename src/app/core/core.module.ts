@@ -20,7 +20,7 @@ import { ProgressModalComponent } from './components/project/progress-modal/prog
 import { TitlebarComponent } from './components/titlebar/titlebar.component'
 import { TaggingComponent } from './components/tagging/tagging.component'
 import { TagAddModalComponent } from './components/tagging/tag-add-modal/tag-add-modal.component'
-import { ViewmodeComponent } from './components/viewmode.component'
+import { ViewmodeComponent } from './components/viewmode/viewmode.component'
 
 // Inspector components
 import { InspectorEntryComponent } from './components/inspector/inspectorEntry/inspectorEntry.component'
