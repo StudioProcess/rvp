@@ -40,6 +40,7 @@ export interface ProjectMeta {
   readonly timeline: Record<Timeline>|null,
   readonly hashtags: Record<ProjectHashtags>|null
   readonly general: Record<ProjectGeneralData>|null
+  // readonly viewmode: boolean|false
 }
 
 export interface ProjectSettings {
@@ -114,6 +115,7 @@ export interface ProjectHashtags {
 }
 export interface ProjectGeneralData {
   readonly title: string|null
+  readonly viewmode: boolean
 }
 
 export interface Track {
@@ -227,7 +229,8 @@ export const AnnotationFieldsRecordFactory = Record<AnnotationFields>({
 })
 
 export const ProjectGeneralDataRecordFactory = Record<ProjectGeneralData>({
-  title: ''
+  title: '',
+  viewmode: false
 })
 
 export const AnnotationRecordFactory = Record<Annotation>({

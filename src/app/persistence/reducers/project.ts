@@ -79,6 +79,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       const prevVideoBlob = state.get('videoBlob', null)
 
       const { meta: { id, timeline, video: videoMeta, general, hashtags }, video } = action.payload
+      // console.log(action.payload)
 
       if (videoMeta === null) {
         timeline.duration = prevDuration
@@ -118,7 +119,8 @@ export function reducer(state: State = initialState, action: project.Actions): S
             list: (hashtags! && hashtags!.list) ? hashtags.list : null
           }),
           general: ProjectGeneralDataRecordFactory({
-            title: (general! && general!.title) ? general.title : _PROJECT_DEFAULT_TITLE_
+            title: (general! && general!.title) ? general.title : _PROJECT_DEFAULT_TITLE_,
+            viewmode: general.viewmode
           })
         })
       })
@@ -457,7 +459,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       if (new_hashtags) {
         let hashtags = new_hashtags.concat(prev_hashtags)
         hashtags = prepareHashTagList(hashtags)
-        // console.log('PROJECT_UPDATE_HASHTAGS', hashtags)
+
         return state.setIn(['meta', 'hashtags', 'list'], hashtags)
       }
       return state
@@ -469,9 +471,8 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state
     }
     case project.PROJECT_UPDATE_VIEWMODE: {
-      console.log('PROJECT_UPDATE_VIEWMODE', action.payload)
-
-      return state
+      // console.log('PROJECT_UPDATE_VIEWMODE', action.payload)
+      return state.setIn(['meta', 'general', 'viewmode'], action.payload)
     }
     case project.PROJECT_PASTE_CLIPBOARD: {
       const all = state.get('clipboard', null)!
