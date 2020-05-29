@@ -56,8 +56,9 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
     this.activatedRoute.queryParams.subscribe(params => {
       if (params.hasOwnProperty('video') && params.hasOwnProperty('annotations')) {
-        const mediArchiveModal = $('#medi-archive-modal') as any
-        mediArchiveModal.foundation('open')
+        // const mediArchiveModal = $('#medi-archive-modal') as any
+        // mediArchiveModal.foundation('open')
+        // this.global.setValue(true)
       }
     })
 
@@ -295,10 +296,6 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   updateProjectTitle(updateTitle: project.ProjectUpdateTitle) {
     this._rootStore.dispatch(new project.ProjectUpdateTitle(updateTitle))
   }
-
-  /*updateProjectViewmode(viewmode: project.ProjectUpdateViewmode) {
-    this._rootStore.dispatch(new project.ProjectUpdateViewmode(viewmode))
-  }*/
 
   private dispatchDeleteAnnotation() {
     this._rootStore.dispatch(new project.ProjectDeleteSelectedAnnotations())

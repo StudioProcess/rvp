@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store'
 import * as project from '../../../persistence/actions/project'
 import * as fromRoot from '../../reducers'
 import { Globals } from '../../../common/globals'
+// import { ofType, Actions } from '@ngrx/effects'
 
 @Component({
   selector: 'rv-viewmode',
@@ -21,7 +22,7 @@ import { Globals } from '../../../common/globals'
     }
     .viewmode-wrapper i {
       font-size: 28px;
-      color: #e0e0e0;
+      color: #ededed;
     }
     .viewmode-wrapper.active i {
       color: #000;
@@ -35,6 +36,7 @@ export class ViewmodeComponent {
   // readonly onViewmodeUpdate = new EventEmitter<project.UpdateProjectViewmodePayload>()
 
   constructor(
+    // private _actions: Actions,
     private global: Globals,
     private _rootStore: Store<fromRoot.State>
   ) {
@@ -50,7 +52,13 @@ export class ViewmodeComponent {
   toggleViewMode($event: MouseEvent) {
     this.viewmode_active = ((this.viewmode_active) ? false : true)
     this._rootStore.dispatch(new project.ProjectUpdateViewmode(this.viewmode_active))
-    // console.log('toggle', this.viewmode_active)
-    // this.global.setValue(this.viewmode)
+    /*
+    this._actions.pipe(ofType(project.PROJECT_UPDATE_VIEWMODE)).subscribe((data: any) => {
+      window.location.reload()
+    })
+    */
+    setTimeout(() => {
+      window.location.reload()
+    }, 1000)
   }
 }

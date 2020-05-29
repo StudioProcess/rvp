@@ -474,7 +474,6 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state
     }
     case project.PROJECT_UPDATE_VIEWMODE: {
-      // console.log('PROJECT_UPDATE_VIEWMODE', action.payload)
       return state.setIn(['meta', 'general', 'viewmode'], action.payload)
     }
     case project.PROJECT_PASTE_CLIPBOARD: {
