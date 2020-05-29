@@ -137,6 +137,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     })
 
     this.annotation_id = this.entry.getIn(['annotation', 'id']) as number
+    this.annotation_pointer_color = ((this.entry.getIn(['annotation', 'pointerElement']) !== null) ? (this.entry.get('color', null) as string) : '#bbb')
   }
 
   ngAfterViewInit() {
@@ -354,7 +355,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       remove: true
     })
     this._resetPointerTraits()
-    // this.annotation_pointer_color = '#bbb'
+    this.annotation_pointer_color = '#bbb'
   }
 
 
@@ -377,7 +378,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
           let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + this.annotation_id + '"]')
           if (pointer_elem !== null) {
             pointer_elem.remove()
-            this.annotation_pointer_color = '#bbb'
+            this.annotation_pointer_color = this.entry.get('color', null) as string
           }
         }
       } else if (this.isSelected) {
@@ -400,7 +401,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + this.annotation_id + '"]')
     if (pointer_elem !== null) {
       pointer_elem.remove()
-      this.annotation_pointer_color = '#bbb'
+      // this.annotation_pointer_color = '#bbb'
     }
 
     /*
