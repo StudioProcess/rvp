@@ -89,10 +89,6 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
 
   ngOnInit() {
 
-    this.global.getValue().subscribe((value) => {
-      this.viewmode_active = value
-    })
-
     this.form = this._fb.group({
       title: [this.data.getIn(['fields', 'title']), Validators.required]
     })
@@ -234,6 +230,12 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   }
 
   ngAfterViewInit() {
+
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+      this._cdr.detectChanges()
+    })
+
     const getZoomContainerRect = () => {
       return this._zoomContainerRef.nativeElement.getBoundingClientRect()
     }

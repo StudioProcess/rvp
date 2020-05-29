@@ -78,11 +78,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   constructor(
     private readonly _cdr: ChangeDetectorRef,
     private global: Globals,
-    @Inject(DOCUMENT) private readonly _document: any) {
-      this.global.getValue().subscribe((value) => {
-        this.viewmode_active = value
-      })
-    }
+    @Inject(DOCUMENT) private readonly _document: any) {}
 
   ngOnInit() {
     const _initRect: Handlebar = {
@@ -106,8 +102,21 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   }
 
   ngAfterViewInit() {
-    if (!this.viewmode_active) {
-      const isLeftBtn = (ev: MouseEvent) => ev.button === 0
+
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+
+      if (!this.viewmode_active) {
+        this.subscribeSubs()
+      } else {
+        this._subs.forEach(sub => sub.unsubscribe())
+      }
+    })
+  }
+
+  subscribeSubs() {
+
+    const isLeftBtn = (ev: MouseEvent) => ev.button === 0
 
       const mousemove = fromEvent(this._document, 'mousemove')
       const mouseup = fromEvent(this._document, 'mouseup')
@@ -180,35 +189,33 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
           const newLeft = Math.min(Math.max(0, m-distLeft), 100-prevHb.width)
           return {left: newLeft, width: prevHb.width, move: 'middleMove'}
         }))
+    this._subs.push(
+      merge(leftMouseDown, rightMouseDown, middleMouseDown)
+        .subscribe(() => {
+          this._isDragging = true
+        }))
 
-      this._subs.push(
-        merge(leftMouseDown, rightMouseDown, middleMouseDown)
-          .subscribe(() => {
-            this._isDragging = true
-          }))
+    this._subs.push(mouseup.subscribe(() => {
+      this._isDragging = false
+    }))
 
-      this._subs.push(mouseup.subscribe(() => {
-        this._isDragging = false
-      }))
+    this._subs.push(
+      merge(leftPos, middlePos, rightPos)
+        .subscribe(({left, width, move}: {left: number, width: number, move: MoveTypes}) => {
+          this.internLeft = left
+          this.internWidth = width
+          this._handlebarSubj.next({source: 'intern', left, width, move})
+          this._cdr.markForCheck()
+        }))
 
-      this._subs.push(
-        merge(leftPos, middlePos, rightPos)
-          .subscribe(({left, width, move}: {left: number, width: number, move: MoveTypes}) => {
-            this.internLeft = left
-            this.internWidth = width
-            this._handlebarSubj.next({source: 'intern', left, width, move})
-            this._cdr.markForCheck()
-          }))
-
-      this._subs.push(
-        this._syncValueSubj
-          .subscribe(({left, width, move}) => {
-            this.internLeft = left
-            this.internWidth = width
-            this._handlebarSubj.next({source: 'extern', left, width, move})
-            this._cdr.markForCheck()
-          }))
-    }
+    this._subs.push(
+      this._syncValueSubj
+        .subscribe(({left, width, move}) => {
+          this.internLeft = left
+          this.internWidth = width
+          this._handlebarSubj.next({source: 'extern', left, width, move})
+          this._cdr.markForCheck()
+        }))
   }
 
   ngOnChanges(changes: SimpleChanges) {

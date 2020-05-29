@@ -57,8 +57,9 @@ export class ViewmodeComponent {
       window.location.reload()
     })
     */
+   /*
     setTimeout(() => {
       window.location.reload()
-    }, 1000)
+    }, 1000)*/
   }
 }

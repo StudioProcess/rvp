@@ -71,10 +71,6 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
 
-    this.global.getValue().subscribe((value) => {
-      this.viewmode_active = value
-    })
-
     this._subs.push(
       this._timelineSubj.subscribe(timeline => {
         this.timeline = timeline as Record<Timeline> // use identifer! syntax?
@@ -105,6 +101,12 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+      this._cdr.detectChanges()
+    })
+
     const getScrollbarRect = () => {
       return this._scrollbarRef.nativeElement.getBoundingClientRect()
     }

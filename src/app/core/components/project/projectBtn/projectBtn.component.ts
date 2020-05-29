@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, ChangeDetectorRef } from '@angular/core'
 import { Globals } from '../../../../common/globals'
 
 @Component({
@@ -14,12 +14,16 @@ export class ProjectBtnComponent {
 
   viewmode_active: boolean = false
 
-  constructor(private global: Globals) { }
+  constructor(
+    private global: Globals,
+    private readonly _cdr: ChangeDetectorRef
+  ) { }
 
 
   ngOnInit() {
     this.global.getValue().subscribe((value) => {
       this.viewmode_active = value
+      this._cdr.detectChanges()
     })
   }
 }

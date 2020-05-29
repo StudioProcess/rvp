@@ -6,6 +6,7 @@ import {
   ViewChild,
   EventEmitter,
   ElementRef,
+  ChangeDetectorRef,
   //ChangeDetectionStrategy,
 } from '@angular/core'
 
@@ -63,7 +64,8 @@ export class TitlebarComponent implements OnInit {
     private readonly formBldr: FormBuilder,
     private readonly _store: Store<fromProject.State>,
     private titleService: Title,
-    private global: Globals
+    private global: Globals,
+    private readonly _cdr: ChangeDetectorRef,
   ) {
     this._store.select(fromProject.getProjectMeta).subscribe(meta => {
       if(meta !== null) {
@@ -78,10 +80,6 @@ export class TitlebarComponent implements OnInit {
 
   ngOnInit() {
 
-    this.global.getValue().subscribe((value) => {
-      this.viewmode_active = value
-    })
-
     this.pnform = this.formBldr.group({
       project_title: [
         this.project_title,
@@ -94,6 +92,11 @@ export class TitlebarComponent implements OnInit {
   }
 
   ngAfterViewInit() {
+
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+      this._cdr.detectChanges()
+    })
 
     this._subs.push(
       fromEvent(this._projecttitleInputRef.nativeElement, 'blur')

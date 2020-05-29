@@ -4,7 +4,7 @@ import {
   EventEmitter, ViewChild, ElementRef,
   ChangeDetectionStrategy, OnDestroy,
   SimpleChanges, HostBinding, HostListener,
-  ViewEncapsulation,
+  ViewEncapsulation, ChangeDetectorRef
   // ChangeDetectorRef
 } from '@angular/core'
 
@@ -92,7 +92,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     readonly elem: ElementRef,
     private readonly _fb: FormBuilder,
     readonly _domService: DomService,
-    private global: Globals
+    private global: Globals,
+    private readonly _cdr: ChangeDetectorRef,
   ) {
     super(_domService)
   }
@@ -111,10 +112,6 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
   ngOnInit() {
 
-    this.global.getValue().subscribe((value) => {
-      this.viewmode_active = value
-    })
-
     const {
       utc_timestamp,
       duration,
@@ -129,6 +126,11 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   }
 
   ngAfterViewInit() {
+
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+      this._cdr.detectChanges()
+    })
 
     // add span nodes around hashtags inside textnodes
     this.encloseHashtags()
