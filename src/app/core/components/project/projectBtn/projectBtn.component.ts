@@ -20,7 +20,9 @@ export class ProjectBtnComponent {
   ) { }
 
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  ngAfterViewInit() {
     this.global.getValue().subscribe((value) => {
       this.viewmode_active = value
       this._cdr.detectChanges()

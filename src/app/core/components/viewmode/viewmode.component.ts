@@ -40,14 +40,12 @@ export class ViewmodeComponent {
     private global: Globals,
     private _rootStore: Store<fromRoot.State>
   ) {
-  }
-
-  ngOnInit() {
-    //this.viewmode_active = Globals.viewmode_active
     this.global.getValue().subscribe((value) => {
       this.viewmode_active = value
     })
   }
+
+  ngOnInit() {}
 
   toggleViewMode($event: MouseEvent) {
     this.viewmode_active = ((this.viewmode_active) ? false : true)
@@ -57,9 +55,5 @@ export class ViewmodeComponent {
       window.location.reload()
     })
     */
-   /*
-    setTimeout(() => {
-      window.location.reload()
-    }, 1000)*/
   }
 }
