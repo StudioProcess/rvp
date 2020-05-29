@@ -74,7 +74,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
         const viewmode = meta.getIn(['general', 'viewmode'])! as boolean
         this.global.setValue(viewmode)
         //  this.global.setValue(true)
-        console.log('main setting global viewmode', viewmode)
+        // console.log('main setting global viewmode', viewmode)
       }
     })
 
