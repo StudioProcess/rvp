@@ -7,7 +7,7 @@ import { Globals } from '../../../common/globals'
 @Component({
   selector: 'rv-viewmode',
   template: `
-    <div class="viewmode-wrapper" *ngIf="viewmode_active" (click)="toggleViewMode($event)">
+    <div class="viewmode-wrapper" [ngClass]="{'active': viewmode_active}" (click)="toggleViewMode($event)">
       <i class="ion-md-eye"></i>
     </div>
   `,
@@ -21,6 +21,10 @@ import { Globals } from '../../../common/globals'
     }
     .viewmode-wrapper i {
       font-size: 28px;
+      color: #e0e0e0;
+    }
+    .viewmode-wrapper.active i {
+      color: #000;
     }
   `]
 })
@@ -44,8 +48,9 @@ export class ViewmodeComponent {
   }
 
   toggleViewMode($event: MouseEvent) {
-    // console.log('toggle', Globals.viewmode_active)
-    Globals.viewmode_active = ((Globals.viewmode_active) ? false : true)
-    this._rootStore.dispatch(new project.ProjectUpdateViewmode(Globals.viewmode_active))
+    this.viewmode_active = ((this.viewmode_active) ? false : true)
+    this._rootStore.dispatch(new project.ProjectUpdateViewmode(this.viewmode_active))
+    // console.log('toggle', this.viewmode_active)
+    // this.global.setValue(this.viewmode)
   }
 }
