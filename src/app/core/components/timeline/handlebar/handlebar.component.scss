@@ -30,6 +30,12 @@ $text-color: $black;
 
   &.playercurrenttime {
     background-color: $timeline-playercurrenttime-bgcolor;
+
+    .handlebar {
+      .content {
+        // color: rgb(145, 145, 145);
+      }
+    }
   }
 
   .handlebar {
