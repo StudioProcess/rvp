@@ -68,7 +68,8 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
 
   constructor(
     private readonly _fb: FormBuilder,
-    readonly _domService: DomService
+    readonly _domService: DomService,
+    private global: Globals
   ) {
     super(_domService)
   }
@@ -85,6 +86,11 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
   }
 
   ngOnInit() {
+
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+    })
+
     this.leftForm = this._fb.group(this._mapLeftModel())
     this.rightForm = this._fb.group(this._mapRightModel())
 
@@ -110,8 +116,6 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
         .subscribe((value: boolean) => {
           this.onApplyToTimelineChange.emit(value)
         }))
-
-    this.viewmode_active = Globals.viewmode_active
   }
 
   ngAfterViewInit() {

@@ -84,9 +84,15 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   constructor(
     private readonly _elem: ElementRef,
     private readonly _fb: FormBuilder,
+    private global: Globals,
     private readonly _cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
+
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+    })
+
     this.form = this._fb.group({
       title: [this.data.getIn(['fields', 'title']), Validators.required]
     })
@@ -225,8 +231,6 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
         track: this.data, annotation
       })
     })
-
-    this.viewmode_active = Globals.viewmode_active
   }
 
   ngAfterViewInit() {

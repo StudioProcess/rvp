@@ -31,12 +31,16 @@ export class ViewmodeComponent {
   // readonly onViewmodeUpdate = new EventEmitter<project.UpdateProjectViewmodePayload>()
 
   constructor(
+    private global: Globals,
     private _rootStore: Store<fromRoot.State>
   ) {
   }
 
   ngOnInit() {
-    this.viewmode_active = Globals.viewmode_active
+    //this.viewmode_active = Globals.viewmode_active
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+    })
   }
 
   toggleViewMode($event: MouseEvent) {

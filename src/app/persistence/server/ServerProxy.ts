@@ -57,6 +57,7 @@ export class ServerProxy implements OnDestroy {
             }
           }))
 
+
       this._subs.push(
         this.loadProject.subscribe({
           next: async () => {

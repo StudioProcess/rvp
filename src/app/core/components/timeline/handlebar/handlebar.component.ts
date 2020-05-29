@@ -77,6 +77,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
+    private global: Globals,
     @Inject(DOCUMENT) private readonly _document: any) {}
 
   ngOnInit() {
@@ -99,7 +100,9 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
       this._handlebarSubj.pipe(filter(hb => hb.source !== 'extern'))
         .subscribe(this.onHandlebarUpdate))
 
-    this.viewmode_active = Globals.viewmode_active
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+    })
   }
 
   ngAfterViewInit() {

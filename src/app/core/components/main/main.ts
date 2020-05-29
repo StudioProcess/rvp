@@ -44,10 +44,10 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     private readonly _cdr: ChangeDetectorRef,
     private readonly _rootStore: Store<fromRoot.State>,
     private titleService: Title,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private global: Globals
   ) {
-    // TODO : check whether viewmode is active
-    Globals.viewmode_active = true
+    // Globals.viewmode_active = true
   }
 
   ngOnInit() {
@@ -68,6 +68,12 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       if (meta !== null) {
         const title = meta.getIn(['general', 'title'])! as string
         this.titleService.setTitle(title)
+
+        // set viewmode globally
+        const viewmode = meta.getIn(['general', 'viewmode'])! as boolean
+        this.global.setValue(viewmode)
+        //  this.global.setValue(true)
+        console.log('main setting global viewmode', viewmode)
       }
     })
 

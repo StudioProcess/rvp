@@ -66,9 +66,15 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private readonly _cdr: ChangeDetectorRef,
     private readonly _store: Store<fromProject.State>,
+    private global: Globals,
     @Inject(DOCUMENT) private readonly _document: any) { }
 
   ngOnInit() {
+
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+    })
+
     this._subs.push(
       this._timelineSubj.subscribe(timeline => {
         this.timeline = timeline as Record<Timeline> // use identifer! syntax?
@@ -96,8 +102,6 @@ export class TimelineContainer implements OnInit, AfterViewInit, OnDestroy {
           this.playerCurrentTime = currentTime
           this._cdr.markForCheck()
         }))
-
-    this.viewmode_active = Globals.viewmode_active
   }
 
   ngAfterViewInit() {

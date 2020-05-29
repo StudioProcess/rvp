@@ -23,6 +23,7 @@ import {
 
 import { embedAnnotations } from '../../lib/annotationStack'
 import { prepareHashTagList } from '../../lib/hashtags'
+// import { Globals } from '../../common/globals'
 
 const initialState = new ProjectRecordFactory()
 
@@ -88,6 +89,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
       if (videoMeta && videoMeta.type === VIDEO_TYPE_URL) {
         videoMeta.url = new URL(videoMeta.url)
       }
+
       // Create immutable representation
       return new ProjectRecordFactory({
         videoBlob: video === null ? prevVideoBlob : video,
@@ -120,7 +122,8 @@ export function reducer(state: State = initialState, action: project.Actions): S
           }),
           general: ProjectGeneralDataRecordFactory({
             title: (general! && general!.title) ? general.title : _PROJECT_DEFAULT_TITLE_,
-            viewmode: general.viewmode
+            // viewmode: general.viewmode
+            viewmode: (general! && general!.viewmode) ? general.viewmode : false
           })
         })
       })

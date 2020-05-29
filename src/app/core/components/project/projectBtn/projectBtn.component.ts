@@ -1,4 +1,4 @@
-import {Component} from '@angular/core'
+import { Component } from '@angular/core'
 import { Globals } from '../../../../common/globals'
 
 @Component({
@@ -14,7 +14,12 @@ export class ProjectBtnComponent {
 
   viewmode_active: boolean = false
 
+  constructor(private global: Globals) { }
+
+
   ngOnInit() {
-    this.viewmode_active = Globals.viewmode_active
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+    })
   }
 }

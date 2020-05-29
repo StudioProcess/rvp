@@ -62,7 +62,8 @@ export class TitlebarComponent implements OnInit {
   constructor(
     private readonly formBldr: FormBuilder,
     private readonly _store: Store<fromProject.State>,
-    private titleService: Title
+    private titleService: Title,
+    private global: Globals
   ) {
     this._store.select(fromProject.getProjectMeta).subscribe(meta => {
       if(meta !== null) {
@@ -76,6 +77,11 @@ export class TitlebarComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+    })
+
     this.pnform = this.formBldr.group({
       project_title: [
         this.project_title,
@@ -85,8 +91,6 @@ export class TitlebarComponent implements OnInit {
         ])
       ]
     })
-
-    this.viewmode_active = Globals.viewmode_active
   }
 
   ngAfterViewInit() {
