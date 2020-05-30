@@ -126,7 +126,7 @@ export class PointerElementComponent implements OnInit {
   mousedown() {
     this.zIndex += 10
     // select annotation
-    let annotation_entry = this._annotation_entries_container.querySelector('[entry_annotation_id="' + this.pointer_id + '"]')
+    let annotation_entry = this._annotation_entries_container.querySelector('[entry_annotation_id="' + this.pointer_id + '"]') as HTMLElement
     annotation_entry.click()
   }
 
