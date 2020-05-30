@@ -1,4 +1,4 @@
-<form #formWrapper class="entry-container" [formGroup]="form" novalidate>
+<form #formWrapper class="entry-container" [formGroup]="form" [attr.entry_annotation_id]="annotation_id" novalidate>
   <div class="row collapse">
     <div class="column shrink">
       <div class="annotation-color" [style.backgroundColor]="entry.get('color', null)"></div>

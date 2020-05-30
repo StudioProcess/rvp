@@ -23,7 +23,7 @@ import { InspectorEntryComponent } from './inspectorEntry/inspectorEntry.compone
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'rv-inspector',
   template: `
-    <div #wrapper *ngIf="annotations !== null" class="wrapper" [style.max-height.px]="height|async" (mouseup)="stopPropagation($event)">
+    <div #wrapper *ngIf="annotations !== null" class="wrapper rv-inspector-entry-wrapper" [style.max-height.px]="height|async" (mouseup)="stopPropagation($event)">
       <rv-inspector-entry
         *ngFor="let annotation of annotations; trackBy: trackByFunc;"
         [entry]="annotation"

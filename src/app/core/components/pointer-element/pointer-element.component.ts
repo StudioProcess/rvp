@@ -70,6 +70,7 @@ export class PointerElementComponent implements OnInit {
   public options: any
 
   private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
+  private readonly _annotation_entries_container = document.querySelector('.rv-inspector-entry-wrapper') as HTMLElement
 
 
   constructor(
@@ -123,7 +124,10 @@ export class PointerElementComponent implements OnInit {
   }
 
   mousedown() {
-    this.zIndex += 10 // TODO :
+    this.zIndex += 10
+    // select annotation
+    let annotation_entry = this._annotation_entries_container.querySelector('[entry_annotation_id="' + this.pointer_id + '"]')
+    annotation_entry.click()
   }
 
   getPosition(event: any) {
