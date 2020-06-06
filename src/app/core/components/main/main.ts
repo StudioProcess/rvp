@@ -38,6 +38,8 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   currentAnnotationsOnly: boolean = false // show current annotations only
   search: string | null = null
   applyToTimeline: boolean = false
+  viewmode_active: boolean = true // trick for the subs
+  subs_active: boolean = false
   private readonly _subs: Subscription[] = []
 
   constructor(
@@ -73,10 +75,28 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
         // set viewmode globally
         const viewmode = meta.getIn(['general', 'viewmode'])! as boolean
         this.global.setValue(viewmode)
-        //  this.global.setValue(true)
-        // console.log('main setting global viewmode', viewmode)
+        this.viewmode_active = viewmode
       }
     })
+  }
+
+  ngAfterViewInit() {
+
+    setTimeout(() => {
+      this.global.getValue().subscribe((value) => {
+        this.viewmode_active = value
+        if (!this.viewmode_active && !this.subs_active) {
+          this.subs_active = true
+          this.subscribeShortcutSubs()
+        } else {
+          // this._subs.forEach(sub => sub.unsubscribe())
+        }
+      })
+    }, 2000)
+  }
+
+
+  subscribeShortcutSubs() {
 
     this._subs.push(this._rootStore.select(fromProject.getProjectFocusAnnotationSelection).subscribe(selected => {
       this.hasSelectedAnnotations = selected !== null
@@ -347,9 +367,9 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     this._rootStore.dispatch(new project.ProjectSettingsSetApplyToTimeline(applyToTimeline))
   }
 
-  ngAfterViewInit() {
+  /*ngAfterViewInit() {
     // $(document).foundation()
-  }
+  }*/
 
   ngOnDestroy() {
     this._subs.forEach(s => s.unsubscribe())
