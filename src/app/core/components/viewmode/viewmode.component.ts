@@ -8,7 +8,7 @@ import { Globals } from '../../../common/globals'
 @Component({
   selector: 'rv-viewmode',
   template: `
-    <div class="viewmode-wrapper" [ngClass]="{'active': viewmode_active}" (click)="toggleViewMode($event)">
+    <div class="viewmode-wrapper" *ngIf="viewmode_active" [ngClass]="{'active': viewmode_active}" (click)="toggleViewMode($event)" title="This project is in View Mode">
       <i class="ion-md-eye"></i>
     </div>
   `,
@@ -48,12 +48,13 @@ export class ViewmodeComponent {
   ngOnInit() {}
 
   toggleViewMode($event: MouseEvent) {
+    /**
+     *  Uncommenting the following lines will
+     *  enable switching the viewmode state
+     */
+    /*
     this.viewmode_active = ((this.viewmode_active) ? false : true)
     this._rootStore.dispatch(new project.ProjectUpdateViewmode(this.viewmode_active))
-    /*
-    this._actions.pipe(ofType(project.PROJECT_UPDATE_VIEWMODE)).subscribe((data: any) => {
-      window.location.reload()
-    })
     */
   }
 }
