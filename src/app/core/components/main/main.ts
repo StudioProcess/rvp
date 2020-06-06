@@ -363,9 +363,9 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     this._rootStore.dispatch(new project.ProjectSettingsSetApplyToTimeline(applyToTimeline))
   }
 
-  /*ngAfterViewInit() {
+  ngAfterViewInit() {
     // $(document).foundation()
-  }*/
+  }
 
   ngOnDestroy() {
     this._subs.forEach(s => s.unsubscribe())
