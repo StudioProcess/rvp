@@ -1,9 +1,8 @@
 import { Component /*, EventEmitter, Output*/ } from '@angular/core'
-import { Store } from '@ngrx/store'
-import * as project from '../../../persistence/actions/project'
-import * as fromRoot from '../../reducers'
+// import { Store } from '@ngrx/store'
+// import * as project from '../../../persistence/actions/project'
+// import * as fromRoot from '../../reducers'
 import { Globals } from '../../../common/globals'
-// import { ofType, Actions } from '@ngrx/effects'
 
 @Component({
   selector: 'rv-viewmode',
@@ -38,7 +37,7 @@ export class ViewmodeComponent {
   constructor(
     // private _actions: Actions,
     private global: Globals,
-    private _rootStore: Store<fromRoot.State>
+    // private _rootStore: Store<fromRoot.State>
   ) {
     this.global.getValue().subscribe((value) => {
       this.viewmode_active = value
