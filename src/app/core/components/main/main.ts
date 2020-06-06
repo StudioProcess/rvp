@@ -78,23 +78,19 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
         this.viewmode_active = viewmode
       }
     })
-  }
 
-  ngAfterViewInit() {
-
-    setTimeout(() => {
-      this.global.getValue().subscribe((value) => {
-        this.viewmode_active = value
-        if (!this.viewmode_active && !this.subs_active) {
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+      if (!this.viewmode_active) {
+        if(!this.subs_active) {
           this.subs_active = true
           this.subscribeShortcutSubs()
-        } else {
-          // this._subs.forEach(sub => sub.unsubscribe())
         }
-      })
-    }, 2000)
+      } else {
+        this._subs.forEach(sub => sub.unsubscribe())
+      }
+    })
   }
-
 
   subscribeShortcutSubs() {
 
