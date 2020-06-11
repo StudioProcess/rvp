@@ -5,3 +5,29 @@
 #progress-modal-bar {
   width: 100%;
 }
+
+.loading-gif-wrapper {
+  margin: 100px auto 0 auto;
+  text-align: center;
+
+  .rv-loading-gif {
+    width: 80px;
+  }
+}
+
+.progress-bar-wrapper {
+  padding: 35px 25% 100px 25%;
+  text-align: center;
+
+  .progress {
+    height: 7px;
+  }
+  .progress.secondary {
+    background-color: #FFF;
+    border: 1px solid #000;
+
+    .progress-meter {
+      background-color: #000;
+    }
+  }
+}

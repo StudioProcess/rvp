@@ -1,4 +1,17 @@
 <p>
+  <!--
   <span id="progress-modal-text">{{text}}</span>
+  -->
 </p>
-<progress max="100" value="{{percent}}" id="progress-modal-bar" class="secondary"></progress>
+<div class="loading-gif-wrapper">
+  <img src="assets/img/rv_animation.gif" class="rv-loading-gif">
+</div>
+<div class="progress-bar-wrapper">
+  <div id="progress-modal-bar" class="secondary progress" role="progressbar" tabindex="0"
+    aria-valuemin="0" aria-valuemax="100">
+    <div class="progress-meter" style="width: {{percent}}%"></div>
+  </div>
+</div>
+<!--
+  <progress max="100" value="{{percent}}" id="progress-modal-bar" class="secondary"></progress>
+-->

@@ -7,7 +7,7 @@ import {
 import { Title } from '@angular/platform-browser'
 
 import { Store } from '@ngrx/store'
-import { ActivatedRoute } from '@angular/router'
+// import { ActivatedRoute } from '@angular/router'
 
 import { Observable, Subscription, fromEvent } from 'rxjs'
 import { filter, pairwise, withLatestFrom } from 'rxjs/operators'
@@ -43,7 +43,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     private readonly _cdr: ChangeDetectorRef,
     private readonly _rootStore: Store<fromRoot.State>,
     private titleService: Title,
-    private activatedRoute: ActivatedRoute
+    // private activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit() {
