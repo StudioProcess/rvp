@@ -7,3 +7,7 @@
 .button-media-archive {
   @include button($process-light-gray);
 }
+
+.error-msgs {
+  user-select: text;
+}

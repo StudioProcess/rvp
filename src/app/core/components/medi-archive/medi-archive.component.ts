@@ -90,30 +90,40 @@ export class MediArchiveComponent implements OnInit {
           })
 
           this._msg.msgData.subscribe((res: any) => {
-            // console.log('MSG', res)
             if (res.hasOwnProperty('videoImportSuccess')) {
-
               if (res.videoImportSuccess === true) {
-                // this.response_annotations_header = 'METADATA LOAD SUCCESS'
-                this.response_annotations = response
-                // this.changeDetectorRef.detectChanges()
-                this.response_video_header = 'VIDEO LOADED'
-                this.mediArchiveModal.foundation('close')
-
                 // Reload
                 this.router.navigate(['/'])
-              } else {
-                // TODO : ERRORHANDLING
               }
             }
           })
         }, 1000)
       },
       error => {
-        this.response_annotations_header = 'METADATA LOAD ERROR'
-        this.response_annotations = error
-        this.changeDetectorRef.detectChanges()
+        this.handleErrorModal(error)
       })
+  }
+
+  handleErrorModal(error: any) {
+
+    const mediArchiveModal = $('#medi-archive-modal') as any
+    mediArchiveModal.foundation('open')
+
+    if(typeof error === 'object' && error.hasOwnProperty('status')) {
+      if(error.status === 404) {
+        this.response_annotations = "Not found. Couldn't find Research Video under this URL."
+      } else if(error.status === 401) {
+        this.response_annotations = "Login necessary. Please log in at https://medienarchiv.zhdk.ch then try again."
+      } else if(error.status === 403) {
+        this.response_annotations = "Missing permissions. You don't have the necessary permissions to view this Research Video."
+      } else {
+        this.response_annotations = error
+      }
+    } else {
+      // this.response_annotations_header = 'METADATA LOAD ERROR'
+      this.response_annotations = error
+    }
+    this.changeDetectorRef.detectChanges()
   }
 
   /**
@@ -128,8 +138,9 @@ export class MediArchiveComponent implements OnInit {
       observe: 'response'
     }).toPromise().then((res: any) => {
       this.loadProjectFromUrl()
-    }).catch((err: any) => {
-      if (err.status === 401) {
+    }).catch((error: any) => {
+      this.handleErrorModal(error)
+      if (error.status === 401) {
         this.withCredentialsSetting = true
       }
       this.loadProjectFromUrl()

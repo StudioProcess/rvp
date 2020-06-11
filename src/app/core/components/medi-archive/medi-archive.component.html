@@ -1,5 +1,5 @@
 <div>
-  <h4>Media Archive</h4>
+  <h4>Loading external project...</h4>
   <button class="close-button" data-close aria-label="Close modal" type="button">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -9,6 +9,7 @@
     <div [formGroup]="mediaArchiveForm">
       <div class="grid-container">
         <div class="grid-x grid-padding-x">
+          <!--
           <div class="cell">
             <label>Video
               <input type="url" class="input-group-field" required aria-required="true" name="videourl"
@@ -21,16 +22,18 @@
             </label>
           </div>
           <a type="submit" class="button button-media-archive" (click)="loadProjectFromUrl()">Load Project</a>
+          -->
         </div>
       </div>
     </div>
   </div>
 </div>
 <div class="row">
-  <div class="column">
+  <div class="column error-msgs">
     {{ response_video_header }}
     <pre>{{ response_video | json }}</pre>
     {{ response_annotations_header }}
-    <pre>{{ response_annotations | json }}</pre>
+    <pre *ngIf="(response_annotations | keyvalue)?.length">{{ response_annotations | json }}</pre>
+    <p *ngIf="!(response_annotations | keyvalue)?.length">{{ response_annotations }}</p>
   </div>
 </div>
