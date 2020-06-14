@@ -1,5 +1,5 @@
 import {
-  Component, ChangeDetectionStrategy, EventEmitter,
+  Component, ChangeDetectionStrategy, ChangeDetectorRef, EventEmitter,
   Output, OnDestroy
 } from '@angular/core'
 
@@ -8,6 +8,8 @@ import {
   VIDEO_URL_SOURCE_VIMEO, VIDEO_URL_SOURCE_CUSTOM
 } from '../../../../persistence/model'
 import { ImportVideoPayload } from '../../../../persistence/actions/project'
+import { Store } from '@ngrx/store'
+import * as fromProject from '../../../../persistence/reducers'
 
 function extractFile(e: any): File | null {
   if (e && e.target && e.target.files && e.target.files.length) {
@@ -34,6 +36,36 @@ export class ProjectModalComponent implements OnDestroy {
   youtubeURL = ''
   vimeoURL = ''
   customURL = ''
+
+  videoDuration = 0
+  tracksCount = 0
+  annotationsCount = 0
+
+  constructor(
+    private readonly _store: Store<fromProject.State>,
+    private readonly _cdr: ChangeDetectorRef,
+  ) { }
+
+  ngAfterViewInit() {
+    this._store.select(fromProject.getProjectMeta).subscribe(meta => {
+      if (meta !== null) {
+        let counter = new Date(0, 0, 0, 0, 0, 0)
+        this.videoDuration = meta!.getIn(['timeline', 'duration'])!
+        this.videoDuration = counter.setSeconds(this.videoDuration)
+
+        const tracks = meta!.getIn(['timeline', 'tracks'])!
+        this.tracksCount = tracks.size
+        tracks.forEach((track: any, trackIndex: number) => {
+          const annotationStacks = track.get('annotationStacks', null)
+          annotationStacks.forEach((annotationStack: any, annotationStackIndex: number) => {
+            this.annotationsCount += annotationStack.size
+          })
+        })
+        // console.log(this.videoDuration, this.tracksCount, this.annotationsCount)
+        this._cdr.markForCheck()
+      }
+    })
+  }
 
   importProject(e: any) {
     const file = extractFile(e)

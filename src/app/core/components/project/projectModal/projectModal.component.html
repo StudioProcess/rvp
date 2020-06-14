@@ -8,31 +8,28 @@
   <div class="column">
     <h3 class="title-settings">New project</h3>
     <a class="button-new" href="#" (click)="newProject()">New</a>
+    <h3 class="title-settings">Open Project</h3>
+    <input type="file" name="projectFile" id="projectFile" class="inputfile" accept=".rv" (change)="importProject($event)">
+    <label for="projectFile">Open...</label>
+    <h3 class="title-settings">Change Video File</h3>
+    <input type="file" name="videoChooser" id="videoChooser" class="inputfile" accept="video/*" (change)="importVideo($event)">
+    <label for="videoChooser">Choose a file...</label>
   </div>
   <div class="column">
     <h3 class="title-settings">Reset to sample project</h3>
     <a class="button-reset" href="#" (click)="resetProject()">Reset</a>
-  </div>
-</div>
-<div class="row">
-  <div class="column">
-    <h3 class="title-settings">Open Project</h3>
-    <input type="file" name="projectFile" id="projectFile" class="inputfile" accept=".rv" (change)="importProject($event)">
-    <label for="projectFile">Open...</label>
-  </div>
-  <div class="column">
     <h3 class="title-settings">Export Project</h3>
     <a class="button-export" href="#" (click)="exportProject()">Export</a>
   </div>
+  <div class="column">
+    <h3 class="title-settings">Duration</h3>
+    <div>{{videoDuration | date:'HH:mm:ss'}} (HH:MM:SS)</div>
+    <h3 class="title-settings">Annotations</h3>
+    <div>{{annotationsCount}} (on {{tracksCount}} Tracks)</div>
+  </div>
 </div>
 <div class="row">
   <div class="column">
-    <div>
-      <h3 class="title-settings">Change Video File</h3>
-      <input type="file" name="videoChooser" id="videoChooser" class="inputfile" accept="video/*" (change)="importVideo($event)">
-      <label for="videoChooser">Choose a file...</label>
-    </div>
-
     <div style="display: none;">
       <h3 class="title-settings">HTTP URL</h3>
       <input type="text" [(ngModel)]="customURL">
@@ -48,7 +45,6 @@
       <input type="text" [(ngModel)]="vimeoURL">
       <button class="button-importurl" (click)="openURL('vimeo', vimeoURL)">Open</button>
     </div>
-
   </div>
 </div>
 <div class="row">
@@ -60,6 +56,7 @@
       <div class="column"><a class="button-export" href="#" (click)="exportProjectAsText('srt')">Subtitle File (.srt)</a></div>
     </div>
   </div>
+  <div class="column"></div>
 </div>
 <div class="row">
   <div class="column">
