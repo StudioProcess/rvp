@@ -71,10 +71,10 @@ export class ProjectModalComponent implements OnDestroy {
       }
     })
 
-    this._store.select(fromProject.getProjectVideoBlob).subscribe(videoBlob => {
+    this._store.select(fromProject.getProjectVideoBlob).subscribe((videoBlob: any) => {
       if (videoBlob !== null) {
-        this.videoName = videoBlob.name
-        this.videoSize = (videoBlob.size / (1024*1024)).toFixed(1)
+        this.videoName = videoBlob!.name!
+        this.videoSize = parseFloat((videoBlob.size / (1024*1024)).toFixed(1))
         // console.log(videoBlob, this.videoName, this.videoSize)
         this._cdr.markForCheck()
       }
