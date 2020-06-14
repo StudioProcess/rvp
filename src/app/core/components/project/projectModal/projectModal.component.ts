@@ -49,12 +49,15 @@ export class ProjectModalComponent implements OnDestroy {
   ngAfterViewInit() {
     this._store.select(fromProject.getProjectMeta).subscribe(meta => {
       if (meta !== null) {
+
         let counter = new Date(0, 0, 0, 0, 0, 0)
         this.videoDuration = meta!.getIn(['timeline', 'duration'])!
         this.videoDuration = counter.setSeconds(this.videoDuration)
 
         const tracks = meta!.getIn(['timeline', 'tracks'])!
         this.tracksCount = tracks.size
+
+        this.annotationsCount = 0
         tracks.forEach((track: any, trackIndex: number) => {
           const annotationStacks = track.get('annotationStacks', null)
           annotationStacks.forEach((annotationStack: any, annotationStackIndex: number) => {
