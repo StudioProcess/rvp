@@ -37,6 +37,8 @@ export class ProjectModalComponent implements OnDestroy {
   vimeoURL = ''
   customURL = ''
 
+  videoName = ''
+  videoSize = 0
   videoDuration = 0
   tracksCount = 0
   annotationsCount = 0
@@ -65,6 +67,15 @@ export class ProjectModalComponent implements OnDestroy {
           })
         })
         // console.log(this.videoDuration, this.tracksCount, this.annotationsCount)
+        this._cdr.markForCheck()
+      }
+    })
+
+    this._store.select(fromProject.getProjectVideoBlob).subscribe(videoBlob => {
+      if (videoBlob !== null) {
+        this.videoName = videoBlob.name
+        this.videoSize = (videoBlob.size / (1024*1024)).toFixed(1)
+        // console.log(videoBlob, this.videoName, this.videoSize)
         this._cdr.markForCheck()
       }
     })
