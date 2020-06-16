@@ -1,12 +1,31 @@
-import {Component} from '@angular/core'
+import { Component, ChangeDetectorRef } from '@angular/core'
+import { Globals } from '../../../../common/globals'
 
 @Component({
   selector: 'rv-projectbtn',
   template: `
-    <a>
+    <button [disabled]="viewmode_active">
       <i class="ion-ios-folder" title="Project Settings"></i><span class="show-for-medium"> Project</span>
-    </a>
+    </button>
   `,
   styleUrls: ['projectBtn.component.scss']
 })
-export class ProjectBtnComponent {}
+export class ProjectBtnComponent {
+
+  viewmode_active: boolean = false
+
+  constructor(
+    private global: Globals,
+    private readonly _cdr: ChangeDetectorRef
+  ) { }
+
+
+  ngOnInit() {}
+
+  ngAfterViewInit() {
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+      this._cdr.detectChanges()
+    })
+  }
+}

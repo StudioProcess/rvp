@@ -39,6 +39,7 @@ export const PROJECT_PASTE_CLIPBOARD = '[Project] Paste Annotation Selection for
 export const PROJECT_ANNOTATION_ADD_POINTER = '[Project] Add Annotation Pointer'
 export const PROJECT_UPDATE_HASHTAGS = '[Project] Update Hashtags'
 export const PROJECT_UPDATE_TITLE = '[Project] Update Projecttitle'
+export const PROJECT_UPDATE_VIEWMODE = '[Project] Update/Toggle Viewmode'
 
 export const PROJECT_ADD_TRACK = '[Project] Add Track'
 export const PROJECT_UPDATE_TRACK = '[Project] Update Track'
@@ -152,7 +153,10 @@ export interface UpdateProjectHashtagsPayload {
 }
 export interface UpdateProjectTitlePayload {
   readonly title: string
-  //readonly general: Record<ProjectGeneralData>
+}
+
+export interface UpdateProjectViewmodePayload {
+  readonly viewmode: boolean
 }
 
 export class ProjectUpdateAnnotation implements Action {
@@ -225,7 +229,12 @@ export class ProjectUpdateTitle implements Action {
   readonly type = PROJECT_UPDATE_TITLE
   constructor(readonly payload: any) {}
   //constructor(readonly payload: UpdateProjectTitlePayload) {}
-  //constructor(readonly payload: {title : string}) {}
+}
+
+export class ProjectUpdateViewmode implements Action {
+  readonly type = PROJECT_UPDATE_VIEWMODE
+  constructor(readonly payload: any) {}
+  // TODO : payload: UpdateProjectViewmodePayload
 }
 
 type AddTrackPayload = Partial<Track>
@@ -426,7 +435,7 @@ export type Actions =
   ProjectAddAnnotation|ProjectUpdateAnnotation|
   ProjectDeleteSelectedAnnotations|ProjectSelectAnnotation|
   ProjectResetAnnotationSelection|ProjectCopyAnnotationSelectionToClipboard|ProjectPasteClipBoard|
-  ProjectUpdateHashtags| ProjectUpdateTitle|
+  ProjectUpdateHashtags|ProjectUpdateTitle|ProjectUpdateViewmode|
   ProjectSetTimelineDuration|
   ProjectPushUndo|ProjectUndo|ProjectRedo|
   ProjectSettingsSetCurrentAnnotationsOnly|ProjectSettingsSetSearch|ProjectSettingsSetApplyToTimeline|

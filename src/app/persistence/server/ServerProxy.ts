@@ -57,6 +57,7 @@ export class ServerProxy implements OnDestroy {
             }
           }))
 
+
       this._subs.push(
         this.loadProject.subscribe({
           next: async () => {
@@ -301,7 +302,8 @@ export class ServerProxy implements OnDestroy {
             action.type === project.PROJECT_LOAD_SUCCESS ||
             action.type === project.PROJECT_ANNOTATION_ADD_POINTER ||
             action.type === project.PROJECT_UPDATE_HASHTAGS ||
-            action.type === project.PROJECT_UPDATE_TITLE
+            action.type === project.PROJECT_UPDATE_TITLE ||
+            action.type === project.PROJECT_UPDATE_VIEWMODE
         }))
 
       this._subs.push(

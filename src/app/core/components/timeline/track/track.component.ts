@@ -33,6 +33,7 @@ import { coordTransform } from '../../../../lib/coords'
 import { Handlebar } from '../handlebar/handlebar.component'
 import * as project from '../../../../persistence/actions/project'
 import { ScrollSettings } from '../timeline'
+import { Globals } from '../../../../common/globals'
 
 interface EmitAnnotationSelectionArgs {
   readonly track: Record<Track>
@@ -58,6 +59,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
 
   form: FormGroup | null = null
   zoom: number
+  viewmode_active: boolean = false
   readonly zoomContainerRect = new ReplaySubject<ClientRect>(1)
 
   @Output() readonly onUpdateTrack = new EventEmitter<project.UpdateTrackPayload>()
@@ -83,9 +85,11 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   constructor(
     private readonly _elem: ElementRef,
     private readonly _fb: FormBuilder,
+    private global: Globals,
     private readonly _cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
+
     this.form = this._fb.group({
       title: [this.data.getIn(['fields', 'title']), Validators.required]
     })
@@ -228,6 +232,12 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   }
 
   ngAfterViewInit() {
+
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+      this._cdr.detectChanges()
+    })
+
     const getZoomContainerRect = () => {
       return this._zoomContainerRef.nativeElement.getBoundingClientRect()
     }

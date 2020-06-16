@@ -3,7 +3,7 @@ import {
   Output, ChangeDetectionStrategy,
   AfterViewInit, ViewChild,
   ElementRef, EventEmitter,
-  HostListener
+  HostListener, ChangeDetectorRef
 } from '@angular/core'
 import { FormBuilder, FormGroup } from '@angular/forms'
 
@@ -12,11 +12,11 @@ import { debounceTime, pluck } from 'rxjs/operators'
 
 import { _FORM_INPUT_DEBOUNCE_ } from '../../../config/form'
 
-
 import * as project from '../../../persistence/actions/project'
 import { ImportVideoPayload } from '../../../persistence/actions/project'
 import { DomService } from '../../actions/dom.service'
 import { HashtagService } from '../../actions/hashtag.service'
+import { Globals } from '../../../common/globals'
 
 @Component({
   selector: 'rv-toolbar',
@@ -37,6 +37,7 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
 
   leftForm: FormGroup | null = null
   rightForm: FormGroup | null = null
+  viewmode_active: boolean = false
 
   @Output() readonly onAddAnnotation = new EventEmitter()
   @Output() readonly onDeleteAnnotation = new EventEmitter()
@@ -67,7 +68,9 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
 
   constructor(
     private readonly _fb: FormBuilder,
-    readonly _domService: DomService
+    readonly _domService: DomService,
+    private global: Globals,
+    private readonly _cdr: ChangeDetectorRef,
   ) {
     super(_domService)
   }
@@ -84,6 +87,7 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
   }
 
   ngOnInit() {
+
     this.leftForm = this._fb.group(this._mapLeftModel())
     this.rightForm = this._fb.group(this._mapRightModel())
 
@@ -112,6 +116,12 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
   }
 
   ngAfterViewInit() {
+
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+      this._cdr.detectChanges()
+    })
+
     this._subs.push(fromEvent(this._searchRef.nativeElement, 'keydown').subscribe((ev: KeyboardEvent) => {
       ev.stopPropagation()
       if (ev.key == 'Enter') {

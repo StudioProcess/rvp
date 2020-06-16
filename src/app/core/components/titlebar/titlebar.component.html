@@ -8,6 +8,7 @@
       formControlName="project_title"
       maxlength="50"
       AutoSizeInput
+      [readonly]="viewmode_active"
       [includeBorders]="true"
       [extraWidth]="2"
       [class.my-class]=""
@@ -16,3 +17,4 @@
     >
   </div>
 </form>
+<rv-viewmode></rv-viewmode>

@@ -1,32 +1,33 @@
 <div class="row toolbar-color" (mousedown)="toolbarClick($event)">
   <div class="small-12 medium-12 large-8 column">
-    <button (click)="actionBtnClick($event, 'add_annotation')" [disabled]="!hasTracks || !hasActiveTrack">
+    <button (click)="actionBtnClick($event, 'add_annotation')" [disabled]="!hasTracks || !hasActiveTrack || viewmode_active">
       <i class="ion-md-add-circle-outline" title="Add Annotation"></i><span class="show-for-medium"> Add</span>
     </button>
-    <button (mousedown)="actionBtnClick($event, 'delete_annotation')" [disabled]="!hasSelectedAnnotations">
+    <button (mousedown)="actionBtnClick($event, 'delete_annotation')" [disabled]="!hasSelectedAnnotations || viewmode_active">
       <i class="ion-md-remove-circle-outline" title="Delete Annotation"></i><span class="show-for-medium"> Delete</span>
     </button>
-    <button (mousedown)="actionBtnClick($event, 'copy_annotation')" [disabled]="!hasSelectedAnnotations">
+    <button (mousedown)="actionBtnClick($event, 'copy_annotation')" [disabled]="!hasSelectedAnnotations || viewmode_active">
       <i class="ion-md-copy" title="Copy Annotation"></i><span class="show-for-medium"> Copy</span>
     </button>
-    <button (mousedown)="actionBtnClick($event, 'paste_annotation')" [disabled]="!hasClipboardAnnotations">
+    <button (mousedown)="actionBtnClick($event, 'paste_annotation')" [disabled]="!hasClipboardAnnotations || viewmode_active">
       <i class="ion-md-clipboard" title="Paste Annotation"></i><span class="show-for-medium"> Paste</span>
     </button>
-    <button data-open="tag-add-modal" [disabled]="!hasSelectedAnnotations">
+    <button data-open="tag-add-modal" [disabled]="!hasSelectedAnnotations || viewmode_active">
       <i>#</i> Tag
     </button>
     <rv-tag-add-modal class="reveal" id="tag-add-modal" data-reveal>
     </rv-tag-add-modal>
 
-    <button (click)="actionBtnClick($event, 'undo_action')" [disabled]="!hasUndo">
+    <button (click)="actionBtnClick($event, 'undo_action')" [disabled]="!hasUndo || viewmode_active">
       <i class="ion-md-undo" title="Undo Action"></i><span class="show-for-medium"> Undo</span>
     </button>
-    <button (click)="actionBtnClick($event, 'redo_action')" [disabled]="!hasRedo">
+    <button (click)="actionBtnClick($event, 'redo_action')" [disabled]="!hasRedo || viewmode_active">
       <i class="ion-md-redo" title="Redo Action"></i><span class="show-for-medium"> Redo</span>
     </button>
 
     <rv-projectbtn data-open="settings-reveal" class="modalButton"></rv-projectbtn>
-    <rv-projectmodal class="reveal" id="settings-reveal" data-reveal
+    <rv-projectmodal class="reveal" data-reveal
+      [attr.id]="viewmode_active ? '' : 'settings-reveal'"
       (onImportProject)="importProject($event)"
       (onImportVideo)="importVideo($event)"
       (onExportProject)="exportProject()"

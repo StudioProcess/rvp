@@ -22,7 +22,9 @@ import {
 
 import { _HANDLEBAR_MIN_WIDTH_ } from '../../../../config/timeline/handlebar'
 
-type MoveTypes = 'noopMove' | 'leftMove' | 'middleMove' | 'rightMove'
+import { Globals } from '../../../../common/globals'
+
+type MoveTypes = 'noopMove'|'leftMove'|'middleMove'|'rightMove'
 
 export interface Handlebar {
   readonly left: number
@@ -36,10 +38,10 @@ export interface Handlebar {
   selector: 'rv-handlebar',
   template: `
     <div class="handlebar" (dblclick)="dblClick($event)">
-      <div #leftHandle class="left-handle"><i class="ion-md-arrow-dropright"></i></div>
+      <div #leftHandle class="left-handle" [hidden]="viewmode_active"><i class="ion-md-arrow-dropright"></i></div>
       <div *ngIf="hasPointerElement" class="handlebarPointerMarker"></div>
       <div #middleHandle class="content">{{caption}}</div>
-      <div #rightHandle class="right-handle"><i class="ion-md-arrow-dropleft"></i></div>
+      <div #rightHandle class="right-handle" [hidden]="viewmode_active"><i class="ion-md-arrow-dropleft"></i></div>
     </div>
   `,
   styleUrls: ['handlebar.component.scss']
@@ -75,12 +77,14 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   @Output() readonly onDblClick = new EventEmitter()
 
   private readonly _subs: Subscription[] = []
-
   private _isDragging = false
+
+  viewmode_active: boolean = false
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
-    @Inject(DOCUMENT) private readonly _document: any) { }
+    private global: Globals,
+    @Inject(DOCUMENT) private readonly _document: any) {}
 
   ngOnInit() {
     const _initRect: Handlebar = {
@@ -111,80 +115,93 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   }
 
   ngAfterViewInit() {
+
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+
+      if (!this.viewmode_active) {
+        this.subscribeSubs()
+      } else {
+        this._subs.forEach(sub => sub.unsubscribe())
+      }
+    })
+  }
+
+  subscribeSubs() {
+
     const isLeftBtn = (ev: MouseEvent) => ev.button === 0
 
-    const mousemove = fromEvent(this._document, 'mousemove')
-    const mouseup = fromEvent(this._document, 'mouseup')
-    const leftMouseDown = fromEvent(this._leftHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
-    const rightMouseDown = fromEvent(this._rightHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
-    const middleMouseDown = fromEvent(this._middleHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
+      const mousemove = fromEvent(this._document, 'mousemove')
+      const mouseup = fromEvent(this._document, 'mouseup')
+      const leftMouseDown = fromEvent(this._leftHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
+      const rightMouseDown = fromEvent(this._rightHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
+      const middleMouseDown = fromEvent(this._middleHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
 
-    const clientPosWhileMouseMove = (args: any) => {
-      return mousemove.pipe(
-        map((mmEvent: MouseEvent) => {
-          const { clientX, clientY } = mmEvent
-          return { clientX, clientY, payload: args }
+      const clientPosWhileMouseMove = (args: any) => {
+        return mousemove.pipe(
+          map((mmEvent: MouseEvent) => {
+            const {clientX, clientY} = mmEvent
+            return {clientX, clientY, payload: args}
+          }),
+          takeUntil(mouseup))
+      }
+
+      const coordTransform = (clientX: number, hRect: ClientRect) => (clientX-hRect.left)
+      const mapToPercentage = (localX: number, hRect: ClientRect) => (localX/hRect.width*100)
+      const transformedToPercentage = (clientX: number, hRect: ClientRect) => {
+        return mapToPercentage(coordTransform(clientX, hRect), hRect)
+      }
+
+      const leftClientPos = leftMouseDown.pipe(switchMap(clientPosWhileMouseMove))
+      const rightClientPos = rightMouseDown.pipe(switchMap(clientPosWhileMouseMove))
+      const middleClientPos = middleMouseDown.pipe(
+        withLatestFrom(this._handlebarSubj, this.containerRect, (mdEvent: MouseEvent, prevHb: Handlebar, hRect: ClientRect) => {
+          const m = transformedToPercentage(mdEvent.clientX, hRect)
+          const hbRight = prevHb.left+prevHb.width
+          return {
+            distLeft: m-prevHb.left,
+            distRight: hbRight-m,
+            hRect
+          }
         }),
-        takeUntil(mouseup))
-    }
+        switchMap(clientPosWhileMouseMove))
 
-    const coordTransform = (clientX: number, hRect: ClientRect) => (clientX - hRect.left)
-    const mapToPercentage = (localX: number, hRect: ClientRect) => (localX / hRect.width * 100)
-    const transformedToPercentage = (clientX: number, hRect: ClientRect) => {
-      return mapToPercentage(coordTransform(clientX, hRect), hRect)
-    }
+      const minMax = (x: number) => Math.min(Math.max(0, x), 100)
 
-    const leftClientPos = leftMouseDown.pipe(switchMap(clientPosWhileMouseMove))
-    const rightClientPos = rightMouseDown.pipe(switchMap(clientPosWhileMouseMove))
-    const middleClientPos = middleMouseDown.pipe(
-      withLatestFrom(this._handlebarSubj, this.containerRect, (mdEvent: MouseEvent, prevHb: Handlebar, hRect: ClientRect) => {
-        const m = transformedToPercentage(mdEvent.clientX, hRect)
-        const hbRight = prevHb.left + prevHb.width
-        return {
-          distLeft: m - prevHb.left,
-          distRight: hbRight - m,
-          hRect
-        }
-      }),
-      switchMap(clientPosWhileMouseMove))
+      const leftPos = leftClientPos.pipe(
+        map(({clientX}) => clientX),
+        withLatestFrom(this.containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect))),
+        distinctUntilChanged(),
+        withLatestFrom(this._handlebarSubj, (l, prevHb) => {
+          const oldRight = prevHb.left+prevHb.width
+          // ensure handlebar min width
+          const newLeft = Math.min(l, oldRight-_HANDLEBAR_MIN_WIDTH_)
+          const deltaLeft = newLeft-prevHb.left
+          const newWidth = prevHb.width-deltaLeft
+          return {left: newLeft, width: newWidth, move: 'leftMove'}
+        }))
 
-    const minMax = (x: number) => Math.min(Math.max(0, x), 100)
+      const rightPos = rightClientPos.pipe(
+        map(({clientX}) => clientX),
+        withLatestFrom(this.containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect))),
+        distinctUntilChanged(),
+        withLatestFrom(this._handlebarSubj, (r, prevHb) => {
+          const newRight = Math.max(prevHb.left+_HANDLEBAR_MIN_WIDTH_, r)
+          return {left: prevHb.left, width: newRight-prevHb.left, move: 'rightMove'}
+        }))
 
-    const leftPos = leftClientPos.pipe(
-      map(({ clientX }) => clientX),
-      withLatestFrom(this.containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect))),
-      distinctUntilChanged(),
-      withLatestFrom(this._handlebarSubj, (l, prevHb) => {
-        const oldRight = prevHb.left + prevHb.width
-        // ensure handlebar min width
-        const newLeft = Math.min(l, oldRight - _HANDLEBAR_MIN_WIDTH_)
-        const deltaLeft = newLeft - prevHb.left
-        const newWidth = prevHb.width - deltaLeft
-        return { left: newLeft, width: newWidth, move: 'leftMove' }
-      }))
-
-    const rightPos = rightClientPos.pipe(
-      map(({ clientX }) => clientX),
-      withLatestFrom(this.containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect))),
-      distinctUntilChanged(),
-      withLatestFrom(this._handlebarSubj, (r, prevHb) => {
-        const newRight = Math.max(prevHb.left + _HANDLEBAR_MIN_WIDTH_, r)
-        return { left: prevHb.left, width: newRight - prevHb.left, move: 'rightMove' }
-      }))
-
-    const middlePos = middleClientPos.pipe(
-      map(({ clientX, payload: { distLeft, distRight, hRect } }) => {
-        return {
-          distLeft, distRight,
-          m: minMax(transformedToPercentage(clientX, hRect))
-        }
-      }),
-      distinctUntilKeyChanged('m'),
-      withLatestFrom(this._handlebarSubj, ({ distLeft, m }, prevHb) => {
-        const newLeft = Math.min(Math.max(0, m - distLeft), 100 - prevHb.width)
-        return { left: newLeft, width: prevHb.width, move: 'middleMove' }
-      }))
-
+      const middlePos = middleClientPos.pipe(
+        map(({clientX, payload: {distLeft, distRight, hRect}}) => {
+          return {
+            distLeft, distRight,
+            m: minMax(transformedToPercentage(clientX, hRect))
+          }
+        }),
+        distinctUntilKeyChanged('m'),
+        withLatestFrom(this._handlebarSubj, ({distLeft, m}, prevHb) => {
+          const newLeft = Math.min(Math.max(0, m-distLeft), 100-prevHb.width)
+          return {left: newLeft, width: prevHb.width, move: 'middleMove'}
+        }))
     this._subs.push(
       merge(leftMouseDown, rightMouseDown, middleMouseDown)
         .subscribe(() => {

@@ -10,7 +10,7 @@
 form {
   &.project-title {
     display: inline-block;
-    width: 90%;
+    width: auto;
 
     .title-wrapper {
       margin: 0 0 0 5px;
@@ -31,12 +31,25 @@ form {
         &:hover {
           border-color: #CCC;
         }
+
         &:focus {
           border-color: #000000;
         }
 
         &.initial-title {
           color: #CCC;
+        }
+
+        &:read-only {
+          background-color: #FFF;
+
+          &:hover {
+            border-color: #FFF;
+          }
+
+          &:focus {
+            border-color: #FFF;
+          }
         }
       }
     }

@@ -6,10 +6,10 @@ import { HttpClient/*, HttpHeaders*/ } from '@angular/common/http'
 
 import { VIDEO_TYPE_URL, VIDEO_URL_SOURCE_CUSTOM } from '../../../persistence/model'
 import { ImportVideoPayload } from '../../../persistence/actions/project'
-
 // import { from } from 'rxjs'
 
 import { MessageService } from '../../actions/message.service'
+
 
 @Component({
   selector: 'rv-medi-archive',
@@ -41,7 +41,7 @@ export class MediArchiveComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private http: HttpClient,
-    private _msg: MessageService
+    private _msg: MessageService,
   ) { }
 
   ngOnInit() {
@@ -80,6 +80,7 @@ export class MediArchiveComponent implements OnInit {
             meta: JSON.parse(response.body),
             video: null
           }
+          metaData.meta.general!.viewmode! = true
           this.onImportProjectMeta.emit(metaData)
 
           // Import Video from URL
@@ -92,7 +93,12 @@ export class MediArchiveComponent implements OnInit {
           this._msg.msgData.subscribe((res: any) => {
             if (res.hasOwnProperty('videoImportSuccess')) {
               if (res.videoImportSuccess === true) {
-                // Reload
+                // this.response_annotations_header = 'METADATA LOAD SUCCESS'
+                this.response_annotations = response
+                // this.changeDetectorRef.detectChanges()
+                this.response_video_header = 'VIDEO LOADED'
+                this.mediArchiveModal.foundation('close')
+
                 this.router.navigate(['/'])
               }
             }

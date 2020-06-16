@@ -4,7 +4,7 @@ import {
   EventEmitter, ViewChild, ElementRef,
   ChangeDetectionStrategy, OnDestroy,
   SimpleChanges, HostBinding, HostListener,
-  ViewEncapsulation,
+  ViewEncapsulation, ChangeDetectorRef
   // ChangeDetectorRef
 } from '@angular/core'
 
@@ -45,6 +45,7 @@ import { PointerElementComponent } from '../../pointer-element/pointer-element.c
 import { parseDuration } from '../../../../lib/time'
 import { DomService } from '../../../actions/dom.service'
 import { HashtagService } from '../../../actions/hashtag.service'
+import { Globals } from '../../../../common/globals'
 
 function durationValidatorFactory(): ValidatorFn {
   const durationRegex = /^([0-9]*:){0,2}[0-9]*(\.[0-9]*)?$/
@@ -71,6 +72,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   mouse_overed: boolean = false
   annotation_pointer_color: string = '#bbb'
   public annotation_id: number
+  viewmode_active: boolean = false
   private readonly _subs: Subscription[] = []
   private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
 
@@ -107,6 +109,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     readonly elem: ElementRef,
     private readonly _fb: FormBuilder,
     readonly _domService: DomService,
+    private global: Globals,
+    private readonly _cdr: ChangeDetectorRef,
   ) {
     super(_domService)
   }
@@ -124,6 +128,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   }
 
   ngOnInit() {
+
     const {
       utc_timestamp,
       duration,
@@ -141,6 +146,11 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   }
 
   ngAfterViewInit() {
+
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+      this._cdr.detectChanges()
+    })
 
     // add span nodes around hashtags inside textnodes
     this.encloseHashtags()

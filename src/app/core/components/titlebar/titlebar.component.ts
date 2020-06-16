@@ -6,8 +6,9 @@ import {
   ViewChild,
   EventEmitter,
   ElementRef,
+  ChangeDetectorRef,
   //ChangeDetectionStrategy,
-} from '@angular/core';
+} from '@angular/core'
 
 import {
   FormGroup,
@@ -35,6 +36,7 @@ import {Store} from '@ngrx/store'
 import {Record} from 'immutable'
 import * as project from '../../../persistence/actions/project'
 import * as fromProject from '../../../persistence/reducers'
+import { Globals } from '../../../common/globals'
 
 
 @Component({
@@ -55,12 +57,15 @@ export class TitlebarComponent implements OnInit {
   @ViewChild('projecttitle', { static: true }) private readonly _projecttitleInputRef: ElementRef
 
   pnform: FormGroup | null = null
+  viewmode_active: boolean = false
   private readonly _subs: Subscription[] = []
 
   constructor(
     private readonly formBldr: FormBuilder,
     private readonly _store: Store<fromProject.State>,
-    private titleService: Title
+    private titleService: Title,
+    private global: Globals,
+    private readonly _cdr: ChangeDetectorRef,
   ) {
     this._store.select(fromProject.getProjectMeta).subscribe(meta => {
       if(meta !== null) {
@@ -74,6 +79,7 @@ export class TitlebarComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.pnform = this.formBldr.group({
       project_title: [
         this.project_title,
@@ -86,6 +92,11 @@ export class TitlebarComponent implements OnInit {
   }
 
   ngAfterViewInit() {
+
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+      this._cdr.detectChanges()
+    })
 
     this._subs.push(
       fromEvent(this._projecttitleInputRef.nativeElement, 'blur')

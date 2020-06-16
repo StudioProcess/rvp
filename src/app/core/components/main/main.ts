@@ -18,6 +18,7 @@ import * as fromProject from '../../../persistence/reducers'
 import { rndColor } from '../../../lib/color'
 import { AnnotationRecordFactory, AnnotationFieldsRecordFactory } from '../../../persistence/model'
 import { _EMPTY_PROJECT_ } from '../../../config/project'
+import { Globals } from '../../../common/globals'
 
 declare var $: any
 
@@ -37,14 +38,19 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   currentAnnotationsOnly: boolean = false // show current annotations only
   search: string | null = null
   applyToTimeline: boolean = false
+  viewmode_active: boolean = true // trick for the subs
+  subs_active: boolean = false
   private readonly _subs: Subscription[] = []
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
     private readonly _rootStore: Store<fromRoot.State>,
     private titleService: Title,
-    // private activatedRoute: ActivatedRoute
-  ) { }
+    // private activatedRoute: ActivatedRoute,
+    private global: Globals
+  ) {
+    // Globals.viewmode_active = true
+  }
 
   ngOnInit() {
 
@@ -53,8 +59,9 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     /*
     this.activatedRoute.queryParams.subscribe(params => {
       if (params.hasOwnProperty('video') && params.hasOwnProperty('annotations')) {
-        const mediArchiveModal = $('#medi-archive-modal') as any
-        mediArchiveModal.foundation('open')
+        // const mediArchiveModal = $('#medi-archive-modal') as any
+        // mediArchiveModal.foundation('open')
+        // this.global.setValue(true)
       }
     })
     */
@@ -66,8 +73,28 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       if (meta !== null) {
         const title = meta.getIn(['general', 'title'])! as string
         this.titleService.setTitle(title)
+
+        // set viewmode globally
+        const viewmode = meta.getIn(['general', 'viewmode'])! as boolean
+        this.global.setValue(viewmode)
+        this.viewmode_active = viewmode
       }
     })
+
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+      if (!this.viewmode_active) {
+        if(!this.subs_active) {
+          this.subs_active = true
+          this.subscribeShortcutSubs()
+        }
+      } else {
+        this._subs.forEach(sub => sub.unsubscribe())
+      }
+    })
+  }
+
+  subscribeShortcutSubs() {
 
     this._subs.push(this._rootStore.select(fromProject.getProjectFocusAnnotationSelection).subscribe(selected => {
       this.hasSelectedAnnotations = selected !== null
@@ -269,7 +296,9 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
   closeProjectModal() {
     const modal = $('#settings-reveal') as any
-    modal.foundation('close')
+    if(typeof modal.close === 'function') {
+      modal!.foundation('close')
+    }
   }
 
   addAnnotation() {
@@ -286,7 +315,6 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   updateProjectTitle(updateTitle: project.ProjectUpdateTitle) {
-    // console.log ('updateProjectTitle', updateTitle);
     this._rootStore.dispatch(new project.ProjectUpdateTitle(updateTitle))
   }
 
