@@ -34,7 +34,7 @@ const processFile = function(filepath) {
   let str = fs.readFileSync(filepath, 'utf8');
   str = str.replace(/%VERSION%/g, version);
   str = str.replace(/%COMMIT%/g, hash);
-  
+
   let pathObj = path.parse(filepath);
   pathObj.ext = '.ts';
   delete pathObj.base; // .base overrides .name + .ext if present, so delete it

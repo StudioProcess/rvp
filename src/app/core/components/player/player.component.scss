@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+
+.video-main-elem {
+  position: relative;
+
+  .annotation-pointer-element {
+
+    &.annotation-pointer-dot {
+      &.annotation-selected {
+      }
+    }
+  }
+}

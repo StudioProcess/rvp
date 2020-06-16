@@ -59,6 +59,23 @@ function nextAnnotationId(timeline: Record<Timeline>): number {
   return maxId + 1
 }
 
+/*function getAnnotationById(state: State, id: number): Record<Annotation>|null {
+  const timeline = state.getIn(['meta', 'timeline'])
+  const tracks = timeline.get('tracks', [])
+  let ret = null
+  tracks.forEach((track: any) => {
+    const annotationStacks = track.get('annotationStacks', null)
+    annotationStacks.forEach((annotations: any) => {
+      annotations.forEach((annotation: any) => {
+        if (annotation.get('id', null) === id) {
+          ret = annotation
+        }
+      })
+    })
+  })
+  return ret
+}*/
+
 function getAllSelections(state: State): Set<Record<AnnotationSelection>> {
   const rangeSelections = state.getIn(['selection', 'annotation', 'range'])
   const pickSelections = state.getIn(['selection', 'annotation', 'pick'])
@@ -191,6 +208,7 @@ export function reducer(state: State = initialState, action: project.Actions): S
         const updatedSingleSel = inSelection.set('annotation', annotation)
         updatedState = state.setIn(['selection', 'annotation', 'selected'], updatedSingleSel)
       }
+
       return updatedState.setIn(path, stacksWithEmbedded)
     }
     case project.PROJECT_DELETE_SELECTED_ANNOTATIONS: {
@@ -536,6 +554,21 @@ export function reducer(state: State = initialState, action: project.Actions): S
           mState.setIn(['meta', 'timeline', 'tracks', i, 'isActive'], i === activeTrackIndex)
         }
       })
+    }
+    case project.PROJECT_ANNOTATION_ADD_POINTER: {
+
+      const path = [
+        'meta',
+        'timeline',
+        'tracks',
+        action.payload.pointer_payload.annotation_path.trackIndex,
+        'annotationStacks',
+        action.payload.pointer_payload.annotation_path.annotationStackIndex,
+        action.payload.pointer_payload.annotation_path.annotationIndex,
+        'pointerElement'
+      ]
+      const payload = ((!!action.payload.remove) ? null : action.payload.pointer_payload)
+      return state.setIn(path, payload)
     }
     case project.PLAYER_CREATE_SUCCESS:
     case project.PLAYER_DESTROY_SUCCESS:

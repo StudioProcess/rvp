@@ -26,6 +26,10 @@
           [left]="getAnnotationPosition(annotation)"
           [width]="getAnnotationWidth(annotation)"
           [isSelected]="isSelectedAnnotation(annotation)"
+          [hasPointerElement]="hasPointerElement(annotation)"
+          [annotationStartTime]="getAnnotationStartTime(annotation)"
+          [annotationEndTime]="getAnnotationEndTime(annotation)"
+          [playerCurrentTime]="playerCurrentTime"
           (onHandlebarUpdate)="updateHandlebar($event, i, stackIndex)"
           (mousedown)="annotationClick($event, annotation, stackIndex)"
           (onDblClick)="dblClick(annotation)">

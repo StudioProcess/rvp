@@ -13,6 +13,7 @@
       background-color: $white;
     }
   }
+
   &:nth-child(even) {
     .entry-container {
       background-color: $process-super-light-gray;
@@ -22,6 +23,7 @@
       }
     }
   }
+
   &.selected {
     .entry-container {
       background-color: $process-super-light-gray;
@@ -33,9 +35,32 @@
       }
     }
   }
+
+  &.playercurrenttime {
+    .entry-container {
+      background-color: $entry-playercurrenttime-bgcolor;
+
+      &:hover {
+        background-color: $entry-playercurrenttime-bgcolor-hover;
+      }
+
+      .description {
+        &.contenteditable {
+          &[placeholder]:empty:not(:focus):before {
+            color: rgb(27, 27, 27);
+          }
+        }
+
+        &:focus {
+          color: $white;
+        }
+      }
+    }
+  }
 }
 
-.ion-md-time, .ion-ios-time {
+.ion-md-time,
+.ion-ios-time {
   margin-left: 20px;
 }
 
@@ -66,7 +91,8 @@
       padding-bottom: 0;
     }
 
-    .ion-ios-time, .ion-md-time {
+    .ion-ios-time,
+    .ion-md-time {
       font-size: 13px;
       padding-left: 0.3em;
       padding-right: 0.1em;
@@ -112,15 +138,18 @@
             color: #000000;
           }
         }
+
         &[placeholder]:empty:not(:focus):before {
           content: attr(placeholder);
           color: #CCC;
         }
       }
+
       &:focus {
         color: $black;
       }
     }
+
     .duration {
       font-size: 13px; // TODO: 14px needed to be set explicitly
       font-weight: 400;
@@ -134,7 +163,10 @@
       }
     }
 
-    input, textarea, .duration, .description {
+    input,
+    textarea,
+    .duration,
+    .description {
       &:focus {
         color: $white;
         background-color: $highlight-color;
@@ -147,6 +179,7 @@
       outline-offset: (-$selection-outlinewidth);
       outline: $selection-outlinewidth solid $process-orange;
     }
+
     input.ng-valid:focus {
       outline: none;
     }
@@ -154,6 +187,55 @@
     textarea {
       min-height: 18px !important;
       //max-height: 20px;
+    }
+
+    .pointer-actions {
+
+      display: inline-block;
+      float: left;
+
+      .annotation-pointer-ctrl {
+        display: inline-block;
+        float: left;
+        margin: 6px 0 0 3px;
+        height: 10px;
+        width: 10px;
+        background-color: #bbb;
+        border: 1px solid rgb(223, 223, 223);
+        border-radius: 50%;
+        cursor: pointer;
+
+        &:focus {
+          outline: none !important;
+        }
+      }
+
+      .annotation-pointer-delete {
+        // display: inline-block;
+        display: none;
+        float: left;
+        margin-top: 1px;
+        margin-left: 6px;
+        outline: 0;
+
+        i {
+          font-size: 21px;
+          color: rgb(141, 141, 141);
+          cursor: pointer;
+        }
+
+        &:hover {
+          i {
+            color: $process-dark-gray2;
+          }
+        }
+      }
+
+      &.mouse-over {
+        .annotation-pointer-delete {
+          display: inline-block;
+        }
+      }
     }
   }
 }

@@ -202,6 +202,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
     this._subs.push(
       windowMousedown.subscribe(() => {
+        // TODO : check what for
         this._rootStore.dispatch(new project.ProjectResetAnnotationSelection())
       }))
 

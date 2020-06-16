@@ -2,7 +2,7 @@ import {
   Component, Input, ChangeDetectionStrategy,
   OnInit, OnDestroy, EventEmitter, Output,
   OnChanges, SimpleChanges, ViewChild,
-  ElementRef, ChangeDetectorRef, AfterViewInit
+  ElementRef, ChangeDetectorRef, AfterViewInit/*, ComponentFactoryResolver*/
 } from '@angular/core'
 
 import { FormGroup, FormBuilder, Validators } from '@angular/forms'
@@ -54,6 +54,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   @Input() readonly totalDuration: number
   @Input() readonly selectedAnnotations: Set<Record<Annotation>>
   @Input() readonly scrollSettings: Observable<ScrollSettings>
+  @Input() readonly playerCurrentTime: number
 
   form: FormGroup | null = null
   zoom: number
@@ -191,7 +192,8 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
               id: oldAnnotation.get('id', null),
               fields: oldAnnotation.get('fields', null),
               utc_timestamp: newStart,
-              duration: newDuration
+              duration: newDuration,
+              pointerElement: oldAnnotation.get('pointerElement', null),
             })
           })
         }))
@@ -308,6 +310,18 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     return this.selectedAnnotations ?
       this.selectedAnnotations.find(sel => sel.get('id', null) === annotation.get('id', null)) !== undefined :
       null
+  }
+
+  hasPointerElement(annotation: any) {
+    return ((annotation.get('pointerElement', true) !== null) ? true : false)
+  }
+
+  getAnnotationStartTime (annotation: Record<Annotation>) {
+    return annotation.get('utc_timestamp', true)
+  }
+
+  getAnnotationEndTime (annotation: Record<Annotation>) {
+    return annotation.get('utc_timestamp', true) + annotation.get('duration', true)
   }
 
   outerTrackByFunc(index: number) {

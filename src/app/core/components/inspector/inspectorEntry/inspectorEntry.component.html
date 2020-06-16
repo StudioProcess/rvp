@@ -1,4 +1,4 @@
-<form #formWrapper class="entry-container" [formGroup]="form" novalidate>
+<form #formWrapper class="entry-container" [formGroup]="form" [attr.entry_annotation_id]="annotation_id" novalidate>
   <div class="row collapse">
     <div class="column shrink">
       <div class="annotation-color" [style.backgroundColor]="entry.get('color', null)"></div>
@@ -6,6 +6,12 @@
     <div class="column annotation-info">
       <div class="row time-row">
         <div class="column">
+          <div class="pointer-actions" [class.mouse-over]="mouse_overed" (mouseover)="mouse_overed=true" (mouseout)="mouse_overed=false">
+            <button (click)="pointerAction($event)" title="Pointer" class="annotation-pointer-ctrl" [style.backgroundColor]="annotation_pointer_color"></button>
+            <button *ngIf="(entry.getIn(['annotation', 'pointerElement']) !== null)" (click)="removePointerAction($event)" title="Remove Pointer" class="annotation-pointer-delete">
+              <i class="ion-ios-close"></i>
+            </button>
+          </div>
           <i class="ion-md-time"></i>
           <input #start formControlName="utc_timestamp" class="duration" title="Start Time">
           <i class="ion-ios-time"></i>

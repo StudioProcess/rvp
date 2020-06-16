@@ -34,12 +34,14 @@ import { formatDuration } from '../../../../lib/time'
 import {
   AnnotationColorMap, AnnotationRecordFactory,
   AnnotationFieldsRecordFactory, SelectionSource,
-  AnnotationSelectionRecordFactory
+  AnnotationSelectionRecordFactory,
+  PointerElement
 } from '../../../../persistence/model'
 
 import { _MOUSE_DBLCLICK_DEBOUNCE_ } from '../../../../config/form'
 
 import * as project from '../../../../persistence/actions/project'
+import { PointerElementComponent } from '../../pointer-element/pointer-element.component'
 import { parseDuration } from '../../../../lib/time'
 import { DomService } from '../../../actions/dom.service'
 import { HashtagService } from '../../../actions/hashtag.service'
@@ -66,14 +68,23 @@ const durationValidator = Validators.compose([Validators.required, durationValid
 export class InspectorEntryComponent extends HashtagService implements OnChanges, OnInit, AfterViewInit, OnDestroy {
 
   form: FormGroup | null = null
+  mouse_overed: boolean = false
+  annotation_pointer_color: string = '#bbb'
+  public annotation_id: number
   private readonly _subs: Subscription[] = []
+  private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
 
   @Input() readonly entry: Record<AnnotationColorMap>
-  @Input() @HostBinding('class.selected') readonly isSelected = false
+  @Input() readonly playerCurrentTime: number
+  @Input() readonly annotationStartTime: number
+  @Input() readonly annotationEndTime: number
+  @Input() @HostBinding('class.selected') readonly isSelected: boolean = false
+  @Input() @HostBinding('class.playercurrenttime') _isPlayerCurrentTime: boolean = false
 
   @Output() readonly onUpdate = new EventEmitter<project.UpdateAnnotationPayload>()
   @Output() readonly onSelectAnnotation = new EventEmitter<project.SelectAnnotationPayload>()
   @Output() readonly onFocusAnnotation = new EventEmitter<project.PlayerRequestCurrentTimePayload>()
+  @Output() readonly onAddAnnotationPointer = new EventEmitter<project.UpdateAnnotationPointerPayload>()
   @Output() readonly onHashtagsUpdate = new EventEmitter<project.UpdateProjectHashtagsPayload>()
 
   @ViewChild('formWrapper', { static: true }) private readonly _formRef: ElementRef
@@ -84,6 +95,12 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   @HostListener('click', ['$event', '$event.target'])
   onClick(event: MouseEvent, target: HTMLElement) {
     this.removeHashTag(target)
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    // console.log(event.target.innerWidth)
+    this._resetPointerTraits()
   }
 
   constructor(
@@ -118,6 +135,9 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       duration: [duration, durationValidator],
       description
     })
+
+    this.annotation_id = this.entry.getIn(['annotation', 'id']) as number
+    this.annotation_pointer_color = ((this.entry.getIn(['annotation', 'pointerElement']) !== null) ? (this.entry.get('color', null) as string) : '#bbb')
   }
 
   ngAfterViewInit() {
@@ -240,7 +260,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
             id: this.entry.getIn(['annotation', 'id']),
             utc_timestamp: parseDuration(utc_timestamp),
             duration: parseDuration(duration),
-            fields: new AnnotationFieldsRecordFactory({ description })
+            fields: new AnnotationFieldsRecordFactory({ description }),
+            pointerElement: this.entry.getIn(['annotation', 'pointerElement'])
           })
 
           this.onUpdate.emit({
@@ -264,9 +285,182 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
         this.form.setValue(this._mapModel(currentValue))
       }
     }
+
+    // this._setPointers()
+    this._resetPointerTraits()
   }
 
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
   }
+
+
+  isPlayerCurrentTime() {
+    // console.log(this.playerCurrentTime, this.annotationStartTime, this.annotationEndTime)
+    return ((this.playerCurrentTime >= this.annotationStartTime) && (this.playerCurrentTime <= this.annotationEndTime) ? true : false)
+  }
+
+  pointerAction($event: MouseEvent) {
+
+    const annotation_id = this.entry.getIn(['annotation', 'id']) as number
+    const entries_pointer_element = this.entry.getIn(['annotation', 'pointerElement'])
+    /**
+     *  check if new pointerelement
+     */
+    if (entries_pointer_element === null) {
+
+      const componentWidth = 20
+      const componentHeight = 20
+
+      let options = {
+        video_width: this._video_elem_container.offsetWidth as number,
+        video_height: this._video_elem_container.offsetHeight as number,
+        left: ((this._video_elem_container.offsetWidth / 2) - (componentWidth / 2)) as number,
+        top: ((this._video_elem_container.offsetHeight / 2) - (componentHeight / 2)) as number,
+        bgcolor: this.entry.get('color', null) as string,
+        active: true as boolean,
+        zIndex: 1 as number,
+        annotation_path: {
+          trackIndex: this.entry.get('trackIndex', null),
+          annotationStackIndex: this.entry.get('annotationStackIndex', null),
+          annotationIndex: this.entry.get('annotationIndex', null),
+          annotation_id: annotation_id
+        } as any
+      } as PointerElement
+
+      // this._instantiatePointer(<PointerElement>options)
+
+      // save
+      this.onAddAnnotationPointer.emit({
+        annotation_id: annotation_id,
+        pointer_payload: options
+      })
+    }
+  }
+
+
+  removePointerAction($event: MouseEvent) {
+    const annotation_id = this.entry.getIn(['annotation', 'id']) as number
+    let options = {
+      annotation_path: {
+        trackIndex: this.entry.get('trackIndex', null),
+        annotationStackIndex: this.entry.get('annotationStackIndex', null),
+        annotationIndex: this.entry.get('annotationIndex', null),
+        annotation_id: annotation_id
+      } as any
+    } as PointerElement
+    this.onAddAnnotationPointer.emit({
+      annotation_id: annotation_id,
+      pointer_payload: options,
+      remove: true
+    })
+    this._resetPointerTraits()
+    this.annotation_pointer_color = '#bbb'
+  }
+
+
+  /**
+   *  check if pointer to instantiate
+   */
+  private _setPointers() {
+    const entries_pointer_element = this.entry.getIn(['annotation', 'pointerElement'])
+    this._isPlayerCurrentTime = this.isPlayerCurrentTime()
+    if (this._isPlayerCurrentTime) {
+      if (entries_pointer_element !== null) {
+        if (!this._isPointerDisplayed(this.annotation_id)) {
+          this._instantiatePointer(<PointerElement>entries_pointer_element)
+          this.annotation_pointer_color = this.entry.get('color', null) as string
+        }
+      }
+    } else {
+      if (entries_pointer_element !== null && !this.isSelected) {
+        if (this.annotation_id !== undefined && this._isPointerDisplayed(this.annotation_id)) {
+          let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + this.annotation_id + '"]')
+          if (pointer_elem !== null) {
+            pointer_elem.remove()
+            this.annotation_pointer_color = this.entry.get('color', null) as string
+          }
+        }
+      } else if (this.isSelected) {
+        if (entries_pointer_element !== null) {
+          if (!this._isPointerDisplayed(this.annotation_id)) {
+            this._instantiatePointer(<PointerElement>entries_pointer_element)
+            this.annotation_pointer_color = this.entry.get('color', null) as string
+          }
+        }
+      }
+    }
+    if (this.isSelected) {
+      this._addSelectedAnnotationPointerClass(this.annotation_id)
+    } else {
+      this._removeSelectedAnnotationPointerClass(this.annotation_id)
+    }
+  }
+
+  private _resetPointerTraits() {
+    let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + this.annotation_id + '"]')
+    if (pointer_elem !== null) {
+      pointer_elem.remove()
+      // this.annotation_pointer_color = '#bbb'
+    }
+
+    /*
+    let all_pointer_refs = this._video_elem_container.querySelectorAll('rv-pointer-element')
+    all_pointer_refs.forEach((e: any) => {
+      e.remove()
+    })
+    */
+    this._setPointers()
+  }
+
+  private _addSelectedAnnotationPointerClass(annotation_id: number) {
+    setTimeout(() => {
+      if (this._isPointerDisplayed(this.annotation_id)) {
+        const pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + annotation_id + '"] .annotation-pointer-element')
+        pointer_elem!.classList.add('annotation-selected')
+      }
+    }, 0)
+  }
+
+  private _removeSelectedAnnotationPointerClass(annotation_id: number) {
+    if (this._isPointerDisplayed(this.annotation_id)) {
+      const pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + annotation_id + '"] .annotation-pointer-element')
+      pointer_elem!.classList.remove('annotation-selected')
+    }
+  }
+
+  private _isPointerDisplayed(annotation_id: number) {
+    const pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + annotation_id + '"]')
+    return ((pointer_elem !== null) ? true : false)
+  }
+
+  private _instantiatePointer(options: any) {
+    const componentRef = this._domService.instantiateComponent(PointerElementComponent)
+    const componentRefInstance = this._domService.getInstance(componentRef)
+    this._domService.attachComponent(componentRef, this._video_elem_container)
+
+    if ((this._video_elem_container.offsetWidth !== options.video_width) || (this._video_elem_container.offsetHeight !== options.video_height)) {
+      // reset widht/height ratio
+      const ratio_width: number = (this._video_elem_container.offsetWidth / options.video_width).toFixed(2) as unknown as number
+      const ratio_height: number = (this._video_elem_container.offsetHeight / options.video_height).toFixed(2) as unknown as number
+      options.left = (options.left * ratio_width)
+      options.top = (options.top * ratio_height)
+      options.video_height = this._video_elem_container.offsetHeight
+      options.video_width = this._video_elem_container.offsetWidth
+
+      // centered
+      // const componentWidth = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetWidth
+      // const componentHeight = componentRefInstance.element.nativeElement.querySelector('.annotation-pointer-element').offsetHeight
+      // options.left = ((this._video_elem_container.offsetWidth / 2) - (componentWidth / 2))
+      // options.top = ((this._video_elem_container.offsetHeight / 2) - (componentHeight / 2))
+
+      /*this.onAddAnnotationPointer.emit({
+        annotation_id: this.entry.getIn(['annotation', 'id']) as number,
+        pointer_payload: options
+      })*/
+    }
+
+    componentRefInstance.setPointerTraits(<PointerElement>options)
+  }
+
 }

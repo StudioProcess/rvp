@@ -93,12 +93,14 @@ export class TagAddModalComponent implements OnInit {
         const annotation_timestamp = sel.get('utc_timestamp', null)
         const annotation_text = sel.getIn(['fields', 'description'])
         const annotation_text_new = annotation_text.trim() + ' ' + hashtag
+        const pointer_element = sel.get('pointerElement', null)
 
         const annotation = new AnnotationRecordFactory({
           id: annotationId,
           utc_timestamp: annotation_timestamp,
           duration: annotation_duration,
-          fields: new AnnotationFieldsRecordFactory({ description: annotation_text_new })
+          fields: new AnnotationFieldsRecordFactory({ description: annotation_text_new }),
+          pointerElement: pointer_element
         })
         const updateAnnotation = {
           trackIndex: pathInfo!.trackIndex,

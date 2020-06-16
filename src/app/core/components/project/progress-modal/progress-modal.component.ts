@@ -2,10 +2,10 @@ import {
   OnInit,
   Component,
   ChangeDetectorRef
-} from '@angular/core';
+} from '@angular/core'
 
-import {Subscription} from 'rxjs'
-import {MessageService} from '../../../actions/message.service'
+import { Subscription } from 'rxjs'
+import { MessageService } from '../../../actions/message.service'
 
 @Component({
   selector: 'rv-progress-modal',
@@ -21,12 +21,12 @@ export class ProgressModalComponent implements OnInit {
   constructor(
     private readonly _cdr: ChangeDetectorRef,
     private _msg: MessageService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.subscription = this._msg.msgData.subscribe((res: any) => {
-      if(res.hasOwnProperty('percent')) { this.updateProgress(res.percent) }
-      if(res.hasOwnProperty('text')) { this.updateProgressText(res.text) }
+      if (res.hasOwnProperty('percent')) { this.updateProgress(res.percent) }
+      if (res.hasOwnProperty('text')) { this.updateProgressText(res.text) }
       this._cdr.detectChanges()
     })
   }

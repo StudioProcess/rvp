@@ -134,6 +134,7 @@ export interface Annotation {
   readonly utc_timestamp: number
   readonly duration: number
   readonly fields: Record<AnnotationFields>
+  readonly pointerElement: Record<PointerElement>|null
 }
 
 export interface AnnotationFields {
@@ -147,6 +148,19 @@ export interface AnnotationColorMap {
   readonly annotationIndex: number
   readonly annotation: Record<Annotation>
   readonly color: string
+}
+
+export interface PointerElement {
+  readonly left: number // x
+  readonly top: number  // y
+  readonly active: boolean
+  readonly zIndex: number
+  readonly bgcolor: string
+  readonly video_width: number  // initial video width for scaling
+  readonly video_height: number // initial video height for scaling
+  readonly annotation_path: any // TODO : annotation_path record factory
+  // readonly annotation_id: number
+  // readonly pointer_id: number
 }
 
 // Record factories
@@ -235,7 +249,8 @@ export const AnnotationRecordFactory = Record<Annotation>({
   isShown: true,
   utc_timestamp: -1,
   duration: -1,
-  fields: new AnnotationFieldsRecordFactory()
+  fields: new AnnotationFieldsRecordFactory(),
+  pointerElement: null
 })
 
 export const ProjectHashtagsRecordFactory = Record<ProjectHashtags>({
@@ -259,4 +274,15 @@ export const AnnotationColorMapRecordFactory = Record<AnnotationColorMap>({
   annotationIndex: -1,
   annotation: new AnnotationRecordFactory(),
   color: '#000'
+})
+
+export const PointerElementRecordFactory = Record<PointerElement>({
+  left: 0,
+  top: 0,
+  active: true,
+  zIndex: 1,
+  bgcolor: '#000000',
+  video_width: 0,
+  video_height: 0,
+  annotation_path: {}
 })

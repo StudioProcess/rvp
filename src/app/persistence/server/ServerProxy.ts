@@ -96,13 +96,14 @@ export class ServerProxy implements OnDestroy {
               this._store.dispatch(new project.ProjectLoadError(err))
             }
           },
-          error: err => {
+          error: (err: any) => {
             this._store.dispatch(new project.ProjectLoadError(err))
           }
         }))
 
       this._subs.push(
         this.importProject.subscribe({
+          //next: async (payload:any) => {
           next: async ({payload}) => {
 
             const progressModal = $('#progress-modal') as any
@@ -132,13 +133,14 @@ export class ServerProxy implements OnDestroy {
             this._msg!.update({percent: 0, text: 'please wait'})
             progressModal.foundation('close')
           },
-          error: err => {
+          error: (err: any) => {
             this._store.dispatch(new project.ProjectImportError(err))
           }
         }))
 
       this._subs.push(
         this.importVideo.subscribe({
+          //next: async (payload: any) => {
           next: async ({payload}) => {
             try {
               await this._cache.clear('video')
@@ -151,7 +153,7 @@ export class ServerProxy implements OnDestroy {
               this._msg!.update({videoImportSuccess: false, error: err})
             }
           },
-          error: err => {
+          error: (err: any) => {
             this._store.dispatch(new project.ProjectImportVideoError(err))
             this._msg!.update({videoImportSuccess: false, error: err})
           }
@@ -188,7 +190,7 @@ export class ServerProxy implements OnDestroy {
                 this._store.dispatch(new project.ProjectExportError(err))
               }
             },
-            error: err => {
+            error: (err: any) => {
               this._store.dispatch(new project.ProjectExportError(err))
             }
           }))
@@ -264,7 +266,7 @@ export class ServerProxy implements OnDestroy {
                     this._store.dispatch(new project.ProjectExportError(err))
                   }
                 },
-                error: err => {
+                error: (err: any) => {
                   this._store.dispatch(new project.ProjectExportError(err))
                 }
               }))
@@ -275,7 +277,7 @@ export class ServerProxy implements OnDestroy {
             await this._cache.clearAll()
             this._store.dispatch(new project.ProjectLoad())
           },
-          error: err => {
+          error: (err: any) => {
             this._store.dispatch(new project.ProjectResetError(err))
           }
         }))
@@ -297,6 +299,7 @@ export class ServerProxy implements OnDestroy {
             action.type === project.PROJECT_REDO ||
             action.type === project.PROJECT_IMPORT_VIDEO_SUCCESS ||
             action.type === project.PROJECT_LOAD_SUCCESS ||
+            action.type === project.PROJECT_ANNOTATION_ADD_POINTER ||
             action.type === project.PROJECT_UPDATE_HASHTAGS ||
             action.type === project.PROJECT_UPDATE_TITLE
         }))
