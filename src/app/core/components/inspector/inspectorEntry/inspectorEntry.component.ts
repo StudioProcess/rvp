@@ -312,6 +312,10 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
   pointerAction($event: MouseEvent) {
 
+    this.onFocusAnnotation.emit({
+      currentTime: this.entry.get('annotation', null).get('utc_timestamp', null)
+    })
+
     const annotation_id = this.entry.getIn(['annotation', 'id']) as number
     const entries_pointer_element = this.entry.getIn(['annotation', 'pointerElement'])
     /**
@@ -350,6 +354,9 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
 
   removePointerAction($event: MouseEvent) {
+    this.onFocusAnnotation.emit({
+      currentTime: this.entry.get('annotation', null).get('utc_timestamp', null)
+    })
     const annotation_id = this.entry.getIn(['annotation', 'id']) as number
     let options = {
       annotation_path: {
