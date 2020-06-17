@@ -278,7 +278,10 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     } else {
       if (window.confirm('Reset the whole project? All data will be lost.')) {
         this._rootStore.dispatch(new project.ProjectReset())
-        this.closeProjectModal()
+        setTimeout(() => {
+          this.closeProjectModal()
+          window.location.reload()
+        }, 200)
       }
     }
   }
@@ -296,9 +299,8 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
   closeProjectModal() {
     const modal = $('#settings-reveal') as any
-    if(typeof modal.close === 'function') {
-      modal!.foundation('close')
-    }
+    modal!.foundation('close')
+    // if(typeof modal.close === 'function') {}
   }
 
   addAnnotation() {
