@@ -203,7 +203,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     this._subs.push(
       formDblClick.subscribe(() => {
         this.onFocusAnnotation.emit({
-          currentTime: this.entry.get('annotation', null).get('utc_timestamp', null)
+          // currentTime: this.entry.get('annotation', null).get('utc_timestamp', null)
+          currentTime: (this.entry.getIn(['annotation', 'utc_timestamp']) + 0.1)
         })
       }))
 
@@ -313,7 +314,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   pointerAction($event: MouseEvent) {
 
     this.onFocusAnnotation.emit({
-      currentTime: this.entry.get('annotation', null).get('utc_timestamp', null)
+      currentTime: (this.entry.getIn(['annotation', 'utc_timestamp']) + 0.1)
     })
 
     const annotation_id = this.entry.getIn(['annotation', 'id']) as number
@@ -355,7 +356,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
   removePointerAction($event: MouseEvent) {
     this.onFocusAnnotation.emit({
-      currentTime: this.entry.get('annotation', null).get('utc_timestamp', null)
+      currentTime: (this.entry.getIn(['annotation', 'utc_timestamp']) + 0.1)
     })
     const annotation_id = this.entry.getIn(['annotation', 'id']) as number
     let options = {
@@ -399,12 +400,14 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
           }
         }
       } else if (this.isSelected) {
+        /*
         if (entries_pointer_element !== null) {
           if (!this._isPointerDisplayed(this.annotation_id)) {
             this._instantiatePointer(<PointerElement>entries_pointer_element)
             this.annotation_pointer_color = this.entry.get('color', null) as string
           }
         }
+        */
       }
     }
     if (this.isSelected) {
