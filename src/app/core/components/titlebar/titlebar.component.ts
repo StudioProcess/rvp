@@ -16,7 +16,7 @@ import {
   Validators
 } from '@angular/forms'
 
-import {Title} from '@angular/platform-browser'
+import { Title } from '@angular/platform-browser'
 
 import {
   Subscription,
@@ -32,8 +32,8 @@ import {
   ProjectGeneralData
 } from '../../../persistence/model'
 
-import {Store} from '@ngrx/store'
-import {Record} from 'immutable'
+import { Store } from '@ngrx/store'
+import { Record } from 'immutable'
 import * as project from '../../../persistence/actions/project'
 import * as fromProject from '../../../persistence/reducers'
 import { Globals } from '../../../common/globals'
@@ -68,7 +68,7 @@ export class TitlebarComponent implements OnInit {
     private readonly _cdr: ChangeDetectorRef,
   ) {
     this._store.select(fromProject.getProjectMeta).subscribe(meta => {
-      if(meta !== null) {
+      if (meta !== null) {
         const title = meta.getIn(['general', 'title'])! as string
         this.pnform!.controls['project_title'].setValue(title) //this.pnform!.patchValue({project_title: title})
 
@@ -91,29 +91,42 @@ export class TitlebarComponent implements OnInit {
     })
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit() {
 
     this.global.getValue().subscribe((value) => {
       this.viewmode_active = value
       this._cdr.detectChanges()
     })
 
+
+    this.global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+      if (!this.viewmode_active) {
+        this.subscribeSubs()
+      } else {
+        this._subs.forEach(sub => sub.unsubscribe())
+      }
+    })
+
+  }
+
+  subscribeSubs () {
     this._subs.push(
       fromEvent(this._projecttitleInputRef.nativeElement, 'blur')
         .subscribe(
-          ({project_title}) => {
+          ({ project_title }) => {
             let newTitle = this.pnform!.value!.project_title!
-            if(newTitle === '') {
+            if (newTitle === '') {
               newTitle = _PROJECT_DEFAULT_TITLE_
-              this.pnform!.patchValue({project_title: newTitle})
+              this.pnform!.patchValue({ project_title: newTitle, viewmode: this.viewmode_active })
             }
             // reset document title
-            this.titleService.setTitle(newTitle);
+            this.titleService.setTitle(newTitle)
 
             this.onTitleUpdate.emit({
               title: newTitle
             })
-    }))
+          }))
 
     // prevent video play/pause (e.g hit space key)
     this._subs.push(
