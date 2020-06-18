@@ -2,7 +2,7 @@
 <div class="row title-row">
   <div class="column shrink" [formGroup]="form">
     <div #trackBtn class="track-color" [style.color]="data.get('color', null)">
-      <i class="ion-ios-disc" title="Track Color"></i>
+      <i class="ion-ios-radio-button-on" title="Track Color"></i>
     </div>
     <input #title class="title-input" placeholder="Track Title" title="Track Title" formControlName="title" [readonly]="viewmode_active">
   </div>

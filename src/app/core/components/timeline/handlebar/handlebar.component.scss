@@ -21,7 +21,7 @@ $text-color: $black;
   position: absolute;
   height: $handlebar-height;
   min-width: $handlebar-minwidth;
-  transition: all 0.4s;
+  transition: background-color 0.4s;
 
   &.selected {
     outline-offset: (-$selection-outlinewidth);
