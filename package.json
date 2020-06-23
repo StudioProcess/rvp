@@ -30,7 +30,6 @@
     "build": "ng build",
     "prebuild:prod": "node tools/prepEnv",
     "build:prod": "ng build --prod; open dist/",
-    "build:prod-old": "ng build --prod --output-hashing none",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
