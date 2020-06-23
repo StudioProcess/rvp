@@ -33,4 +33,6 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## Contributors
 
-[Onur Dogangönül](https://github.com/dinony), [Adrian Soluch](https://github.com/n0mad01), [Manuel Meister](https://github.com/manuelmeister)
+[Adrian Soluch](https://github.com/n0mad01)  
+[Onur Dogangönül](https://github.com/dinony)  
+[Manuel Meister](https://github.com/manuelmeister)
