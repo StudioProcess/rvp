@@ -437,7 +437,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     setTimeout(() => {
       if (this._isPointerDisplayed(this.annotation_id)) {
         const pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + annotation_id + '"] .annotation-pointer-element')
-        pointer_elem!.classList.add('annotation-selected')
+        pointer_elem!.classList!.add('annotation-selected')
       }
     }, 0)
   }
@@ -445,7 +445,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   private _removeSelectedAnnotationPointerClass(annotation_id: number) {
     if (this._isPointerDisplayed(this.annotation_id)) {
       const pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + annotation_id + '"] .annotation-pointer-element')
-      pointer_elem!.classList.remove('annotation-selected')
+      pointer_elem!.classList!.remove('annotation-selected')
     }
   }
 
