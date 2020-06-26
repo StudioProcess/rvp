@@ -382,6 +382,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
    */
   private _setPointers() {
     const entries_pointer_element = this.entry.getIn(['annotation', 'pointerElement'])
+    // console.log(entries_pointer_element)
     this._isPlayerCurrentTime = this.isPlayerCurrentTime()
     if (this._isPlayerCurrentTime) {
       if (entries_pointer_element !== null) {
@@ -418,12 +419,11 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   }
 
   private _resetPointerTraits() {
-    let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + this.annotation_id + '"]')
+    // let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + this.annotation_id + '"]')
+    let pointer_elem = this._video_elem_container.querySelector('[pointer_id]')
     if (pointer_elem !== null) {
       pointer_elem.remove()
-      // this.annotation_pointer_color = '#bbb'
     }
-
     /*
     let all_pointer_refs = this._video_elem_container.querySelectorAll('rv-pointer-element')
     all_pointer_refs.forEach((e: any) => {
