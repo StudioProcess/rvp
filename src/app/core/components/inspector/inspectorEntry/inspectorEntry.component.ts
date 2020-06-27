@@ -203,8 +203,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     this._subs.push(
       formDblClick.subscribe(() => {
         this.onFocusAnnotation.emit({
-          // currentTime: this.entry.get('annotation', null).get('utc_timestamp', null)
-          currentTime: (this.entry.getIn(['annotation', 'utc_timestamp']) + 0.1)
+          currentTime: (this.entry.getIn(['annotation', 'utc_timestamp']))
         })
       }))
 
@@ -307,14 +306,18 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
 
   isPlayerCurrentTime() {
-    // console.log(this.playerCurrentTime, this.annotationStartTime, this.annotationEndTime)
-    return ((this.playerCurrentTime >= this.annotationStartTime) && (this.playerCurrentTime <= this.annotationEndTime) ? true : false)
+    const annotationStartTime = parseFloat( this.annotationStartTime.toFixed(2))
+    const annotationEndTime = parseFloat( this.annotationEndTime.toFixed(2))
+    const playerCurrentTime = parseFloat(this.playerCurrentTime.toFixed(2))
+
+    return ((playerCurrentTime >= annotationStartTime) && (playerCurrentTime <= annotationEndTime) ? true : false)
   }
 
   pointerAction($event: MouseEvent) {
 
     this.onFocusAnnotation.emit({
-      currentTime: (this.entry.getIn(['annotation', 'utc_timestamp']) + 0.1)
+      // currentTime: (this.entry.getIn(['annotation', 'utc_timestamp']) + 0.1)
+      currentTime: (this.entry.getIn(['annotation', 'utc_timestamp']))
     })
 
     const annotation_id = this.entry.getIn(['annotation', 'id']) as number
@@ -356,7 +359,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
   removePointerAction($event: MouseEvent) {
     this.onFocusAnnotation.emit({
-      currentTime: (this.entry.getIn(['annotation', 'utc_timestamp']) + 0.1)
+      currentTime: (this.entry.getIn(['annotation', 'utc_timestamp']))
     })
     const annotation_id = this.entry.getIn(['annotation', 'id']) as number
     let options = {
@@ -382,9 +385,9 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
    */
   private _setPointers() {
     const entries_pointer_element = this.entry.getIn(['annotation', 'pointerElement'])
-    // console.log(entries_pointer_element)
     this._isPlayerCurrentTime = this.isPlayerCurrentTime()
     if (this._isPlayerCurrentTime) {
+      // console.log('', this.annotation_id)
       if (entries_pointer_element !== null) {
         if (!this._isPointerDisplayed(this.annotation_id)) {
           this._instantiatePointer(<PointerElement>entries_pointer_element)
@@ -419,17 +422,11 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   }
 
   private _resetPointerTraits() {
-    // let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + this.annotation_id + '"]')
-    let pointer_elem = this._video_elem_container.querySelector('[pointer_id]')
+    let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + this.annotation_id + '"]')
     if (pointer_elem !== null) {
       pointer_elem.remove()
     }
-    /*
-    let all_pointer_refs = this._video_elem_container.querySelectorAll('rv-pointer-element')
-    all_pointer_refs.forEach((e: any) => {
-      e.remove()
-    })
-    */
+
     this._setPointers()
   }
 
