@@ -139,7 +139,6 @@ export function reducer(state: State = initialState, action: project.Actions): S
           }),
           general: ProjectGeneralDataRecordFactory({
             title: (general! && general!.title) ? general.title : _PROJECT_DEFAULT_TITLE_,
-            // viewmode: general.viewmode
             viewmode: (general! && general!.viewmode) ? general.viewmode : false
           })
         })

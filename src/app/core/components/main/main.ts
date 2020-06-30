@@ -81,15 +81,30 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       }
     })
 
+
+    // space key
+    const windowKeydown = fromEvent(window, 'keydown') as Observable<KeyboardEvent>
+    const togglePlayingHotkey = windowKeydown.pipe(filter(e => e.keyCode === 32))
+
+    //this._subs.push(
+    togglePlayingHotkey.subscribe(ev => {
+      ev.preventDefault()
+      ev.stopPropagation()
+      this._rootStore.dispatch(new project.PlayerTogglePlaying())
+    })//)
+
     this.global.getValue().subscribe((value) => {
       this.viewmode_active = value
       if (!this.viewmode_active) {
-        if(!this.subs_active) {
+        if (!this.subs_active) {
           this.subs_active = true
           this.subscribeShortcutSubs()
         }
       } else {
-        this._subs.forEach(sub => sub.unsubscribe())
+        this._subs.forEach(sub => {
+          // console.log(sub)
+          sub.unsubscribe()
+        })
       }
     })
   }
@@ -169,9 +184,6 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       return e.keyCode === 46 && e.shiftKey // shift + del
     }))
 
-    // space key
-    const togglePlayingHotkey = windowKeydown.pipe(filter(e => e.keyCode === 32))
-
     // + key
     const addTrackHotkey = windowKeydown.pipe(filter(e => {
       return e.keyCode === 187 || // +
@@ -211,13 +223,6 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     this._subs.push(
       copyToClipboardHotkey.subscribe(() => {
         this.dispatchCopyAnnotation()
-      }))
-
-    this._subs.push(
-      togglePlayingHotkey.subscribe(ev => {
-        ev.preventDefault()
-        ev.stopPropagation()
-        this._rootStore.dispatch(new project.PlayerTogglePlaying())
       }))
 
     this._subs.push(
@@ -299,7 +304,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
   closeProjectModal() {
     const modal = $('#settings-reveal') as any
-    if(typeof modal.close === 'function') {
+    if (typeof modal.close === 'function') {
       modal!.foundation('close')
     }
   }

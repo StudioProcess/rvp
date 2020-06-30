@@ -1,10 +1,11 @@
 import { Component, ChangeDetectorRef } from '@angular/core'
 import { Globals } from '../../../../common/globals'
 
+// <button [disabled]="viewmode_active">
 @Component({
   selector: 'rv-projectbtn',
   template: `
-    <button [disabled]="viewmode_active">
+    <button>
       <i class="ion-ios-folder" title="Project Settings"></i><span class="show-for-medium"> Project</span>
     </button>
   `,

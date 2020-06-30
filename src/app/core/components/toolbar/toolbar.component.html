@@ -27,7 +27,7 @@
 
     <rv-projectbtn data-open="settings-reveal" class="modalButton"></rv-projectbtn>
     <rv-projectmodal class="reveal" data-reveal
-      [attr.id]="viewmode_active ? '' : 'settings-reveal'"
+      [attr.id]="viewmode_active ? 'settings-reveal' : 'settings-reveal'"
       (onImportProject)="importProject($event)"
       (onImportVideo)="importVideo($event)"
       (onExportProject)="exportProject()"
