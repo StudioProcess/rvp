@@ -62,6 +62,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   // Input left and width
   @Input('left') readonly inLeft: number
   @Input('width') readonly inWidth: number
+  @Input('ommit_viewmode') readonly ommit_viewmode: boolean = false
 
   // Intern left and width (mutable, for fast UI updates)
   @HostBinding('style.left.%') internLeft: number
@@ -115,16 +116,20 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   }
 
   ngAfterViewInit() {
+    if (this.ommit_viewmode) {
+      this.subscribeSubs()
+    } else {
+      this.global.getValue().subscribe((value) => {
+        this.viewmode_active = value
 
-    this.global.getValue().subscribe((value) => {
-      this.viewmode_active = value
+        if (!this.viewmode_active) {
+          this.subscribeSubs()
+        } else {
+          this._subs.forEach(sub => sub.unsubscribe())
+        }
+      })
+    }
 
-      if (!this.viewmode_active) {
-        this.subscribeSubs()
-      } else {
-        this._subs.forEach(sub => sub.unsubscribe())
-      }
-    })
   }
 
   subscribeSubs() {
