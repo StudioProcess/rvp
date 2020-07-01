@@ -119,7 +119,7 @@ export class MediArchiveComponent implements OnInit {
       if(error.status === 404) {
         this.response_annotations = "Not found. Couldn't find Research Video under this URL."
       } else if(error.status === 401) {
-        this.response_annotations = "Login necessary. Please log in at https://medienarchiv.zhdk.ch then try again."
+        this.response_annotations = 'Login necessary. Please log in at <a href="https://medienarchiv.zhdk.ch" target="_blank">https://medienarchiv.zhdk.ch</a> then try again.'
       } else if(error.status === 403) {
         this.response_annotations = "Missing permissions. You don't have the necessary permissions to view this Research Video."
       } else {
@@ -145,7 +145,7 @@ export class MediArchiveComponent implements OnInit {
     }).toPromise().then((res: any) => {
       this.loadProjectFromUrl()
     }).catch((error: any) => {
-      this.handleErrorModal(error)
+      // this.handleErrorModal(error)
       if (error.status === 401) {
         this.withCredentialsSetting = true
       }

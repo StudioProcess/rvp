@@ -34,6 +34,6 @@
     <pre>{{ response_video | json }}</pre>
     {{ response_annotations_header }}
     <pre *ngIf="(response_annotations | keyvalue)?.length">{{ response_annotations | json }}</pre>
-    <p *ngIf="!(response_annotations | keyvalue)?.length">{{ response_annotations }}</p>
+    <p *ngIf="!(response_annotations | keyvalue)?.length" [innerHTML]="response_annotations"></p>
   </div>
 </div>
