@@ -16,25 +16,22 @@ export class ProgressModalComponent implements OnInit {
 
   text: string = ''
   percent: number = 0
+  error: boolean = false
+  close: boolean = false
   subscription: Subscription
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
     private _msg: MessageService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.subscription = this._msg.msgData.subscribe((res: any) => {
-      if (res.hasOwnProperty('percent')) { this.updateProgress(res.percent) }
-      if (res.hasOwnProperty('text')) { this.updateProgressText(res.text) }
+      this.percent = (res.hasOwnProperty('percent') ? res.percent : 0 )
+      this.text = (res.hasOwnProperty('text') ? res.text : '' )
+      this.error = (res.hasOwnProperty('error') ? res.error : false )
+      this.close = (res.hasOwnProperty('close') ? res.close : false )
       this._cdr.detectChanges()
     })
-  }
-
-  updateProgress(percent: number) {
-    this.percent = percent
-  }
-  updateProgressText(text: string) {
-    this.text = text
   }
 }

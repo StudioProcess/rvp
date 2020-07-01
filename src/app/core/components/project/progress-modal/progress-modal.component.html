@@ -1,16 +1,20 @@
-<p>
-  <!--
-  <span id="progress-modal-text">{{text}}</span>
-  -->
-</p>
-<div class="loading-gif-wrapper">
+<button class="close-button" data-close aria-label="Close modal" type="button" *ngIf="close">
+  <span aria-hidden="true">&times;</span>
+</button>
+<div class="error-wrapper" *ngIf="error">
+  <span class="error-sign">×</span>
+</div>
+<div class="loading-gif-wrapper" *ngIf="!error">
   <img src="assets/img/rv_animation.gif" class="rv-loading-gif">
 </div>
-<div class="progress-bar-wrapper">
+<div class="progress-bar-wrapper" *ngIf="percent">
   <div id="progress-modal-bar" class="secondary progress" role="progressbar" tabindex="0"
     aria-valuemin="0" aria-valuemax="100">
     <div class="progress-meter" style="width: {{percent}}%"></div>
   </div>
+</div>
+<div *ngIf="text" class="modal-text" [ngClass]="{'error' : error}">
+  <span class="progress-modal-text">{{text}}</span>
 </div>
 <!--
   <progress max="100" value="{{percent}}" id="progress-modal-bar" class="secondary"></progress>

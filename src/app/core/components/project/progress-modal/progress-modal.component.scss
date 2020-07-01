@@ -1,5 +1,6 @@
 :host {
   display: block;
+  min-height: 370px;
 }
 
 #progress-modal-bar {
@@ -12,6 +13,17 @@
 
   .rv-loading-gif {
     width: 80px;
+  }
+}
+
+.error-wrapper {
+  margin: 100px auto 0 auto;
+  text-align: center;
+
+  .error-sign {
+    font-size: 70px;
+    font-weight: bold;
+    color: red;
   }
 }
 
@@ -28,6 +40,17 @@
 
     .progress-meter {
       background-color: #000;
+    }
+  }
+}
+
+.modal-text {
+  margin: 0 auto 0 auto;
+  text-align: center;
+
+  &.error {
+    .progress-modal-text {
+      color: red;
     }
   }
 }

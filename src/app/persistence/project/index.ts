@@ -16,7 +16,7 @@ export async function extractProject(zip: JSZip, msg?: MessageService): Promise<
           if (msg) {
             msg!.update({
               percent: percent,
-              text: 'importing ' + meta.file + ': ' + percent + '%'
+              // text: 'importing ' + meta.file + ': ' + percent + '%'
             })
           }
         }
@@ -24,7 +24,7 @@ export async function extractProject(zip: JSZip, msg?: MessageService): Promise<
       .then((f: any) => {
         if (msg) {
           msg!.update({
-            text: 'please wait'
+            // text: 'please wait'
           })
         }
         return [meta.middleware.postLoad(f), meta]
