@@ -7,8 +7,8 @@ import { Globals } from '../../../common/globals'
 @Component({
   selector: 'rv-viewmode',
   template: `
-    <div class="viewmode-wrapper" *ngIf="viewmode_active" [ngClass]="{'active': viewmode_active}" (click)="toggleViewMode($event)" title="This project is in View Mode">
-      <i class="ion-md-eye"></i>
+    <div class="viewmode-wrapper" *ngIf="viewmode_active" [ngClass]="{'active': viewmode_active}" (click)="toggleViewMode($event)" title="This project is read-only">
+      <i class="ion-ios-lock"></i>
     </div>
   `,
   styles: [`
