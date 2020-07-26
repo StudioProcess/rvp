@@ -142,10 +142,13 @@
             color: #000000;
           }
         }
-
-        &[placeholder]:empty:not(:focus):before {
+        // &[placeholder]:empty:not(:focus):before {
+        &[placeholder]:empty::before {
           content: attr(placeholder);
           color: #CCC;
+        }
+        &[placeholder]:empty:focus::before {
+          content: "";
         }
       }
 

@@ -44,10 +44,10 @@ button {
     top: 5px;
     left: 10px;
   }
-  input:focus + .search-icon {
-    /*opacity: 0;*/
-    visibility: hidden;
-  }
+  /*input:focus + .search-icon {
+    // opacity: 0.9;
+    // visibility: hidden;
+  }*/
   .close-icon {
     position: absolute;
     top: 5px;
@@ -67,12 +67,15 @@ button {
       padding: 6px 32px;
     }
     &:focus + .search-icon {
-      /*opacity: 0;*/
-      visibility: hidden;
+      opacity: 0.15;
+      // visibility: hidden;
     }
-    &[placeholder]:empty:not(:focus):before {
+    &[placeholder]:empty:before {
       content: attr(placeholder);
       color: #CCC;
+    }
+    &[placeholder]:empty:focus::before {
+      content: "";
     }
   }
   .searchBox::placeholder {

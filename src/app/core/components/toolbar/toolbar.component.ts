@@ -69,7 +69,7 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
   constructor(
     private readonly _fb: FormBuilder,
     readonly _domService: DomService,
-    private global: Globals,
+    private _global: Globals,
     private readonly _cdr: ChangeDetectorRef,
   ) {
     super(_domService)
@@ -117,7 +117,7 @@ export class ToolbarComponent extends HashtagService implements OnInit, AfterVie
 
   ngAfterViewInit() {
 
-    this.global.getValue().subscribe((value) => {
+    this._global.getValue().subscribe((value) => {
       this.viewmode_active = value
       this._cdr.detectChanges()
     })
