@@ -20,6 +20,12 @@ import {
   distinctUntilKeyChanged
 } from 'rxjs/operators'
 
+import { Record } from 'immutable'
+
+import {
+  Annotation // AnnotationColorMap //, PointerElement
+} from '../../../../persistence/model'
+
 import { _HANDLEBAR_MIN_WIDTH_ } from '../../../../config/timeline/handlebar'
 
 import { Globals } from '../../../../common/globals'
@@ -47,6 +53,7 @@ export interface Handlebar {
   styleUrls: ['handlebar.component.scss']
 })
 export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+  @Input() readonly annotation: Record<Annotation>
   @Input() readonly hasPointerElement: boolean
   @Input() readonly playerCurrentTime: number
   @Input() readonly annotationStartTime: number
@@ -130,6 +137,9 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
       })
     }
 
+    if(this.annotation) {
+      console.log(this.annotation.get('id', null))
+    }
   }
 
   subscribeSubs() {
