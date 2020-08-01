@@ -84,10 +84,13 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   @Output() readonly onHandlebarUpdate = new ReplaySubject<Handlebar>(1)
   @Output() readonly onDblClick = new EventEmitter()
 
+  private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
   private readonly _subs: Subscription[] = []
   private _isDragging = false
 
-  viewmode_active: boolean = false
+  public viewmode_active: boolean = false
+  public annotation_id: number
+
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
@@ -115,10 +118,12 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
         .subscribe(this.onHandlebarUpdate))
 
     this._isPlayerCurrentTime = this.isPlayerCurrentTime()
+    if(this.annotation) {
+      this.annotation_id = this.annotation.get('id', null) as number
+    }
   }
 
   isPlayerCurrentTime() {
-    // console.log(this.playerCurrentTime, this.annotationStartTime, this.annotationEndTime)
     return ((this.playerCurrentTime >= this.annotationStartTime) && (this.playerCurrentTime <= this.annotationEndTime) ? true : false)
   }
 
@@ -138,7 +143,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
     }
 
     if(this.annotation) {
-      console.log(this.annotation.get('id', null))
+      // console.log(this.annotation.get('id', null))
     }
   }
 
@@ -265,6 +270,10 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
     }
 
     this._isPlayerCurrentTime = this.isPlayerCurrentTime()
+
+    if(this.annotation) {
+      this._resetPointerTraits()
+    }
   }
 
   dblClick(ev: MouseEvent) {
@@ -275,5 +284,13 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
 
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
+  }
+
+  private _resetPointerTraits() {
+    let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + this.annotation_id + '"]')
+    if (pointer_elem !== null) {
+      pointer_elem.remove()
+    }
+    // this._setPointers()
   }
 }

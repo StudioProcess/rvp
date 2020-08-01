@@ -71,8 +71,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   form: FormGroup | null = null
   mouse_overed: boolean = false
   annotation_pointer_color: string = '#bbb'
-  public annotation_id: number
   viewmode_active: boolean = false
+  public annotation_id: number
   private readonly _subs: Subscription[] = []
   private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
 
