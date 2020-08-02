@@ -3,6 +3,7 @@
   position: absolute;
 }
 .tagging-list-container {
+  position: relative;
   margin-top: -24px;
   margin-left: -10px;
   min-width: 100px;
@@ -12,6 +13,7 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   color: #000;
   overflow-y: scroll;
+  z-index: 1001;
 
   #tag-editable {
   }
