@@ -4,7 +4,7 @@ import {
   ChangeDetectionStrategy, OnInit,
   OnDestroy, Input, HostBinding,
   Output, ChangeDetectorRef, OnChanges,
-  SimpleChanges, EventEmitter
+  SimpleChanges, EventEmitter, HostListener
 } from '@angular/core'
 
 import { DOCUMENT } from '@angular/common'
@@ -23,11 +23,12 @@ import {
 import { Record } from 'immutable'
 
 import {
-  Annotation // AnnotationColorMap //, PointerElement
+  Annotation, PointerElement
 } from '../../../../persistence/model'
 
 import { _HANDLEBAR_MIN_WIDTH_ } from '../../../../config/timeline/handlebar'
-
+import { DomService } from '../../../actions/dom.service'
+import { PointerElementComponent } from '../../pointer-element/pointer-element.component'
 import { Globals } from '../../../../common/globals'
 
 type MoveTypes = 'noopMove'|'leftMove'|'middleMove'|'rightMove'
@@ -91,11 +92,18 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   public viewmode_active: boolean = false
   public annotation_id: number
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    this._resetPointerTraits()
+  }
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
     private global: Globals,
-    @Inject(DOCUMENT) private readonly _document: any) {}
+    private readonly _domService: DomService,
+    @Inject(DOCUMENT) private readonly _document: any) {
+      // super(_domService)
+    }
 
   ngOnInit() {
     const _initRect: Handlebar = {
@@ -278,7 +286,6 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
 
   dblClick(ev: MouseEvent) {
     ev.stopPropagation()
-
     this.onDblClick.emit()
   }
 
@@ -291,6 +298,79 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
     if (pointer_elem !== null) {
       pointer_elem.remove()
     }
-    // this._setPointers()
+    this._setPointers()
+  }
+
+  private _setPointers() {
+    const entries_pointer_element = this.annotation.get('pointerElement', null)
+
+    this._isPlayerCurrentTime = this.isPlayerCurrentTime()
+    if (this._isPlayerCurrentTime) {
+      // console.log(this.annotation)
+      if (entries_pointer_element !== null && this.display === 'block') {
+        if (!this._isPointerDisplayed(this.annotation_id)) {
+          this._instantiatePointer(entries_pointer_element)
+        }
+      }
+    } else {
+      if (entries_pointer_element !== null && !this.isSelected) {
+        if (this.annotation_id !== undefined && this._isPointerDisplayed(this.annotation_id)) {
+          let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + this.annotation_id + '"]')
+          if (pointer_elem !== null) {
+            pointer_elem.remove()
+          }
+        }
+      } else if (this.isSelected) {
+        // if (entries_pointer_element !== null) {
+        //   if (!this._isPointerDisplayed(this.annotation_id)) {
+        //     this._instantiatePointer(entries_pointer_element)
+        //   }
+        // }
+      }
+    }
+    if (this.isSelected) {
+      this._addSelectedAnnotationPointerClass(this.annotation_id)
+    } else {
+      this._removeSelectedAnnotationPointerClass(this.annotation_id)
+    }
+  }
+
+  private _isPointerDisplayed(annotation_id: number) {
+    const pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + annotation_id + '"]')
+    return ((pointer_elem !== null) ? true : false)
+  }
+
+  private _instantiatePointer(options: any) {
+    const componentRef = this._domService.instantiateComponent(PointerElementComponent)
+    const componentRefInstance = this._domService.getInstance(componentRef)
+    this._domService.attachComponent(componentRef, this._video_elem_container)
+
+    if ((this._video_elem_container.offsetWidth !== options.video_width) || (this._video_elem_container.offsetHeight !== options.video_height)) {
+      // reset widht/height ratio
+      const ratio_width: number = (this._video_elem_container.offsetWidth / options.video_width).toFixed(2) as unknown as number
+      const ratio_height: number = (this._video_elem_container.offsetHeight / options.video_height).toFixed(2) as unknown as number
+      options.left = (options.left * ratio_width)
+      options.top = (options.top * ratio_height)
+      options.video_height = this._video_elem_container.offsetHeight
+      options.video_width = this._video_elem_container.offsetWidth
+    }
+
+    componentRefInstance.setPointerTraits(<PointerElement>options)
+  }
+
+  private _removeSelectedAnnotationPointerClass(annotation_id: number) {
+    if (this._isPointerDisplayed(this.annotation_id)) {
+      const pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + annotation_id + '"] .annotation-pointer-element')
+      pointer_elem!.classList!.remove('annotation-selected')
+    }
+  }
+
+  private _addSelectedAnnotationPointerClass(annotation_id: number) {
+    setTimeout(() => {
+      if (this._isPointerDisplayed(this.annotation_id)) {
+        const pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + annotation_id + '"] .annotation-pointer-element')
+        pointer_elem!.classList!.add('annotation-selected')
+      }
+    }, 0)
   }
 }
