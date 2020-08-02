@@ -103,7 +103,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     readonly elem: ElementRef,
     private readonly _fb: FormBuilder,
     readonly _domService: DomService,
-    private global: Globals,
+    private _global: Globals,
     private readonly _cdr: ChangeDetectorRef,
   ) {
     super(_domService)
@@ -141,7 +141,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
   ngAfterViewInit() {
 
-    this.global.getValue().subscribe((value) => {
+    this._global.getValue().subscribe((value) => {
       this.viewmode_active = value
       this._cdr.detectChanges()
     })
@@ -297,8 +297,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
 
   isPlayerCurrentTime() {
-    const annotationStartTime = parseFloat( this.annotationStartTime.toFixed(2))
-    const annotationEndTime = parseFloat( this.annotationEndTime.toFixed(2))
+    const annotationStartTime = parseFloat(this.annotationStartTime.toFixed(2))
+    const annotationEndTime = parseFloat(this.annotationEndTime.toFixed(2))
     const playerCurrentTime = parseFloat(this.playerCurrentTime.toFixed(2))
 
     return ((playerCurrentTime >= annotationStartTime) && (playerCurrentTime <= annotationEndTime) ? true : false)

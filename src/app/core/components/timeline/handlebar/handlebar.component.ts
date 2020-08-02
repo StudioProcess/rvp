@@ -99,7 +99,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
 
   constructor(
     private readonly _cdr: ChangeDetectorRef,
-    private global: Globals,
+    private _global: Globals,
     private readonly _domService: DomService,
     @Inject(DOCUMENT) private readonly _document: any) {
       // super(_domService)
@@ -125,21 +125,25 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
       this._handlebarSubj.pipe(filter(hb => hb.source !== 'extern'))
         .subscribe(this.onHandlebarUpdate))
 
-    this._isPlayerCurrentTime = this.isPlayerCurrentTime()
     if(this.annotation) {
+      this._isPlayerCurrentTime = this.isPlayerCurrentTime()
       this.annotation_id = this.annotation.get('id', null) as number
     }
   }
 
   isPlayerCurrentTime() {
-    return ((this.playerCurrentTime >= this.annotationStartTime) && (this.playerCurrentTime <= this.annotationEndTime) ? true : false)
+    const annotationStartTime = parseFloat(this.annotationStartTime.toFixed(2))
+    const annotationEndTime = parseFloat(this.annotationEndTime.toFixed(2))
+    const playerCurrentTime = parseFloat(this.playerCurrentTime.toFixed(2))
+
+    return ((playerCurrentTime >= annotationStartTime) && (playerCurrentTime <= annotationEndTime) ? true : false)
   }
 
   ngAfterViewInit() {
     if (this.ommit_viewmode) {
       this.subscribeSubs()
     } else {
-      this.global.getValue().subscribe((value) => {
+      this._global.getValue().subscribe((value) => {
         this.viewmode_active = value
 
         if (!this.viewmode_active) {
@@ -148,10 +152,6 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
           this._subs.forEach(sub => sub.unsubscribe())
         }
       })
-    }
-
-    if(this.annotation) {
-      // console.log(this.annotation.get('id', null))
     }
   }
 
@@ -277,9 +277,8 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
       }
     }
 
-    this._isPlayerCurrentTime = this.isPlayerCurrentTime()
-
     if(this.annotation) {
+      this._isPlayerCurrentTime = this.isPlayerCurrentTime()
       this._resetPointerTraits()
     }
   }
@@ -303,7 +302,6 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
 
   private _setPointers() {
     const entries_pointer_element = this.annotation.get('pointerElement', null)
-
     this._isPlayerCurrentTime = this.isPlayerCurrentTime()
     if (this._isPlayerCurrentTime) {
       // console.log(this.annotation)
