@@ -94,7 +94,9 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
 
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
-    this._resetPointerTraits()
+    if(this.annotation) {
+      this._resetPointerTraits()
+    }
   }
 
   constructor(
