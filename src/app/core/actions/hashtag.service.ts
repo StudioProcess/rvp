@@ -404,26 +404,18 @@ export abstract class HashtagService {
   encloseHrefs () {
     const elem = this.getCurrentFocusNativeElement()
     if (elem) {
-      // console.log(elem.textContent)
-      console.log(this.urlify(elem.textContent))
-      elem!.innerHTML = this.urlify(elem.textContent)
-
-      /*
-      const elemArr = Array.from(elem.childNodes)
-      elemArr.forEach((node: HTMLElement) => {
-        if (node.nodeType === Node.TEXT_NODE) {
-          // console.log(this.urlify(node.textContent))
-          // node!.innerHTML = this.urlify(node.textContent)
-        }
-      })
-      */
+      const urlified = this.urlify(elem.textContent) as string|undefined
+      if (urlified) {
+        // console.log(urlified)
+        elem!.innerHTML = urlified
+      }
     }
   }
 
-  urlify (text) {
+  urlify (text: string|null) {
     var urlRegex = /(https?:\/\/[^\s]+)/g
-    return text.replace(urlRegex, function(url) {
-      return '<span contenteditable="false" class="annotation-link-wrapper"><a href="' + url + '" target="_blank" class="annotation-link">' + url + '</a></span>'
+    return text?.replace(urlRegex, function(url: string) {
+      return '<a href="' + url + '" target="_blank" contenteditable="false" class="annotation-link">' + url + '</a>'
     })
   }
 }

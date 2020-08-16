@@ -193,6 +193,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
           })
         })
         this.encloseHashtags({ 'replace': true })
+        // this.encloseHrefs()
       }))
 
     // Focus annotation
@@ -279,6 +280,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
           setTimeout(() => {
             this.encloseHashtags()
+            this.encloseHrefs()
           }, 50)
         }))
   }
