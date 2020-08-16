@@ -4,7 +4,7 @@ import {id} from '../lib/fp'
 export const _PROJECT_AUTOSAVE_DEBOUNCE_ = 1000
 
 export const _PROJECT_DEFAULT_TITLE_ = 'Untitled document'
-export const _PROJECT_TITLE_MAX_LENGTH_ = 50
+export const _PROJECT_TITLE_MAX_LENGTH_ = 350
 export const _PROJECT_DEFAULT_PATH_ = 'assets/projects/default.rv'
 
 export const _PROJECT_METADATA_PATH_ = 'project.json'

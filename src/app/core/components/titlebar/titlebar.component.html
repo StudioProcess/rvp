@@ -6,9 +6,11 @@
       type="text"
       title="Project Title"
       formControlName="project_title"
-      maxlength="50"
+      maxlength="350"
       AutoSizeInput
+      [maxWidth]="getMaxWidth()"
       [readonly]="viewmode_active"
+      [setParentWidth]="true"
       [includeBorders]="true"
       [extraWidth]="2"
       [class.my-class]=""

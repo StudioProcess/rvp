@@ -135,4 +135,9 @@ export class TitlebarComponent implements OnInit {
           ev!.stopPropagation()
         }))
   }
+
+
+  getMaxWidth () {
+    return (window.innerWidth - 32)
+  }
 }
