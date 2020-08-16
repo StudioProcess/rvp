@@ -149,6 +149,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     // add span nodes around hashtags inside textnodes
     this.encloseHashtags()
 
+    this.encloseHrefs()
+
     // make sure all hashtags are filtered/saved
     this.saveHashtags(this.entry.getIn(['annotation', 'fields', 'description']))
 

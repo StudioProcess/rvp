@@ -400,4 +400,30 @@ export abstract class HashtagService {
     const pat2 = new RegExp('</div>', 'g')
     return description.replace(pat1, '\n').replace(pat2, '')
   }
+
+  encloseHrefs () {
+    const elem = this.getCurrentFocusNativeElement()
+    if (elem) {
+      // console.log(elem.textContent)
+      console.log(this.urlify(elem.textContent))
+      elem!.innerHTML = this.urlify(elem.textContent)
+
+      /*
+      const elemArr = Array.from(elem.childNodes)
+      elemArr.forEach((node: HTMLElement) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          // console.log(this.urlify(node.textContent))
+          // node!.innerHTML = this.urlify(node.textContent)
+        }
+      })
+      */
+    }
+  }
+
+  urlify (text) {
+    var urlRegex = /(https?:\/\/[^\s]+)/g
+    return text.replace(urlRegex, function(url) {
+      return '<span contenteditable="false" class="annotation-link-wrapper"><a href="' + url + '" target="_blank" class="annotation-link">' + url + '</a></span>'
+    })
+  }
 }

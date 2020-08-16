@@ -140,6 +140,10 @@
           .hashtag {
             color: #000000;
           }
+
+          a {
+            color: #FFF;
+          }
         }
         // &[placeholder]:empty:not(:focus):before {
         &[placeholder]:empty::before {
