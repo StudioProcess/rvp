@@ -138,6 +138,6 @@ export class TitlebarComponent implements OnInit {
 
 
   getMaxWidth () {
-    return (window.innerWidth - 32)
+    return (window.innerWidth - 70)
   }
 }
