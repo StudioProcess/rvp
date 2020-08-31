@@ -357,7 +357,7 @@ export abstract class HashtagService {
                *  (all remaining text elements + hashtags spans)
                */
               const replacementNode = document.createElement('div')
-              replacementNode.innerHTML = nodeTextUp + ' '
+              replacementNode.innerHTML = nodeTextUp // + ' '
               const replacementNodeArr = Array.from(replacementNode.childNodes)
               // console.log('replacementNodeArr', replacementNodeArr)
               replacementNodeArr.forEach((replace: HTMLElement) => {
@@ -378,7 +378,6 @@ export abstract class HashtagService {
   }
 
   removeHashTag(target: HTMLElement): void {
-
     if (target.classList.contains(this.tagContainerCloseClass)) {
       const p = target.parentNode as HTMLElement
       const container = target.parentNode!.parentNode! as HTMLElement
@@ -401,10 +400,10 @@ export abstract class HashtagService {
     return description.replace(pat1, '\n').replace(pat2, '')
   }
 
-  encloseHrefs () {
+  encloseHrefs() {
     const elem = this.getCurrentFocusNativeElement()
     if (elem) {
-      const urlified = this.urlify(elem.textContent) as string|undefined
+      const urlified = this.urlify(elem.textContent) as string | undefined
       if (urlified) {
         // console.log(urlified)
         elem!.innerHTML = urlified
@@ -412,10 +411,23 @@ export abstract class HashtagService {
     }
   }
 
-  urlify (text: string|null) {
-    var urlRegex = /(https?:\/\/[^\s]+)/g
-    return text?.replace(urlRegex, function(url: string) {
-      return '<a href="' + url + '" target="_blank" contenteditable="false" class="annotation-link">' + url + '</a>'
+  deductHrefs() {
+    const elem = this.getCurrentFocusNativeElement()
+    if (elem) {
+      let elemArr = Array.from(elem.childNodes)
+      elemArr.forEach((node: HTMLElement, i) => {
+        if (node instanceof HTMLElement && node.tagName === 'A') {
+          // console.log(node.attributes, elemArr[i], node.textContent)
+          elem.replaceChild(document.createTextNode(node.textContent as string), node)
+        }
+      })
+    }
+  }
+
+  urlify(text: string | null) {
+    const urlRegex = /(https?:\/\/[^\s]+)/g
+    return text?.replace(urlRegex, function (url: string) {
+      return '<a href="' + url + '" target="_blank" contenteditable="false" title="link to '+ url +'" class="annotation-link">' + url + '</a>'
     })
   }
 }
