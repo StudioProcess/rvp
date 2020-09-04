@@ -71,3 +71,14 @@
     font-weight: bold;
   }
 }
+
+:host {
+  .default-annotation-length-input {
+    display: inline-block;
+    margin-right: 8px;
+    max-width: 75px;
+    background-color: $process-light-gray;
+    border: none;
+    box-shadow: none;
+  }
+}
