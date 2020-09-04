@@ -496,7 +496,6 @@ export function reducer(state: State = initialState, action: project.Actions): S
       return state.setIn(['meta', 'general', 'viewmode'], action.payload)
     }
     case project.PROJECT_UPDATE_DEFALUT_ANNOTATION_DURATION: {
-      console.log('PROJECT_UPDATE_DEFALUT_ANNOTATION_DURATION', action.payload)
       return state.setIn(['meta', 'general', 'defaultAnnotationDuration'], action.payload)
     }
     case project.PROJECT_PASTE_CLIPBOARD: {

@@ -17,6 +17,8 @@ import {
   animationFrameScheduler as animationScheduler
 } from 'rxjs'
 
+import { Store } from '@ngrx/store'
+
 import {
   withLatestFrom, debounceTime,
   map, filter, distinctUntilChanged, startWith
@@ -32,6 +34,7 @@ import { _HANDLEBAR_MIN_WIDTH_ } from '../../../../config/timeline/handlebar'
 import { coordTransform } from '../../../../lib/coords'
 import { Handlebar } from '../handlebar/handlebar.component'
 import * as project from '../../../../persistence/actions/project'
+import * as fromProject from '../../../../persistence/reducers'
 import { ScrollSettings } from '../timeline'
 import { Globals } from '../../../../common/globals'
 
@@ -76,6 +79,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   private readonly _addAnnotationClick = new Subject<{ ev: MouseEvent, annotationStackIndex: number }>()
   private readonly _updateAnnotationSubj = new Subject<{ hb: Handlebar, annotationIndex: number, annotationStackIndex: number }>()
   private readonly _annotationMdSubj = new Subject<{ ev: MouseEvent, annotation: Record<Annotation>, annotationStackIndex: number }>()
+  private defaultAnnotationDuration: number = 0
 
   @ViewChild('title', { static: true }) private readonly _titleInputRef: ElementRef
   @ViewChild('trackOverflow', { static: true }) private readonly _overflowContainerRef: ElementRef
@@ -83,9 +87,10 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   @ViewChild('trackBtn', { static: true }) private readonly _trackBtnRef: ElementRef
 
   constructor(
+    private readonly _store: Store<fromProject.State>,
     private readonly _elem: ElementRef,
     private readonly _fb: FormBuilder,
-    private global: Globals,
+    private _global: Globals,
     private readonly _cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
@@ -165,7 +170,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
               annotationStackIndex,
               annotation: new AnnotationRecordFactory({
                 utc_timestamp: perc * tPerc,
-                duration: 2
+                duration: this.defaultAnnotationDuration
               })
             } as project.AddAnnotationPayload
           }))
@@ -233,10 +238,17 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
 
   ngAfterViewInit() {
 
-    this.global.getValue().subscribe((value) => {
+    this._global.getValue().subscribe((value) => {
       this.viewmode_active = value
       this._cdr.detectChanges()
     })
+
+    this._store.select(fromProject.getProjectMeta).subscribe(meta => {
+      if (meta !== null) {
+        this.defaultAnnotationDuration = meta!.getIn(['general', 'defaultAnnotationDuration'])!
+      }
+    })
+
 
     const getZoomContainerRect = () => {
       return this._zoomContainerRef.nativeElement.getBoundingClientRect()

@@ -160,21 +160,23 @@ export class ProjectModalComponent implements OnDestroy {
   }
 
   updateDefaultAnnotationDuration() {
-    this.defaultAnnotationDuration = parseFloat(this.defaultAnnotationDuration).toFixed(2)
-    if ((this.defaultAnnotationDuration === null) || (this.defaultAnnotationDuration > this.defaultAnnotationDurationMax)) {
-      setTimeout(() => {
-        this.defaultAnnotationDuration = this.defaultAnnotationDurationMax
-        this._cdr.markForCheck()
+    if (typeof this.defaultAnnotationDuration === 'number') {
+      this.defaultAnnotationDuration = parseFloat(this.defaultAnnotationDuration.toFixed(2))
+      if ((this.defaultAnnotationDuration === null) || (this.defaultAnnotationDuration > this.defaultAnnotationDurationMax)) {
+        setTimeout(() => {
+          this.defaultAnnotationDuration = this.defaultAnnotationDurationMax
+          this._cdr.markForCheck()
+          this.saveDefaultAnnotationDuration()
+        })
+      } else if (this.defaultAnnotationDuration < this.defaultAnnotationDurationMin) {
+        setTimeout(() => {
+          this.defaultAnnotationDuration = this.defaultAnnotationDurationMin
+          this._cdr.markForCheck()
+          this.saveDefaultAnnotationDuration()
+        })
+      } else {
         this.saveDefaultAnnotationDuration()
-      })
-    } else if (this.defaultAnnotationDuration < this.defaultAnnotationDurationMin) {
-      setTimeout(() => {
-        this.defaultAnnotationDuration = this.defaultAnnotationDurationMin
-        this._cdr.markForCheck()
-        this.saveDefaultAnnotationDuration()
-      })
-    } else {
-      this.saveDefaultAnnotationDuration()
+      }
     }
   }
 

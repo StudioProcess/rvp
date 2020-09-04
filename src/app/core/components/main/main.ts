@@ -47,24 +47,12 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
     private readonly _rootStore: Store<fromRoot.State>,
     private titleService: Title,
     // private activatedRoute: ActivatedRoute,
-    private global: Globals
-  ) {
-    // Globals.viewmode_active = true
-  }
+    private _global: Globals
+  ) { }
 
   ngOnInit() {
 
     $(document).foundation()
-
-    /*
-    this.activatedRoute.queryParams.subscribe(params => {
-      if (params.hasOwnProperty('video') && params.hasOwnProperty('annotations')) {
-        // const mediArchiveModal = $('#medi-archive-modal') as any
-        // mediArchiveModal.foundation('open')
-        // this.global.setValue(true)
-      }
-    })
-    */
 
     this._rootStore.dispatch(new project.ProjectLoad())
 
@@ -76,7 +64,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
 
         // set viewmode globally
         const viewmode = meta.getIn(['general', 'viewmode'])! as boolean
-        this.global.setValue(viewmode)
+        this._global.setValue(viewmode)
         this.viewmode_active = viewmode
       }
     })
@@ -93,7 +81,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
       this._rootStore.dispatch(new project.PlayerTogglePlaying())
     })//)
 
-    this.global.getValue().subscribe((value) => {
+    this._global.getValue().subscribe((value) => {
       this.viewmode_active = value
       if (!this.viewmode_active) {
         if (!this.subs_active) {
