@@ -116,6 +116,7 @@ export interface ProjectHashtags {
 export interface ProjectGeneralData {
   readonly title: string|null
   readonly viewmode: boolean
+  readonly defaultAnnotationDuration: number
 }
 
 export interface Track {
@@ -244,7 +245,8 @@ export const AnnotationFieldsRecordFactory = Record<AnnotationFields>({
 
 export const ProjectGeneralDataRecordFactory = Record<ProjectGeneralData>({
   title: '',
-  viewmode: false
+  viewmode: false,
+  defaultAnnotationDuration: 0
 })
 
 export const AnnotationRecordFactory = Record<Annotation>({

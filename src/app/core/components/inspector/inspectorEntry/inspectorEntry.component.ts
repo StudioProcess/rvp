@@ -26,7 +26,7 @@ import {
   withLatestFrom, map, filter,
   distinctUntilChanged, buffer,
   debounceTime,
-  // tap, delay
+  tap//, delay
 } from 'rxjs/operators'
 
 import { formatDuration } from '../../../../lib/time'
@@ -149,6 +149,9 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
     // add span nodes around hashtags inside textnodes
     this.encloseHashtags()
 
+    // find links and change them to hrefs/HTMLAnchorElement
+    this.encloseHrefs()
+
     // make sure all hashtags are filtered/saved
     this.saveHashtags(this.entry.getIn(['annotation', 'fields', 'description']))
 
@@ -191,6 +194,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
           })
         })
         this.encloseHashtags({ 'replace': true })
+        this.deductHrefs()
       }))
 
     // Focus annotation
@@ -244,7 +248,9 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       formBlur
         .pipe(
           // delay(100),
-          // tap((ev) => {}),
+          tap((ev) => {
+            this.encloseHrefs()
+          }),
           withLatestFrom(combineLatest(this.form!.valueChanges, this.form!.statusChanges), (_, [form, status]) => {
             return [form, status]
           }),
@@ -255,7 +261,6 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
               prev.utc_timestamp === cur.utc_timestamp && prev.duration === cur.duration
           }))
         .subscribe(({ description, utc_timestamp, duration }) => {
-
           description = this.htmlBr(description)
           description = this.removeNodesFromText(description)
           this.saveHashtags(description)
@@ -276,7 +281,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
           })
 
           setTimeout(() => {
-            this.encloseHashtags()
+            // this.encloseHashtags()
+            this.encloseHrefs()
           }, 50)
         }))
   }

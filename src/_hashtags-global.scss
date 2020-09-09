@@ -36,6 +36,11 @@ $hashtag-body-color-hover: #ffca82;
   }
 }
 
+.annotation-link {
+  text-decoration: underline;
+  color: #000;
+}
+
 .searchBox {
   &.contenteditable {
     .hashtag {

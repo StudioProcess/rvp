@@ -28,6 +28,13 @@
     <div>{{videoDuration | date:'HH:mm:ss'}} (HH:MM:SS)</div>
     <h3 class="title-settings">Annotations</h3>
     <div>{{annotationsCount}} (on {{tracksCount}} Tracks)</div>
+    <h3 class="title-settings">Default annotation duration</h3>
+    <div class="row">
+      <div class="column">
+        <input type="number" [(ngModel)]="defaultAnnotationDuration" [min]="defaultAnnotationDurationMin" [max]="defaultAnnotationDurationMax" (ngModelChange)="updateDefaultAnnotationDuration()" class="default-annotation-duration-input" />
+        <span class="default-annotation-duration-label">seconds</span>
+      </div>
+    </div>
   </div>
 </div>
 <div class="row">

@@ -4,8 +4,9 @@ import {id} from '../lib/fp'
 export const _PROJECT_AUTOSAVE_DEBOUNCE_ = 1000
 
 export const _PROJECT_DEFAULT_TITLE_ = 'Untitled document'
-export const _PROJECT_TITLE_MAX_LENGTH_ = 50
+export const _PROJECT_TITLE_MAX_LENGTH_ = 350
 export const _PROJECT_DEFAULT_PATH_ = 'assets/projects/default.rv'
+export const _PROJECT_DEFAULT_ANNOTATION_DURATION_ = 2.00
 
 export const _PROJECT_METADATA_PATH_ = 'project.json'
 export const _PROJECT_VIDEODATA_PATH_ = 'video.m4v'
@@ -47,7 +48,8 @@ export const _EMPTY_PROJECT_ = {
     "timeline": {
       "id": 0,
       "general": {
-        "title" : _PROJECT_DEFAULT_TITLE_
+        "title" : _PROJECT_DEFAULT_TITLE_,
+        "defaultAnnotationDuration": _PROJECT_DEFAULT_ANNOTATION_DURATION_
       },
       "duration": 60,
       "hashtags": {

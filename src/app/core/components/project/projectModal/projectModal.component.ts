@@ -7,9 +7,10 @@ import {
   VIDEO_TYPE_BLOB, VIDEO_TYPE_URL, VIDEO_URL_SOURCE_YT,
   VIDEO_URL_SOURCE_VIMEO, VIDEO_URL_SOURCE_CUSTOM
 } from '../../../../persistence/model'
-import { ImportVideoPayload } from '../../../../persistence/actions/project'
+// import { ImportVideoPayload } from '../../../../persistence/actions/project'
 import { Store } from '@ngrx/store'
 import * as fromProject from '../../../../persistence/reducers'
+import * as project from '../../../../persistence/actions/project'
 
 function extractFile(e: any): File | null {
   if (e && e.target && e.target.files && e.target.files.length) {
@@ -27,7 +28,7 @@ function extractFile(e: any): File | null {
 })
 export class ProjectModalComponent implements OnDestroy {
   @Output() readonly onImportProject = new EventEmitter()
-  @Output() readonly onImportVideo = new EventEmitter<ImportVideoPayload>()
+  @Output() readonly onImportVideo = new EventEmitter<project.ImportVideoPayload>()
   @Output() readonly onExportProject = new EventEmitter()
   @Output() readonly onExportProjectAsText = new EventEmitter()
   @Output() readonly onResetProject = new EventEmitter()
@@ -43,6 +44,11 @@ export class ProjectModalComponent implements OnDestroy {
   tracksCount = 0
   annotationsCount = 0
 
+  public defaultAnnotationDuration: number = 0
+  public defaultAnnotationDurationMin: number = 0
+  public defaultAnnotationDurationMax: number = 60
+
+
   constructor(
     private readonly _store: Store<fromProject.State>,
     private readonly _cdr: ChangeDetectorRef,
@@ -51,6 +57,8 @@ export class ProjectModalComponent implements OnDestroy {
   ngAfterViewInit() {
     this._store.select(fromProject.getProjectMeta).subscribe(meta => {
       if (meta !== null) {
+
+        this.defaultAnnotationDuration = meta!.getIn(['general', 'defaultAnnotationDuration'])!
 
         let counter = new Date(0, 0, 0, 0, 0, 0)
         this.videoDuration = meta!.getIn(['timeline', 'duration'])!
@@ -74,7 +82,7 @@ export class ProjectModalComponent implements OnDestroy {
     this._store.select(fromProject.getProjectVideoBlob).subscribe((videoBlob: any) => {
       if (videoBlob !== null) {
         this.videoName = videoBlob!.name!
-        this.videoSize = parseFloat((videoBlob.size / (1024*1024)).toFixed(1))
+        this.videoSize = parseFloat((videoBlob.size / (1024 * 1024)).toFixed(1))
         // console.log(videoBlob, this.videoName, this.videoSize)
         this._cdr.markForCheck()
       }
@@ -149,5 +157,30 @@ export class ProjectModalComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.onExportProject.complete()
+  }
+
+  updateDefaultAnnotationDuration() {
+    if (typeof this.defaultAnnotationDuration === 'number') {
+      this.defaultAnnotationDuration = parseFloat(this.defaultAnnotationDuration.toFixed(2))
+      if ((this.defaultAnnotationDuration === null) || (this.defaultAnnotationDuration > this.defaultAnnotationDurationMax)) {
+        setTimeout(() => {
+          this.defaultAnnotationDuration = this.defaultAnnotationDurationMax
+          this._cdr.markForCheck()
+          this.saveDefaultAnnotationDuration()
+        })
+      } else if (this.defaultAnnotationDuration < this.defaultAnnotationDurationMin) {
+        setTimeout(() => {
+          this.defaultAnnotationDuration = this.defaultAnnotationDurationMin
+          this._cdr.markForCheck()
+          this.saveDefaultAnnotationDuration()
+        })
+      } else {
+        this.saveDefaultAnnotationDuration()
+      }
+    }
+  }
+
+  saveDefaultAnnotationDuration() {
+    this._store.dispatch(new project.ProjectUpdateDefaultAnnotationDuration(this.defaultAnnotationDuration))
   }
 }
