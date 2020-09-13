@@ -74,6 +74,7 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   @Output() readonly onInsertAtTrack = new EventEmitter<project.TrackInsertAtPayload>()
   @Output() readonly onSetActiveTrack = new EventEmitter<project.ProjectSetActiveTrackPayload>()
   @Output() readonly onDblClickAnnotation = new EventEmitter<project.PlayerRequestCurrentTimePayload>()
+  // @Output() readonly onToggleTrackVisibility = new EventEmitter<project.TrackVisibilityPayload>()
 
   private readonly _subs: Subscription[] = []
   private readonly _addAnnotationClick = new Subject<{ ev: MouseEvent, annotationStackIndex: number }>()
@@ -151,7 +152,8 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
             id: this.data.get('id', null),
             color: this.data.get('color', null),
             fields: new TrackFieldsRecordFactory({ title }),
-            annotationStacks: this.data.get('annotationStacks', null)
+            annotationStacks: this.data.get('annotationStacks', null),
+            isVisible: this.data.get('isVisible', null)
           })
         }
         this.onUpdateTrack.emit(updateTrackPayload)
@@ -390,6 +392,23 @@ export class TrackComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     $event.stopPropagation()
     if ($event.button !== 0) { return }
     this.onDuplicateTrack.emit({ trackIndex })
+  }
+
+  toggleTrackVisibility($event: MouseEvent, trackIndex: number, toggleState: boolean) {
+    $event.stopPropagation()
+    // this.onToggleTrackVisibility.emit({ trackIndex: trackIndex, isVisible: !toggleState })
+    const isVisible = !toggleState
+    const updateTrackPayload = {
+      trackIndex: this.trackIndex,
+      track: new TrackRecordFactory({
+        id: this.data.get('id', null),
+        color: this.data.get('color', null),
+        fields: new TrackFieldsRecordFactory(this.data.get('fields', null)),
+        annotationStacks: this.data.get('annotationStacks', null),
+        isVisible: isVisible
+      })
+    }
+    this.onUpdateTrack.emit(updateTrackPayload)
   }
 
   dblClick(annotation: Record<Annotation>) {

@@ -59,6 +59,7 @@ export const PROJECT_SETTINGS_SET_SEARCH = '[PROJECT] Set Search Setting'
 export const PROJECT_SETTINGS_SET_APPLY_TO_TIMELINE = '[PROJECT] Apply To Timeline Setting'
 
 export const PROJECT_SET_ACTIVE_TRACK = '[PROJECT] Set Active Track'
+// export const PROJECT_SET_TRACK_VISIBILITY = '[PROJECT] Set Track Visibilty'
 
 export const PROJECT_FOCUS_ANNOTATION = '[PROJECT] Focus Annotation'
 
@@ -283,6 +284,11 @@ export interface TrackInsertAtPayload {
   readonly insertAtIndex: number
 }
 
+/*export interface TrackVisibilityPayload {
+  readonly trackIndex: number
+  readonly isVisible: boolean
+}*/
+
 export class ProjectInsertAtTrack implements Action {
   readonly type = PROJECT_INSERTAT_TRACK
   constructor(readonly payload: TrackInsertAtPayload) {}
@@ -329,6 +335,12 @@ export class ProjectSetActiveTrack implements Action {
   readonly type = PROJECT_SET_ACTIVE_TRACK
   constructor(readonly payload: ProjectSetActiveTrackPayload) {}
 }
+
+/*export class ProjectSetTrackVisibility implements Action {
+  readonly type = PROJECT_SET_TRACK_VISIBILITY
+  constructor(readonly payload: TrackVisibilityPayload) {}
+}*/
+
 
 /**
  * PLAYER
@@ -445,7 +457,7 @@ export type Actions =
   ProjectSetTimelineDuration|
   ProjectPushUndo|ProjectUndo|ProjectRedo|
   ProjectSettingsSetCurrentAnnotationsOnly|ProjectSettingsSetSearch|ProjectSettingsSetApplyToTimeline|
-  ProjectSetActiveTrack|
+  ProjectSetActiveTrack|//ProjectSetTrackVisibility|
   ProjectAnnotationAddPointer|
   // PLAYER ACTIONS
   PlayerCreate|PlayerCreateError|PlayerCreateSuccess|
