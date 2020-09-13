@@ -18,9 +18,11 @@
 <div #trackOverflow class="track-overflow">
   <div #zoomContainer class="track-zoom" [style.width.%]="zoom*100">
     <div *ngFor="let stack of data.get('annotationStacks', []); index as stackIndex; trackBy: outerTrackByFunc;">
-      <div class="annotations-wrapper" (dblclick)="addAnnotation($event, stackIndex)">
+      <div class="annotations-wrapper" (dblclick)="addAnnotation($event, stackIndex)" *ngIf="data.get('isVisible', null)">
         <rv-handlebar *ngFor="let annotation of stack; index as i; trackBy: innerTrackByFunc;"
           [annotation]="annotation"
+          [trackIndex]="data.get('id', null)"
+          [trackIsVisible]="data.get('isVisible', null)"
           [is_viewmode]="viewmode_active"
           [ommit_viewmode]="false"
           [display]="getIsDisplayed(annotation)"

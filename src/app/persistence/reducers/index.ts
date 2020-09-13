@@ -1,14 +1,14 @@
-import {List, Record, Set} from 'immutable'
+import { List, Record, Set } from 'immutable'
 
-import {ActionReducerMap, createSelector, createFeatureSelector} from '@ngrx/store'
+import { ActionReducerMap, createSelector, createFeatureSelector } from '@ngrx/store'
 
 import * as Fuse from 'fuse.js'
 
 import * as fromProject from './project'
 
-import {findVerticalCollisionsWithCursor} from '../../lib/annotationStack'
+import { findVerticalCollisionsWithCursor } from '../../lib/annotationStack'
 
-import {_FUSE_OPTIONS_, _FUSE_OPTIONS_HASHTAGS_} from '../../config/search'
+import { _FUSE_OPTIONS_, _FUSE_OPTIONS_HASHTAGS_ } from '../../config/search'
 
 import {
   AnnotationColorMapRecordFactory, AnnotationSelection,
@@ -55,23 +55,23 @@ export const getProjectSettingsApplyToTimeline = createSelector(getProjectSettin
 export const getProjectMeta = createSelector(getProjectState, fromProject.getProjectMeta)
 
 export const getProjectId = createSelector(getProjectMeta, meta => {
-  return meta ? meta.get('id', null): null
+  return meta ? meta.get('id', null) : null
 })
 
 export const getProjectGeneralData = createSelector(getProjectMeta, meta => {
-  return meta ? meta.get('general', null): null
+  return meta ? meta.get('general', null) : null
 })
 
 export const getProjectVideoMeta = createSelector(getProjectMeta, meta => {
-  return meta ? meta.get('video', null): null
+  return meta ? meta.get('video', null) : null
 })
 
 export const getProjectTimeline = createSelector(getProjectMeta, meta => {
-  return meta ? meta.get('timeline', null): null
+  return meta ? meta.get('timeline', null) : null
 })
 
 export const getProjectTimelineTracks = createSelector(getProjectTimeline, timeline => {
-  if(timeline !== null) {
+  if (timeline !== null) {
     return timeline.get('tracks', null)
   } else {
     return List([])
@@ -82,17 +82,21 @@ export const getProjectHasActiveTrack = createSelector(getProjectTimelineTracks,
   return timeline.find(track => track.get('isActive', false)) !== undefined
 })
 
-function flattenAnnotations(timeline: Record<Timeline>|null) {
-  if(timeline !== null) {
+function flattenAnnotations(timeline: Record<Timeline> | null) {
+  if (timeline !== null) {
     return timeline.get('tracks', null).flatMap((track, trackIndex) => {
-      const color = track.get('color', null)
-      return track.get('annotationStacks', null).flatMap((annotations, annotationStackIndex) => {
-        return annotations.map((annotation, annotationIndex) => {
-          return new AnnotationColorMapRecordFactory({
-            track, trackIndex, color, annotation, annotationIndex, annotationStackIndex
+      if (track.get('isVisible', null)) {
+        const color = track.get('color', null)
+        return track.get('annotationStacks', null).flatMap((annotations, annotationStackIndex) => {
+          return annotations.map((annotation, annotationIndex) => {
+            return new AnnotationColorMapRecordFactory({
+              track, trackIndex, color, annotation, annotationIndex, annotationStackIndex
+            })
           })
         })
-      })
+      } else {
+        return List([])
+      }
     })
   } else {
     return List([])
@@ -109,11 +113,11 @@ const sortAnnotations = (annotations: List<Record<AnnotationColorMap>>) => {
   return annotations.sort((a1, a2) => {
     const a1Start = a1.getIn(path)
     const a2Start = a2.getIn(path)
-    if(a1Start < a2Start) {
+    if (a1Start < a2Start) {
       return -1
-    } else if(a1Start > a2Start) {
+    } else if (a1Start > a2Start) {
       return 1
-    } else {
+    } else {
       return 0
     }
   })
@@ -124,21 +128,23 @@ export const getSortedFlattenedAnnotations = createSelector(getFlattenedAnnotati
 export const getCurrentFlattenedAnnotations = createSelector(
   getProjectSettings, getProjectTimeline, getCurrentTime,
   (settings, timeline, currentTime) => {
-    if(settings.get('currentAnnotationsOnly', false)) {
+    if (settings.get('currentAnnotationsOnly', false)) {
       const duration = timeline!.get('duration', null)
 
       const tracks = timeline!.get('tracks', null)
       const res: Record<AnnotationColorMap>[] = []
       tracks.forEach((track, trackIndex) => {
-        const color = track.get('color', null)
-        const stacks = track.get('annotationStacks', null)
-        const collisions = findVerticalCollisionsWithCursor(duration, stacks, currentTime)
-        const mapped = collisions.map(({annotation, annotationIndex, annotationStackIndex}) => {
-          return new AnnotationColorMapRecordFactory({
-            track, trackIndex, color, annotation, annotationIndex, annotationStackIndex
+        if(track.get('isVisible', null)) {
+          const color = track.get('color', null)
+          const stacks = track.get('annotationStacks', null)
+          const collisions = findVerticalCollisionsWithCursor(duration, stacks, currentTime)
+          const mapped = collisions.map(({ annotation, annotationIndex, annotationStackIndex }) => {
+            return new AnnotationColorMapRecordFactory({
+              track, trackIndex, color, annotation, annotationIndex, annotationStackIndex
+            })
           })
-        })
-        res.push(...mapped)
+          res.push(...mapped)
+        }
       })
 
       return List(res)
@@ -148,21 +154,21 @@ export const getCurrentFlattenedAnnotations = createSelector(
   })
 
 
-function searchAnnotations(search: string|null, annotations: List<Record<AnnotationColorMap>>) {
-  if(search !== null) {
+function searchAnnotations(search: string | null, annotations: List<Record<AnnotationColorMap>>) {
+  if (search !== null) {
     const jsAnnotations = annotations.toJS()
     const hashtags = search.match(/#\w+/g)
     let res: any[] = []
 
-    if(hashtags) {
-      let regexp = new RegExp('#([^\\s]*)','g')
+    if (hashtags) {
+      let regexp = new RegExp('#([^\\s]*)', 'g')
       search = search.replace(regexp, '').trim()
     }
-    if(search) {
+    if (search) {
       const fuse = new Fuse(jsAnnotations, _FUSE_OPTIONS_)
       res = fuse.search(search)
     }
-    if(hashtags) {
+    if (hashtags) {
       let res_hash: any[] = []
       let res_tmp: any[] = []
       const fuse_hashtags = new Fuse(jsAnnotations, _FUSE_OPTIONS_HASHTAGS_)
@@ -202,33 +208,33 @@ export const getCurrentQueriedSortedFlattenedAnnotations = createSelector(getCur
 export const getProjectQueriedTimeline = createSelector(
   getProjectTimeline, getProjectSettings, getQueriedFlattenedAnnotations,
   (timeline, settings, queried) => {
-  const applyToTimeline = settings.get('applyToTimeline', false)
-  if(timeline !== null && applyToTimeline) {
-    const tracks = timeline.get('tracks', null)
-    let resTracks = tracks
-    tracks.forEach((track, trackIndex) => {
-      const stacks = track.get('annotationStacks', null)
-      stacks.forEach((stack, stackIndex) => {
-        stack.forEach((annotation, annotationIndex) => {
-          const aId = annotation.get('id', null)
-          const isShown = queried.find(annotationColorMap => {
-            const id = annotationColorMap.getIn(['annotation', 'id'])
-            return parseInt(id) === aId
-          }) !== undefined
+    const applyToTimeline = settings.get('applyToTimeline', false)
+    if (timeline !== null && applyToTimeline) {
+      const tracks = timeline.get('tracks', null)
+      let resTracks = tracks
+      tracks.forEach((track, trackIndex) => {
+        const stacks = track.get('annotationStacks', null)
+        stacks.forEach((stack, stackIndex) => {
+          stack.forEach((annotation, annotationIndex) => {
+            const aId = annotation.get('id', null)
+            const isShown = queried.find(annotationColorMap => {
+              const id = annotationColorMap.getIn(['annotation', 'id'])
+              return parseInt(id) === aId
+            }) !== undefined
 
-          if(!isShown) {
-            resTracks = resTracks.updateIn([trackIndex, 'annotationStacks', stackIndex, annotationIndex], annotation => {
-              return annotation.set('isShown', false)
-            })
-          }
+            if (!isShown) {
+              resTracks = resTracks.updateIn([trackIndex, 'annotationStacks', stackIndex, annotationIndex], annotation => {
+                return annotation.set('isShown', false)
+              })
+            }
+          })
         })
       })
-    })
-    return timeline.set('tracks', resTracks)
-  } else {
-    return timeline
-  }
-})
+      return timeline.set('tracks', resTracks)
+    } else {
+      return timeline
+    }
+  })
 
 // Project video
 

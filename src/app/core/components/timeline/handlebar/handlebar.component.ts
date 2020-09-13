@@ -31,7 +31,7 @@ import { DomService } from '../../../actions/dom.service'
 import { PointerElementComponent } from '../../pointer-element/pointer-element.component'
 import { Globals } from '../../../../common/globals'
 
-type MoveTypes = 'noopMove'|'leftMove'|'middleMove'|'rightMove'
+type MoveTypes = 'noopMove' | 'leftMove' | 'middleMove' | 'rightMove'
 
 export interface Handlebar {
   readonly left: number
@@ -55,6 +55,8 @@ export interface Handlebar {
 })
 export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() readonly annotation: Record<Annotation>
+  @Input() readonly trackIndex: number
+  @Input() readonly trackIsVisible: boolean
   @Input() readonly hasPointerElement: boolean
   @Input() readonly playerCurrentTime: number
   @Input() readonly annotationStartTime: number
@@ -94,7 +96,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
 
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
-    if(this.annotation) {
+    if (this.annotation) {
       this._resetPointerTraits()
     }
   }
@@ -104,8 +106,8 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
     private _global: Globals,
     private readonly _domService: DomService,
     @Inject(DOCUMENT) private readonly _document: any) {
-      // super(_domService)
-    }
+    // super(_domService)
+  }
 
   ngOnInit() {
     const _initRect: Handlebar = {
@@ -127,7 +129,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
       this._handlebarSubj.pipe(filter(hb => hb.source !== 'extern'))
         .subscribe(this.onHandlebarUpdate))
 
-    if(this.annotation) {
+    if (this.annotation) {
       this._isPlayerCurrentTime = this.isPlayerCurrentTime()
       this.annotation_id = this.annotation.get('id', null) as number
     }
@@ -161,77 +163,77 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
 
     const isLeftBtn = (ev: MouseEvent) => ev.button === 0
 
-      const mousemove = fromEvent(this._document, 'mousemove')
-      const mouseup = fromEvent(this._document, 'mouseup')
-      const leftMouseDown = fromEvent(this._leftHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
-      const rightMouseDown = fromEvent(this._rightHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
-      const middleMouseDown = fromEvent(this._middleHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
+    const mousemove = fromEvent(this._document, 'mousemove')
+    const mouseup = fromEvent(this._document, 'mouseup')
+    const leftMouseDown = fromEvent(this._leftHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
+    const rightMouseDown = fromEvent(this._rightHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
+    const middleMouseDown = fromEvent(this._middleHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
 
-      const clientPosWhileMouseMove = (args: any) => {
-        return mousemove.pipe(
-          map((mmEvent: MouseEvent) => {
-            const {clientX, clientY} = mmEvent
-            return {clientX, clientY, payload: args}
-          }),
-          takeUntil(mouseup))
-      }
-
-      const coordTransform = (clientX: number, hRect: ClientRect) => (clientX-hRect.left)
-      const mapToPercentage = (localX: number, hRect: ClientRect) => (localX/hRect.width*100)
-      const transformedToPercentage = (clientX: number, hRect: ClientRect) => {
-        return mapToPercentage(coordTransform(clientX, hRect), hRect)
-      }
-
-      const leftClientPos = leftMouseDown.pipe(switchMap(clientPosWhileMouseMove))
-      const rightClientPos = rightMouseDown.pipe(switchMap(clientPosWhileMouseMove))
-      const middleClientPos = middleMouseDown.pipe(
-        withLatestFrom(this._handlebarSubj, this.containerRect, (mdEvent: MouseEvent, prevHb: Handlebar, hRect: ClientRect) => {
-          const m = transformedToPercentage(mdEvent.clientX, hRect)
-          const hbRight = prevHb.left+prevHb.width
-          return {
-            distLeft: m-prevHb.left,
-            distRight: hbRight-m,
-            hRect
-          }
+    const clientPosWhileMouseMove = (args: any) => {
+      return mousemove.pipe(
+        map((mmEvent: MouseEvent) => {
+          const { clientX, clientY } = mmEvent
+          return { clientX, clientY, payload: args }
         }),
-        switchMap(clientPosWhileMouseMove))
+        takeUntil(mouseup))
+    }
 
-      const minMax = (x: number) => Math.min(Math.max(0, x), 100)
+    const coordTransform = (clientX: number, hRect: ClientRect) => (clientX - hRect.left)
+    const mapToPercentage = (localX: number, hRect: ClientRect) => (localX / hRect.width * 100)
+    const transformedToPercentage = (clientX: number, hRect: ClientRect) => {
+      return mapToPercentage(coordTransform(clientX, hRect), hRect)
+    }
 
-      const leftPos = leftClientPos.pipe(
-        map(({clientX}) => clientX),
-        withLatestFrom(this.containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect))),
-        distinctUntilChanged(),
-        withLatestFrom(this._handlebarSubj, (l, prevHb) => {
-          const oldRight = prevHb.left+prevHb.width
-          // ensure handlebar min width
-          const newLeft = Math.min(l, oldRight-_HANDLEBAR_MIN_WIDTH_)
-          const deltaLeft = newLeft-prevHb.left
-          const newWidth = prevHb.width-deltaLeft
-          return {left: newLeft, width: newWidth, move: 'leftMove'}
-        }))
+    const leftClientPos = leftMouseDown.pipe(switchMap(clientPosWhileMouseMove))
+    const rightClientPos = rightMouseDown.pipe(switchMap(clientPosWhileMouseMove))
+    const middleClientPos = middleMouseDown.pipe(
+      withLatestFrom(this._handlebarSubj, this.containerRect, (mdEvent: MouseEvent, prevHb: Handlebar, hRect: ClientRect) => {
+        const m = transformedToPercentage(mdEvent.clientX, hRect)
+        const hbRight = prevHb.left + prevHb.width
+        return {
+          distLeft: m - prevHb.left,
+          distRight: hbRight - m,
+          hRect
+        }
+      }),
+      switchMap(clientPosWhileMouseMove))
 
-      const rightPos = rightClientPos.pipe(
-        map(({clientX}) => clientX),
-        withLatestFrom(this.containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect))),
-        distinctUntilChanged(),
-        withLatestFrom(this._handlebarSubj, (r, prevHb) => {
-          const newRight = Math.max(prevHb.left+_HANDLEBAR_MIN_WIDTH_, r)
-          return {left: prevHb.left, width: newRight-prevHb.left, move: 'rightMove'}
-        }))
+    const minMax = (x: number) => Math.min(Math.max(0, x), 100)
 
-      const middlePos = middleClientPos.pipe(
-        map(({clientX, payload: {distLeft, distRight, hRect}}) => {
-          return {
-            distLeft, distRight,
-            m: minMax(transformedToPercentage(clientX, hRect))
-          }
-        }),
-        distinctUntilKeyChanged('m'),
-        withLatestFrom(this._handlebarSubj, ({distLeft, m}, prevHb) => {
-          const newLeft = Math.min(Math.max(0, m-distLeft), 100-prevHb.width)
-          return {left: newLeft, width: prevHb.width, move: 'middleMove'}
-        }))
+    const leftPos = leftClientPos.pipe(
+      map(({ clientX }) => clientX),
+      withLatestFrom(this.containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect))),
+      distinctUntilChanged(),
+      withLatestFrom(this._handlebarSubj, (l, prevHb) => {
+        const oldRight = prevHb.left + prevHb.width
+        // ensure handlebar min width
+        const newLeft = Math.min(l, oldRight - _HANDLEBAR_MIN_WIDTH_)
+        const deltaLeft = newLeft - prevHb.left
+        const newWidth = prevHb.width - deltaLeft
+        return { left: newLeft, width: newWidth, move: 'leftMove' }
+      }))
+
+    const rightPos = rightClientPos.pipe(
+      map(({ clientX }) => clientX),
+      withLatestFrom(this.containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect))),
+      distinctUntilChanged(),
+      withLatestFrom(this._handlebarSubj, (r, prevHb) => {
+        const newRight = Math.max(prevHb.left + _HANDLEBAR_MIN_WIDTH_, r)
+        return { left: prevHb.left, width: newRight - prevHb.left, move: 'rightMove' }
+      }))
+
+    const middlePos = middleClientPos.pipe(
+      map(({ clientX, payload: { distLeft, distRight, hRect } }) => {
+        return {
+          distLeft, distRight,
+          m: minMax(transformedToPercentage(clientX, hRect))
+        }
+      }),
+      distinctUntilKeyChanged('m'),
+      withLatestFrom(this._handlebarSubj, ({ distLeft, m }, prevHb) => {
+        const newLeft = Math.min(Math.max(0, m - distLeft), 100 - prevHb.width)
+        return { left: newLeft, width: prevHb.width, move: 'middleMove' }
+      }))
     this._subs.push(
       merge(leftMouseDown, rightMouseDown, middleMouseDown)
         .subscribe(() => {
@@ -279,7 +281,7 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
       }
     }
 
-    if(this.annotation) {
+    if (this.annotation) {
       this._isPlayerCurrentTime = this.isPlayerCurrentTime()
       this._resetPointerTraits()
     }
@@ -292,14 +294,19 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
 
   ngOnDestroy() {
     this._subs.forEach(sub => sub.unsubscribe())
+    this._removePointer()
   }
 
   private _resetPointerTraits() {
+    this._removePointer()
+    this._setPointers()
+  }
+
+  private _removePointer() {
     let pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + this.annotation_id + '"]')
     if (pointer_elem !== null) {
       pointer_elem.remove()
     }
-    this._setPointers()
   }
 
   private _setPointers() {
@@ -366,11 +373,15 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   }
 
   private _addSelectedAnnotationPointerClass(annotation_id: number) {
-    setTimeout(() => {
+    let checkPointerInterval = setInterval(() => {
       if (this._isPointerDisplayed(this.annotation_id)) {
-        const pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + annotation_id + '"] .annotation-pointer-element')
-        pointer_elem!.classList!.add('annotation-selected')
+        const pointer_elem = this._video_elem_container.querySelector('[pointer_id="' + this.annotation_id + '"] .annotation-pointer-element')
+        if (pointer_elem !== null) {
+          pointer_elem!.classList!.add('annotation-selected')
+        }
+        clearInterval(checkPointerInterval)
       }
-    }, 0)
+    }, 10)
+
   }
 }
