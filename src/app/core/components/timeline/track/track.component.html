@@ -4,14 +4,13 @@
     <div #trackBtn class="track-color" [style.color]="data.get('color', null)">
       <i class="ion-ios-radio-button-on" title="Track Color"></i>
     </div>
-    {{data.get('isVisible', null)}}
     <input #title class="title-input" placeholder="Track Title" title="Track Title" formControlName="title" [readonly]="viewmode_active">
   </div>
   <div class="column shrink track-options" *ngIf="!viewmode_active">
+    <i class="icon" [className]="data.get('isVisible', null) ? 'ion-md-eye-off' : 'ion-md-eye'" title="{{data.get('isVisible', null) ? 'Hide' : 'Show'}} track" (mousedown)="toggleTrackVisibility($event, trackIndex, data.get('isVisible', null))"></i>
     <i class="ion-md-copy track-copy-icon" title="Duplicate" alt="Duplicate" (mousedown)="duplicateTrack($event, trackIndex)"></i>
     <i *ngIf="trackIndex > 0" class="ion-ios-arrow-up" title="Move Up" alt="Move Up" (mousedown)="moveTrack($event, trackIndex, 'up')"></i>
     <i *ngIf="trackIndex < numTracks-1" class="ion-ios-arrow-down" title="Move Down" alt="Move Down" (mousedown)="moveTrack($event, trackIndex, 'down')"></i>
-    <i class="icon ion-md-eye-off" title="Hide track" alt="Hide track" (mousedown)="toggleTrackVisibility($event, trackIndex, data.get('isVisible', null))"></i>
     <i class="ion-md-close track-delete-icon" title="Delete Track" alt="Delete Track" (mousedown)="deleteTrackHandler($event)"></i>
   </div>
 </div>
