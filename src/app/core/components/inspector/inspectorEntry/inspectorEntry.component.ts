@@ -166,6 +166,9 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
     const formKeyUp = fromEvent(this._descrInputRef.nativeElement, 'keyup')
 
+    const formInputClick = fromEvent(this._descrInputRef.nativeElement, 'click')
+      .pipe(filter((ev: MouseEvent) => ev.button === 0))
+
     const durationKeydown = merge(
       fromEvent(this._startInputRef.nativeElement, 'keydown'),
       fromEvent(this._durationInputRef.nativeElement, 'keydown'))
@@ -194,6 +197,11 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
           })
         })
         this.encloseHashtags({ 'replace': true })
+      }))
+
+
+    this._subs.push(
+      formInputClick.subscribe((ev: MouseEvent) => {
         this.deductHrefs()
       }))
 
@@ -283,7 +291,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
           setTimeout(() => {
             // this.encloseHashtags()
             this.encloseHrefs()
-          }, 50)
+          })
         }))
   }
 
