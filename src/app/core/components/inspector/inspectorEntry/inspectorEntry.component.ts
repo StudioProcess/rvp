@@ -223,7 +223,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
         if (this.isHashTagPopupContainerOpen) {
           this.handleHashtagInput(ev)
         } else {
-          if (ev.keyCode === 191 || ev.key === '#') {
+          if (ev.key === '#') {
             this.handleHashTag(ev)
           }
         }
