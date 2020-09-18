@@ -7,6 +7,7 @@
     <input #title class="title-input" placeholder="Track Title" title="Track Title" formControlName="title" [readonly]="viewmode_active">
   </div>
   <div class="column shrink track-options" *ngIf="!viewmode_active">
+    <i class="icon" [className]="data.get('isVisible', null) ? 'ion-md-eye-off' : 'ion-md-eye'" title="{{data.get('isVisible', null) ? 'Hide' : 'Show'}} track" (mousedown)="toggleTrackVisibility($event, trackIndex, data.get('isVisible', null))"></i>
     <i class="ion-md-copy track-copy-icon" title="Duplicate" alt="Duplicate" (mousedown)="duplicateTrack($event, trackIndex)"></i>
     <i *ngIf="trackIndex > 0" class="ion-ios-arrow-up" title="Move Up" alt="Move Up" (mousedown)="moveTrack($event, trackIndex, 'up')"></i>
     <i *ngIf="trackIndex < numTracks-1" class="ion-ios-arrow-down" title="Move Down" alt="Move Down" (mousedown)="moveTrack($event, trackIndex, 'down')"></i>
@@ -16,9 +17,11 @@
 <div #trackOverflow class="track-overflow">
   <div #zoomContainer class="track-zoom" [style.width.%]="zoom*100">
     <div *ngFor="let stack of data.get('annotationStacks', []); index as stackIndex; trackBy: outerTrackByFunc;">
-      <div class="annotations-wrapper" (dblclick)="addAnnotation($event, stackIndex)">
+      <div class="annotations-wrapper" (dblclick)="addAnnotation($event, stackIndex)" *ngIf="data.get('isVisible', null)">
         <rv-handlebar *ngFor="let annotation of stack; index as i; trackBy: innerTrackByFunc;"
           [annotation]="annotation"
+          [trackIndex]="data.get('id', null)"
+          [trackIsVisible]="data.get('isVisible', null)"
           [is_viewmode]="viewmode_active"
           [ommit_viewmode]="false"
           [display]="getIsDisplayed(annotation)"

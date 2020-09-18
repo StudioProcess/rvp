@@ -24,6 +24,7 @@ import {
 
 import { embedAnnotations } from '../../lib/annotationStack'
 import { prepareHashTagList } from '../../lib/hashtags'
+// import { SSL_OP_TLS_ROLLBACK_BUG } from 'constants'
 // import { Globals } from '../../common/globals'
 
 const initialState = new ProjectRecordFactory()
@@ -567,6 +568,11 @@ export function reducer(state: State = initialState, action: project.Actions): S
         }
       })
     }
+    /*case project.PROJECT_SET_TRACK_VISIBILITY: {
+
+      const { trackIndex, isVisible } = action.payload
+      return state.setIn(['meta', 'timeline', 'tracks', trackIndex, 'fields', 'isVisible'], isVisible)
+    }*/
     case project.PROJECT_ANNOTATION_ADD_POINTER: {
 
       const path = [

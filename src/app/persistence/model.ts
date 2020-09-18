@@ -122,6 +122,7 @@ export interface ProjectGeneralData {
 export interface Track {
   readonly id: number|null
   readonly isActive: boolean
+  readonly isVisible: boolean
   readonly color: string
   readonly fields: Record<TrackFields>
   readonly annotationStacks: List<List<Record<Annotation>>>
@@ -234,6 +235,7 @@ export const TrackFieldsRecordFactory = Record<TrackFields>({
 export const TrackRecordFactory = Record<Track>({
   id: null,
   isActive: false,
+  isVisible: true,
   color: '#000',
   fields: new TrackFieldsRecordFactory(),
   annotationStacks: List([List([])])

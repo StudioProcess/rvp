@@ -340,7 +340,8 @@ export abstract class HashtagService {
       // console.log(elemArr)
       elemArr.forEach((node: HTMLElement) => {
         if (node.nodeType === Node.TEXT_NODE) {
-          const r = /#\w+/g // /(\#[a-zA-Z0-9\-\_]+)/g
+          // const r = /#\w+/g
+          const r = /(^|\s)(#[a-z\d-]+)/gi // hash except part of url
           const result = r.exec(node.textContent as string)
           if (!result) { return } else {
             const nodeTextUp = node.textContent!.replace(
