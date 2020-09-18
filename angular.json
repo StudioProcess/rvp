@@ -40,6 +40,12 @@
               "node_modules/pace-progress/pace.min.js",
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/foundation-sites/dist/js/foundation.min.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "video.js",
+              "videojs-youtube",
+              "file-saver",
+              "jszip"
             ]
           },
           "configurations": {
