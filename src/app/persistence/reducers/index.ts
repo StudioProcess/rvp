@@ -242,7 +242,6 @@ export const getProjectQueriedTimeline = createSelector(
               resTracks = resTracks.updateIn([trackIndex, 'annotationStacks', stackIndex, annotationIndex], annotation => {
                 return annotation.set('isShown', true)
               })
-
             })
           })
         })
