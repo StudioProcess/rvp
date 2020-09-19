@@ -354,7 +354,6 @@ export abstract class HashtagService {
                *  (all remaining text elements + hashtags spans)
                */
               const replacementNode = document.createElement('div')
-              console.log('replace', nodeTextUp)
               replacementNode.innerHTML = nodeTextUp
               const replacementNodeArr = Array.from(replacementNode.childNodes)
               replacementNodeArr.forEach((replace: HTMLElement) => {
