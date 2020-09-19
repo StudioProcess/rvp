@@ -340,7 +340,7 @@ export abstract class HashtagService {
           const r = /(^|\s)(#[a-z\d-]+)/gi // hash except part of url
           const result = r.exec(node.textContent as string)
           if (!result) { return } else {
-            const nodeTextUp = node.textContent!.replace(
+            let nodeTextUp = node.textContent!.replace(
               r,
               '<span class="' + this.tagContainerClass + '" contenteditable="false">'
               + '$&'
@@ -354,7 +354,8 @@ export abstract class HashtagService {
                *  (all remaining text elements + hashtags spans)
                */
               const replacementNode = document.createElement('div')
-              replacementNode.innerHTML = nodeTextUp // + ' '
+              console.log('replace', nodeTextUp)
+              replacementNode.innerHTML = nodeTextUp
               const replacementNodeArr = Array.from(replacementNode.childNodes)
               replacementNodeArr.forEach((replace: HTMLElement) => {
                 node.parentNode!.insertBefore(replace, node)
@@ -362,6 +363,12 @@ export abstract class HashtagService {
               // node.parentNode.insertBefore(replacementNode, node)
               node.parentNode!.removeChild(node)
             } else {
+              /**
+               *  check if last char is an empty space
+               */
+              if(!/\s+$/.test(nodeTextUp)) {
+                nodeTextUp = nodeTextUp + ' '
+              }
               /**
                *  Simply replace whole textNode
                */
