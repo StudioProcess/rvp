@@ -79,14 +79,12 @@ export abstract class HashtagService {
    *  popup component (will be removed on any formblur, save, pick etc. event).
    */
   addHashTagPopupContainer(): void {
-    // console.log(document.getSelection())
     const selected = document.getSelection()!
     if (selected.rangeCount) {
       let range = selected!.getRangeAt(0)!
       if (!range.collapsed) {
         range.deleteContents()
       }
-      // console.log(range)
       const hashtag_popup_container_span = document.createElement('span')
       hashtag_popup_container_span.id = this.tagPopupContainerId
       hashtag_popup_container_span.style.display = 'inline-block'
@@ -298,7 +296,6 @@ export abstract class HashtagService {
     let descriptionText = ''
     const descriptionNode = new DOMParser().parseFromString(description, 'text/html').body.childNodes
     const elemArr = Array.from(descriptionNode)
-    // console.log('DOMParser', elemArr)
 
     elemArr.forEach((item: HTMLElement) => {
       if (item.nodeType === Node.TEXT_NODE) {
@@ -337,14 +334,13 @@ export abstract class HashtagService {
     if (elem) {
       this.removeHashTagPopupContainer()
       const elemArr = Array.from(elem.childNodes)
-      // console.log(elemArr)
       elemArr.forEach((node: HTMLElement) => {
         if (node.nodeType === Node.TEXT_NODE) {
           // const r = /#\w+/g
           const r = /(^|\s)(#[a-z\d-]+)/gi // hash except part of url
           const result = r.exec(node.textContent as string)
           if (!result) { return } else {
-            const nodeTextUp = node.textContent!.replace(
+            let nodeTextUp = node.textContent!.replace(
               r,
               '<span class="' + this.tagContainerClass + '" contenteditable="false">'
               + '$&'
@@ -358,15 +354,20 @@ export abstract class HashtagService {
                *  (all remaining text elements + hashtags spans)
                */
               const replacementNode = document.createElement('div')
-              replacementNode.innerHTML = nodeTextUp // + ' '
+              replacementNode.innerHTML = nodeTextUp
               const replacementNodeArr = Array.from(replacementNode.childNodes)
-              // console.log('replacementNodeArr', replacementNodeArr)
               replacementNodeArr.forEach((replace: HTMLElement) => {
                 node.parentNode!.insertBefore(replace, node)
               })
               // node.parentNode.insertBefore(replacementNode, node)
               node.parentNode!.removeChild(node)
             } else {
+              /**
+               *  check if last char is an empty space
+               */
+              if(!/\s+$/.test(nodeTextUp)) {
+                nodeTextUp = nodeTextUp + ' '
+              }
               /**
                *  Simply replace whole textNode
                */
@@ -406,7 +407,6 @@ export abstract class HashtagService {
     if (elem) {
       const urlified = this.urlify(elem.textContent) as string | undefined
       if (urlified) {
-        // console.log(urlified)
         elem!.innerHTML = urlified
       }
     }
@@ -418,7 +418,6 @@ export abstract class HashtagService {
       let elemArr = Array.from(elem.childNodes)
       elemArr.forEach((node: HTMLElement, i) => {
         if (node instanceof HTMLElement && node.tagName === 'A') {
-          // console.log(node.attributes, elemArr[i], node.textContent)
           elem.replaceChild(document.createTextNode(node.textContent as string), node)
         }
       })
@@ -428,7 +427,7 @@ export abstract class HashtagService {
   urlify(text: string | null) {
     const urlRegex = /(https?:\/\/[^\s]+)/g
     return text?.replace(urlRegex, function (url: string) {
-      return '<a href="' + url + '" target="_blank" contenteditable="false" title="link to '+ url +'" class="annotation-link">' + url + '</a>'
+      return '<a href="' + url + '" target="_blank" contenteditable="false" title="link to '+ url +'" onclick="event.stopPropagation();" class="annotation-link">' + url + '</a>'
     })
   }
 }

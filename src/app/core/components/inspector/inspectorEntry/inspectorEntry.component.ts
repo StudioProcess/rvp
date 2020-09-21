@@ -137,6 +137,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
 
     this.annotation_id = this.entry.getIn(['annotation', 'id']) as number
     this.annotation_pointer_color = ((this.entry.getIn(['annotation', 'pointerElement']) !== null) ? (this.entry.get('color', null) as string) : '#bbb')
+
   }
 
   ngAfterViewInit() {
@@ -146,9 +147,10 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       this._cdr.detectChanges()
     })
 
-    // add span nodes around hashtags inside textnodes
-    this.encloseHashtags()
-
+    setTimeout(() => {
+      // add span nodes around hashtags inside textnodes
+      this.encloseHashtags()
+    })
     // find links and change them to hrefs/HTMLAnchorElement
     this.encloseHrefs()
 
@@ -257,6 +259,7 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
         .pipe(
           // delay(100),
           tap((ev) => {
+            // this.encloseHashtags()
             this.encloseHrefs()
           }),
           withLatestFrom(combineLatest(this.form!.valueChanges, this.form!.statusChanges), (_, [form, status]) => {
@@ -287,11 +290,6 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
             annotationIndex: this.entry.get('annotationIndex', null),
             annotation
           })
-
-          setTimeout(() => {
-            // this.encloseHashtags()
-            this.encloseHrefs()
-          })
         }))
   }
 
@@ -301,6 +299,8 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
       if (previousValue === undefined || !previousValue.equals(currentValue)) {
         // console.log(previousValue, currentValue)
         this.form.setValue(this._mapModel(currentValue))
+        this.encloseHashtags()
+        this.encloseHrefs()
       }
     }
   }
@@ -321,7 +321,6 @@ export class InspectorEntryComponent extends HashtagService implements OnChanges
   pointerAction($event: MouseEvent) {
 
     this.onFocusAnnotation.emit({
-      // currentTime: (this.entry.getIn(['annotation', 'utc_timestamp']) + 0.1)
       currentTime: (this.entry.getIn(['annotation', 'utc_timestamp']))
     })
 

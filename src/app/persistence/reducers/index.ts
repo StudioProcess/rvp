@@ -134,7 +134,7 @@ export const getCurrentFlattenedAnnotations = createSelector(
       const tracks = timeline!.get('tracks', null)
       const res: Record<AnnotationColorMap>[] = []
       tracks.forEach((track, trackIndex) => {
-        if(track.get('isVisible', null)) {
+        if (track.get('isVisible', null)) {
           const color = track.get('color', null)
           const stacks = track.get('annotationStacks', null)
           const collisions = findVerticalCollisionsWithCursor(duration, stacks, currentTime)
@@ -222,7 +222,7 @@ export const getProjectQueriedTimeline = createSelector(
               return parseInt(id) === aId
             }) !== undefined
 
-            if (!isShown) {
+            if (!isShown && track.get('isVisible', true)) {
               resTracks = resTracks.updateIn([trackIndex, 'annotationStacks', stackIndex, annotationIndex], annotation => {
                 return annotation.set('isShown', false)
               })
@@ -232,7 +232,21 @@ export const getProjectQueriedTimeline = createSelector(
       })
       return timeline.set('tracks', resTracks)
     } else {
-      return timeline
+      if (timeline !== null) {
+        const tracks = timeline.get('tracks', null)
+        let resTracks = tracks
+        tracks.forEach((track, trackIndex) => {
+          const stacks = track.get('annotationStacks', null)
+          stacks.forEach((stack, stackIndex) => {
+            stack.forEach((annotation, annotationIndex) => {
+              resTracks = resTracks.updateIn([trackIndex, 'annotationStacks', stackIndex, annotationIndex], annotation => {
+                return annotation.set('isShown', true)
+              })
+            })
+          })
+        })
+        return timeline.set('tracks', resTracks)
+      }
     }
   })
 
