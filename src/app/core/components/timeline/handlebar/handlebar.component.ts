@@ -82,17 +82,35 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
   @ViewChild('middleHandle', { static: true }) private readonly _middleHandleRef: ElementRef
   @ViewChild('rightHandle', { static: true }) private readonly _rightHandleRef: ElementRef
 
-  private readonly _syncValueSubj = new Subject<Handlebar>()
-  private readonly _handlebarSubj = new ReplaySubject<Handlebar>(1)
   @Output() readonly onHandlebarUpdate = new ReplaySubject<Handlebar>(1)
   @Output() readonly onDblClick = new EventEmitter()
-
+  private readonly _syncValueSubj = new Subject<Handlebar>()
+  private readonly _handlebarSubj = new ReplaySubject<Handlebar>(1)
   private readonly _video_elem_container = document.querySelector('.video-main-elem') as HTMLElement
   private readonly _subs: Subscription[] = []
   private _isDragging = false
 
+  private isLeftBtn: any
+  private mousemove: any
+  private mouseup: any
+  private leftMouseDown: any
+  private rightMouseDown: any
+  private middleMouseDown: any
+  private clientPosWhileMouseMove: any
+  private coordTransform: any
+  private mapToPercentage: any
+  private transformedToPercentage: any
+  private leftClientPos: any
+  private rightClientPos: any
+  private middleClientPos: any
+  private minMax: any
+  private leftPos: any
+  private rightPos: any
+  private middlePos: any
+
   public viewmode_active: boolean = false
   public annotation_id: number
+
 
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
@@ -135,60 +153,35 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
     }
   }
 
-  isPlayerCurrentTime() {
-    const annotationStartTime = parseFloat(this.annotationStartTime.toFixed(2))
-    const annotationEndTime = parseFloat(this.annotationEndTime.toFixed(2))
-    const playerCurrentTime = parseFloat(this.playerCurrentTime.toFixed(2))
-
-    return ((playerCurrentTime >= annotationStartTime) && (playerCurrentTime <= annotationEndTime) ? true : false)
-  }
-
   ngAfterViewInit() {
-    if (this.ommit_viewmode) {
-      this.subscribeSubs()
-    } else {
-      this._global.getValue().subscribe((value) => {
-        this.viewmode_active = value
 
-        if (!this.viewmode_active) {
-          this.subscribeSubs()
-        } else {
-          this._subs.forEach(sub => sub.unsubscribe())
-        }
-      })
-    }
-  }
+    this.isLeftBtn = (ev: MouseEvent) => ev.button === 0
+    this.mousemove = fromEvent(this._document, 'mousemove')
+    this.mouseup = fromEvent(this._document, 'mouseup')
+    this.leftMouseDown = fromEvent(this._leftHandleRef.nativeElement, 'mousedown').pipe(filter(this.isLeftBtn))
+    this.rightMouseDown = fromEvent(this._rightHandleRef.nativeElement, 'mousedown').pipe(filter(this.isLeftBtn))
+    this.middleMouseDown = fromEvent(this._middleHandleRef.nativeElement, 'mousedown').pipe(filter(this.isLeftBtn))
 
-  subscribeSubs() {
-
-    const isLeftBtn = (ev: MouseEvent) => ev.button === 0
-
-    const mousemove = fromEvent(this._document, 'mousemove')
-    const mouseup = fromEvent(this._document, 'mouseup')
-    const leftMouseDown = fromEvent(this._leftHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
-    const rightMouseDown = fromEvent(this._rightHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
-    const middleMouseDown = fromEvent(this._middleHandleRef.nativeElement, 'mousedown').pipe(filter(isLeftBtn))
-
-    const clientPosWhileMouseMove = (args: any) => {
-      return mousemove.pipe(
+    this.clientPosWhileMouseMove = (args: any) => {
+      return this.mousemove.pipe(
         map((mmEvent: MouseEvent) => {
           const { clientX, clientY } = mmEvent
           return { clientX, clientY, payload: args }
         }),
-        takeUntil(mouseup))
+        takeUntil(this.mouseup))
     }
 
-    const coordTransform = (clientX: number, hRect: ClientRect) => (clientX - hRect.left)
-    const mapToPercentage = (localX: number, hRect: ClientRect) => (localX / hRect.width * 100)
-    const transformedToPercentage = (clientX: number, hRect: ClientRect) => {
-      return mapToPercentage(coordTransform(clientX, hRect), hRect)
+    this.coordTransform = (clientX: number, hRect: ClientRect) => (clientX - hRect.left)
+    this.mapToPercentage = (localX: number, hRect: ClientRect) => (localX / hRect.width * 100)
+    this.transformedToPercentage = (clientX: number, hRect: ClientRect) => {
+      return this.mapToPercentage(this.coordTransform(clientX, hRect), hRect)
     }
 
-    const leftClientPos = leftMouseDown.pipe(switchMap(clientPosWhileMouseMove))
-    const rightClientPos = rightMouseDown.pipe(switchMap(clientPosWhileMouseMove))
-    const middleClientPos = middleMouseDown.pipe(
+    this.leftClientPos = this.leftMouseDown.pipe(switchMap(this.clientPosWhileMouseMove))
+    this.rightClientPos = this.rightMouseDown.pipe(switchMap(this.clientPosWhileMouseMove))
+    this.middleClientPos = this.middleMouseDown.pipe(
       withLatestFrom(this._handlebarSubj, this.containerRect, (mdEvent: MouseEvent, prevHb: Handlebar, hRect: ClientRect) => {
-        const m = transformedToPercentage(mdEvent.clientX, hRect)
+        const m = this.transformedToPercentage(mdEvent.clientX, hRect)
         const hbRight = prevHb.left + prevHb.width
         return {
           distLeft: m - prevHb.left,
@@ -196,15 +189,15 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
           hRect
         }
       }),
-      switchMap(clientPosWhileMouseMove))
+      switchMap(this.clientPosWhileMouseMove))
 
-    const minMax = (x: number) => Math.min(Math.max(0, x), 100)
+    this.minMax = (x: number) => Math.min(Math.max(0, x), 100)
 
-    const leftPos = leftClientPos.pipe(
+    this.leftPos = this.leftClientPos.pipe(
       map(({ clientX }) => clientX),
-      withLatestFrom(this.containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect))),
+      withLatestFrom(this.containerRect, (clientX, hRect) => this.minMax(this.transformedToPercentage(clientX, hRect))),
       distinctUntilChanged(),
-      withLatestFrom(this._handlebarSubj, (l, prevHb) => {
+      withLatestFrom(this._handlebarSubj, (l: any, prevHb: any) => {
         const oldRight = prevHb.left + prevHb.width
         // ensure handlebar min width
         const newLeft = Math.min(l, oldRight - _HANDLEBAR_MIN_WIDTH_)
@@ -213,20 +206,20 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
         return { left: newLeft, width: newWidth, move: 'leftMove' }
       }))
 
-    const rightPos = rightClientPos.pipe(
+    this.rightPos = this.rightClientPos.pipe(
       map(({ clientX }) => clientX),
-      withLatestFrom(this.containerRect, (clientX, hRect) => minMax(transformedToPercentage(clientX, hRect))),
+      withLatestFrom(this.containerRect, (clientX, hRect) => this.minMax(this.transformedToPercentage(clientX, hRect))),
       distinctUntilChanged(),
-      withLatestFrom(this._handlebarSubj, (r, prevHb) => {
+      withLatestFrom(this._handlebarSubj, (r:any, prevHb:any) => {
         const newRight = Math.max(prevHb.left + _HANDLEBAR_MIN_WIDTH_, r)
         return { left: prevHb.left, width: newRight - prevHb.left, move: 'rightMove' }
       }))
 
-    const middlePos = middleClientPos.pipe(
+    this.middlePos = this.middleClientPos.pipe(
       map(({ clientX, payload: { distLeft, distRight, hRect } }) => {
         return {
           distLeft, distRight,
-          m: minMax(transformedToPercentage(clientX, hRect))
+          m: this.minMax(this.transformedToPercentage(clientX, hRect))
         }
       }),
       distinctUntilKeyChanged('m'),
@@ -234,33 +227,16 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
         const newLeft = Math.min(Math.max(0, m - distLeft), 100 - prevHb.width)
         return { left: newLeft, width: prevHb.width, move: 'middleMove' }
       }))
-    this._subs.push(
-      merge(leftMouseDown, rightMouseDown, middleMouseDown)
-        .subscribe(() => {
-          this._isDragging = true
-        }))
 
-    this._subs.push(mouseup.subscribe(() => {
-      this._isDragging = false
-    }))
 
-    this._subs.push(
-      merge(leftPos, middlePos, rightPos)
-        .subscribe(({ left, width, move }: { left: number, width: number, move: MoveTypes }) => {
-          this.internLeft = left
-          this.internWidth = width
-          this._handlebarSubj.next({ source: 'intern', left, width, move })
-          this._cdr.markForCheck()
-        }))
+    this.subscribeSubs()
 
-    this._subs.push(
-      this._syncValueSubj
-        .subscribe(({ left, width, move }) => {
-          this.internLeft = left
-          this.internWidth = width
-          this._handlebarSubj.next({ source: 'extern', left, width, move })
-          this._cdr.markForCheck()
-        }))
+    this._global.getValue().subscribe((value) => {
+      this.viewmode_active = value
+      if (this.viewmode_active) {
+        this._subs.forEach(sub => sub.unsubscribe())
+      }
+    })
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -297,6 +273,44 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
     this._removePointer()
   }
 
+  subscribeSubs() {
+    this._subs.push(
+      merge(this.leftMouseDown, this.rightMouseDown, this.middleMouseDown)
+        .subscribe(() => {
+          this._isDragging = true
+        }))
+
+    this._subs.push(this.mouseup.subscribe(() => {
+      this._isDragging = false
+    }))
+
+    this._subs.push(
+      merge(this.leftPos, this.middlePos, this.rightPos)
+        .subscribe(({ left, width, move }: { left: number, width: number, move: MoveTypes }) => {
+          this.internLeft = left
+          this.internWidth = width
+          this._handlebarSubj.next({ source: 'intern', left, width, move })
+          this._cdr.markForCheck()
+        }))
+
+    this._subs.push(
+      this._syncValueSubj
+        .subscribe(({ left, width, move }) => {
+          this.internLeft = left
+          this.internWidth = width
+          this._handlebarSubj.next({ source: 'extern', left, width, move })
+          this._cdr.markForCheck()
+        }))
+  }
+
+  isPlayerCurrentTime() {
+    const annotationStartTime = parseFloat(this.annotationStartTime.toFixed(2))
+    const annotationEndTime = parseFloat(this.annotationEndTime.toFixed(2))
+    const playerCurrentTime = parseFloat(this.playerCurrentTime.toFixed(2))
+
+    return ((playerCurrentTime >= annotationStartTime) && (playerCurrentTime <= annotationEndTime) ? true : false)
+  }
+
   private _resetPointerTraits() {
     this._removePointer()
     this._setPointers()
@@ -327,12 +341,6 @@ export class HandlebarComponent implements OnInit, AfterViewInit, OnChanges, OnD
             pointer_elem.remove()
           }
         }
-      } else if (this.isSelected) {
-        // if (entries_pointer_element !== null) {
-        //   if (!this._isPointerDisplayed(this.annotation_id)) {
-        //     this._instantiatePointer(entries_pointer_element)
-        //   }
-        // }
       }
     }
     if (this.isSelected) {
