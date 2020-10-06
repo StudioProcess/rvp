@@ -5,6 +5,7 @@
 </div>
 <div #timelineWrapper class="timeline-wrapper">
   <rv-track *ngFor="let track of timeline?.get('tracks', []); index as i; trackBy: trackByFunc;"
+    [class.isHidden]="!track.get('isVisible', null)"
     [data]="track"
     [trackIndex]="i"
     [numTracks]="getNumTracks()"

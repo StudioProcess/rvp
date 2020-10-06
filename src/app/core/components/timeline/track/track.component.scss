@@ -22,6 +22,7 @@
     .track-color {
       width: $track-color-width;
       display: inline-block;
+      vertical-align: middle;
 
       i {
         padding-left: $track-icon-paddingleft;
@@ -108,4 +109,22 @@
     width: 4px;
     background-color: black;
   }
+}
+
+.track-show-hide {
+  display: inline-block;
+  padding-left: 7px; 
+  width: 17px;
+  
+  i {
+    vertical-align: middle;
+    font-size:20px;
+    margin:0 auto;
+    color: $process-gray5;
+  }
+}
+
+:host.isHidden {
+  .track-color { filter: grayscale(0.8); }
+  .title-input { opacity: 0.4; }
 }
