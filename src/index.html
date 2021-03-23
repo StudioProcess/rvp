@@ -10,27 +10,13 @@
     <link rel="apple-touch-icon" href="touch-icon-iphone.png">
     <script>paceOptions = {ajax:true, document:true, eventLag:true, restartOnRequestAfter:2000, maxProgressPerFrame:20, initialRate:0.01, ghostTime:1000, target:'.progress'}</script>
     <style>
-      .loading-overlay {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background-color: white;
-      }
+      .loading-overlay, #browser-check { position:absolute; top:0; bottom:0; right:0; left:0; display:flex; flex-direction:column; justify-content:center; align-items:center; background-color:white; z-index:9999; }
+      #browser-check { display:none; position:fixed; -webkit-user-select:text; user-select:text; }
+      #browser-check .close { font-size:20px; font-weight:bold; position:fixed; top:0; right:0; padding:1em; cursor:pointer; }
+      #browser-check a { text-decoration: underline; }
     </style>
-    <!--
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
-    -->
 </head>
   <body>
-    <!-- <rv-app></rv-app> -->
     <rv-main></rv-main>
 
     <!-- <div class="loading-overlay">
@@ -38,6 +24,22 @@
       <div class="text"><strong>Research Video</strong>&nbsp;Zürcher Hochschule der Künste</div>
       <div class="progress"></div>
     </div> -->
+    <div id="browser-check">
+      <img src="assets/img/rv-logo_1000px.png" width="100px">
+      <div class="text"><strong>Research Video</strong>&nbsp;Zürcher Hochschule der Künste</div>
+      <div class="text" style="margin-top:1em; font-weight:bold;">This app requires <a href="https://www.google.com/chrome/" target="_blank">Google Chrome</a>.</div>
+      <div class="text" style="margin-top:1em;">Please open the following URL in Google Chrome: </div>
+      <div class="link" style="max-width:500px; word-break:break-all; font-family:monospace;"></div>
+      <div class="close">×</div>
+    </div>
+    <script>
+      document.querySelector('#browser-check .link').textContent = window.location.href;
+      document.querySelector('#browser-check .close').addEventListener('click', function() {
+        document.querySelector('#browser-check').style.display = 'none';
+      });
+      var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+      if (!isChrome) document.querySelector('#browser-check').style.display = 'flex';
+    </script>
     <!--<script>
       (function(i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
