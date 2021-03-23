@@ -82,3 +82,9 @@
     box-shadow: none;
   }
 }
+
+:host {
+  rv-version {
+    user-select: text;
+  }
+}
