@@ -4,8 +4,8 @@ import {Store} from '@ngrx/store'
 import {Effect, Actions, ofType} from '@ngrx/effects'
 
 import * as videojs from 'video.js'
-import 'videojs-vimeo'
-import 'videojs-youtube'
+// import 'videojs-vimeo'
+// import 'videojs-youtube'
 
 import {
   ReplaySubject, BehaviorSubject,
