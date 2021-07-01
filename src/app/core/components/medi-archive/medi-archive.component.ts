@@ -10,6 +10,7 @@ import { ImportVideoPayload } from '../../../persistence/actions/project'
 
 import { MessageService } from '../../actions/message.service'
 
+declare var $: any
 
 @Component({
   selector: 'rv-medi-archive',

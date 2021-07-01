@@ -1,7 +1,7 @@
 import {OutputType} from 'jszip'
 import {id} from '../lib/fp'
 
-export const _PROJECT_AUTOSAVE_DEBOUNCE_ = 1000
+export const _PROJECT_AUTOSAVE_DEBOUNCE_ = 1200
 
 export const _PROJECT_DEFAULT_TITLE_ = 'Untitled document'
 export const _PROJECT_TITLE_MAX_LENGTH_ = 350
