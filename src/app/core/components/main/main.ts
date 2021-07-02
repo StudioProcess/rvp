@@ -274,7 +274,7 @@ export class MainContainer implements OnInit, OnDestroy, AfterViewInit {
         setTimeout(() => {
           this.closeProjectModal()
           window.location.reload()
-        }, 200)
+        }, 500)
       }
     }
   }

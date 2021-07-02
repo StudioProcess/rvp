@@ -280,7 +280,7 @@ export class ServerProxy implements OnDestroy {
       this.resetProject.subscribe({
         next: async () => {
           await this._cache.clearAll()
-          this._store.dispatch(new project.ProjectLoad())
+          // this._store.dispatch(new project.ProjectLoad())
         },
         error: (err: any) => {
           this._store.dispatch(new project.ProjectResetError(err))
