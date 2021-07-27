@@ -9,7 +9,7 @@ const fs = require('fs');
 const path = require('path');
 
 const version = require('../package.json').version;
-const hash = execSync('git rev-parse --short HEAD', {encoding: 'utf8'}).trim();
+const hash = execSync('git rev-parse --short HEAD', {encoding: 'utf8'}).trim().slice(0,7);
 console.log(`Version ${version} (${hash})`);
 
 
